@@ -1,9 +1,8 @@
-#include <iostream>
 #include "client.h"
 
 
 Client::Client(const char *host, const char *port) {
-    this->socket.connect(host, port);
+    //this->socket.connect(host, port);
 }
 
 const bool Client::valid_request(std::string &request) {
@@ -12,12 +11,13 @@ const bool Client::valid_request(std::string &request) {
 
 void Client::play() {
     SdlWindow ventana(800,600);
-    ventana.loadImage();
-    ventana.blitSurfaceAndUpadate();
+    ventana.fill();
+    SdlTexture image_lobby(PATH_IMG_LOBBY, ventana);
+    image_lobby.render();
+    ventana.render();
+    //SDL_Delay(3000);
+    while(true) {}
     ventana.~SdlWindow();
-    /*while (true) {
-        
-    }*/
 }
 
 void Client::send_request(const unsigned char* request, std::size_t size) {
@@ -27,3 +27,4 @@ void Client::send_request(const unsigned char* request, std::size_t size) {
 std::vector<unsigned char> Client::get_response() {
     return ClientProtocol::receive_request_response(socket);
 }
+

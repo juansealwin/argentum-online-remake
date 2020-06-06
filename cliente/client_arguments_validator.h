@@ -2,9 +2,9 @@
 #define __client_arguments_validator_H__
 #include <iostream>
 #include <string>
-#include "common_arguments_validator.h"
-#include "common_arguments_exceptions.h"
-#include "common_exception_messages.h"
+#include "../common/common_arguments_validator.h"
+#include "../common/common_arguments_exceptions.h"
+#include "../common/common_exception_messages.h"
 #define CLI_ARGS 3
 #define PORT_ARG 2
 #define IP_ARG 1
