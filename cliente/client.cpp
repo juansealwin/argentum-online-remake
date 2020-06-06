@@ -15,8 +15,7 @@ void Client::play() {
     SdlTexture image_lobby(PATH_IMG_LOBBY, ventana);
     image_lobby.render();
     ventana.render();
-    //SDL_Delay(3000);
-    while(true) {}
+    SDL_Delay(3000);
     ventana.~SdlWindow();
 }
 
