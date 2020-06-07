@@ -7,7 +7,7 @@
 
 class Server {
 public:
-    Server(const char *port);
+    explicit Server(const char *port);
     //Corre un servidor para que los clientes que se conecten 
     //Juegen a GuessNumberGame
     void run();
