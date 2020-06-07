@@ -7,15 +7,14 @@
 #include <cstdarg>
 #include <cstring>
 #include <typeinfo>
-#define BUF_LEN 256
 
 class SdlException : public std::exception {
     private:
         int myerrno;
-        char msg_error[BUF_LEN];
+        std::string msg_error;
 
     public:
-        explicit SdlException(const char* fmt, ...) noexcept;
+        SdlException(const char* , const char*);
         
         virtual ~SdlException() noexcept;
         

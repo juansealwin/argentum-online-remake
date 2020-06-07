@@ -6,6 +6,7 @@
 #include "../protocol/ClientProtocol.h"
 #include <vector>
 #include "client_sdl_window.h"
+#include "client_sdl_texture.h"
 
 class Client {
     private:

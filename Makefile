@@ -46,7 +46,7 @@ CFLAGS += -O3
 CFLAGS += -ggdb -DDEBUG -fno-inline
 
 # Opciones del enlazador.
-LDFLAGS = -lSDL2
+LDFLAGS = -lSDL2 -lSDL2_image
 
 # Estandar de C a usar
 CSTD = c99
