@@ -1,0 +1,5 @@
+PARA COMPILAR:
+
+Pararse en build y abrir la linea de comandos y escribir:
+-> cmake ..
+-> make && make install
