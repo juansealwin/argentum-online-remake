@@ -61,4 +61,6 @@ add_executable(client
 #target_link_libraries(client Qt5::Widgets Qt5::DBus)
 target_link_libraries(client ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 
-install(FILES assets/Argentum_online.jpg DESTINATION ${CMAKE_BINARY_DIR}/client)
+#Install the images
+install(DIRECTORY assets/ DESTINATION ${CMAKE_BINARY_DIR}/client)
+
