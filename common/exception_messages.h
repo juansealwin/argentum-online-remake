@@ -1,5 +1,5 @@
-#ifndef __common_exception_messages_H__
-#define __common_exception_messages_H__
+#ifndef EXCEPTION_MESSAGES_H
+#define EXCEPTION_MESSAGES_H
 
 #define MSG_ERROR_QUANTITY_ARGS \
     "Error: Cantidad inválida de argumentos"

@@ -1,5 +1,6 @@
-#ifndef __COMMON_SDL_EXCEPTION_H__
-#define __COMMON_SDL_EXCEPTION_H__
+#ifndef ARGUMENTS_EXCEPTIONS_H
+#define ARGUMENTS_EXCEPTIONS_H
+
 #include <string>
 #include <iostream>
 #include <errno.h>
@@ -7,16 +8,18 @@
 #include <cstdarg>
 #include <cstring>
 #include <typeinfo>
+#define BUF_LEN 256
 
-class SdlException : public std::exception {
+
+class ArgumentsException : public std::exception {
     private:
         int myerrno;
-        std::string msg_error;
+        char msg_error[BUF_LEN];
 
     public:
-        SdlException(const char* , const char*);
+        explicit ArgumentsException(const char* fmt, ...) noexcept;
         
-        virtual ~SdlException() noexcept;
+        virtual ~ArgumentsException() noexcept;
         
         /*
          * @brief tells what is the exception problem

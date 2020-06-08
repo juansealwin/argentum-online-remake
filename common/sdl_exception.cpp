@@ -1,4 +1,4 @@
-#include "common_sdl_exception.h"
+#include "sdl_exception.h"
 
 SdlException::SdlException(const char* description, const char* sdlError)
     : std::exception(), msg_error(description) {

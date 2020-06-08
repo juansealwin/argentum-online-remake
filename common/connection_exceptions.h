@@ -1,5 +1,5 @@
-#ifndef __common_connection_exceptions_H__
-#define __common_connection_exceptions_H__
+#ifndef CONNECTION_EXCEPTION_H
+#define CONNECTION_EXCEPTION_H
 
 #include <string>
 #include <iostream>

@@ -1,5 +1,5 @@
-#ifndef __common_arguments_validator_H__
-#define __common_arguments_validator_H__
+#ifndef ARGUMENTS_VALIDATOR_H
+#define ARGUMENTS_VALIDATOR_H
 #include <iostream>
 #include <string>
 

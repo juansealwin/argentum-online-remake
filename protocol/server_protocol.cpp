@@ -1,4 +1,4 @@
-#include "ServerProtocol.h"
+#include "server_protocol.h"
 #include <iostream>
 
 void ServerProtocol::send_response_to_command
@@ -12,4 +12,10 @@ unsigned char ServerProtocol::receive_command(const Socket& skt) {
     unsigned char c = 0;
     skt.recv(&c, 1);
     return c;
+}
+
+unsigned int ServerProtocol::receive_room_no(const Socket& skt) {
+	unsigned char i = 0;
+	skt.recv(&i, 1);
+	return (unsigned int)i - '0';
 }

@@ -1,6 +1,6 @@
-#include "common_arguments_exceptions.h"
+#include "connection_exceptions.h"
 
-ArgumentsException::ArgumentsException(const char* fmt, ...) noexcept {
+ConnectionException::ConnectionException(const char* fmt, ...) noexcept {
     //For SERCOM
     myerrno = 0;
     va_list args;
@@ -16,8 +16,8 @@ ArgumentsException::ArgumentsException(const char* fmt, ...) noexcept {
     msg_error[BUF_LEN-1] = 0;
 }
 
-ArgumentsException::~ArgumentsException() {}
+ConnectionException::~ConnectionException() {}
 
-const char* ArgumentsException::what() const noexcept {
+const char* ConnectionException::what() const noexcept {
   return msg_error;
 }

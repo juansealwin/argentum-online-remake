@@ -1,7 +1,7 @@
 #include <cstring>
 #include <unistd.h>
 #include <stdexcept>
-#include "Socket.h"
+#include "common_socket.h"
 #include <iostream>
 
 void Socket::connect(const char *host, const char *port) {

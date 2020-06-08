@@ -1,5 +1,5 @@
-#ifndef SOCKET_H
-#define SOCKET_H
+#ifndef COMMON_SOCKET_H
+#define COMMON_SOCKET_H
 
 #include <sys/types.h>
 #include <netdb.h>

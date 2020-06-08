@@ -1,8 +1,9 @@
+
 #ifndef CLIENT_PROTOCOL_H
 #define CLIENT_PROTOCOL_H
 
 #include <string>
-#include "../red/Socket.h"
+#include "common_socket.h"
 #include <vector>
 namespace ClientProtocol {
 	//Envia el mensaje a traves del socket al servidor con el cual

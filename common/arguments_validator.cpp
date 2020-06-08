@@ -1,4 +1,4 @@
-#include "common_arguments_validator.h"
+#include "arguments_validator.h"
 
 ArgumentsValidator::ArgumentsValidator(int argc, char** argv) : 
                     argc(argc), argv(argv) {} 
