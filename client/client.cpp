@@ -12,7 +12,10 @@ const bool Client::valid_request(std::string &request) {
 void Client::play() {
     SdlWindow ventana(800,600);
     ventana.fill();
-    SdlTexture image_lobby(PATH_IMG_LOBBY, ventana);
+    Texture humano("humano.png", ventana);
+    Texture image_lobby(PATH_IMG_LOBBY, ventana);
+    
+    humano.render();
     image_lobby.render();
     ventana.render();
     SDL_Delay(3000);

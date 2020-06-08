@@ -1,15 +1,15 @@
-#include "sdl_texture.h"
+#include "texture.h"
 
-SdlTexture::SdlTexture(const std::string &filename, SdlWindow& window)
+Texture::Texture(const std::string &filename, SdlWindow& window)
     : renderer(window.getRenderer()) {
     texture = loadTexture(filename);  
 }
 
-SdlTexture::~SdlTexture() {
+Texture::~Texture() {
     SDL_DestroyTexture(this->texture);
 }
 
-SDL_Texture* SdlTexture::loadTexture(const std::string &filename) {
+SDL_Texture* Texture::loadTexture(const std::string &filename) {
     SDL_Texture* texture = IMG_LoadTexture(renderer,
                                            filename.c_str());
 
@@ -19,7 +19,7 @@ SDL_Texture* SdlTexture::loadTexture(const std::string &filename) {
     return texture;
 }
 
-void SdlTexture::render() const {
+void Texture::render() const {
     if(SDL_RenderCopy(renderer, texture, NULL, NULL))
         throw SdlException("Error al renderizar la textura", SDL_GetError());
 }
