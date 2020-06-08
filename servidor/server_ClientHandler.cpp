@@ -2,7 +2,7 @@
 #include <sstream>
 #include "ClientHandler.h"
 #include <iostream>
-ClientHandler::ClientHandler(Socket socket) {
+ClientHandler::ClientHandler(Socket socket, ArgentumGame* game) : game(game) {
     this->peer_socket = std::move(socket);
 }
 
@@ -11,6 +11,8 @@ ClientHandler::~ClientHandler() {
 }
 
 void ClientHandler::run() {
+    std::cout << "connected to the game room :" 
+    << game->get_room() << std::endl;
     while (alive) {
         unsigned char c = receive_request();
         std::cout<< c << std::endl;
@@ -20,7 +22,6 @@ void ClientHandler::run() {
         uint16_t message_length = 7;
         send_response(response, &message_length);
         alive = false;
-
     }
     this->peer_socket.close();
 }

@@ -4,6 +4,7 @@
 #include "../red/Socket.h"
 #include "../utils/Thread.h"
 #include "ClientHandler.h"
+#include "ArgentumGame.h"
 #include <list>
 #include <vector>
 
@@ -11,7 +12,7 @@ class ClientListener : public Thread {
 public:
     /*Crea un nuevo ClientListener que escuchara en el puerto port
     y utilizara numbers para asignarle a cada cliente que se conecte*/
-    ClientListener(const char *port);
+    explicit ClientListener(const char *port);
 
     ~ClientListener() override;
     /*Escucha nuevos clientes en el puerto 'port'.
@@ -23,6 +24,7 @@ public:
     void stop_listening();
 
 private:
+    std::vector<ArgentumGame *> games;
     Socket server_socket;
     std::list<ClientHandler *> clients;
     /*Remueve a los clientes del vector clients

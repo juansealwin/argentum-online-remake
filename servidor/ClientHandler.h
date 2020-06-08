@@ -5,13 +5,13 @@
 #include "../utils/Thread.h"
 #include <string>
 #include "../protocol/ServerProtocol.h"
+#include "ArgentumGame.h"
 
 class ClientHandler : public Thread {
 public:
     //Instancia un nuevo manejador de clientes para que juege 
-    //a un juego de GuessNumberGame utilizando el numero 'number'
-    ClientHandler
-        (Socket socket);
+    //a el juego ArgentumGame recibido por parametro (Es la sala)
+    ClientHandler(Socket socket, ArgentumGame *game);
     ~ClientHandler() override;
     /*
     Corre hasta que termine el juego, el juego terminara cuando:
@@ -24,6 +24,7 @@ public:
     const bool is_alive();
 
 private:
+    ArgentumGame *game;
     Socket peer_socket;
 
     bool alive = true;
