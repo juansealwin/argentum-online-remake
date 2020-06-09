@@ -7,13 +7,12 @@ public:
     BaseCharacter(int x, int y);
     ~BaseCharacter();
     char char_representation();
-    void set_x_position(int x);
-    void set_y_position(int y);
+    void set_x_y_position(int x, int y);
+    int x_position;
+    int y_position;
 
 private:
     char representation = 'g';
-    int x_position;
-    int y_position;
 };
 
 #endif //BASE_CHARACTER_H

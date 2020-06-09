@@ -1,7 +1,7 @@
 #include "map.h"
 #include <iostream>
 
-Map::Map(int rows, int cols) : rows(rows), cols(cols) {
+Map::Map(int rows, int cols, BaseCharacter* b) : rows(rows), cols(cols) {
   matrix.resize(rows);
   int y = 0;
   for (auto &it : matrix)
@@ -11,7 +11,7 @@ Map::Map(int rows, int cols) : rows(rows), cols(cols) {
       for (int x = 0; x < cols; ++x ) {
           Tile *tile = new Tile();
           if (y == 5 && x == 3) {
-            BaseCharacter *b = new BaseCharacter(x, y);
+            //BaseCharacter *b = new BaseCharacter(x, y);
             tile->place_character(b);
 
           } 
@@ -34,6 +34,8 @@ Map::~Map() {
 
 void Map::move_character(int x1, int y1, int x2, int y2) {
   std::swap(matrix[x1][y1]->character, matrix[x2][y2]->character);
+  matrix[x2][y2]->character->set_x_y_position(x2, y2);
+
 }
 
 

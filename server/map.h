@@ -7,7 +7,8 @@
 
 class Map {
 public:
-    Map(int cols, int rows);
+	//b deberia ser un array con todos los que haya q posicionar
+    Map(int cols, int rows, BaseCharacter* b);
     ~Map();
     void debug_print();
     /*
