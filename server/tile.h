@@ -3,14 +3,15 @@
 #define TILE_H
 class Tile {
 public:
-    explicit Tile();
+    explicit Tile(char representation);
     ~Tile();
     char char_representation();
     void place_character(BaseCharacter *character);
+    virtual bool can_hold_character();
     BaseCharacter *character = nullptr;
 
 private:
-    char representation = 'f';
+    char representation;
 };
 
 #endif //TILE_H
