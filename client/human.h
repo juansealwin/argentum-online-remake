@@ -9,7 +9,7 @@
 class Human : public Drawable {
   private:
     //std::string image_path;
-    Animation animation;
+    Animation animation_up;
 
   public:
     Human();

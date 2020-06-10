@@ -1,6 +1,6 @@
-#include "sdl_window.h"
+#include "game_window.h"
 
-SdlWindow::SdlWindow(int width, int height)
+GameWindow::GameWindow(int width, int height)
     : screen_width(width), screen_height(height) {
     if (SDL_Init(SDL_INIT_VIDEO))
         throw SdlException("Error en la inicialización", SDL_GetError());
@@ -8,9 +8,16 @@ SdlWindow::SdlWindow(int width, int height)
     if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED,
                                     &window, &renderer))
         throw SdlException("Error al crear ventana", SDL_GetError());
+
+    chargeGraphics();
 }
 
-SdlWindow::~SdlWindow() {
+void GameWindow::chargeGraphics() {
+    texturas.push_back(new Texture());
+    texturas.at(0)->loadTexture((std::string)PATH_HUMAN, renderer);
+}
+
+GameWindow::~GameWindow() {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
         renderer = nullptr;
@@ -21,13 +28,13 @@ SdlWindow::~SdlWindow() {
     }
 }
 
-void SdlWindow::fill(int r, int g, int b, int alpha) {
+void GameWindow::fill(int r, int g, int b, int alpha) {
     SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
     SDL_RenderClear(renderer);
 }
 
-void SdlWindow::fill() { fill(0x33, 0x33, 0x33, 0xFF); }
+void GameWindow::fill() { fill(0x33, 0x33, 0x33, 0xFF); }
 
-void SdlWindow::render() { SDL_RenderPresent(renderer); }
+void GameWindow::render() { SDL_RenderPresent(renderer); }
 
-SDL_Renderer* SdlWindow::getRenderer() { return renderer; }
+SDL_Renderer* GameWindow::getRenderer() { return renderer; }
