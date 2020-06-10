@@ -2,11 +2,7 @@
 
 Tile::Tile(char representation) : representation(representation) {}
 
-Tile::~Tile() {
-	if (character) {
-		delete character;
-	}
-}
+Tile::~Tile() {}
 
 char Tile::char_representation() {
 	if (character) {

@@ -47,6 +47,10 @@ void ArgentumGame::run() {
 
 ArgentumGame::~ArgentumGame() {
 	alive = false;
+	for (auto &monster : characters)
+	{
+		delete monster;
+	}
 	this->join();
 }
 
