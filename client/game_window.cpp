@@ -22,7 +22,9 @@ GameWindow::GameWindow(int width, int height)
 
 void GameWindow::chargeGraphics() {
     texturas.push_back(new Texture());
-    texturas.at(0)->loadTexture((std::string)PATH_HUMAN, renderer);
+    texturas.push_back(new Texture());
+    texturas.at(0)->loadTexture((std::string)PATH_HUMAN_BODY, renderer);
+    texturas.at(1)->loadTexture((std::string)PATH_HUMAN_HEAD, renderer);
 }
 
 GameWindow::~GameWindow() {
@@ -47,4 +49,4 @@ void GameWindow::render() { SDL_RenderPresent(renderer); }
 
 SDL_Renderer* GameWindow::getRenderer() { return renderer; }
 
-Texture* GameWindow::getTexture() { return texturas.at(0); }
+Texture* GameWindow::getTexture(int index) { return texturas.at(index); }

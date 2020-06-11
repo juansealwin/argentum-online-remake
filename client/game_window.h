@@ -8,7 +8,8 @@
 #include "sdl_exception.h"
 #define GAME_NAME "Argentum"
 #define PATH_IMG_LOBBY "Argentum_online.jpg"
-#define PATH_HUMAN "humano.png"
+#define PATH_HUMAN_BODY "humano.png"
+#define PATH_HUMAN_HEAD "cabeza_humano.png"
 
 class GameWindow {
    private:
@@ -26,7 +27,7 @@ class GameWindow {
     void render();
     void chargeGraphics();
     SDL_Renderer* getRenderer();
-    Texture* getTexture();
+    Texture* getTexture(int);
 };
 
 #endif

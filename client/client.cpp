@@ -7,12 +7,10 @@ Client::Client(const char *host, const char *port) {
 const bool Client::valid_request(std::string &request) { return true; }
 
 void Client::play() {
-    Texture humano_textura;
-    
     GameWindow game_window(800, 600);
-    
     Human humano;
-    SDL_Rect mov = {0,0,25,45};
+    SDL_Rect cuerpo = {0, 0, 25, 45};
+    SDL_Rect cabeza = {0, 0, 17, 16};
     // Main loop flag
     bool quit = false;
     // Event handler
@@ -30,19 +28,23 @@ void Client::play() {
                 // Select surfaces based on key press
                 switch (e.key.keysym.sym) {
                     case SDLK_UP:
-                        mov = humano.move(MOVE_UP);
+                        cuerpo = humano.move(MOVE_UP);
+                        cabeza = humano.getFaceProfile(MOVE_UP);
                         break;
 
                     case SDLK_DOWN:
-                        mov = humano.move(MOVE_DOWN);
+                        cuerpo = humano.move(MOVE_DOWN);
+                        cabeza = humano.getFaceProfile(MOVE_DOWN);
                         break;
 
                     case SDLK_LEFT:
-                        mov = humano.move(MOVE_LEFT);
+                        cuerpo = humano.move(MOVE_LEFT);
+                        cabeza = humano.getFaceProfile(MOVE_LEFT);
                         break;
 
                     case SDLK_RIGHT:
-                        mov = humano.move(MOVE_RIGHT);
+                        cuerpo = humano.move(MOVE_RIGHT);
+                        cabeza = humano.getFaceProfile(MOVE_RIGHT);
                         break;
 
                     default:
@@ -51,17 +53,20 @@ void Client::play() {
                 }
             }
         }
-        
+
         // Clear screen
-        SDL_SetRenderDrawColor(game_window.getRenderer(), 0xFF, 0xFF, 0xFF,
-                               0xFF);
+        SDL_SetRenderDrawColor(game_window.getRenderer(), 0, 0, 0, 0xFF);
         SDL_RenderClear(game_window.getRenderer());
         // renderizar moveup
-        //humano_textura.render(game_window.getRenderer(), &mov, 400, 300);
-        game_window.getTexture()->render(game_window.getRenderer(), &mov, 388,275);
+        // humano_textura.render(game_window.getRenderer(), &mov, 400, 300);
+        game_window.getTexture(0)->render(game_window.getRenderer(), &cuerpo,
+                                          400 - (HUMAN_WIDTH/2), 300 - (HUMAN_HEIGHT/2));
+        game_window.getTexture(1)->render(game_window.getRenderer(), &cabeza,
+                                          400-(HEAD_WIDTH/2), 300 -(HUMAN_HEIGHT/2) - (HEAD_HEIGHT/2));
+
         // Update screen
         SDL_RenderPresent(game_window.getRenderer());
-        //SDL_Delay(3000);
+        // SDL_Delay(3000);
     }
 }
 

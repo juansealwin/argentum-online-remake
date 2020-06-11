@@ -12,7 +12,7 @@
 #define CHARACTER_HEIGHT 45
 #define CHARACTER_WIDTH 25
 
-typedef enum { MOVE_DOWN = 0, MOVE_UP, MOVE_LEFT, MOVE_RIGHT } move_t;
+typedef enum { MOVE_DOWN = 0, MOVE_UP = 3, MOVE_LEFT = 2, MOVE_RIGHT = 1 } move_t;
 
 class Move {
    private:
