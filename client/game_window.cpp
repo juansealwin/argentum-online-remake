@@ -38,3 +38,7 @@ void GameWindow::fill() { fill(0x33, 0x33, 0x33, 0xFF); }
 void GameWindow::render() { SDL_RenderPresent(renderer); }
 
 SDL_Renderer* GameWindow::getRenderer() { return renderer; }
+
+Texture* GameWindow::getTexture() {
+  return texturas.at(0);
+}

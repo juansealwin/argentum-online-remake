@@ -5,8 +5,9 @@
 #include "common_socket.h"
 #include "client_protocol.h"
 #include <vector>
-#include "sdl_window.h"
+#include "game_window.h"
 #include "texture.h"
+#include "human.h"
 
 class Client {
     private:

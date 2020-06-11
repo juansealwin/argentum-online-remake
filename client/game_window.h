@@ -26,6 +26,7 @@ class GameWindow {
     void render();
     void GameWindow::chargeGraphics();
     SDL_Renderer* getRenderer();
+    Texture* getTexture();
 };
 
 #endif

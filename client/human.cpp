@@ -1,7 +1,9 @@
 #include "human.h"
 
-Human::Human(){
-  animation.loadTexture()
-}
+Human::Human() {}
 
-Human::~Human(){}
+Human::~Human() {}
+
+SDL_Rect Human::moveUp() {
+  return animation_up.getNextClip();
+}

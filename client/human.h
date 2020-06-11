@@ -1,19 +1,20 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include "drawable.h"
+
 #include "texture.h"
-#include "animation.h"
+#include "move_up.h"
 #include <string>
 
-class Human : public Drawable {
+class Human {
   private:
     //std::string image_path;
-    Animation animation_up;
+    MoveUp animation_up;
 
   public:
     Human();
     ~Human();
+    SDL_Rect moveUp();
 };
 
 #endif
