@@ -6,10 +6,30 @@
 #include "stdint.h"
 #include <vector>
 #include <mutex>
+#include "../util/json/json.h"
+//1st layer
+#define GROUND 1
+#define FLOOR 229
+#define WALL_1 189
+#define WALL_2 190
+#define WALL_3 180
+#define WALL_4 191
+//2nd layer
+#define PRIEST 498
+#define MERCHANT 526
+#define BANKER 495
+#define GOBLIN 418
+#define ZOMBIE 452
+#define SPIDER 876
+#define SKELETON 914
+#define BUSH_1 164
+#define BUSH_2 172
+
 class Map {
 public:
-	//b deberia ser un array con todos los que haya q posicionar
-    Map(int cols, int rows);
+    //Map(int cols, int rows);
+    //Crea un nuevo mapa a partir de un JSON
+    Map(Json::Value &map_json);
     ~Map();
     void debug_print();
     /*
@@ -24,9 +44,10 @@ public:
 private:
 	int rows;
 	int cols;
+  //Procesa la primera capa del mapa de tiled en el json
+  void load_terrain(Json::Value &map_json);
 	std::vector<std::vector<Tile*> > matrix; 
   	std::mutex mutex;
-
 };
 
 

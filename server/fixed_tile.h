@@ -3,10 +3,9 @@
 #include "tile.h"
 class FixedTile : public Tile {
 public:
-    explicit FixedTile(char representation);
+    FixedTile(int representation_id, char representation);
     ~FixedTile();
     bool can_hold_character() override;
-
 };
 
 #endif //FIXED_TILE_H

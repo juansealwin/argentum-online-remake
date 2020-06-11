@@ -3,7 +3,7 @@
 #define TILE_H
 class Tile {
 public:
-    explicit Tile(char representation);
+    explicit Tile(int representation_id, char representation);
     ~Tile();
     char char_representation();
     void place_character(BaseCharacter *character);
@@ -11,6 +11,7 @@ public:
     BaseCharacter *character = nullptr;
 
 private:
+	int representation_id;
     char representation;
 };
 

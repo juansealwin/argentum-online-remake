@@ -1,6 +1,7 @@
 #include "tile.h"
 
-Tile::Tile(char representation) : representation(representation) {}
+Tile::Tile(int representation_id, char representation)
+ : representation_id(representation_id), representation(representation) {}
 
 Tile::~Tile() {}
 

@@ -2,14 +2,20 @@
 #include <iostream>
 
 ArgentumGame::ArgentumGame
-	(const unsigned int room_number) : room(room_number), map(20,20) {
+	(const unsigned int room_number, std::ifstream &map_config) : 
+  room(room_number) { //, map(20,20) {
 	//Seguramente esto tenga que ser un mapa del estilo id:npc
-	characters.reserve(8);
-    for (int x = 1; x < 9; ++x ) {
-          BaseCharacter *character = new BaseCharacter(x, 3);
-          map.place_character(x, 3, character);
-          characters.push_back(character); 
-    }
+  Json::Value root;
+  map_config >> root;
+  //std::cout << "Width: " << root["width"] << "Height: " << root["height"] << std::endl;
+  map = new Map(root);
+  delete map;
+	// characters.reserve(8);
+ //    for (int x = 1; x < 9; ++x ) {
+ //          BaseCharacter *character = new BaseCharacter(x, 3);
+ //          map.place_character(x, 3, character);
+ //          characters.push_back(character); 
+ //    }
 }
 
 void ArgentumGame::move_monsters() {
@@ -29,7 +35,7 @@ void ArgentumGame::move_monsters() {
     int current_y_pos = monster->y_position;
     int next_x_pos = monster->x_position + x_step;
     int next_y_pos = monster->y_position + y_step;
-    map.move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
+    map->move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
   }
 }
 
@@ -44,18 +50,18 @@ void ArgentumGame::kill() {
 void ArgentumGame::run() {
     while (alive) {
        update();
-       map.debug_print();
+       map->debug_print();
        usleep(25);
     }
 }
 
 ArgentumGame::~ArgentumGame() {
-
-
+  return;
 	for (auto &monster : characters)
 	{
 		delete monster;
 	}
+  delete map;
 	this->join();
 }
 
