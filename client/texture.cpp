@@ -45,15 +45,15 @@ void Texture::loadTexture(std::string path_file,
 
 void Texture::render(SDL_Renderer* renderer, SDL_Rect* clip, int x_dest,
                      int y_dest) {
-    SDL_Rect renderQuad = {x, y, width, height};
+    SDL_Rect quad_dest = {x_dest, y_dest, width, height};
     // Checkeamos si queremos renderizar toda la textura o una porción
 
     if (clip != NULL) {
-        renderQuad.h = clip->h;
-        renderQuad.w = clip->w;
+        quad_dest.h = clip->h;
+        quad_dest.w = clip->w;
     }
-    SDL_Rect rect_dest = {x_dest, y_dest, x, y};
-    if (SDL_RenderCopy(renderer, texture, clip, &rect_dest))
+    
+    if (SDL_RenderCopy(renderer, texture, clip, &quad_dest))
         throw SdlException("Error al renderizar la textura", SDL_GetError());
 }
 

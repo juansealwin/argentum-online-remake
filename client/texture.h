@@ -20,7 +20,11 @@ class Texture : public Drawable {
 
     void loadTexture(std::string, SDL_Renderer*);
 
-    void Texture::free();
+    void free();
+
+    void loadTexture2(const std::string &filename, SDL_Renderer*);
+
+    void render2(SDL_Renderer* renderer);
 
     virtual int getWidth() const;
 

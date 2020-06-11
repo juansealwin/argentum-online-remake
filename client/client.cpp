@@ -7,9 +7,12 @@ Client::Client(const char *host, const char *port) {
 const bool Client::valid_request(std::string &request) { return true; }
 
 void Client::play() {
+    Texture humano_textura;
+    
     GameWindow game_window(800, 600);
+    
     Human humano;
-    SDL_Rect mov;
+    SDL_Rect mov = {0,0,25,45};
     // Main loop flag
     bool quit = false;
     // Event handler
@@ -27,20 +30,20 @@ void Client::play() {
                 // Select surfaces based on key press
                 switch (e.key.keysym.sym) {
                     case SDLK_UP:
-                        mov = humano.moveUp();
+                        mov = humano.move(MOVE_UP);
                         break;
 
-                        /*case SDLK_DOWN:
-
+                    case SDLK_DOWN:
+                        mov = humano.move(MOVE_DOWN);
                         break;
 
-                        case SDLK_LEFT:
-                        gCurrentSurface = gKeyPressSurfaces[
-                        KEY_PRESS_SURFACE_LEFT ]; break;
+                    case SDLK_LEFT:
+                        mov = humano.move(MOVE_LEFT);
+                        break;
 
-                        case SDLK_RIGHT:
-                        gCurrentSurface = gKeyPressSurfaces[
-                        KEY_PRESS_SURFACE_RIGHT ]; break;*/
+                    case SDLK_RIGHT:
+                        mov = humano.move(MOVE_RIGHT);
+                        break;
 
                     default:
 
@@ -48,16 +51,17 @@ void Client::play() {
                 }
             }
         }
-
+        
         // Clear screen
         SDL_SetRenderDrawColor(game_window.getRenderer(), 0xFF, 0xFF, 0xFF,
                                0xFF);
         SDL_RenderClear(game_window.getRenderer());
-
         // renderizar moveup
-        game_window.getTexture()->render(game_window.getRenderer(), &mov, 0,0);
+        //humano_textura.render(game_window.getRenderer(), &mov, 400, 300);
+        game_window.getTexture()->render(game_window.getRenderer(), &mov, 388,275);
         // Update screen
         SDL_RenderPresent(game_window.getRenderer());
+        //SDL_Delay(3000);
     }
 }
 

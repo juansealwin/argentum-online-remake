@@ -2,13 +2,21 @@
 
 GameWindow::GameWindow(int width, int height)
     : screen_width(width), screen_height(height) {
-    if (SDL_Init(SDL_INIT_VIDEO))
-        throw SdlException("Error en la inicialización", SDL_GetError());
+        window = SDL_CreateWindow("Argentum", SDL_WINDOWPOS_UNDEFINED,
+                              SDL_WINDOWPOS_UNDEFINED, width, height,
+                              SDL_WINDOW_SHOWN);
 
-    if (SDL_CreateWindowAndRenderer(width, height, SDL_RENDERER_ACCELERATED,
-                                    &window, &renderer))
-        throw SdlException("Error al crear ventana", SDL_GetError());
-
+    if (!window)
+        throw SdlException("Error en la inicialización de la ventana",
+                           SDL_GetError());
+    else {
+        renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
+        if (!renderer)
+            throw SdlException("Error en la inicialización del render",
+                               SDL_GetError());
+        else
+            SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    }
     chargeGraphics();
 }
 
@@ -39,6 +47,4 @@ void GameWindow::render() { SDL_RenderPresent(renderer); }
 
 SDL_Renderer* GameWindow::getRenderer() { return renderer; }
 
-Texture* GameWindow::getTexture() {
-  return texturas.at(0);
-}
+Texture* GameWindow::getTexture() { return texturas.at(0); }
