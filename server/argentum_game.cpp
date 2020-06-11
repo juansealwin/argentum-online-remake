@@ -37,16 +37,21 @@ void ArgentumGame::update() {
 	move_monsters();
 }
 
+void ArgentumGame::kill() {
+  alive = false;
+}
+
 void ArgentumGame::run() {
     while (alive) {
        update();
        map.debug_print();
-	   usleep(25);
+       usleep(25);
     }
 }
 
 ArgentumGame::~ArgentumGame() {
-	alive = false;
+
+
 	for (auto &monster : characters)
 	{
 		delete monster;

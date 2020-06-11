@@ -3,6 +3,7 @@
 int main(int argc, char *argv[]) {
 	ArgentumGame game(3);
 	game.start();
-	usleep(60000000/6);
+	usleep(60000000/7);
+	game.kill();
     return 0;
 }

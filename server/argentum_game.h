@@ -11,6 +11,7 @@ public:
     ~ArgentumGame() override;
     void run() override;
     const unsigned int get_room();
+    void kill();
 
 private:
     unsigned int room = 0;
