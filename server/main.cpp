@@ -8,14 +8,18 @@
 int main(int argc, char *argv[]) {
 	std::ifstream file("mapa.json");
 	ArgentumGame game(3, file);
-	// Json::Value root;
-	// file >> root;
-	// std::cout << "Width: " << root["width"] << "Height: " << root["height"] << std::endl;
-	// std::cout << "Layers: " << root["layers"][0]["data"][0] << std::endl;
-	// config_doc >> root;
-	// ArgentumGame game(3);
-	// game.start();
-	// usleep(60000000/7);
-	// game.kill();
- //    return 0;
+	game.start();
+	unsigned long long x = 20000000;
+	unsigned long long x2 = 0;
+	//while (x2 < x) {
+		//game.print_debug_map();
+	//	usleep(1000000);
+
+	//	x2 += 1000000;
+
+	//}
+	usleep(10000);
+	game.kill();
+
+    return 0;
 }

@@ -1,37 +1,12 @@
 #include "map.h"
 #include <iostream>
 
-// std::vector<std::vector<char>> map_elements {
-//         { 'w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','w', 'w', 'w', 'w', 'w' , 'w', 'w', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','w', 'b', ',', ',', ',' , ',', 'w', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','w', 'p', ',', ',', ',' , ',', 'w', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','w', 'm', ',', ',', ',' , ',', 'w', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','w', 'w', 'w', '.', 'w' , 'w', 'w', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', '.', '.', '.', '.','.', '.', '.', '.', '.' , '.', '.', '.', '.', '.','.', '.', '.', '.', 'w' },
-//         { 'w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w','w', 'w', 'w', 'w', 'w' }
-//       };
 
-
-//Map::Map(int rows, int cols) : rows(rows), cols(cols) {
-Map::Map(Json::Value &map_json) : rows(map_json["height"].asInt()), cols(map_json["width"].asInt()) {
-//  rows = ;
-//  cols = ;
+Map::Map(Json::Value &map_json) : 
+    rows(map_json["height"].asInt()),
+    cols(map_json["width"].asInt()) {
   matrix.resize(rows);
   load_terrain(map_json);
-  debug_print();
 }
 
 void Map::load_terrain(Json::Value &map_json) {
@@ -49,16 +24,14 @@ void Map::load_terrain(Json::Value &map_json) {
                 tile = new FixedTile(type, 'b');
               }
               else {
-                tile = new FixedTile(type, '.');
+                tile = new Tile(type, '.');
               }
           } else if (type == FLOOR) {
             //Deberia ser un nuevo tipo, SafeTile donde los no monstruos puedan caminar
             //Usando metodos tipo canholdmonster y canholdcharacter
               tile = new FixedTile(type, ',');
           } else {
-
                 tile = new FixedTile(type, 'w');
-            
           }
           it.push_back(tile);
           i++;
@@ -80,12 +53,10 @@ Map::~Map() {
 }
 
 void Map::place_character(int x, int y, BaseCharacter* b) {
-  std::unique_lock<std::mutex> lock(mutex);
   matrix[x][y]->place_character(b);
 }
 
 bool Map::move_character(int x1, int y1, int x2, int y2) {
-  std::unique_lock<std::mutex> lock(mutex);
   if (matrix[x2][y2]->can_hold_character()) {
     std::swap(matrix[x1][y1]->character, matrix[x2][y2]->character);
     matrix[x2][y2]->character->set_x_y_position(x2, y2);
@@ -96,7 +67,6 @@ bool Map::move_character(int x1, int y1, int x2, int y2) {
 
 
 void Map::debug_print() {
-  std::unique_lock<std::mutex> lock(mutex);
   for(auto& row:matrix){
      for(auto& col:row){
         std::cout << col->char_representation();

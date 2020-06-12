@@ -5,7 +5,6 @@
 #include "base_character.h"
 #include "stdint.h"
 #include <vector>
-#include <mutex>
 #include "../util/json/json.h"
 //1st layer
 #define GROUND 1
@@ -15,13 +14,6 @@
 #define WALL_3 180
 #define WALL_4 191
 //2nd layer
-#define PRIEST 498
-#define MERCHANT 526
-#define BANKER 495
-#define GOBLIN 418
-#define ZOMBIE 452
-#define SPIDER 876
-#define SKELETON 914
 #define BUSH_1 164
 #define BUSH_2 172
 
@@ -33,12 +25,13 @@ public:
     ~Map();
     void debug_print();
     /*
-      Returns true if the character placed in x1,y1 could be
-      moved to x2,y2. Else, it returns false and the character
-      remains in it's last position. If moved, the character 
-      position is also updated.
+      Devuelve true si el personaje colocado en x1,y1
+      puede moverse a x2,y2. Si no, devuelve false y se queda
+      donde estaba. Si logra moverse, los datos del personaje
+      son actualizados.
 	*/
     bool move_character(int x1, int y1, int x2, int y2);
+    //Posiciona un personaje en la fila x, columna y
     void place_character(int x, int y, BaseCharacter* b);
 
 private:
@@ -47,7 +40,6 @@ private:
   //Procesa la primera capa del mapa de tiled en el json
   void load_terrain(Json::Value &map_json);
 	std::vector<std::vector<Tile*> > matrix; 
-  	std::mutex mutex;
 };
 
 
