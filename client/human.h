@@ -13,7 +13,6 @@
 
 class Human {
   private:
-    //std::string image_path;
     Move animation_move;
     
 

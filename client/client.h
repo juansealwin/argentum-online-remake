@@ -9,6 +9,7 @@
 #include "texture.h"
 #include "human.h"
 #include "elf.h"
+#include "dwarf.h"
 
 class Client {
     private:

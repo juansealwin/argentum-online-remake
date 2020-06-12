@@ -8,7 +8,8 @@ const bool Client::valid_request(std::string &request) { return true; }
 
 void Client::play() {
     GameWindow game_window(800, 600);
-    Elf elfo;
+    Dwarf elfo;
+    //Para que inicie el sprite de frente
     SDL_Rect cuerpo = {0, 0, 25, 45};
     SDL_Rect cabeza = {0, 0, 17, 16};
     // Main loop flag
@@ -53,16 +54,15 @@ void Client::play() {
                 }
             }
         }
-
+std::cout<<"HOLA"<<std::endl;
         // Clear screen
         SDL_SetRenderDrawColor(game_window.getRenderer(), 0, 0, 0, 0xFF);
         SDL_RenderClear(game_window.getRenderer());
-        // renderizar moveup
-        // humano_textura.render(game_window.getRenderer(), &mov, 400, 300);
+        //renderizamos lo que haya que renderizar
         game_window.getTexture(0)->render(game_window.getRenderer(), &cuerpo,
-                                          400 - (ELF_WIDTH/2), 300 - (ELF_HEIGHT/2));
+                                          400 - (DWARF_WIDTH/2), 300 - (DWARF_HEIGHT/2));
         game_window.getTexture(1)->render(game_window.getRenderer(), &cabeza,
-                                          400-(ELF_HEAD_WIDTH/2), 300 -(ELF_HEIGHT/2) - (ELF_HEAD_HEIGHT/2));
+                                          400-(DWARF_HEAD_WIDTH/2), 310 -(DWARF_HEIGHT/2) - (DWARF_HEAD_HEIGHT/2));
 
         // Update screen
         SDL_RenderPresent(game_window.getRenderer());

@@ -12,6 +12,9 @@
 #define PATH_HUMAN_HEAD "cabeza_humano.png"
 #define PATH_ELF_BODY "elfo.png"
 #define PATH_ELF_HEAD "cabeza_elfo.png"
+#define PATH_DWARF_BODY "enano.png"
+#define PATH_DWARF_HEAD "cabeza_enano.png"
+
 
 class GameWindow {
    private:

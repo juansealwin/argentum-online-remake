@@ -23,19 +23,21 @@ GameWindow::GameWindow(int width, int height)
 void GameWindow::chargeGraphics() {
     texturas.push_back(new Texture());
     texturas.push_back(new Texture());
-    texturas.at(0)->loadTexture((std::string)PATH_ELF_BODY, renderer);
-    texturas.at(1)->loadTexture((std::string)PATH_ELF_HEAD, renderer);
+    texturas.at(0)->loadTexture((std::string)PATH_DWARF_BODY, renderer);
+    texturas.at(1)->loadTexture((std::string)PATH_DWARF_HEAD, renderer);
 }
 
 GameWindow::~GameWindow() {
     if (renderer) {
         SDL_DestroyRenderer(renderer);
-        renderer = nullptr;
+        renderer = NULL;
     }
     if (window) {
         SDL_DestroyWindow(window);
-        window = nullptr;
+        window = NULL;
     }
+    IMG_Quit();
+	  SDL_Quit();
 }
 
 void GameWindow::fill(int r, int g, int b, int alpha) {
