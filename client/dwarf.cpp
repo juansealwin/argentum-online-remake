@@ -1,15 +1,12 @@
 #include "dwarf.h"
 
-Dwarf::Dwarf() : animation_move(DWARF_WIDTH, DWARF_HEIGHT, TOTAL_CLIPS) {}
+Dwarf::Dwarf() {
+    body_w = 25;
+    body_h = 45;
+    head_w = 17;
+    head_h = 17;
+    animation_move = new Move(body_w, body_h, total_clips);
+    animation_move->setOffsetY(10);
+}
 
 Dwarf::~Dwarf() {}
-
-SDL_Rect Dwarf::move(move_t move_type) {
-    return animation_move.getNextClip(move_type);
-}
-
-SDL_Rect Dwarf::getFaceProfile(move_t move_type) {
-    SDL_Rect face_profile = {move_type * DWARF_HEAD_WIDTH, 0, DWARF_HEAD_WIDTH,
-                             DWARF_HEAD_HEIGHT};
-    return face_profile;
-}

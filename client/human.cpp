@@ -1,15 +1,11 @@
 #include "human.h"
 
-Human::Human() : animation_move(HUMAN_WIDTH, HUMAN_HEIGHT, TOTAL_CLIPS) {}
+Human::Human() {
+  body_w = 25;
+  body_h = 45;
+  head_w = 17;
+  head_h = 16;
+  animation_move = new Move(body_w, body_h, total_clips);
+}
 
 Human::~Human() {}
-
-SDL_Rect Human::move(move_t move_type) {
-    return animation_move.getNextClip(move_type);
-}
-
-SDL_Rect Human::getFaceProfile(move_t move_type) {
-    SDL_Rect face_profile = {move_type * HUMAN_HEAD_WIDTH, 0, HUMAN_HEAD_WIDTH,
-                             HUMAN_HEAD_HEIGHT};
-    return face_profile;
-}

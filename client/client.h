@@ -5,11 +5,12 @@
 #include "common_socket.h"
 #include "client_protocol.h"
 #include <vector>
-#include "game_window.h"
+#include "game.h"
 #include "texture.h"
 #include "human.h"
 #include "elf.h"
 #include "dwarf.h"
+#include "gnome.h"
 
 class Client {
     private:

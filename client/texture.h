@@ -36,7 +36,7 @@ class Texture : public Drawable {
 
     virtual void setX(int);
 
-    virtual void setY(int);;
+    virtual void setY(int);
 };
 
 #endif

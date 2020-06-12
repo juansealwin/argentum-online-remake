@@ -34,7 +34,8 @@ SDL_Rect Move::getNextClip(move_t move_type) {
 
 SDL_Rect Move::nextClipMoveUp() {
     SDL_Rect next_clip = {character_width * current_clip[CLIP_UP],
-                          character_height, character_width, character_height};
+                          character_height + offset_y, character_width,
+                          character_height};
 
     if (current_clip[CLIP_UP] == total_clips - 1)
         current_clip[CLIP_UP] = 0;
@@ -45,8 +46,8 @@ SDL_Rect Move::nextClipMoveUp() {
 }
 
 SDL_Rect Move::nextClipMoveDown() {
-    SDL_Rect next_clip = {character_width * current_clip[CLIP_DOWN], 0,
-                          character_width, character_height};
+    SDL_Rect next_clip = {character_width * current_clip[CLIP_DOWN],
+                          0 + offset_y, character_width, character_height};
 
     if (current_clip[CLIP_DOWN] == total_clips - 1)
         current_clip[CLIP_DOWN] = 0;
@@ -58,7 +59,7 @@ SDL_Rect Move::nextClipMoveDown() {
 
 SDL_Rect Move::nextClipMoveLeft() {
     SDL_Rect next_clip = {character_width * current_clip[CLIP_LEFT],
-                          character_height * 2, character_width,
+                          character_height * 2 + offset_y, character_width,
                           character_height};
 
     if (current_clip[CLIP_LEFT] == total_clips - 2)
@@ -71,7 +72,7 @@ SDL_Rect Move::nextClipMoveLeft() {
 
 SDL_Rect Move::nextClipMoveRight() {
     SDL_Rect next_clip = {character_width * current_clip[CLIP_RIGHT],
-                          character_height * 3, character_width,
+                          character_height * 3 + offset_y, character_width,
                           character_height};
 
     if (current_clip[CLIP_RIGHT] == total_clips - 2)
@@ -79,6 +80,7 @@ SDL_Rect Move::nextClipMoveRight() {
     else
         current_clip[CLIP_RIGHT] += 1;
 
-
     return next_clip;
 }
+
+void Move::setOffsetY(int offset) { offset_y = offset; }
