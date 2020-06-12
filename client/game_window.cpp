@@ -23,8 +23,8 @@ GameWindow::GameWindow(int width, int height)
 void GameWindow::chargeGraphics() {
     texturas.push_back(new Texture());
     texturas.push_back(new Texture());
-    texturas.at(0)->loadTexture((std::string)PATH_HUMAN_BODY, renderer);
-    texturas.at(1)->loadTexture((std::string)PATH_HUMAN_HEAD, renderer);
+    texturas.at(0)->loadTexture((std::string)PATH_ELF_BODY, renderer);
+    texturas.at(1)->loadTexture((std::string)PATH_ELF_HEAD, renderer);
 }
 
 GameWindow::~GameWindow() {

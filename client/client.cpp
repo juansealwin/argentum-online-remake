@@ -8,7 +8,7 @@ const bool Client::valid_request(std::string &request) { return true; }
 
 void Client::play() {
     GameWindow game_window(800, 600);
-    Human humano;
+    Elf elfo;
     SDL_Rect cuerpo = {0, 0, 25, 45};
     SDL_Rect cabeza = {0, 0, 17, 16};
     // Main loop flag
@@ -28,23 +28,23 @@ void Client::play() {
                 // Select surfaces based on key press
                 switch (e.key.keysym.sym) {
                     case SDLK_UP:
-                        cuerpo = humano.move(MOVE_UP);
-                        cabeza = humano.getFaceProfile(MOVE_UP);
+                        cuerpo = elfo.move(MOVE_UP);
+                        cabeza = elfo.getFaceProfile(MOVE_UP);
                         break;
 
                     case SDLK_DOWN:
-                        cuerpo = humano.move(MOVE_DOWN);
-                        cabeza = humano.getFaceProfile(MOVE_DOWN);
+                        cuerpo = elfo.move(MOVE_DOWN);
+                        cabeza = elfo.getFaceProfile(MOVE_DOWN);
                         break;
 
                     case SDLK_LEFT:
-                        cuerpo = humano.move(MOVE_LEFT);
-                        cabeza = humano.getFaceProfile(MOVE_LEFT);
+                        cuerpo = elfo.move(MOVE_LEFT);
+                        cabeza = elfo.getFaceProfile(MOVE_LEFT);
                         break;
 
                     case SDLK_RIGHT:
-                        cuerpo = humano.move(MOVE_RIGHT);
-                        cabeza = humano.getFaceProfile(MOVE_RIGHT);
+                        cuerpo = elfo.move(MOVE_RIGHT);
+                        cabeza = elfo.getFaceProfile(MOVE_RIGHT);
                         break;
 
                     default:
@@ -60,9 +60,9 @@ void Client::play() {
         // renderizar moveup
         // humano_textura.render(game_window.getRenderer(), &mov, 400, 300);
         game_window.getTexture(0)->render(game_window.getRenderer(), &cuerpo,
-                                          400 - (HUMAN_WIDTH/2), 300 - (HUMAN_HEIGHT/2));
+                                          400 - (ELF_WIDTH/2), 300 - (ELF_HEIGHT/2));
         game_window.getTexture(1)->render(game_window.getRenderer(), &cabeza,
-                                          400-(HEAD_WIDTH/2), 300 -(HUMAN_HEIGHT/2) - (HEAD_HEIGHT/2));
+                                          400-(ELF_HEAD_WIDTH/2), 300 -(ELF_HEIGHT/2) - (ELF_HEAD_HEIGHT/2));
 
         // Update screen
         SDL_RenderPresent(game_window.getRenderer());

@@ -10,6 +10,8 @@
 #define PATH_IMG_LOBBY "Argentum_online.jpg"
 #define PATH_HUMAN_BODY "humano.png"
 #define PATH_HUMAN_HEAD "cabeza_humano.png"
+#define PATH_ELF_BODY "elfo.png"
+#define PATH_ELF_HEAD "cabeza_elfo.png"
 
 class GameWindow {
    private:

@@ -8,6 +8,7 @@
 #include "game_window.h"
 #include "texture.h"
 #include "human.h"
+#include "elf.h"
 
 class Client {
     private:

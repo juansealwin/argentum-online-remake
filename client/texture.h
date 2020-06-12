@@ -36,8 +36,7 @@ class Texture : public Drawable {
 
     virtual void setX(int);
 
-    virtual void setY(int);
-    // void loadFromFile(std::string, SDL_Renderer*);
+    virtual void setY(int);;
 };
 
 #endif
