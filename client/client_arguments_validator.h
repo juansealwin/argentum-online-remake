@@ -11,27 +11,27 @@
 #define IP_ARG 1
 
 class ClientArgumentsValidator : public ArgumentsValidator {
-   private:
-    std::string ip;
+ private:
+  std::string ip;
 
-   public:
-    ClientArgumentsValidator(int, char**);
+ public:
+  ClientArgumentsValidator(int, char**);
 
-    ~ClientArgumentsValidator();
+  ~ClientArgumentsValidator();
 
-    /*
-     * @brief This is the polimoric function that ArgumentsValidator force * to
-     * implement. It validate the arguments on the client side.
-     *
-     */
-    void validateArguments();
+  /*
+   * @brief This is the polimoric function that ArgumentsValidator force * to
+   * implement. It validate the arguments on the client side.
+   *
+   */
+  void validateArguments();
 
-    /*
-     * @brief Get the Ip to know where we want to connect
-     *
-     * @return const char* that is the ip value
-     */
-    const char* getIp();
+  /*
+   * @brief Get the Ip to know where we want to connect
+   *
+   * @return const char* that is the ip value
+   */
+  const char* getIp();
 };
 
 #endif

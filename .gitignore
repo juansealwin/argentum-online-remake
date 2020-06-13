@@ -33,3 +33,14 @@
 
 # all build files
 build/*
+
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
+install_manifest.txt
+server/server_autogen
+client/client_autogen
+
+client/client
+server/server

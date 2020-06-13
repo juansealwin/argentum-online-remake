@@ -8,17 +8,8 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   // Seguramente esto tenga que ser un mapa del estilo id:npc
   Json::Value root;
   map_config >> root;
-  // std::cout << "Width: " << root["width"] << "Height: " << root["height"] <<
-  // std::endl;
   map = new Map(root);
   place_initial_monsters(root);
-  // map->debug_print();
-  // characters.reserve(8);
-  //    for (int x = 1; x < 9; ++x ) {
-  //          BaseCharacter *character = new BaseCharacter(x, 3);
-  //          map.place_character(x, 3, character);
-  //          characters.push_back(character);
-  //    }
 }
 void ArgentumGame::place_initial_monsters(Json::Value root) {
   int row = 0;
@@ -153,4 +144,4 @@ ArgentumGame::~ArgentumGame() {
   this->join();
 }
 
-const unsigned int ArgentumGame::get_room() { return room; }
+unsigned int ArgentumGame::get_room() { return room; }

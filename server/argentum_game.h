@@ -26,7 +26,7 @@ class ArgentumGame : public Thread {
   ArgentumGame(const unsigned int room, std::ifstream &map_config);
   ~ArgentumGame() override;
   void run() override;
-  const unsigned int get_room();
+  unsigned int get_room();
   void kill();
   void print_debug_map();
 

@@ -6,7 +6,7 @@ class Monster : public BaseCharacter {
  public:
   Monster(int x, int y, int id, char repr);
   bool is_movable() override;
-  ~Monster();
+  virtual ~Monster();
 
  private:
 };

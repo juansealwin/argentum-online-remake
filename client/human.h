@@ -1,18 +1,15 @@
 #ifndef HUMAN_H
 #define HUMAN_H
 
-#include "drawable.h"
-#include "texture.h"
 #include <string>
 
-class Human : public Drawable {
-  private:
-    std::string image_path;
-    Texture texture;
+#include "move.h"
+#include "player.h"
 
-  public:
-    Human();
-    ~Human();
+class Human : public Player {
+ public:
+  Human();
+  ~Human();
 };
 
 #endif

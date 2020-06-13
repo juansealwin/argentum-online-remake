@@ -5,7 +5,7 @@
 class BaseCharacter {
  public:
   BaseCharacter(int x, int y, int id, char repr);
-  ~BaseCharacter();
+  virtual ~BaseCharacter();
   char char_representation();
   virtual bool is_movable();
   void set_x_y_position(int x, int y);
