@@ -7,28 +7,28 @@
 // //////////////////////////////////////////////////////////////////////
 
 /*
-The JsonCpp library's source code, including accompanying documentation, 
+The JsonCpp library's source code, including accompanying documentation,
 tests and demonstration applications, are licensed under the following
 conditions...
 
-Baptiste Lepilleur and The JsonCpp Authors explicitly disclaim copyright in all 
-jurisdictions which recognize such a disclaimer. In such jurisdictions, 
+Baptiste Lepilleur and The JsonCpp Authors explicitly disclaim copyright in all
+jurisdictions which recognize such a disclaimer. In such jurisdictions,
 this software is released into the Public Domain.
 
-In jurisdictions which do not recognize Public Domain property (e.g. Germany as of
-2010), this software is Copyright (c) 2007-2010 by Baptiste Lepilleur and
-The JsonCpp Authors, and is released under the terms of the MIT License (see below).
+In jurisdictions which do not recognize Public Domain property (e.g. Germany as
+of 2010), this software is Copyright (c) 2007-2010 by Baptiste Lepilleur and The
+JsonCpp Authors, and is released under the terms of the MIT License (see below).
 
-In jurisdictions which recognize Public Domain property, the user of this 
-software may choose to accept it either as 1) Public Domain, 2) under the 
-conditions of the MIT License (see below), or 3) under the terms of dual 
+In jurisdictions which recognize Public Domain property, the user of this
+software may choose to accept it either as 1) Public Domain, 2) under the
+conditions of the MIT License (see below), or 3) under the terms of dual
 Public Domain/MIT License conditions described here, as they choose.
 
 The MIT License is about as close to Public Domain as a license can get, and is
 described in clear, concise terms at:
 
    http://en.wikipedia.org/wiki/MIT_License
-   
+
 The full text of the MIT License follows:
 
 ========================================================================
@@ -69,12 +69,8 @@ license you like.
 // End of content of file: LICENSE
 // //////////////////////////////////////////////////////////////////////
 
-
-
-
-
 #ifndef JSON_FORWARD_AMALGAMATED_H_INCLUDED
-# define JSON_FORWARD_AMALGAMATED_H_INCLUDED
+#define JSON_FORWARD_AMALGAMATED_H_INCLUDED
 /// If defined, indicates that the source file is amalgamated
 /// to prevent private header inclusion.
 #define JSON_IS_AMALGAMATION
@@ -99,8 +95,8 @@ license you like.
 #define JSONCPP_VERSION_MINOR 9
 #define JSONCPP_VERSION_PATCH 3
 #define JSONCPP_VERSION_QUALIFIER
-#define JSONCPP_VERSION_HEXA                                                   \
-  ((JSONCPP_VERSION_MAJOR << 24) | (JSONCPP_VERSION_MINOR << 16) |             \
+#define JSONCPP_VERSION_HEXA                                       \
+  ((JSONCPP_VERSION_MAJOR << 24) | (JSONCPP_VERSION_MINOR << 16) | \
    (JSONCPP_VERSION_PATCH << 8))
 
 #ifdef JSONCPP_USING_SECURE_MEMORY
@@ -110,16 +106,11 @@ license you like.
 // If non-zero, the library zeroes any memory that it has allocated before
 // it frees its memory.
 
-#endif // JSON_VERSION_H_INCLUDED
+#endif  // JSON_VERSION_H_INCLUDED
 
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: include/json/version.h
 // //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // //////////////////////////////////////////////////////////////////////
 // Beginning of content of file: include/json/allocator.h
@@ -139,8 +130,9 @@ license you like.
 #pragma pack(push, 8)
 
 namespace Json {
-template <typename T> class SecureAllocator {
-public:
+template <typename T>
+class SecureAllocator {
+ public:
   // Type definitions
   using value_type = T;
   using pointer = T*;
@@ -174,7 +166,8 @@ public:
   /**
    * Construct an item in-place at pointer P.
    */
-  template <typename... Args> void construct(pointer p, Args&&... args) {
+  template <typename... Args>
+  void construct(pointer p, Args&&... args) {
     // construct using "placement new" and "perfect forwarding"
     ::new (static_cast<void*>(p)) T(std::forward<Args>(args)...);
   }
@@ -195,8 +188,12 @@ public:
 
   // Boilerplate
   SecureAllocator() {}
-  template <typename U> SecureAllocator(const SecureAllocator<U>&) {}
-  template <typename U> struct rebind { using other = SecureAllocator<U>; };
+  template <typename U>
+  SecureAllocator(const SecureAllocator<U>&) {}
+  template <typename U>
+  struct rebind {
+    using other = SecureAllocator<U>;
+  };
 };
 
 template <typename T, typename U>
@@ -209,20 +206,15 @@ bool operator!=(const SecureAllocator<T>&, const SecureAllocator<U>&) {
   return false;
 }
 
-} // namespace Json
+}  // namespace Json
 
 #pragma pack(pop)
 
-#endif // JSON_ALLOCATOR_H_INCLUDED
+#endif  // JSON_ALLOCATOR_H_INCLUDED
 
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: include/json/allocator.h
 // //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // //////////////////////////////////////////////////////////////////////
 // Beginning of content of file: include/json/config.h
@@ -267,21 +259,21 @@ bool operator!=(const SecureAllocator<T>&, const SecureAllocator<U>&) {
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
 #elif defined(__GNUC__) || defined(__clang__)
 #define JSON_API __attribute__((visibility("default")))
-#endif // if defined(_MSC_VER)
+#endif  // if defined(_MSC_VER)
 
 #elif defined(JSON_DLL)
 #if defined(_MSC_VER) || defined(__MINGW32__)
 #define JSON_API __declspec(dllimport)
 #define JSONCPP_DISABLE_DLL_INTERFACE_WARNING
-#endif // if defined(_MSC_VER)
-#endif // ifdef JSON_DLL_BUILD
+#endif  // if defined(_MSC_VER)
+#endif  // ifdef JSON_DLL_BUILD
 
 #if !defined(JSON_API)
 #define JSON_API
 #endif
 
 #if defined(_MSC_VER) && _MSC_VER < 1800
-#error                                                                         \
+#error \
     "ERROR:  Visual Studio 12 (2013) with _MSC_VER=1800 is the oldest supported compiler with sufficient C++11 capabilities"
 #endif
 
@@ -308,20 +300,20 @@ extern JSON_API int msvc_pre1900_c99_snprintf(char* outBuf, size_t size,
 #if __has_extension(attribute_deprecated_with_message)
 #define JSONCPP_DEPRECATED(message) __attribute__((deprecated(message)))
 #endif
-#elif defined(__GNUC__) // not clang (gcc comes later since clang emulates gcc)
+#elif defined(__GNUC__)  // not clang (gcc comes later since clang emulates gcc)
 #if (__GNUC__ > 4 || (__GNUC__ == 4 && __GNUC_MINOR__ >= 5))
 #define JSONCPP_DEPRECATED(message) __attribute__((deprecated(message)))
 #elif (__GNUC__ > 3 || (__GNUC__ == 3 && __GNUC_MINOR__ >= 1))
 #define JSONCPP_DEPRECATED(message) __attribute__((__deprecated__))
-#endif                  // GNUC version
-#elif defined(_MSC_VER) // MSVC (after clang because clang on Windows emulates
-                        // MSVC)
+#endif                   // GNUC version
+#elif defined(_MSC_VER)  // MSVC (after clang because clang on Windows emulates
+                         // MSVC)
 #define JSONCPP_DEPRECATED(message) __declspec(deprecated(message))
-#endif // __clang__ || __GNUC__ || _MSC_VER
+#endif  // __clang__ || __GNUC__ || _MSC_VER
 
 #if !defined(JSONCPP_DEPRECATED)
 #define JSONCPP_DEPRECATED(message)
-#endif // if !defined(JSONCPP_DEPRECATED)
+#endif  // if !defined(JSONCPP_DEPRECATED)
 
 #if defined(__clang__) || (defined(__GNUC__) && (__GNUC__ >= 6))
 #define JSON_USE_INT64_DOUBLE_CONVERSION 1
@@ -332,7 +324,7 @@ extern JSON_API int msvc_pre1900_c99_snprintf(char* outBuf, size_t size,
 #include "allocator.h"
 #include "version.h"
 
-#endif // if !defined(JSON_IS_AMALGAMATION)
+#endif  // if !defined(JSON_IS_AMALGAMATION)
 
 namespace Json {
 using Int = int;
@@ -341,19 +333,19 @@ using UInt = unsigned int;
 using LargestInt = int;
 using LargestUInt = unsigned int;
 #undef JSON_HAS_INT64
-#else                 // if defined(JSON_NO_INT64)
+#else                  // if defined(JSON_NO_INT64)
 // For Microsoft Visual use specific types as long long is not supported
-#if defined(_MSC_VER) // Microsoft Visual Studio
+#if defined(_MSC_VER)  // Microsoft Visual Studio
 using Int64 = __int64;
 using UInt64 = unsigned __int64;
-#else                 // if defined(_MSC_VER) // Other platforms, use long long
+#else                  // if defined(_MSC_VER) // Other platforms, use long long
 using Int64 = int64_t;
 using UInt64 = uint64_t;
-#endif                // if defined(_MSC_VER)
+#endif                 // if defined(_MSC_VER)
 using LargestInt = Int64;
 using LargestUInt = UInt64;
 #define JSON_HAS_INT64
-#endif // if defined(JSON_NO_INT64)
+#endif  // if defined(JSON_NO_INT64)
 
 template <typename T>
 using Allocator =
@@ -368,7 +360,7 @@ using OStringStream =
                              String::allocator_type>;
 using IStream = std::istream;
 using OStream = std::ostream;
-} // namespace Json
+}  // namespace Json
 
 // Legacy names (formerly macros).
 using JSONCPP_STRING = Json::String;
@@ -377,16 +369,11 @@ using JSONCPP_OSTRINGSTREAM = Json::OStringStream;
 using JSONCPP_ISTREAM = Json::IStream;
 using JSONCPP_OSTREAM = Json::OStream;
 
-#endif // JSON_CONFIG_H_INCLUDED
+#endif  // JSON_CONFIG_H_INCLUDED
 
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: include/json/config.h
 // //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // //////////////////////////////////////////////////////////////////////
 // Beginning of content of file: include/json/forwards.h
@@ -402,7 +389,7 @@ using JSONCPP_OSTREAM = Json::OStream;
 
 #if !defined(JSON_IS_AMALGAMATION)
 #include "config.h"
-#endif // if !defined(JSON_IS_AMALGAMATION)
+#endif  // if !defined(JSON_IS_AMALGAMATION)
 
 namespace Json {
 
@@ -432,16 +419,12 @@ class ValueIteratorBase;
 class ValueIterator;
 class ValueConstIterator;
 
-} // namespace Json
+}  // namespace Json
 
-#endif // JSON_FORWARDS_H_INCLUDED
+#endif  // JSON_FORWARDS_H_INCLUDED
 
 // //////////////////////////////////////////////////////////////////////
 // End of content of file: include/json/forwards.h
 // //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-#endif //ifndef JSON_FORWARD_AMALGAMATED_H_INCLUDED
+#endif  // ifndef JSON_FORWARD_AMALGAMATED_H_INCLUDED

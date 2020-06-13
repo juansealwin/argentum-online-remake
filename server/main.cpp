@@ -1,21 +1,21 @@
-#include "argentum_game.h"
-//#include <jsoncpp/json/json.h>
-#include "../util/json/json.h"
-
+#include "server.h"
 #include <fstream>
 #include <iostream>
+#include <vector>
+
+#define NUMBERS_LENGTH 3
+#define ARGC 3
+#define SUCCESS 0
+#define ERROR 1
 
 int main(int argc, char *argv[]) {
-	std::ifstream file("mapa.json");
-	ArgentumGame game(3, file);
-	//game.print_debug_map();
-
-	game.start();
-
-	usleep(1000000);
-	//game.print_debug_map();
-
-	game.kill();
-
-    return 0;
+    if (argc != ARGC) { 
+    	std::cerr << "Error: argumentos invalidos." << std::endl;
+    	return ERROR;
+    }
+    char *port = argv[1];
+    //Recibir archivo de configuracion y pasarlo por parametro al server
+    Server server(port, argv[2]);
+    server.run();
+    return SUCCESS;
 }
