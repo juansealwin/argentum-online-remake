@@ -66,16 +66,16 @@ void ArgentumGame::move_monsters() {
        continue;
     }
     else {
-  	  //int x_step = rand() % 2; //Si es 0, se queda quieto. Si es 1, se mueve.
-      //int y_step = rand() % 2;
-      //int y_top = rand() % 2;
-      //if (y_top == 1) {
-      //  	y_step*= -1;
-      //}
-      //int x_left = rand() % 2;
-      //if (x_left == 1) {
-      //  	x_step *= -1;
-     // }
+  	  int x_step = rand() % 2; //Si es 0, se queda quieto. Si es 1, se mueve.
+      int y_step = rand() % 2;
+      int y_top = rand() % 2;
+      if (y_top == 1) {
+        	y_step*= -1;
+      }
+      int x_left = rand() % 2;
+      if (x_left == 1) {
+        	x_step *= -1;
+      }
       int current_x_pos = character->x_position;
       int current_y_pos = character->y_position;
       int next_x_pos = character->x_position + 1;
@@ -88,8 +88,8 @@ void ArgentumGame::move_monsters() {
   }
 }
 
-void ArgentumGame::update(unsigned long long seconds) {
-  if (seconds % 1000000 == 0) {
+void ArgentumGame::update(bool one_second_update) {
+  if (one_second_update) {
 	  move_monsters();
   }
 }
@@ -98,27 +98,54 @@ void ArgentumGame::kill() {
   alive = false;
 }
 
+
+static unsigned long long MSTimeStamp() {
+    typedef std::chrono::steady_clock sc;
+    unsigned long long ms_since_epoch = std::chrono::
+                                        duration_cast<std::chrono::milliseconds>
+                                        (sc::now().time_since_epoch()).count();
+    return ms_since_epoch;
+  }
+
 void ArgentumGame::run() {
-  //tiempo que transcurrio en MICROSEGUNDOS
-    unsigned long long time_elapsed = 0;
-    int last_duration = 0;
-    while (alive) {
-       auto t1 = std::chrono::high_resolution_clock::now();
-       update(time_elapsed);
-       auto t2 = std::chrono::high_resolution_clock::now();
-       auto duration = std::chrono::duration_cast<std::chrono::microseconds>( t2 - t1 ).count();
-       //aca deberia dormir 60 - el tiempo que me lleve update
-       if (duration > last_duration) {
-         last_duration = duration;
-       }
-       //usleep(60 - duration);
-       //time_elapsed += 60 - duration;
+  unsigned long long t1 = MSTimeStamp();
+  unsigned long long t2 = 0;
+  unsigned long long delta = 0;
+  unsigned long long time_elapsed = 0;
+  unsigned long long delay = 0;
+  unsigned long long total_time_elapsed = 0;
+  bool one_second_passed = false;
+  const unsigned int game_updates_after = 1000;
+  int updates = 0;
+  //con este valor obtengo acerca de 60 updates por segundo, con la idea de
+  //que el juego corra a 60fps.
+  const unsigned int ups = 17;
 
+  while (alive) {
+    update(one_second_passed);
+    one_second_passed &= false;
+    updates++;
+    t2 = MSTimeStamp(); //0
+    time_elapsed += t2 - t1 + delta;
+    total_time_elapsed += t2 - t1 + delta;
+    delay = ups - time_elapsed;
+    if (time_elapsed < ups) {
+          std::this_thread::sleep_for(std::chrono::milliseconds(delay));
+          delta = MSTimeStamp() - t2 - delay;
+    } else {
+      delta = 0;
     }
-    std::cout << "Cantidad de monstruos: " << characters.size() << std::endl;
-    std::cout << "Maxima duracion del loop: " << last_duration << std::endl;
-}
+    t1 = MSTimeStamp();
+    if (total_time_elapsed >= game_updates_after) {
+      total_time_elapsed = 0;
+      one_second_passed = true;
+      updates = 0;
+    }
+    }
 
+    //std::cout << "UPS: " << updates << std::endl;
+  }
+  
 void ArgentumGame::print_debug_map() {
   map->debug_print();
   std::cout << "\x1B[2J\x1B[H";

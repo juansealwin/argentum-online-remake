@@ -34,7 +34,7 @@ private:
     Map *map;
     //actualiza el mundo
     //seconds es el tiempo que ha pasado en el server
-    void update(unsigned long long seconds);
+    void update(bool one_second_update);
 	void move_monsters();
     //segun los ids de la capa 2 del json generado por tiled,
     //coloca a los monstruos iniciales del mapa.
