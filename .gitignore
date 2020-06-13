@@ -33,3 +33,8 @@
 
 # all build files
 build/*
+
+cmake_install.cmake
+CMakeCache.txt
+CMakeFiles
+Makefile
