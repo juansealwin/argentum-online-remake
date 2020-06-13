@@ -4,27 +4,27 @@
 #include <thread>
 
 class Thread {
-public:
-    Thread();
+ public:
+  Thread();
 
-    virtual ~Thread();
+  virtual ~Thread();
 
-    void start();
+  void start();
 
-    void join();
+  void join();
 
-    virtual void run() = 0;
+  virtual void run() = 0;
 
-    Thread(const Thread &) = delete;
+  Thread(const Thread &) = delete;
 
-    Thread &operator=(const Thread &) = delete;
+  Thread &operator=(const Thread &) = delete;
 
-    Thread(Thread &&other);
+  Thread(Thread &&other);
 
-    Thread &operator=(Thread &&other);
+  Thread &operator=(Thread &&other);
 
-private:
-    std::thread thread;
+ private:
+  std::thread thread;
 };
 
-#endif //THREAD_H
+#endif  // THREAD_H

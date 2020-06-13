@@ -8,9 +8,9 @@
 #include "texture.h"
 
 class Gnome : public Player {
-   public:
-    Gnome();
-    ~Gnome();
+ public:
+  Gnome();
+  ~Gnome();
 };
 
 #endif

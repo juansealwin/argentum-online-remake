@@ -8,9 +8,9 @@
 #include "texture.h"
 
 class Elf : public Player {
-   public:
-    Elf();
-    ~Elf();
+ public:
+  Elf();
+  ~Elf();
 };
 
 #endif
