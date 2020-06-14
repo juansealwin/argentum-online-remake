@@ -61,11 +61,9 @@ void Map::load_terrain(Json::Value &map_json) {
       int type2 = map_json["layers"][1]["data"][i].asInt();
       if (type2 != 0) {
         tile = new FixedTile(type, 'b');
-      }
-      else if (type == FLOOR) {
+      } else if (type == FLOOR) {
         tile = new Tile(type, ',');
-      }
-      else {
+      } else {
         tile = new Tile(type, '.');
       }
       it.push_back(tile);
@@ -89,7 +87,7 @@ void Map::place_character(int x, int y, BaseCharacter *b) {
 }
 
 bool Map::move_character(int x1, int y1, int x2, int y2) {
-  if (x2 >= rows || y2 >= cols) return false;
+  if (x2 >= rows || y2 >= cols || x2 < 0 || y2 < 0) return false;
   if (matrix[x2][y2]->can_hold_character()) {
     std::swap(matrix[x1][y1]->character, matrix[x2][y2]->character);
     matrix[x2][y2]->character->set_x_y_position(x2, y2);

@@ -32,6 +32,7 @@ class ArgentumGame : public Thread {
 
  private:
   unsigned int room = 0;
+  std::string map_name;
   bool alive = true;
   Map *map;
   // actualiza el mundo
@@ -43,6 +44,7 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   //std::vector<BaseCharacter *> characters;
   std::map<int, BaseCharacter *> characters;
+  Json::Value game_status();
 
 };
 

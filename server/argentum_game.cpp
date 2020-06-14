@@ -9,6 +9,8 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   Json::Value map_cfg;
   map_config >> map_cfg;
   map = new Map(map_cfg);
+  map_name = map_cfg["editorsettings"]["export"]["target"].asString();
+  std::cout << "New game in map " << map_name << std::endl;
   place_initial_monsters(map_cfg);
 }
 void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
@@ -37,7 +39,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       character = new Monster(row, col, type, 'e');
     }
     map->place_character(row, col, character);
-    //if (character) characters.push_back(character);
+    // if (character) characters.push_back(character);
     if (character) characters.emplace(id, character);
     col++;
     id++;
