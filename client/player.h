@@ -4,33 +4,30 @@
 #include <string>
 #include <vector>
 
+#include "drawable.h"
 #include "move.h"
 
-class Player {
+class Player : public Drawable {
  protected:
-  /*
-  std::string user_name;
-  std::string password;
-  std::string id;
-  std::string path_face_character;
-  std::string path_body_character;
-  */
+  Texture body_texture;
+  Texture head_texture;
+  SDL_Renderer* renderer = NULL;
   Move* animation_move = NULL;
-  int body_w;
-  int body_h;
-  int head_w;
-  int head_h;
+  SDL_Rect body_rect;
+  SDL_Rect head_rect;
   int total_clips = 6;
 
  public:
-  Player();
-  ~Player();
-  SDL_Rect move(move_t);
-  SDL_Rect getFaceProfile(move_t);
-  int getBodyW();
-  int getBodyH();
-  int getHeadW();
-  int getHeadH();
+  virtual ~Player();
+  virtual void render() override;
+  virtual void move(move_t);
+  virtual void updateFaceProfile(move_t);
+  virtual int getWidth() const override;
+  virtual int getHeight() const override;
+  virtual int getX() const override;
+  virtual int getY() const override;
+  virtual int getHeadW() const;
+  virtual int getHeadH() const;
 };
 
 #endif

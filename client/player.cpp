@@ -1,22 +1,34 @@
 #include "player.h"
 
-Player::Player() {}
-
-Player::~Player() { delete animation_move; }
-
-SDL_Rect Player::move(move_t move_type) {
-  return animation_move->getNextClip(move_type);
+Player::~Player() {
+  delete animation_move;
+  renderer = nullptr;
+  body_texture.free();
+  head_texture.free();
 }
 
-SDL_Rect Player::getFaceProfile(move_t move_type) {
-  SDL_Rect face_profile = {move_type * head_w, 0, head_w, head_h};
-  return face_profile;
+void Player::move(move_t move_type) {
+  body_rect = animation_move->getNextClip(move_type);
 }
 
-int Player::getBodyW() { return body_w; }
+void Player::updateFaceProfile(move_t move_type) {
+  head_rect.x = move_type * head_rect.w;
+}
 
-int Player::getBodyH() { return body_h; }
+void Player::render() {
+  body_texture.render(renderer, &body_rect, x - width / 2, y - height / 2);
+  head_texture.render(renderer, &head_rect, x - head_rect.w / 2,
+                      y - height / 2 - head_rect.h / 2);
+}
 
-int Player::getHeadW() { return head_w; }
+int Player::getWidth() const { return width; }
 
-int Player::getHeadH() { return head_h; }
+int Player::getHeight() const { return height; }
+
+int Player::getX() const { return x; }
+
+int Player::getY() const { return y; }
+
+int Player::getHeadW() const { return head_rect.w; }
+
+int Player::getHeadH() const { return head_rect.h; }

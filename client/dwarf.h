@@ -9,8 +9,9 @@
 
 class Dwarf : public Player {
  public:
-  Dwarf();
+  Dwarf(std::string, std::string, SDL_Renderer*, int, int);
   ~Dwarf();
+  //virtual void render();
 };
 
 #endif

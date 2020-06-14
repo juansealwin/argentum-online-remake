@@ -1,9 +1,17 @@
 #include "game.h"
 
 Game::Game(int width, int height) : screen_width(width), screen_height(height) {
+  windowInit();
+  background = new BackgroundMap("mapa_hierba.png", renderer);
+  player =
+      new Human((std::string)PATH_HUMAN_BODY, (std::string)PATH_HUMAN_HEAD,
+                renderer, screen_width / 2, screen_height / 2);
+}
+
+void Game::windowInit() {
   window = SDL_CreateWindow("Argentum Online", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, width, height,
-                            SDL_WINDOW_SHOWN);
+                            SDL_WINDOWPOS_UNDEFINED, screen_width,
+                            screen_height, SDL_WINDOW_SHOWN);
 
   if (!window)
     throw SdlException("Error en la inicialización de la ventana",
@@ -34,12 +42,15 @@ Game::~Game() {
   IMG_Quit();
   SDL_Quit();
   deleteTextures();
+  free(background);
+  free(player);
 }
 
 void Game::deleteTextures() {
   std::vector<Texture*>::iterator it;
-  for (it = textures.begin(); it != textures.end();) {
-    delete *it;
+  for (it = textures.begin(); it != textures.end(); it++) {
+    (*it)->free();
+    delete (*it);
     it = textures.erase(it);
   }
 }
@@ -71,23 +82,27 @@ void Game::eventHandler() {
       // Select surfaces based on key press
       switch (event.key.keysym.sym) {
         case SDLK_UP:
-          body_player = player->move(MOVE_UP);
-          head_player = player->getFaceProfile(MOVE_UP);
+          player->move(MOVE_UP);
+          player->updateFaceProfile(MOVE_UP);
+          background->update(0, -32);
           break;
 
         case SDLK_DOWN:
-          body_player = player->move(MOVE_DOWN);
-          head_player = player->getFaceProfile(MOVE_DOWN);
+          player->move(MOVE_DOWN);
+          player->updateFaceProfile(MOVE_DOWN);
+          background->update(0, 32);
           break;
 
         case SDLK_LEFT:
-          body_player = player->move(MOVE_LEFT);
-          head_player = player->getFaceProfile(MOVE_LEFT);
+          player->move(MOVE_LEFT);
+          player->updateFaceProfile(MOVE_LEFT);
+          background->update(-32, 0);
           break;
 
         case SDLK_RIGHT:
-          body_player = player->move(MOVE_RIGHT);
-          head_player = player->getFaceProfile(MOVE_RIGHT);
+          player->move(MOVE_RIGHT);
+          player->updateFaceProfile(MOVE_RIGHT);
+          background->update(32, 0);
           break;
 
         default:
@@ -100,12 +115,14 @@ void Game::eventHandler() {
 void Game::update() {
   SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
   SDL_RenderClear(renderer);
-  textures.at(0)->render(renderer, &body_player,
+  background->render();
+  player->render();
+  /*textures.at(0)->render(renderer, &body_player,
                          screen_width / 2 - (player->getBodyW() / 2),
                          screen_height / 2 - (player->getBodyH() / 2));
   textures.at(1)->render(
       renderer, &head_player, screen_width / 2 - (player->getHeadW() / 2),
-      screen_height / 2 - (player->getBodyH() / 2) - (player->getHeadH() / 2));
+      screen_height / 2 - (player->getBodyH() / 2) - (player->getHeadH() / 2));*/
 }
 
 void Game::render() { SDL_RenderPresent(renderer); }

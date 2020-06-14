@@ -8,8 +8,10 @@
 
 class Human : public Player {
  public:
-  Human();
+  Human(std::string, std::string path_head_tex, SDL_Renderer*, int, int);
   ~Human();
+  //virtual void render();
+  // void update();
 };
 
 #endif

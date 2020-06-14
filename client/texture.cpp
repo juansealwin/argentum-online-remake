@@ -2,8 +2,6 @@
 
 Texture::Texture() {
   texture = NULL;
-  x = 0;
-  y = 0;
   width = 0;
   height = 0;
 }
@@ -63,19 +61,9 @@ void Texture::free() {
     texture = NULL;
     width = 0;
     height = 0;
-    x = 0;
-    y = 0;
   }
 }
 
 int Texture::getWidth(void) const { return width; }
 
 int Texture::getHeight(void) const { return height; }
-
-int Texture::getX(void) const { return x; }
-
-int Texture::getY(void) const { return y; }
-
-void Texture::setX(int new_x) { x = new_x; }
-
-void Texture::setY(int new_y) { y = new_y; }

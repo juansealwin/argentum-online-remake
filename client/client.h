@@ -6,13 +6,9 @@
 
 #include "client_protocol.h"
 #include "common_socket.h"
-#include "dwarf.h"
-#include "elf.h"
 #include "game.h"
-#include "gnome.h"
-#include "human.h"
 #include "texture.h"
-#define FRAME_DELAY 5000/60
+#define FRAME_DELAY 5000 / 60
 
 class Client {
  private:

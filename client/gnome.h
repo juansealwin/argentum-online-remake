@@ -9,8 +9,9 @@
 
 class Gnome : public Player {
  public:
-  Gnome();
+  Gnome(std::string, std::string, SDL_Renderer*, int, int);
   ~Gnome();
+  //virtual void render();
 };
 
 #endif

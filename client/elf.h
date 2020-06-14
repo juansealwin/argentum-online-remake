@@ -9,8 +9,10 @@
 
 class Elf : public Player {
  public:
-  Elf();
+  Elf(std::string , std::string ,
+         SDL_Renderer* , int , int );
   ~Elf();
+  //virtual void render();
 };
 
 #endif
