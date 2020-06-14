@@ -40,8 +40,10 @@ class ArgentumGame : public Thread {
   void move_monsters();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
-  void place_initial_monsters(Json::Value root);
-  std::vector<BaseCharacter *> characters;
+  void place_initial_monsters(Json::Value map_cfg);
+  //std::vector<BaseCharacter *> characters;
+  std::map<int, BaseCharacter *> characters;
+
 };
 
 #endif  // ARGENTUMGAME_H

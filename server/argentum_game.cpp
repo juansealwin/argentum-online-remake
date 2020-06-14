@@ -6,20 +6,21 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
                            std::ifstream &map_config)
     : room(room_number) {  //, map(20,20) {
   // Seguramente esto tenga que ser un mapa del estilo id:npc
-  Json::Value root;
-  map_config >> root;
-  map = new Map(root);
-  place_initial_monsters(root);
-  map->debug_print();
+  Json::Value map_cfg;
+  map_config >> map_cfg;
+  map = new Map(map_cfg);
+  place_initial_monsters(map_cfg);
 }
-void ArgentumGame::place_initial_monsters(Json::Value root) {
+void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   int row = 0;
   int col = 0;
-  int map_cols = root["width"].asInt();
-  for (const auto &jv : root["layers"][2]["data"]) {
+  int map_cols = map_cfg["width"].asInt();
+  unsigned int id = 0;
+  for (const auto &jv : map_cfg["layers"][2]["data"]) {
     BaseCharacter *character = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
+
     if (type == PRIEST) {
       character = new BaseCharacter(row, col, type, 'p');
     } else if (type == MERCHANT) {
@@ -36,9 +37,10 @@ void ArgentumGame::place_initial_monsters(Json::Value root) {
       character = new Monster(row, col, type, 'e');
     }
     map->place_character(row, col, character);
-
-    if (character) characters.push_back(character);
+    //if (character) characters.push_back(character);
+    if (character) characters.emplace(id, character);
     col++;
+    id++;
     if (col == map_cols) {
       row++;
       col = 0;
@@ -48,7 +50,7 @@ void ArgentumGame::place_initial_monsters(Json::Value root) {
 
 void ArgentumGame::move_monsters() {
   for (auto &character : characters) {
-    if (!character->is_movable()) {
+    if (!character.second->is_movable()) {
       continue;
     } else {
       int x_step = rand() % 2;  // Si es 0, se queda quieto. Si es 1, se mueve.
@@ -61,12 +63,12 @@ void ArgentumGame::move_monsters() {
       if (x_left == 1) {
         x_step *= -1;
       }
-      int current_x_pos = character->x_position;
-      int current_y_pos = character->y_position;
+      int current_x_pos = character.second->x_position;
+      int current_y_pos = character.second->y_position;
       // int next_x_pos = character->x_position + 1;
       // int next_y_pos = character->y_position + 1;
-      int next_x_pos = character->x_position + x_step;
-      int next_y_pos = character->y_position + y_step;
+      int next_x_pos = character.second->x_position + x_step;
+      int next_y_pos = character.second->y_position + y_step;
       map->move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
     }
   }
@@ -118,6 +120,7 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
+      print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
@@ -133,8 +136,8 @@ void ArgentumGame::print_debug_map() {
 }
 
 ArgentumGame::~ArgentumGame() {
-  for (auto &monster : characters) {
-    delete monster;
+  for (auto &character : characters) {
+    delete character.second;
   }
   delete map;
   this->join();
