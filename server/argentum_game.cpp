@@ -122,7 +122,8 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      print_debug_map();
+      // print_debug_map();
+      game_status();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
@@ -146,3 +147,19 @@ ArgentumGame::~ArgentumGame() {
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
+
+Json::Value ArgentumGame::game_status() {
+  Json::Value status;
+  status["map"] = map_name;
+  status["entities"] = Json::Value(Json::arrayValue);
+  for (auto &character : characters) {
+    Json::Value current_entity_status;
+    current_entity_status["id"] = character.first;
+    current_entity_status["x_pos"] = character.second->x_position;
+    current_entity_status["y_pos"] = character.second->y_position;
+    current_entity_status["type"] = character.second->get_type();
+    status["entities"].append(current_entity_status);
+  }
+  std::cout << status << std::endl << "*******************" << std::endl;
+  return status;
+}

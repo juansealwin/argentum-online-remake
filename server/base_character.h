@@ -4,16 +4,17 @@
 
 class BaseCharacter {
  public:
-  BaseCharacter(int x, int y, int id, char repr);
+  BaseCharacter(int x, int y, int type, char repr);
   virtual ~BaseCharacter();
   char char_representation();
   virtual bool is_movable();
   void set_x_y_position(int x, int y);
+  int get_type();
   int x_position;
   int y_position;
 
  private:
-  int id;
+  int type;
   char representation;
 };
 
