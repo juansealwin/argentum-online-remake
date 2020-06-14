@@ -10,37 +10,33 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_config >> root;
   map = new Map(root);
   place_initial_monsters(root);
+  map->debug_print();
 }
 void ArgentumGame::place_initial_monsters(Json::Value root) {
   int row = 0;
   int col = 0;
   int map_cols = root["width"].asInt();
-  for (const auto &jv : root["layers"][1]["data"]) {
+  for (const auto &jv : root["layers"][2]["data"]) {
     BaseCharacter *character = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
     if (type == PRIEST) {
       character = new BaseCharacter(row, col, type, 'p');
-      map->place_character(row, col, character);
     } else if (type == MERCHANT) {
       character = new BaseCharacter(row, col, type, 'm');
-      map->place_character(row, col, character);
     } else if (type == BANKER) {
       character = new BaseCharacter(row, col, type, 'b');
-      map->place_character(row, col, character);
     } else if (type == GOBLIN) {
       character = new Monster(row, col, type, 'g');
-      map->place_character(row, col, character);
     } else if (type == ZOMBIE) {
       character = new Monster(row, col, type, 'z');
-      map->place_character(row, col, character);
     } else if (type == SPIDER) {
       character = new Monster(row, col, type, 'a');
-      map->place_character(row, col, character);
     } else if (type == SKELETON) {
       character = new Monster(row, col, type, 'e');
-      map->place_character(row, col, character);
     }
+    map->place_character(row, col, character);
+
     if (character) characters.push_back(character);
     col++;
     if (col == map_cols) {
@@ -67,8 +63,8 @@ void ArgentumGame::move_monsters() {
       }
       int current_x_pos = character->x_position;
       int current_y_pos = character->y_position;
-      //int next_x_pos = character->x_position + 1;
-      //int next_y_pos = character->y_position + 1;
+      // int next_x_pos = character->x_position + 1;
+      // int next_y_pos = character->y_position + 1;
       int next_x_pos = character->x_position + x_step;
       int next_y_pos = character->y_position + y_step;
       map->move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
@@ -128,7 +124,7 @@ void ArgentumGame::run() {
     }
   }
 
-  //std::cout << "UPS: " << updates << std::endl;
+  // std::cout << "UPS: " << updates << std::endl;
 }
 
 void ArgentumGame::print_debug_map() {

@@ -12,13 +12,13 @@
 #include "map.h"
 #include "monster.h"
 
-#define PRIEST 498
-#define MERCHANT 526
-#define BANKER 495
-#define GOBLIN 418
-#define ZOMBIE 452
-#define SPIDER 876
-#define SKELETON 914
+#define PRIEST 1334
+#define MERCHANT 1320
+#define BANKER 1352
+#define GOBLIN 1677
+#define ZOMBIE 1288
+#define SPIDER 1712
+#define SKELETON 1750
 
 class ArgentumGame : public Thread {
  public:
