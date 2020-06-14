@@ -6,10 +6,10 @@ jobs:
     steps:
       - checkout
       - run:
-          name: install cmake
-          command: 'apt update && apt install -y cmake'
+          name: install packages
+          command: 'apt update && apt install -y build-essential cmake'
       - run:
-          name: install cmake
+          name: run cmake
           command: 'cmake CMakeLists.txt'
       - run:
           name: make
