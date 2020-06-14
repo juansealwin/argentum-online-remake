@@ -1,0 +1,19 @@
+version: 2.1
+jobs:
+  build:
+    docker:
+      - image: ubuntu:18.04
+    steps:
+      - checkout
+      - run:
+          name: install cmake
+          command: 'apt update && apt install -y cmake'
+      - run:
+          name: install cmake
+          command: 'cmake CMakeLists.txt'
+      - run:
+          name: make
+          command: 'make'
+      - run:
+          name: make install
+          command: 'make install'
