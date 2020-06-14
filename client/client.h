@@ -12,6 +12,7 @@
 #include "gnome.h"
 #include "human.h"
 #include "texture.h"
+#define FRAME_DELAY 5000/60
 
 class Client {
  private:
