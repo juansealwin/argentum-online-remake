@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
   }
   char *port = argv[1];
   // Recibir archivo de configuracion y pasarlo por parametro al server
-  Server server(port);
+  Server server(port, argv[2]);
   server.run();
   return SUCCESS;
 }

@@ -22,7 +22,7 @@ class ClientHandler : public Thread {
   */
   void run() override;
   // Devuelve True mientras el juego siga en curso
-  const bool is_alive();
+  bool is_alive();
 
  private:
   ArgentumGame *game;

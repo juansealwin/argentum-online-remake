@@ -34,4 +34,4 @@ void ClientHandler::send_response(const unsigned char* response,
                                                   size);
 }
 
-const bool ClientHandler::is_alive() { return this->alive; }
+bool ClientHandler::is_alive() { return this->alive; }

@@ -13,7 +13,7 @@ class ClientListener : public Thread {
  public:
   /*Crea un nuevo ClientListener que escuchara en el puerto port
   y utilizara numbers para asignarle a cada cliente que se conecte*/
-  explicit ClientListener(const char *port);
+  explicit ClientListener(const char *port, const char *map_cfg_file);
 
   ~ClientListener() override;
   /*Escucha nuevos clientes en el puerto 'port'.

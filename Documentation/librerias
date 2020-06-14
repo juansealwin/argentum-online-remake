@@ -1,0 +1,17 @@
+sdl: sudo apt-get install libsdl2-dev
+	 sudo apt install libsdl2-image-dev
+---------------------------------------------------------------------
+jsoncpp:
+No se si sea lo mismo para todos, tuve bastantes inconvenientes, finalmente hice:
+
+git clone https://github.com/open-source-parsers/jsoncpp jsoncpp
+cd jsoncpp
+python amalgamate.py
+
+luego en dist copiar la carpeta y el jsoncpp.cpp al proyecto para usarlo
+cada vez que se use json.cpp: 
+#include "json/json.h"
+
+Tambien habia otra forma haciendo sudo apt-get install libjsoncpp-dev
+pero no pude y no me quedo otra que agregar el codigo fuente de json.cpp.
+-----------------------------------------------------------------------
