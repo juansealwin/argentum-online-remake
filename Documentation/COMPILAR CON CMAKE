@@ -1,5 +1,5 @@
 PARA COMPILAR:
 
-Pararse en build y abrir la linea de comandos y escribir:
+-> pararse en /build (crearlo si no existe)
 -> cmake ..
 -> make && make install

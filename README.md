@@ -9,5 +9,6 @@ Remake del Argentum
 | qt5-default | 5.9.5 |
 | gcc | 7.3.0 |
 
+## Para correr app:  
 valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./server 8080 ../../server/cfg/map/mapa.json  
-valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --gen-suppressions=all --suppressions=./suppressions.txt ./client localhost 8080
+valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=../../client/suppressions.txt ./client localhost 8080
