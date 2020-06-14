@@ -38,11 +38,13 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     } else if (type == SKELETON) {
       character = new Monster(row, col, type, 'e');
     }
-    map->place_character(row, col, character);
-    // if (character) characters.push_back(character);
-    if (character) characters.emplace(id, character);
+    if (character) {
+      characters.emplace(id, character);
+      map->place_character(row, col, character);
+      id++;
+      std::cout << "id: " << id << std::endl;
+    }
     col++;
-    id++;
     if (col == map_cols) {
       row++;
       col = 0;
@@ -101,11 +103,11 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 1000;
+  const unsigned int game_updates_after = 850; // a tunear
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
-  const unsigned int ups = 17;
+  const unsigned int ups = 17; // a tunear
   while (alive) {
     update(one_second_passed);
     one_second_passed &= false;
@@ -151,15 +153,18 @@ unsigned int ArgentumGame::get_room() { return room; }
 Json::Value ArgentumGame::game_status() {
   Json::Value status;
   status["map"] = map_name;
+  status["op"] = "game_status";
   status["entities"] = Json::Value(Json::arrayValue);
   for (auto &character : characters) {
     Json::Value current_entity_status;
     current_entity_status["id"] = character.first;
-    current_entity_status["x_pos"] = character.second->x_position;
-    current_entity_status["y_pos"] = character.second->y_position;
+    current_entity_status["x"] = character.second->x_position;
+    current_entity_status["y"] = character.second->y_position;
     current_entity_status["type"] = character.second->get_type();
     status["entities"].append(current_entity_status);
+    std::cout << "id: " << character.first << " at: "
+              << "(" << character.second->x_position << ", "
+              << character.second->y_position << ")" << std::endl;
   }
-  std::cout << status << std::endl << "*******************" << std::endl;
   return status;
 }
