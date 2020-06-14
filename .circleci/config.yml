@@ -7,7 +7,7 @@ jobs:
       - checkout
       - run:
           name: install packages
-          command: 'apt update && apt install -y build-essential cmake'
+          command: 'apt update && apt install -y build-essential cmake libsdl2-dev libsdl2-image-dev qt5-default'
       - run:
           name: run cmake
           command: 'cmake CMakeLists.txt'
