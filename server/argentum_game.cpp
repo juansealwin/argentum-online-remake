@@ -3,45 +3,52 @@
 #include <iostream>
 
 ArgentumGame::ArgentumGame(const unsigned int room_number,
+                           ThreadSafeQueue<Command *> *commands_queue,
                            std::ifstream &map_config)
-    : room(room_number) {  //, map(20,20) {
+    : room(room_number),
+      commands_queue(commands_queue),
+      mutex() {  //, map(20,20) {
   // Seguramente esto tenga que ser un mapa del estilo id:npc
-  Json::Value root;
-  map_config >> root;
-  map = new Map(root);
-  place_initial_monsters(root);
+  std::unique_lock<std::mutex> lock(mutex);
+  Json::Value map_cfg;
+  map_config >> map_cfg;
+  map = new Map(map_cfg);
+  map_name = map_cfg["editorsettings"]["export"]["target"].asString();
+  std::cout << "New game in map " << map_name << std::endl;
+  place_initial_monsters(map_cfg);
 }
-void ArgentumGame::place_initial_monsters(Json::Value root) {
+void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
+  // std::unique_lock<std::mutex> lock(mutex);
   int row = 0;
   int col = 0;
-  int map_cols = root["width"].asInt();
-  for (const auto &jv : root["layers"][1]["data"]) {
+  int map_cols = map_cfg["width"].asInt();
+  unsigned int id = 0;
+  for (const auto &jv : map_cfg["layers"][2]["data"]) {
     BaseCharacter *character = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
+
     if (type == PRIEST) {
       character = new BaseCharacter(row, col, type, 'p');
-      map->place_character(row, col, character);
     } else if (type == MERCHANT) {
       character = new BaseCharacter(row, col, type, 'm');
-      map->place_character(row, col, character);
     } else if (type == BANKER) {
       character = new BaseCharacter(row, col, type, 'b');
-      map->place_character(row, col, character);
     } else if (type == GOBLIN) {
       character = new Monster(row, col, type, 'g');
-      map->place_character(row, col, character);
     } else if (type == ZOMBIE) {
       character = new Monster(row, col, type, 'z');
-      map->place_character(row, col, character);
     } else if (type == SPIDER) {
       character = new Monster(row, col, type, 'a');
-      map->place_character(row, col, character);
     } else if (type == SKELETON) {
       character = new Monster(row, col, type, 'e');
-      map->place_character(row, col, character);
     }
-    if (character) characters.push_back(character);
+    map->place_character(row, col, character);
+    // if (character) characters.push_back(character);
+    if (character) {
+      entities.emplace(id, character);
+      id++;
+    }
     col++;
     if (col == map_cols) {
       row++;
@@ -50,9 +57,14 @@ void ArgentumGame::place_initial_monsters(Json::Value root) {
   }
 }
 
-void ArgentumGame::move_monsters() {
-  for (auto &character : characters) {
-    if (!character->is_movable()) {
+void ArgentumGame::move_entity(int entity_id, int x, int y) {
+  Entity *entity = entities.at(entity_id);
+  map->move_character(entity->x_position, entity->y_position, x, y);
+}
+
+void ArgentumGame::auto_move_monsters() {
+  for (auto &entity : entities) {
+    if (!entity.second->is_movable()) {
       continue;
     } else {
       int x_step = rand() % 2;  // Si es 0, se queda quieto. Si es 1, se mueve.
@@ -65,24 +77,33 @@ void ArgentumGame::move_monsters() {
       if (x_left == 1) {
         x_step *= -1;
       }
-      int current_x_pos = character->x_position;
-      int current_y_pos = character->y_position;
-      //int next_x_pos = character->x_position + 1;
-      //int next_y_pos = character->y_position + 1;
-      int next_x_pos = character->x_position + x_step;
-      int next_y_pos = character->y_position + y_step;
+      int current_x_pos = entity.second->x_position;
+      int current_y_pos = entity.second->y_position;
+      // int next_x_pos = entity->x_position + 1;
+      // int next_y_pos = entity->y_position + 1;
+      int next_x_pos = entity.second->x_position + x_step;
+      int next_y_pos = entity.second->y_position + y_step;
       map->move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
     }
   }
 }
 
 void ArgentumGame::update(bool one_second_update) {
+  std::unique_lock<std::mutex> lock(mutex);
   if (one_second_update) {
-    move_monsters();
+    auto_move_monsters();
+  }
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    cmd->execute(this);
+    delete cmd;
   }
 }
 
-void ArgentumGame::kill() { alive = false; }
+void ArgentumGame::kill() {
+  std::unique_lock<std::mutex> lock(mutex);
+  alive = false;
+}
 
 static unsigned long long MSTimeStamp() {
   typedef std::chrono::steady_clock sc;
@@ -101,7 +122,7 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 1000;
+  const unsigned int game_updates_after = 850;  // A TUNEAR
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -122,26 +143,59 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
+      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
+      game_status();
+      // commands_queue->push(new MoveCommand(14, 0, 0));
+      // MoveCommand cmd(14, 0, 0);
+      // cmd.execute(this);
     }
   }
 
-  //std::cout << "UPS: " << updates << std::endl;
+  // std::cout << "UPS: " << updates << std::endl;
 }
 
 void ArgentumGame::print_debug_map() {
+  std::unique_lock<std::mutex> lock(mutex);
   map->debug_print();
   std::cout << "\x1B[2J\x1B[H";
 }
 
 ArgentumGame::~ArgentumGame() {
-  for (auto &monster : characters) {
-    delete monster;
+  for (auto &entity : entities) {
+    delete entity.second;
   }
   delete map;
+  // Cierro cola y elimino comandos que no se podran procesar
+  commands_queue->close();
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    delete cmd;
+  }
   this->join();
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
+
+Json::Value ArgentumGame::game_status() {
+  std::unique_lock<std::mutex> lock(mutex);
+  Json::Value status;
+  status["map"] = map_name;
+  status["op"] = "game_status";
+  status["entities"] = Json::Value(Json::arrayValue);
+  for (auto &entity : entities) {
+    Json::Value current_entity_status;
+    current_entity_status["id"] = entity.first;
+    current_entity_status["x"] = entity.second->x_position;
+    current_entity_status["y"] = entity.second->y_position;
+    current_entity_status["type"] = entity.second->get_type();
+    status["entities"].append(current_entity_status);
+    // std::cout << status << std::endl;
+    // std::cout << "id: " << entity.first << " at: "
+    //           << "(" << entity.second->x_position << ", "
+    //           << entity.second->y_position << ")" << std::endl;
+  }
+  return status;
+}

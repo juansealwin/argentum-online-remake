@@ -1,0 +1,63 @@
+#ifndef THREAD_SAFE_QUEUE
+#define THREAD_SAFE_QUEUE
+
+//#include <condition_variable>
+#include <mutex>
+#include <queue>
+
+template <class T>
+class ThreadSafeQueue {
+ private:
+  std::queue<T> queue;
+  mutable std::mutex mutex;
+  // std::condition_variable cv;
+  bool closed;
+
+ public:
+  ThreadSafeQueue()
+      : queue(), mutex(), closed(false) {}  // cv(), closed(false) {}
+
+  ~ThreadSafeQueue() {}
+
+  void close() {
+    std::lock_guard<std::mutex> lock(mutex);
+    closed = true;
+    // cv.notify_all();
+  }
+
+  void push(T item) {
+    std::lock_guard<std::mutex> lock(mutex);
+    queue.push(item);
+    // cv.notify_all();
+  }
+
+  bool is_empty() {
+    std::lock_guard<std::mutex> lock(mutex);
+    return queue.empty();
+  }
+
+  bool is_closed() {
+    std::lock_guard<std::mutex> lock(mutex);
+    return closed;
+  };
+
+  T pop() {
+    std::unique_lock<std::mutex> lock(mutex);
+    // en el game no me quiero quedar esperando
+    // while (queue.empty() && !closed) cv.wait(lock);
+
+    if (closed || queue.empty()) return nullptr;
+
+    T item = queue.front();
+    queue.pop();
+    return item;
+  }
+};
+
+#ifndef GAME_COMMANDS_QUEUE
+#define GAME_COMMANDS_QUEUE
+class Command;
+template class ThreadSafeQueue<Command*>;
+#endif
+
+#endif

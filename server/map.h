@@ -2,22 +2,22 @@
 #define MAP_H
 #include <vector>
 
-#include "../util/json/json.h"
 #include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "base_character.h"
 #include "fixed_tile.h"
 #include "stdint.h"
 #include "tile.h"
 // 1st layer
 #define GROUND 1
-#define FLOOR 229
-#define WALL_1 189
-#define WALL_2 190
-#define WALL_3 180
-#define WALL_4 191
+#define FLOOR 1217
 // 2nd layer
-#define BUSH_1 164
-#define BUSH_2 172
+#define TREE_1 1153
+#define TREE_2 1216
+#define HOUSE_1 1025
+#define HOUSE_2 1064
+#define HOUSE2_1 1089
+#define HOUSE2_2 1112
 
 class Map {
  public:
