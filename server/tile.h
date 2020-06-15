@@ -4,7 +4,7 @@
 class Tile {
  public:
   explicit Tile(int representation_id, char representation);
-  ~Tile();
+  virtual ~Tile();
   char char_representation();
   void place_character(BaseCharacter *character);
   virtual bool can_hold_character();
