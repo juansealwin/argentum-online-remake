@@ -8,6 +8,7 @@ Remake del Argentum
 | libsdl2-image-dev | 2.0.3 |
 | qt5-default | 5.9.5 |
 | gcc | 7.3.0 |
+| libmsgpack | 3.3.0 |
 
 ## Para correr app:  
 valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./server 8080 ../../server/cfg/map/mapa.json  
