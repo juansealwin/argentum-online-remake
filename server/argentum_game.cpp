@@ -1,22 +1,24 @@
-#include <iostream>
-
 #include "argentum_game.h"
 
+#include <iostream>
+
 ArgentumGame::ArgentumGame(const unsigned int room_number,
+                           ThreadSafeQueue<Command *> *commands_queue,
                            std::ifstream &map_config)
-    : room(room_number), mutex() {  //, map(20,20) {
+    : room(room_number),
+      commands_queue(commands_queue),
+      mutex() {  //, map(20,20) {
   // Seguramente esto tenga que ser un mapa del estilo id:npc
+  std::unique_lock<std::mutex> lock(mutex);
   Json::Value map_cfg;
   map_config >> map_cfg;
   map = new Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in map " << map_name << std::endl;
   place_initial_monsters(map_cfg);
-  //Command test;
-  //test.execute(this);
 }
 void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
-  std::unique_lock<std::mutex> lock(mutex);
+  // std::unique_lock<std::mutex> lock(mutex);
   int row = 0;
   int col = 0;
   int map_cols = map_cfg["width"].asInt();
@@ -43,9 +45,11 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     }
     map->place_character(row, col, character);
     // if (character) characters.push_back(character);
-    if (character) entities.emplace(id, character);
+    if (character) {
+      entities.emplace(id, character);
+      id++;
+    }
     col++;
-    id++;
     if (col == map_cols) {
       row++;
       col = 0;
@@ -53,7 +57,12 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   }
 }
 
-void ArgentumGame::move_monsters() {
+void ArgentumGame::move_entity(int entity_id, int x, int y) {
+  Entity *entity = entities.at(entity_id);
+  map->move_character(entity->x_position, entity->y_position, x, y);
+}
+
+void ArgentumGame::auto_move_monsters() {
   for (auto &entity : entities) {
     if (!entity.second->is_movable()) {
       continue;
@@ -82,7 +91,12 @@ void ArgentumGame::move_monsters() {
 void ArgentumGame::update(bool one_second_update) {
   std::unique_lock<std::mutex> lock(mutex);
   if (one_second_update) {
-    move_monsters();
+    auto_move_monsters();
+  }
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    cmd->execute(this);
+    delete cmd;
   }
 }
 
@@ -108,7 +122,7 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 850; // A TUNEAR
+  const unsigned int game_updates_after = 850;  // A TUNEAR
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -129,10 +143,14 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      //print_debug_map();
+      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
+      game_status();
+      // commands_queue->push(new MoveCommand(14, 0, 0));
+      // MoveCommand cmd(14, 0, 0);
+      // cmd.execute(this);
     }
   }
 
@@ -150,12 +168,19 @@ ArgentumGame::~ArgentumGame() {
     delete entity.second;
   }
   delete map;
+  // Cierro cola y elimino comandos que no se podran procesar
+  commands_queue->close();
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    delete cmd;
+  }
   this->join();
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
 
 Json::Value ArgentumGame::game_status() {
+  std::unique_lock<std::mutex> lock(mutex);
   Json::Value status;
   status["map"] = map_name;
   status["op"] = "game_status";
@@ -167,7 +192,7 @@ Json::Value ArgentumGame::game_status() {
     current_entity_status["y"] = entity.second->y_position;
     current_entity_status["type"] = entity.second->get_type();
     status["entities"].append(current_entity_status);
-    std::cout << status << std::endl;
+    // std::cout << status << std::endl;
     // std::cout << "id: " << entity.first << " at: "
     //           << "(" << entity.second->x_position << ", "
     //           << entity.second->y_position << ")" << std::endl;

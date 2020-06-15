@@ -55,6 +55,8 @@
       "numeric": "cpp",
       "random": "cpp",
       "set": "cpp",
-      "iomanip": "cpp"
+      "iomanip": "cpp",
+      "condition_variable": "cpp",
+      "mutex": "cpp"
     }
 }

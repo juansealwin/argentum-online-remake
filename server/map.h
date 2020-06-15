@@ -2,8 +2,8 @@
 #define MAP_H
 #include <vector>
 
-#include "../util/json/json.h"
 #include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "base_character.h"
 #include "fixed_tile.h"
 #include "stdint.h"

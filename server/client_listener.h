@@ -8,6 +8,8 @@
 #include "client_handler.h"
 #include "common_socket.h"
 #include "thread.h"
+#include "../util/thread_safe_queue.h"
+
 
 class ClientListener : public Thread {
  public:
@@ -26,6 +28,7 @@ class ClientListener : public Thread {
 
  private:
   std::vector<ArgentumGame *> games;
+  std::vector<ThreadSafeQueue<Command *>*> queues_commands;
   Socket server_socket;
   std::list<ClientHandler *> clients;
   /*Remueve a los clientes del vector clients
