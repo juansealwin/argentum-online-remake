@@ -12,6 +12,7 @@
 #include "map.h"
 #include "monster.h"
 #include <mutex>
+#include "command.h"
 
 #define PRIEST 1334
 #define MERCHANT 1320
