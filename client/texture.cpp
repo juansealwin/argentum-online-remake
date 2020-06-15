@@ -54,6 +54,11 @@ void Texture::render(SDL_Renderer* renderer, SDL_Rect* clip, int x_dest,
     throw SdlException("Error al renderizar la textura", SDL_GetError());
 }
 
+void Texture::render(SDL_Renderer* renderer, SDL_Rect* clip, SDL_Rect* dest) {
+  if (SDL_RenderCopy(renderer, texture, clip, dest))
+    throw SdlException("Error al renderizar la textura", SDL_GetError());
+}
+
 void Texture::free() {
   // Free texture if it exists
   if (texture != NULL) {

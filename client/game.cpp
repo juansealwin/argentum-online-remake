@@ -2,10 +2,9 @@
 
 Game::Game(int width, int height) : screen_width(width), screen_height(height) {
   windowInit();
-  background = new BackgroundMap("mapa_hierba.png", renderer);
-  player =
-      new Human((std::string)PATH_HUMAN_BODY, (std::string)PATH_HUMAN_HEAD,
-                renderer, screen_width / 2, screen_height / 2);
+  background = new BackgroundMap("mapa_hierba.png", renderer, screen_width,
+                                 screen_height);
+  player = new Gnome(renderer, screen_width / 2, screen_height / 2);
 }
 
 void Game::windowInit() {
@@ -24,26 +23,27 @@ void Game::windowInit() {
     else
       SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
   }
-  if (chargeGraphics())
+  /*if (chargeGraphics())
     throw SdlException("Error al cargar las texturas", SDL_GetError());
-  else
-    is_running = true;
+  else*/
+  is_running = true;
 }
 
 Game::~Game() {
   if (renderer) {
     SDL_DestroyRenderer(renderer);
-    renderer = NULL;
+    renderer = nullptr;
   }
   if (window) {
     SDL_DestroyWindow(window);
-    window = NULL;
+    window = nullptr;
   }
   IMG_Quit();
   SDL_Quit();
-  deleteTextures();
-  free(background);
-  free(player);
+  // background->~BackgroundMap();
+  background = nullptr;
+  // player->~Player();
+  player = nullptr;
 }
 
 void Game::deleteTextures() {
@@ -56,14 +56,14 @@ void Game::deleteTextures() {
 }
 
 // mejorar
-bool Game::chargeGraphics() {
+/*bool Game::chargeGraphics() {
   textures.push_back(new Texture());
   textures.push_back(new Texture());
   textures.at(0)->loadTexture((std::string)PATH_GNOME_BODY, renderer);
   textures.at(1)->loadTexture((std::string)PATH_GNOME_HEAD, renderer);
 
   return EXIT_SUCCESS;
-}
+}*/
 
 void Game::fill(int r, int g, int b, int alpha) {
   SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
@@ -112,20 +112,15 @@ void Game::eventHandler() {
   }
 }
 // mejorar
-void Game::update() {
-  SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+void Game::update() {}
+
+void Game::render() {
+  // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
   SDL_RenderClear(renderer);
   background->render();
   player->render();
-  /*textures.at(0)->render(renderer, &body_player,
-                         screen_width / 2 - (player->getBodyW() / 2),
-                         screen_height / 2 - (player->getBodyH() / 2));
-  textures.at(1)->render(
-      renderer, &head_player, screen_width / 2 - (player->getHeadW() / 2),
-      screen_height / 2 - (player->getBodyH() / 2) - (player->getHeadH() / 2));*/
+  SDL_RenderPresent(renderer);
 }
-
-void Game::render() { SDL_RenderPresent(renderer); }
 
 void Game::newPlayer(Player* new_player) { player = new_player; }
 

@@ -2,16 +2,16 @@
 #define GNOME_H
 
 #include <string>
-
+#define PATH_GNOME_BODY "gnomo.png"
+#define PATH_GNOME_HEAD "cabeza_gnomo.png"
 #include "move.h"
 #include "player.h"
 #include "texture.h"
 
 class Gnome : public Player {
  public:
-  Gnome(std::string, std::string, SDL_Renderer*, int, int);
+  Gnome(SDL_Renderer*, int, int);
   ~Gnome();
-  //virtual void render();
 };
 
 #endif

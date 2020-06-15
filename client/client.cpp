@@ -10,7 +10,6 @@ void Client::play() {
   Game game(800, 600);
   Uint32 frame_start;
   int frame_time;
-  //game.newPlayer(&human);
 
   while (game.isRunning()) {
     frame_start = SDL_GetTicks();

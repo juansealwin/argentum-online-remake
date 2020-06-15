@@ -21,6 +21,8 @@ class Texture {
   // Renderiza la textura en un x e y concreto
   void render(SDL_Renderer*, SDL_Rect*, int, int);
 
+  void render(SDL_Renderer*, SDL_Rect*, SDL_Rect*);
+
   void loadTexture(std::string, SDL_Renderer*);
 
   void free();
