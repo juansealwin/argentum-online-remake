@@ -1,5 +1,4 @@
 #include "server_protocol.h"
-
 #include <iostream>
 
 void ServerProtocol::send_response_to_command(const Socket& skt,
@@ -20,4 +19,14 @@ unsigned int ServerProtocol::receive_room_no(const Socket& skt) {
   unsigned char i = 0;
   skt.recv(&i, 1);
   return (unsigned int)i - '0';
+}
+
+int ServerProtocol::receive_starting_info(const Socket& skt) {
+  Json::Value info;
+  info['a'] = "asasas";
+  // unsigned char i;
+  std::stringstream sbuf;
+  msgpack::pack(sbuf, "hola");
+  // skt.recv(&i, 1);
+  return 5;
 }
