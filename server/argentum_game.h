@@ -11,6 +11,7 @@
 #include "base_character.h"
 #include "map.h"
 #include "monster.h"
+#include <mutex>
 
 #define PRIEST 1334
 #define MERCHANT 1320
@@ -32,6 +33,7 @@ class ArgentumGame : public Thread {
 
  private:
   unsigned int room = 0;
+  std::mutex mutex;
   std::string map_name;
   bool alive = true;
   Map *map;

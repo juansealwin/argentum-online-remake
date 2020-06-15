@@ -9,7 +9,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   Json::Value map_cfg;
   map_config >> map_cfg;
   map = new Map(map_cfg);
-  map_name = map_cfg["editorsettings"]["export"]["target"].asString();
+  map_name = map_cfg["editorsettings"]["export"]["target"].;
   std::cout << "New game in map " << map_name << std::endl;
   place_initial_monsters(map_cfg);
 }
@@ -38,13 +38,11 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     } else if (type == SKELETON) {
       character = new Monster(row, col, type, 'e');
     }
-    if (character) {
-      entities.emplace(id, character);
-      map->place_character(row, col, character);
-      id++;
-      std::cout << "id: " << id << std::endl;
-    }
+    map->place_character(row, col, character);
+    // if (character) characters.push_back(character);
+    if (character) characters.emplace(id, character);
     col++;
+    id++;
     if (col == map_cols) {
       row++;
       col = 0;
@@ -53,7 +51,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
 }
 
 void ArgentumGame::move_monsters() {
-  for (auto &character : entities) {
+  for (auto &character : characters) {
     if (!character.second->is_movable()) {
       continue;
     } else {
@@ -103,11 +101,11 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 850; // a tunear
+  const unsigned int game_updates_after = 1000;
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
-  const unsigned int ups = 17; // a tunear
+  const unsigned int ups = 17;
   while (alive) {
     update(one_second_passed);
     one_second_passed &= false;
@@ -124,8 +122,7 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      // print_debug_map();
-      game_status();
+      print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
@@ -141,31 +138,11 @@ void ArgentumGame::print_debug_map() {
 }
 
 ArgentumGame::~ArgentumGame() {
-  for (auto &entitiy : entities) {
-    delete entitiy.second;
+  for (auto &character : characters) {
+    delete character.second;
   }
   delete map;
   this->join();
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
-
-Json::Value ArgentumGame::game_status() {
-  Json::Value status;
-  status["map"] = map_name;
-  status["op"] = "game_status";
-  status["entities"] = Json::Value(Json::arrayValue);
-  for (auto &entity : entities) {
-    Json::Value current_entity_status;
-    current_entity_status["id"] = entity.first;
-    current_entity_status["x"] = entity.second->x_position;
-    current_entity_status["y"] = entity.second->y_position;
-    current_entity_status["type"] = entity.second->get_type();
-    status["entities"].append(current_entity_status);
-    std::cout << status << std::endl;
-    // std::cout << "id: " << entity.first << " at: "
-    //           << "(" << entity.second->x_position << ", "
-    //           << entity.second->y_position << ")" << std::endl;
-  }
-  return status;
-}
