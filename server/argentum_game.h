@@ -43,7 +43,7 @@ class ArgentumGame : public Thread {
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);
   //std::vector<BaseCharacter *> characters;
-  std::map<int, BaseCharacter *> characters;
+  std::map<int, Entity *> entities;
   Json::Value game_status();
 
 };

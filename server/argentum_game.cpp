@@ -39,7 +39,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       character = new Monster(row, col, type, 'e');
     }
     if (character) {
-      characters.emplace(id, character);
+      entities.emplace(id, character);
       map->place_character(row, col, character);
       id++;
       std::cout << "id: " << id << std::endl;
@@ -53,7 +53,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
 }
 
 void ArgentumGame::move_monsters() {
-  for (auto &character : characters) {
+  for (auto &character : entities) {
     if (!character.second->is_movable()) {
       continue;
     } else {
@@ -141,8 +141,8 @@ void ArgentumGame::print_debug_map() {
 }
 
 ArgentumGame::~ArgentumGame() {
-  for (auto &character : characters) {
-    delete character.second;
+  for (auto &entitiy : entities) {
+    delete entitiy.second;
   }
   delete map;
   this->join();
@@ -155,16 +155,17 @@ Json::Value ArgentumGame::game_status() {
   status["map"] = map_name;
   status["op"] = "game_status";
   status["entities"] = Json::Value(Json::arrayValue);
-  for (auto &character : characters) {
+  for (auto &entity : entities) {
     Json::Value current_entity_status;
-    current_entity_status["id"] = character.first;
-    current_entity_status["x"] = character.second->x_position;
-    current_entity_status["y"] = character.second->y_position;
-    current_entity_status["type"] = character.second->get_type();
+    current_entity_status["id"] = entity.first;
+    current_entity_status["x"] = entity.second->x_position;
+    current_entity_status["y"] = entity.second->y_position;
+    current_entity_status["type"] = entity.second->get_type();
     status["entities"].append(current_entity_status);
-    std::cout << "id: " << character.first << " at: "
-              << "(" << character.second->x_position << ", "
-              << character.second->y_position << ")" << std::endl;
+    std::cout << status << std::endl;
+    // std::cout << "id: " << entity.first << " at: "
+    //           << "(" << entity.second->x_position << ", "
+    //           << entity.second->y_position << ")" << std::endl;
   }
   return status;
 }
