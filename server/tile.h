@@ -5,6 +5,7 @@ class Tile {
  public:
   explicit Tile(int representation_id, char representation);
   virtual ~Tile();
+  Tile(const Tile &) = delete;
   char char_representation();
   void place_character(BaseCharacter *character);
   virtual bool can_hold_character();

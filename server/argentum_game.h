@@ -11,6 +11,7 @@
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
 #include "base_character.h"
+#include "hero.h"
 #include "command.h"  //<- guarda con esto y dependencias circulares
 #include "map.h"
 #include "monster.h"
@@ -35,7 +36,7 @@ class ArgentumGame : public Thread {
   void kill();
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
-
+  void add_new_hero(std::string hero_race, std::string hero_class);
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta

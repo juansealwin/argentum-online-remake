@@ -5,13 +5,16 @@
 
 class BaseCharacter : public Entity {
  public:
-  BaseCharacter(int x, int y, int type, char repr, int hp, int level);
+  BaseCharacter(int x, int y, int type, char repr, int max_hp, int level);
+  BaseCharacter(int x, int y, int type, char repr, int level);
   BaseCharacter(int x, int y, int type, char repr);
   virtual ~BaseCharacter();
+  BaseCharacter(const BaseCharacter &) = delete;
 
- private:
-  int hp;
+ protected:
   int level;
+  int max_hp;
+  int current_hp;
   int type;
   char representation;
 

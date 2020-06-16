@@ -4,6 +4,7 @@
 class FixedTile : public Tile {
  public:
   FixedTile(int representation_id, char representation);
+  FixedTile(const FixedTile &) = delete;
   virtual ~FixedTile();
   bool can_hold_character() override;
 };

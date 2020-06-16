@@ -35,6 +35,7 @@ class Map {
   bool move_entity(int x1, int y1, int x2, int y2);
   // Posiciona un personaje en la fila x, columna y
   void place_character(int x, int y, BaseCharacter *b);
+  Map(const Map &) = delete;
 
  private:
   int rows;

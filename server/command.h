@@ -8,6 +8,7 @@ class Command {
  public:
   Command();
   virtual ~Command();
+  Command(const Command &) = delete;
   // Ejecuta cambios en el juego segun
   virtual void execute(ArgentumGame *game) = 0;
 };

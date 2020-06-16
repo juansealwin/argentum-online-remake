@@ -68,7 +68,9 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       row++;
       col = 0;
     }
+    
   }
+  add_new_hero("human", "warrior");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
@@ -97,9 +99,40 @@ void ArgentumGame::auto_move_monsters() {
       // int next_y_pos = entity->y_position + 1;
       int next_x_pos = entity.second->x_position + x_step;
       int next_y_pos = entity.second->y_position + y_step;
+
       map->move_entity(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
     }
   }
+}
+
+void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
+  Json::Value race_stats = entities_cfg["races"][hero_race];
+  Json::Value class_stats = entities_cfg["classes"][hero_class];
+  int strength =
+      race_stats["strength"].asInt() + class_stats["strength"].asInt();
+  int agility = race_stats["agility"].asInt() + class_stats["agility"].asInt();
+  int intelligence =
+      race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt();
+  int base_mana =
+      race_stats["baseMana"].asInt() + class_stats["baseMana"].asInt();
+  int f_race_hp = race_stats["fRaceHp"].asInt();
+  int f_race_recovery = race_stats["fRaceRecovery"].asInt();
+  int f_race_mana = race_stats["fRaceMana"].asInt();
+  int gold = race_stats["gold"].asInt();
+  int constitution = race_stats["constitution"].asInt();
+  int f_class_hp = class_stats["fClassHp"].asInt();
+  int f_class_mana = class_stats["fClassMana"].asInt();
+  int f_class_meditation = class_stats["fClassMeditation"].asInt();
+  int level = class_stats["level"].asInt();
+  // TO DO: Buscar coordenadas libres, resolver lo del type
+  Hero* hero =
+      new Hero(1, 1, 123, 'h', level, strength, intelligence, agility,
+               constitution, base_mana, f_class_hp, f_race_hp, f_race_recovery,
+               f_race_mana, f_class_mana, f_class_meditation, gold);
+  // TO DO: que el id usado en monstruos se pueda usar aca
+  map->place_character(1, 1, hero);
+
+  entities.emplace(5251, hero);
 }
 
 void ArgentumGame::update(bool one_second_update) {
@@ -179,6 +212,7 @@ void ArgentumGame::print_debug_map() {
 
 ArgentumGame::~ArgentumGame() {
   for (auto &entity : entities) {
+    std::cout << "DELETING @@@id@@@@: " << entity.first << std::endl;
     delete entity.second;
   }
   delete map;

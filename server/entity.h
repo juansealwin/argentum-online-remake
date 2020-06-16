@@ -4,6 +4,7 @@
 class Entity {
  public:
   Entity(int x, int y, int type, char repr);
+  Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
   virtual bool is_movable();
@@ -11,6 +12,7 @@ class Entity {
   virtual int get_type();
   int x_position;
   int y_position;
+
 
  private:
   int type;
