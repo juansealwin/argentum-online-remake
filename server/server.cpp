@@ -1,7 +1,8 @@
 #include "server.h"
 
-Server::Server(const char *port, const char *map_cfg_file)
-    : listener(port, map_cfg_file) {}
+Server::Server(const char *port, const char *map_cfg_file,
+               const char *entities_cfg_file)
+    : listener(port, map_cfg_file, entities_cfg_file) {}
 
 void Server::run() {
   this->listener.start();

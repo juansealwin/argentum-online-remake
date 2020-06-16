@@ -5,14 +5,16 @@
 
 class BaseCharacter : public Entity {
  public:
+  BaseCharacter(int x, int y, int type, char repr, int hp, int level);
   BaseCharacter(int x, int y, int type, char repr);
   virtual ~BaseCharacter();
-  int x_position;
-  int y_position;
 
  private:
+  int hp;
+  int level;
   int type;
   char representation;
+
 };
 
 #endif  // BASE_CHARACTER_H

@@ -1,22 +1,22 @@
 {
   "npcs": {
     "goblin": {
-      "maxHp": "100",
+      "maxHp": 100,
       "dps": 25,
       "level": 1
     },
     "spider": {
-      "maxHp": "75",
+      "maxHp": 75,
       "dps": 15,
       "level": 1
     },
     "skeleton": {
-      "maxHp": "125",
+      "maxHp": 125,
       "dps": 30,
       "level": 1
     },
     "zombie": {
-      "maxHp": "150",
+      "maxHp": 150,
       "dps": 40,
       "level": 1
     }

@@ -4,7 +4,8 @@
 
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           std::ifstream &map_config)
+                           std::ifstream &map_config,
+                           std::ifstream &entities_config)
     : room(room_number),
       commands_queue(commands_queue),
       mutex() {  //, map(20,20) {
@@ -12,9 +13,11 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   std::unique_lock<std::mutex> lock(mutex);
   Json::Value map_cfg;
   map_config >> map_cfg;
+  entities_config >> entities_cfg;
   map = new Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in map " << map_name << std::endl;
+  std::cout << "Entities cfg: " << std::endl << entities_cfg;
   place_initial_monsters(map_cfg);
 }
 void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
@@ -35,13 +38,24 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     } else if (type == BANKER) {
       character = new BaseCharacter(row, col, type, 'b');
     } else if (type == GOBLIN) {
-      character = new Monster(row, col, type, 'g');
+      Json::Value entity = entities_cfg["npcs"]["goblin"];
+      character = new Monster(row, col, type, 'g', entity["maxHp"].asInt(),
+                              entity["level"].asInt(), entity["dps"].asInt());
     } else if (type == ZOMBIE) {
-      character = new Monster(row, col, type, 'z');
+      Json::Value entity = entities_cfg["npcs"]["zombie"];
+
+      character = new Monster(row, col, type, 'g', entity["maxHp"].asInt(),
+                              entity["level"].asInt(), entity["dps"].asInt());
     } else if (type == SPIDER) {
-      character = new Monster(row, col, type, 'a');
+      Json::Value entity = entities_cfg["npcs"]["spider"];
+
+      character = new Monster(row, col, type, 'g', entity["maxHp"].asInt(),
+                              entity["level"].asInt(), entity["dps"].asInt());
     } else if (type == SKELETON) {
-      character = new Monster(row, col, type, 'e');
+      Json::Value entity = entities_cfg["npcs"]["skeleton"];
+
+      character = new Monster(row, col, type, 'g', entity["maxHp"].asInt(),
+                              entity["level"].asInt(), entity["dps"].asInt());
     }
     map->place_character(row, col, character);
     // if (character) characters.push_back(character);
@@ -143,11 +157,11 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      // print_debug_map();
+      print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      game_status();
+      // game_status();
       // commands_queue->push(new MoveCommand(14, 0, 0));
       // MoveCommand cmd(14, 0, 0);
       // cmd.execute(this);

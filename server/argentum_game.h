@@ -11,9 +11,9 @@
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
 #include "base_character.h"
+#include "command.h"  //<- guarda con esto y dependencias circulares
 #include "map.h"
 #include "monster.h"
-#include "command.h" //<- guarda con esto y dependencias circulares
 #include "move_command.h"
 #define PRIEST 1334
 #define MERCHANT 1320
@@ -26,7 +26,9 @@
 class ArgentumGame : public Thread {
  public:
   // Instancia una nueva sala de Argentum
-  ArgentumGame(const unsigned int room, ThreadSafeQueue<Command *> *commands_queue, std::ifstream &map_config);
+  ArgentumGame(const unsigned int room,
+               ThreadSafeQueue<Command *> *commands_queue,
+               std::ifstream &map_config, std::ifstream &entities_config);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -54,6 +56,7 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   std::map<int, Entity *> entities;
   Json::Value game_status();
+  Json::Value entities_cfg;
 };
 
 #endif  // ARGENTUMGAME_H
