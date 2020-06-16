@@ -32,7 +32,7 @@ class Map {
     donde estaba. Si logra moverse, los datos del personaje
     son actualizados.
       */
-  bool move_character(int x1, int y1, int x2, int y2);
+  bool move_entity(int x1, int y1, int x2, int y2);
   // Posiciona un personaje en la fila x, columna y
   void place_character(int x, int y, BaseCharacter *b);
 

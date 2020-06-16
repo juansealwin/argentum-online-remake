@@ -73,7 +73,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   Entity *entity = entities.at(entity_id);
-  map->move_character(entity->x_position, entity->y_position, x, y);
+  map->move_entity(entity->x_position, entity->y_position, x, y);
 }
 
 void ArgentumGame::auto_move_monsters() {
@@ -97,7 +97,7 @@ void ArgentumGame::auto_move_monsters() {
       // int next_y_pos = entity->y_position + 1;
       int next_x_pos = entity.second->x_position + x_step;
       int next_y_pos = entity.second->y_position + y_step;
-      map->move_character(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
+      map->move_entity(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
     }
   }
 }

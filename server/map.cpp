@@ -86,7 +86,7 @@ void Map::place_character(int x, int y, BaseCharacter *b) {
   matrix[x][y]->place_character(b);
 }
 
-bool Map::move_character(int x1, int y1, int x2, int y2) {
+bool Map::move_entity(int x1, int y1, int x2, int y2) {
   if (x2 >= rows || y2 >= cols || x2 < 0 || y2 < 0) return false;
   if (matrix[x2][y2]->can_hold_character()) {
     std::swap(matrix[x1][y1]->character, matrix[x2][y2]->character);
