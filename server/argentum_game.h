@@ -58,6 +58,7 @@ class ArgentumGame : public Thread {
   std::map<int, Entity *> entities;
   Json::Value game_status();
   Json::Value entities_cfg;
+  unsigned int entities_ids = 0;
 };
 
 #endif  // ARGENTUMGAME_H
