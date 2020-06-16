@@ -1,6 +1,8 @@
 #include "elf.h"
 
 Elf::Elf(SDL_Renderer* ren, int new_x, int new_y) {
+  half_screen_w = new_x;
+  half_screen_h = new_y;
   x = new_x;
   y = new_y;
   width = 25;
@@ -9,8 +11,8 @@ Elf::Elf(SDL_Renderer* ren, int new_x, int new_y) {
   body_rect = {0, 0, width, height};
   head_rect = {0, 0, 17, 16};
   animation_move = new Move(width, height, total_clips);
-  body_texture.loadTexture(PATH_ELF_BODY, renderer);
-  head_texture.loadTexture(PATH_ELF_HEAD, renderer);
+  body_texture.loadTexture(ID_ELF, renderer);
+  head_texture.loadTexture(ID_ELF_HEAD, renderer);
 }
 
 Elf::~Elf() {

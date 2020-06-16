@@ -5,9 +5,9 @@
 #define PATH_HUMAN_BODY "humano.png"
 #define PATH_HUMAN_HEAD "cabeza_humano.png"
 #include "move.h"
-#include "player.h"
+#include "character.h"
 
-class Human : public Player {
+class Human : public Character {
  public:
   Human(SDL_Renderer*, int, int);
   ~Human();

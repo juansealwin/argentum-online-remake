@@ -2,7 +2,7 @@
 
 Game::Game(int width, int height) : screen_width(width), screen_height(height) {
   windowInit();
-  background = new BackgroundMap("mapa_hierba.png", renderer, screen_width,
+  background = new BackgroundMap(ID_MAP_GRASS, renderer, screen_width,
                                  screen_height);
   player = new Gnome(renderer, screen_width / 2, screen_height / 2);
 }
@@ -21,12 +21,12 @@ void Game::windowInit() {
       throw SdlException("Error en la inicialización del render",
                          SDL_GetError());
     else
-      SDL_SetRenderDrawColor(renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+    //Fondo negro
+      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+
+    is_running = true;
   }
-  /*if (chargeGraphics())
-    throw SdlException("Error al cargar las texturas", SDL_GetError());
-  else*/
-  is_running = true;
+
 }
 
 Game::~Game() {
@@ -83,26 +83,22 @@ void Game::eventHandler() {
       switch (event.key.keysym.sym) {
         case SDLK_UP:
           player->move(MOVE_UP);
-          player->updateFaceProfile(MOVE_UP);
-          background->update(0, -32);
+          background->update(0, -TILE_SIZE);
           break;
 
         case SDLK_DOWN:
           player->move(MOVE_DOWN);
-          player->updateFaceProfile(MOVE_DOWN);
-          background->update(0, 32);
+          background->update(0, TILE_SIZE);
           break;
 
         case SDLK_LEFT:
           player->move(MOVE_LEFT);
-          player->updateFaceProfile(MOVE_LEFT);
-          background->update(-32, 0);
+          background->update(-TILE_SIZE, 0);
           break;
 
         case SDLK_RIGHT:
           player->move(MOVE_RIGHT);
-          player->updateFaceProfile(MOVE_RIGHT);
-          background->update(32, 0);
+          background->update(TILE_SIZE, 0);
           break;
 
         default:
@@ -115,14 +111,13 @@ void Game::eventHandler() {
 void Game::update() {}
 
 void Game::render() {
-  // SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
   SDL_RenderClear(renderer);
   background->render();
   player->render();
   SDL_RenderPresent(renderer);
 }
 
-void Game::newPlayer(Player* new_player) { player = new_player; }
+void Game::newPlayer(Character* new_player) { player = new_player; }
 
 bool Game::isRunning() { return is_running; }
 

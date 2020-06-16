@@ -11,6 +11,7 @@
 #define CLIP_RIGHT 'R'
 #define CHARACTER_HEIGHT 45
 #define CHARACTER_WIDTH 25
+#define TILE_SIZE 32
 
 typedef enum {
   MOVE_DOWN = 0,

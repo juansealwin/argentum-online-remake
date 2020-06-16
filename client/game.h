@@ -10,7 +10,7 @@
 #include "exception_messages.h"
 #include "gnome.h"
 #include "human.h"
-#include "player.h"
+#include "character.h"
 #include "sdl_exception.h"
 #include "texture.h"
 #define GAME_NAME "Argentum"
@@ -21,7 +21,7 @@ class Game {
   SDL_Window* window;
   SDL_Renderer* renderer;
   std::vector<Texture*> textures;
-  Player* player;
+  Character* player;
   BackgroundMap* background;
   bool is_running;
   int screen_width = 800;
@@ -33,7 +33,7 @@ class Game {
   void windowInit();
   void fill(int, int, int, int);
   bool isRunning();
-  void newPlayer(Player*);
+  void newPlayer(Character*);
   //bool chargeGraphics();
   void eventHandler();
   void update();

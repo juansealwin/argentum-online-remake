@@ -1,10 +1,10 @@
 #include "background_map.h"
 
-BackgroundMap::BackgroundMap(std::string background_path, SDL_Renderer* ren,
+BackgroundMap::BackgroundMap(int id_background_path, SDL_Renderer* ren,
                              int scr_width, int scr_height)
     : renderer(ren), screen_width(scr_width), screen_height(scr_height) {
-  background_texture.loadTexture(background_path, renderer);
-  map_piece = {1200, 1200, screen_width, screen_height};
+  background_texture.loadTexture(ID_MAP_GRASS, renderer);
+  map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, 0, screen_width, screen_height};
 }
 
@@ -48,6 +48,6 @@ void BackgroundMap::render() {
   background_texture.render(renderer, &map_piece, &viewport);
 }
 
-void BackgroundMap::changeMap(std::string new_map) {
-  background_texture.loadTexture(new_map, renderer);
+void BackgroundMap::changeMap(int id_new_map) {
+  background_texture.loadTexture(id_new_map, renderer);
 }

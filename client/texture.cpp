@@ -8,14 +8,14 @@ Texture::Texture() {
 
 Texture::~Texture() { free(); }
 
-void Texture::loadTexture(std::string path_file, SDL_Renderer* renderer) {
+void Texture::loadTexture(int id_path, SDL_Renderer* renderer) {
   // Libera la textura si ya tenia algo cargado
   free();
-
+  
   // La textura final
   SDL_Texture* new_texture = NULL;
 
-  SDL_Surface* new_surface = IMG_Load(path_file.c_str());
+  SDL_Surface* new_surface = IMG_Load(texture_paths.getPathTexture(id_path));
   // texture = IMG_LoadTexture(renderer, filename.c_str());
 
   if (!new_surface)

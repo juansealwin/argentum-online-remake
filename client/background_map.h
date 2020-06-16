@@ -16,11 +16,11 @@ class BackgroundMap {
   int screen_height;
 
  public:
-  BackgroundMap(std::string, SDL_Renderer*, int, int);
+  BackgroundMap(int, SDL_Renderer*, int, int);
   ~BackgroundMap();
   void render();
   void update(int, int);
-  void changeMap(std::string);
+  void changeMap(int);
 };
 
 #endif

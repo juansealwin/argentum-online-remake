@@ -5,10 +5,10 @@
 #define PATH_DWARF_BODY "enano.png"
 #define PATH_DWARF_HEAD "cabeza_enano.png"
 #include "move.h"
-#include "player.h"
+#include "character.h"
 #include "texture.h"
 
-class Dwarf : public Player {
+class Dwarf : public Character {
  public:
   Dwarf(SDL_Renderer*, int, int);
   ~Dwarf();
