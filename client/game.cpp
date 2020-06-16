@@ -4,7 +4,7 @@ Game::Game(int width, int height) : screen_width(width), screen_height(height) {
   windowInit();
   current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
 
-  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128);
+  /*current_map->loadCharacter(renderer, ID_SPIDER, 128, 128);
   current_map->loadCharacter(renderer, ID_SKELETON, 160, 128);
   current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128);
   current_map->loadCharacter(renderer, ID_ZOMBIE, 250, 128);
@@ -24,7 +24,7 @@ Game::Game(int width, int height) : screen_width(width), screen_height(height) {
   current_map->loadCharacter(renderer, ID_ZOMBIE, 250+50, 128+250);
   current_map->loadCharacter(renderer, ID_PRIEST, 280+200, 128+200);
   current_map->loadCharacter(renderer, ID_MERCHANT, 320+300, 128+200);
-  current_map->loadCharacter(renderer, ID_BANKER, 360+300, 128+300);
+  current_map->loadCharacter(renderer, ID_BANKER, 360+300, 128+300);*/
   player = new Gnome(renderer, screen_width / 2, screen_height / 2);
 }
 
