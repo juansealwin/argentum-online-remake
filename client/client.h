@@ -5,15 +5,14 @@
 #include <vector>
 
 #include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "common_socket.h"
-#include "dwarf.h"
-#include "elf.h"
 #include "game.h"
 #include "gnome.h"
 #include "human.h"
 #include "protocol.h"
 #include "texture.h"
-#include "../util/json/json.h"
+#define FRAME_DELAY 5000 / 60
 
 class Client {
  private:
