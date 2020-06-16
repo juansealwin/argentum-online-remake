@@ -19,19 +19,20 @@ void ClientHandler::run() {
     const unsigned char* response =
         reinterpret_cast<const unsigned char*>(message.c_str());
     uint16_t message_length = 7;
-    send_response(response, &message_length);
+    // send_response(response, &message_length);
     alive = false;
   }
   this->peer_socket.close();
 }
 unsigned char ClientHandler::receive_request() {
-  return ServerProtocol::receive_command(this->peer_socket);
+  // return ServerProtocol::receive_command(this->peer_socket);
+  return 'h';
 }
 
 void ClientHandler::send_response(const unsigned char* response,
                                   const uint16_t* size) {
-  return ServerProtocol::send_response_to_command(this->peer_socket, response,
-                                                  size);
+  // return ServerProtocol::send_response_to_command(this->peer_socket, response,
+  //                                                 size);
 }
 
 bool ClientHandler::is_alive() { return this->alive; }

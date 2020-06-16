@@ -5,7 +5,6 @@
 
 #include "argentum_game.h"
 #include "common_socket.h"
-#include "server_protocol.h"
 #include "thread.h"
 
 class ClientHandler : public Thread {

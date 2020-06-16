@@ -1,24 +1,37 @@
 #include "client.h"
+#include <iostream>
 
-Client::Client(const char *host, const char *port) {
-  // this->socket.connect(host, port);
+Client::Client(const char* host, const char* port) {
+  Socket socket;
+  socket.connect(host, port);
+  this->socket = std::move(socket);
 }
 
-const bool Client::valid_request(std::string &request) { return true; }
+Client::~Client() {}
+
+const bool Client::valid_request(std::string& request) { return true; }
 
 void Client::play() {
-  Game game(800, 600);
-  Gnome human;
+  Json::Value starting_info;
+  starting_info["room_number"] = 1;
+  Json::FastWriter fastWriter;
+  std::string starting_info_string = fastWriter.write(starting_info);
+  std::cout << "lo que envio: " << starting_info_string << std::endl;
+  Protocol::sendMessage(socket, starting_info_string);
+  std::cout << "lo mandé\n";
 
-  game.newPlayer(&human);
-  while (game.isRunning()) {
-    game.eventHandler();
-    // std::cout << "Termino event handler" << std::endl;
-    game.update();
-    // std::cout << "Termino update" << std::endl;
-    game.render();
-    // std::cout << "Termino render" << std::endl;
-  }
+  // Game game(800, 600);
+  // Gnome human;
+
+  // game.newPlayer(&human);
+  // while (game.isRunning()) {
+  //   game.eventHandler();
+  //   // std::cout << "Termino event handler" << std::endl;
+  //   game.update();
+  //   // std::cout << "Termino update" << std::endl;
+  //   game.render();
+  //   // std::cout << "Termino render" << std::endl;
+  // }
 
   /*Dwarf elfo;
   //Para que inicie el sprite de frente
@@ -83,10 +96,10 @@ void Client::play() {
   }*/
 }
 
-void Client::send_request(const unsigned char *request, std::size_t size) {
-  ClientProtocol::send_request(socket, request, size);
-}
+// void Client::send_request(const unsigned char* request, std::size_t size) {
+//   ClientProtocol::send_request(socket, request, size);
+// }
 
-std::vector<unsigned char> Client::get_response() {
-  return ClientProtocol::receive_request_response(socket);
-}
+// std::vector<unsigned char> Client::get_response() {
+//   return ClientProtocol::receive_request_response(socket);
+// }
