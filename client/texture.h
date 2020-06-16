@@ -6,10 +6,16 @@
 
 #include "drawable.h"
 #include "sdl_exception.h"
+#include "paths.h"
 
-class Texture : public Drawable {
+
+
+class Texture {
  private:
   SDL_Texture* texture;
+  Paths texture_paths;
+  int width;
+  int height;
 
  public:
   Texture();
@@ -17,27 +23,17 @@ class Texture : public Drawable {
   ~Texture();
 
   // Renderiza la textura en un x e y concreto
-  virtual void render(SDL_Renderer*, SDL_Rect*, int, int);
+  void render(SDL_Renderer*, SDL_Rect*, int, int);
 
-  void loadTexture(std::string, SDL_Renderer*);
+  void render(SDL_Renderer*, SDL_Rect*, SDL_Rect*);
+
+  void loadTexture(int, SDL_Renderer*);
 
   void free();
 
-  void loadTexture2(const std::string& filename, SDL_Renderer*);
+  int getWidth() const;
 
-  void render2(SDL_Renderer* renderer);
-
-  virtual int getWidth() const;
-
-  virtual int getHeight() const;
-
-  virtual int getX() const;
-
-  virtual int getY() const;
-
-  virtual void setX(int);
-
-  virtual void setY(int);
+  int getHeight() const;
 };
 
 #endif
