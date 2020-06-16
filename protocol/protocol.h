@@ -3,11 +3,13 @@
 
 #include <string>
 
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "common_socket.h"
 
 namespace Protocol {
-const std::string receiveMessage(const Socket& socket);
-void sendMessage(const Socket& socket, const std::string& message);
+const Json::Value receiveMessage(const Socket& socket);
+void sendMessage(const Socket& socket, const Json::Value& info);
 };  // namespace Protocol
 
 #endif
