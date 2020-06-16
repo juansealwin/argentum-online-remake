@@ -13,7 +13,7 @@ class Drawable {
   int height;
 
  public:
-  virtual void render() = 0;
+  virtual void render(int, int) = 0;
   virtual int getWidth() const = 0;
   virtual int getHeight() const = 0;
   virtual int getX() const = 0;

@@ -11,7 +11,7 @@ Gnome::Gnome(SDL_Renderer* ren, int new_x, int new_y) {
   // El 10 de body_rect y del offset es debido a que el grafico es distinto
   body_rect = {0, 10, width, height};
   head_rect = {0, 0, 17, 17};
-  animation_move = new Move(width, height, total_clips);
+  animation_move = new Move(width, height, ID_GNOME);
   animation_move->setOffsetY(10);
   body_texture.loadTexture(ID_GNOME, renderer);
   head_texture.loadTexture(ID_GNOME_HEAD, renderer);

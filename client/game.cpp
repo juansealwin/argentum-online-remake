@@ -2,8 +2,29 @@
 
 Game::Game(int width, int height) : screen_width(width), screen_height(height) {
   windowInit();
-  background = new BackgroundMap(ID_MAP_GRASS, renderer, screen_width,
-                                 screen_height);
+  current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
+
+  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128);
+  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128);
+  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128);
+  current_map->loadCharacter(renderer, ID_ZOMBIE, 250, 128);
+  current_map->loadCharacter(renderer, ID_PRIEST, 280, 128);
+  current_map->loadCharacter(renderer, ID_MERCHANT, 320, 128);
+  current_map->loadCharacter(renderer, ID_BANKER, 360, 128);
+  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128+100);
+  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128+100);
+  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128+100);
+  current_map->loadCharacter(renderer, ID_ZOMBIE, 250, 128);
+  current_map->loadCharacter(renderer, ID_PRIEST, 280, 128+100);
+  current_map->loadCharacter(renderer, ID_MERCHANT, 320, 128+100);
+  current_map->loadCharacter(renderer, ID_BANKER, 360, 128+100);
+  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128+300);
+  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128+300);
+  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128+200);
+  current_map->loadCharacter(renderer, ID_ZOMBIE, 250+50, 128+250);
+  current_map->loadCharacter(renderer, ID_PRIEST, 280+200, 128+200);
+  current_map->loadCharacter(renderer, ID_MERCHANT, 320+300, 128+200);
+  current_map->loadCharacter(renderer, ID_BANKER, 360+300, 128+300);
   player = new Gnome(renderer, screen_width / 2, screen_height / 2);
 }
 
@@ -21,12 +42,11 @@ void Game::windowInit() {
       throw SdlException("Error en la inicialización del render",
                          SDL_GetError());
     else
-    //Fondo negro
+      // Fondo negro
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 
     is_running = true;
   }
-
 }
 
 Game::~Game() {
@@ -40,8 +60,8 @@ Game::~Game() {
   }
   IMG_Quit();
   SDL_Quit();
-  // background->~BackgroundMap();
-  background = nullptr;
+  // currentmap->~Map();
+  current_map = nullptr;
   // player->~Player();
   player = nullptr;
 }
@@ -54,16 +74,6 @@ void Game::deleteTextures() {
     it = textures.erase(it);
   }
 }
-
-// mejorar
-/*bool Game::chargeGraphics() {
-  textures.push_back(new Texture());
-  textures.push_back(new Texture());
-  textures.at(0)->loadTexture((std::string)PATH_GNOME_BODY, renderer);
-  textures.at(1)->loadTexture((std::string)PATH_GNOME_HEAD, renderer);
-
-  return EXIT_SUCCESS;
-}*/
 
 void Game::fill(int r, int g, int b, int alpha) {
   SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
@@ -83,22 +93,22 @@ void Game::eventHandler() {
       switch (event.key.keysym.sym) {
         case SDLK_UP:
           player->move(MOVE_UP);
-          background->update(0, -TILE_SIZE);
+          current_map->update(0, -TILE_SIZE);
           break;
 
         case SDLK_DOWN:
           player->move(MOVE_DOWN);
-          background->update(0, TILE_SIZE);
+          current_map->update(0, TILE_SIZE);
           break;
 
         case SDLK_LEFT:
           player->move(MOVE_LEFT);
-          background->update(-TILE_SIZE, 0);
+          current_map->update(-TILE_SIZE, 0);
           break;
 
         case SDLK_RIGHT:
           player->move(MOVE_RIGHT);
-          background->update(TILE_SIZE, 0);
+          current_map->update(TILE_SIZE, 0);
           break;
 
         default:
@@ -112,12 +122,12 @@ void Game::update() {}
 
 void Game::render() {
   SDL_RenderClear(renderer);
-  background->render();
-  player->render();
+  current_map->render();
+  player->renderAsHero();
   SDL_RenderPresent(renderer);
 }
 
-void Game::newPlayer(Character* new_player) { player = new_player; }
+void Game::newPlayer(PlayableCharacter* new_player) { player = new_player; }
 
 bool Game::isRunning() { return is_running; }
 

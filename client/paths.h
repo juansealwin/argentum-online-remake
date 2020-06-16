@@ -12,7 +12,14 @@
 #define ID_GNOME_HEAD 5
 #define ID_DWARF 6
 #define ID_DWARF_HEAD 7
-#define ID_MAP_GRASS 8
+#define ID_SPIDER 8
+#define ID_SKELETON 9
+#define ID_GOBLIN 10
+#define ID_ZOMBIE 11
+#define ID_PRIEST 12
+#define ID_MERCHANT 13
+#define ID_BANKER 14
+#define ID_MAP_GRASS 15
 
 class Paths {
  private:

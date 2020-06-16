@@ -26,23 +26,19 @@ class Move {
   int character_height;
   int offset_y = 0;
   std::map<char, size_t> current_clip;
-  int total_clips;
+  int clips_up_down;
+  int clips_left_right;
 
  public:
   Move(int, int, int);
   ~Move();
-
   void setOffsetY(int);
-
   SDL_Rect getNextClip(move_t);
-
   SDL_Rect nextClipMoveUp();
-
   SDL_Rect nextClipMoveDown();
-
   SDL_Rect nextClipMoveLeft();
-
   SDL_Rect nextClipMoveRight();
+  int setTotalClips(int);
 };
 
 #endif
