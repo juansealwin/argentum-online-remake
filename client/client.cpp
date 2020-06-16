@@ -103,3 +103,22 @@ void Client::play() {
 // std::vector<unsigned char> Client::get_response() {
 //   return ClientProtocol::receive_request_response(socket);
 // }
+
+
+
+
+// Client::Client(const char* host, const char* port) {
+//   Socket socket;
+//   socket.connect(host, port);
+//   this->socket = std::move(socket);
+// }
+
+// void Client::play() {
+//   Json::Value starting_info;
+//   starting_info["room_number"] = 1;
+//   Json::FastWriter fastWriter;
+//   std::string starting_info_string = fastWriter.write(starting_info);
+//   std::cout << "lo que envio: " << starting_info_string << std::endl;
+//   Protocol::sendMessage(socket, starting_info_string);
+//   std::cout << "lo mandé\n";
+// }
