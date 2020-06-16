@@ -12,8 +12,8 @@ class BaseCharacter : public Entity {
   BaseCharacter(const BaseCharacter &) = delete;
 
  protected:
-  int level;
   int max_hp;
+  int level;
   int current_hp;
   int type;
   char representation;
