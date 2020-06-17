@@ -16,6 +16,9 @@
 #include "map.h"
 #include "monster.h"
 #include "move_command.h"
+#include "banker.h"
+#include "merchant.h"
+#include "priest.h"
 #define PRIEST 1334
 #define MERCHANT 1320
 #define BANKER 1352

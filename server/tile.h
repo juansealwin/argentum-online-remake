@@ -7,9 +7,11 @@ class Tile {
   virtual ~Tile();
   Tile(const Tile &) = delete;
   char char_representation();
-  void place_character(BaseCharacter *character);
+  //void place_character(BaseCharacter *character);
+  void place_entity(Entity *character);
   virtual bool can_hold_character();
-  BaseCharacter *character = nullptr;
+  //BaseCharacter *character = nullptr;
+  Entity *entity = nullptr;
 
  private:
   int representation_id;

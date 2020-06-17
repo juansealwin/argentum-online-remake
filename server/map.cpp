@@ -82,15 +82,19 @@ Map::~Map() {
   }
 }
 
-void Map::place_character(int x, int y, BaseCharacter *b) {
-  matrix[x][y]->place_character(b);
+// void Map::place_character(int x, int y, BaseCharacter *b) {
+//   matrix[x][y]->place_character(b);
+// }
+
+void Map::place_entity(int x, int y, Entity *e) {
+  matrix[x][y]->place_entity(e);
 }
 
 bool Map::move_entity(int x1, int y1, int x2, int y2) {
   if (x2 >= rows || y2 >= cols || x2 < 0 || y2 < 0) return false;
   if (matrix[x2][y2]->can_hold_character()) {
-    std::swap(matrix[x1][y1]->character, matrix[x2][y2]->character);
-    matrix[x2][y2]->character->set_x_y_position(x2, y2);
+    std::swap(matrix[x1][y1]->entity, matrix[x2][y2]->entity);
+    matrix[x2][y2]->entity->set_x_y_position(x2, y2);
     return true;
   }
   return false;

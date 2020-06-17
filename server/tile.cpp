@@ -6,12 +6,14 @@ Tile::Tile(int representation_id, char representation)
 Tile::~Tile() {}
 
 char Tile::char_representation() {
-  if (character) {
-    return character->char_representation();
+  if (entity) {
+    return entity->char_representation();
   }
   return representation;
 }
 
-bool Tile::can_hold_character() { return character == nullptr; }
+void Tile::place_entity(Entity *e) { entity = e; }
 
-void Tile::place_character(BaseCharacter *b) { character = b; }
+bool Tile::can_hold_character() { return entity == nullptr; }
+
+//void Tile::place_character(BaseCharacter *b) { character = b; }

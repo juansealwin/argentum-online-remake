@@ -30,11 +30,11 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     // en el futuro podria simplificarse, el caracter lo recibo para debug
 
     if (type == PRIEST) {
-      character = new BaseCharacter(row, col, type, 'p');
+      character = new Priest(row, col, type, 'p');
     } else if (type == MERCHANT) {
-      character = new BaseCharacter(row, col, type, 'm');
+      character = new Merchant(row, col, type, 'm');
     } else if (type == BANKER) {
-      character = new BaseCharacter(row, col, type, 'b');
+      character = new Banker(row, col, type, 'b');
     } else if (type == GOBLIN) {
       Json::Value entity = entities_cfg["npcs"]["goblin"];
       character = new Monster(row, col, entity["id"].asInt(), 'g',
@@ -59,7 +59,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
                               entity["maxHp"].asInt(), entity["level"].asInt(),
                               entity["dps"].asInt(), map);
     }
-    map->place_character(row, col, character);
+    map->place_entity(row, col, character);
     // if (character) characters.push_back(character);
     if (character) {
       entities.emplace(entities_ids, character);
@@ -112,7 +112,7 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
                constitution, base_mana, f_class_hp, f_race_hp, f_race_recovery,
                f_race_mana, f_class_mana, f_class_meditation, gold, class_id, map);
   // TO DO: que el id usado en monstruos se pueda usar aca
-  map->place_character(1, 1, hero);
+  map->place_entity(1, 1, hero);
   entities.emplace(entities_ids, hero);
   entities_ids++;
 }
