@@ -7,7 +7,6 @@ class Entity {
   Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
-  virtual bool is_movable();
   virtual void set_x_y_position(int x, int y);
   virtual int get_type();
   virtual void update() = 0;

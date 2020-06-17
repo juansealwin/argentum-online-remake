@@ -9,7 +9,6 @@ class Monster : public BaseCharacter {
   Monster(int x, int y, int id, char repr, int hp, int level, int dps,
           Map *map);
   Monster(const Monster &) = delete;
-  bool is_movable() override;
   void update() override;
   virtual ~Monster();
 

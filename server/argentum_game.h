@@ -51,7 +51,6 @@ class ArgentumGame : public Thread {
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
   void update(bool one_second_update);
-  void auto_move_monsters();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);

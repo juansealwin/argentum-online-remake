@@ -12,6 +12,6 @@ void Entity::set_x_y_position(int x, int y) {
 
 int Entity::get_type() { return type; }
 
-bool Entity::is_movable() { return false; }
+//bool Entity::is_movable() { return false; }
 
 char Entity::char_representation() { return representation; }

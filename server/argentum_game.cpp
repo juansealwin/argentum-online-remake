@@ -79,11 +79,11 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   map->move_entity(entity->x_position, entity->y_position, x, y);
 }
 
-void ArgentumGame::auto_move_monsters() {
-  for (auto &entity : entities) {
-    entity.second->update();
-  }
-}
+//void ArgentumGame::auto_move_monsters() {
+//  for (auto &entity : entities) {
+//    entity.second->update();
+//  }
+//}
 
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
@@ -120,7 +120,10 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
 void ArgentumGame::update(bool one_second_update) {
   std::unique_lock<std::mutex> lock(mutex);
   if (one_second_update) {
-    auto_move_monsters();
+    //auto_move_monsters();
+    for (auto &entity : entities) {
+      entity.second->update();
+    }
   }
   while (!commands_queue->is_empty()) {
     Command *cmd = commands_queue->pop();

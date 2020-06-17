@@ -13,8 +13,6 @@ Monster::Monster(int x, int y, int id, char repr, int hp, int level, int dps,
   moves.push_back(fourth_move);
 }
 
-bool Monster::is_movable() { return true; }
-
 void Monster::update() {
   // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
   // Atacar si hay enemigo cercano (danando con dps)
