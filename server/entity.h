@@ -10,6 +10,7 @@ class Entity {
   virtual bool is_movable();
   virtual void set_x_y_position(int x, int y);
   virtual int get_type();
+  virtual void update() = 0;
   int x_position;
   int y_position;
 

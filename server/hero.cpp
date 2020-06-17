@@ -1,10 +1,9 @@
 #include "hero.h"
-
 Hero::Hero(int x, int y, int race_id, char repr, int level,
            int strength, int intelligence, int agility, int constitution,
            int base_mana, int f_class_hp, int f_race_hp, int f_race_recovery,
-           int f_race_mana, int f_class_mana, int f_class_meditation, int gold, int class_id)
-    : BaseCharacter(x, y, race_id, repr, level),
+           int f_race_mana, int f_class_mana, int f_class_meditation, int gold, int class_id, Map *map)
+    : BaseCharacter(x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
       agility(agility),
@@ -20,6 +19,11 @@ Hero::Hero(int x, int y, int race_id, char repr, int level,
 
         max_hp = constitution * f_class_hp * f_race_hp * level;
       }
+
+  void Hero::update() {
+    //aumento de vida, mana, etc.
+    //std::cout << "Updating hero: not implemented" << std::endl;
+  }
 
   int Hero::damage(Hero *other) { //deberia cambiarlo por un baseCharacter ya que puedo atacar a monstruos
     int dmg = strength; //+ sumar lo de los items

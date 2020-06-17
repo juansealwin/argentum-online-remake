@@ -39,25 +39,25 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       Json::Value entity = entities_cfg["npcs"]["goblin"];
       character = new Monster(row, col, entity["id"].asInt(), 'g',
                               entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt());
+                              entity["dps"].asInt(), map);
     } else if (type == ZOMBIE) {
       Json::Value entity = entities_cfg["npcs"]["zombie"];
 
       character = new Monster(row, col, entity["id"].asInt(), 'g',
                               entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt());
+                              entity["dps"].asInt(), map);
     } else if (type == SPIDER) {
       Json::Value entity = entities_cfg["npcs"]["spider"];
 
       character = new Monster(row, col, entity["id"].asInt(), 'g',
                               entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt());
+                              entity["dps"].asInt(), map);
     } else if (type == SKELETON) {
       Json::Value entity = entities_cfg["npcs"]["skeleton"];
 
       character = new Monster(row, col, entity["id"].asInt(), 'g',
                               entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt());
+                              entity["dps"].asInt(), map);
     }
     map->place_character(row, col, character);
     // if (character) characters.push_back(character);
@@ -81,28 +81,7 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 
 void ArgentumGame::auto_move_monsters() {
   for (auto &entity : entities) {
-    if (!entity.second->is_movable()) {
-      continue;
-    } else {
-      int x_step = rand() % 2;  // Si es 0, se queda quieto. Si es 1, se mueve.
-      int y_step = rand() % 2;
-      int y_top = rand() % 2;
-      if (y_top == 1) {
-        y_step *= -1;
-      }
-      int x_left = rand() % 2;
-      if (x_left == 1) {
-        x_step *= -1;
-      }
-      int current_x_pos = entity.second->x_position;
-      int current_y_pos = entity.second->y_position;
-      // int next_x_pos = entity->x_position + 1;
-      // int next_y_pos = entity->y_position + 1;
-      int next_x_pos = entity.second->x_position + x_step;
-      int next_y_pos = entity.second->y_position + y_step;
-
-      map->move_entity(current_x_pos, current_y_pos, next_x_pos, next_y_pos);
-    }
+    entity.second->update();
   }
 }
 
@@ -131,7 +110,7 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Hero *hero =
       new Hero(1, 1, race_id, 'h', level, strength, intelligence, agility,
                constitution, base_mana, f_class_hp, f_race_hp, f_race_recovery,
-               f_race_mana, f_class_mana, f_class_meditation, gold, class_id);
+               f_race_mana, f_class_mana, f_class_meditation, gold, class_id, map);
   // TO DO: que el id usado en monstruos se pueda usar aca
   map->place_character(1, 1, hero);
   entities.emplace(entities_ids, hero);
