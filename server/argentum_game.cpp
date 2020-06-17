@@ -8,8 +8,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
                            std::ifstream &entities_config)
     : room(room_number),
       commands_queue(commands_queue),
-      mutex() {  //, map(20,20) {
-  // Seguramente esto tenga que ser un mapa del estilo id:npc
+      mutex() { 
   std::unique_lock<std::mutex> lock(mutex);
   Json::Value map_cfg;
   map_config >> map_cfg;
@@ -17,52 +16,66 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map = new Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in map " << map_name << std::endl;
+  place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 }
-void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
-  //std::unique_lock<std::mutex> lock(mutex);
+
+void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
   int row = 0;
   int col = 0;
   int map_cols = map_cfg["width"].asInt();
   for (const auto &jv : map_cfg["layers"][2]["data"]) {
-    BaseCharacter *character = nullptr;
+    Entity *e = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
 
     if (type == PRIEST) {
-      character = new Priest(row, col, type, 'p');
+      e = new Priest(row, col, type, 'p');
     } else if (type == MERCHANT) {
-      character = new Merchant(row, col, type, 'm');
+      e = new Merchant(row, col, type, 'm');
     } else if (type == BANKER) {
-      character = new Banker(row, col, type, 'b');
-    } else if (type == GOBLIN) {
-      Json::Value entity = entities_cfg["npcs"]["goblin"];
-      character = new Monster(row, col, entity["id"].asInt(), 'g',
-                              entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt(), map);
-    } else if (type == ZOMBIE) {
-      Json::Value entity = entities_cfg["npcs"]["zombie"];
-
-      character = new Monster(row, col, entity["id"].asInt(), 'g',
-                              entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt(), map);
-    } else if (type == SPIDER) {
-      Json::Value entity = entities_cfg["npcs"]["spider"];
-
-      character = new Monster(row, col, entity["id"].asInt(), 'g',
-                              entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt(), map);
-    } else if (type == SKELETON) {
-      Json::Value entity = entities_cfg["npcs"]["skeleton"];
-
-      character = new Monster(row, col, entity["id"].asInt(), 'g',
-                              entity["maxHp"].asInt(), entity["level"].asInt(),
-                              entity["dps"].asInt(), map);
+      e = new Banker(row, col, type, 'b');
     }
-    map->place_entity(row, col, character);
-    // if (character) characters.push_back(character);
-    if (character) {
-      entities.emplace(entities_ids, character);
+    if (e) {
+      map->place_entity(row, col, e);
+      entities.emplace(entities_ids, e);
+      entities_ids++;
+    }
+    col++;
+    if (col == map_cols) {
+      row++;
+      col = 0;
+    }
+  }
+}
+
+void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
+  // std::unique_lock<std::mutex> lock(mutex);
+  int row = 0;
+  int col = 0;
+  int map_cols = map_cfg["width"].asInt();
+  for (const auto &jv : map_cfg["layers"][2]["data"]) {
+    Entity *e = nullptr;
+    int type = jv.asInt();
+    // en el futuro podria simplificarse, el caracter lo recibo para debug
+    Json::Value entity = Json::arrayValue;
+    if (type == GOBLIN) {
+      entity = entities_cfg["npcs"]["goblin"];
+    } else if (type == ZOMBIE) {
+      entity = entities_cfg["npcs"]["zombie"];
+    } else if (type == SPIDER) {
+      entity = entities_cfg["npcs"]["spider"];
+    } else if (type == SKELETON) {
+      entity = entities_cfg["npcs"]["skeleton"];
+    }
+    if (type == GOBLIN || type == ZOMBIE || type == SPIDER || type == SKELETON) {
+      e = new Monster(row, col, entity["id"].asInt(), 'g',
+                      entity["maxHp"].asInt(), entity["level"].asInt(),
+                      entity["dps"].asInt(), map);
+    }
+    if (e) {
+      map->place_entity(row, col, e);
+      entities.emplace(entities_ids, e);
       entities_ids++;
     }
     col++;
@@ -78,12 +91,6 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   Entity *entity = entities.at(entity_id);
   map->move_entity(entity->x_position, entity->y_position, x, y);
 }
-
-//void ArgentumGame::auto_move_monsters() {
-//  for (auto &entity : entities) {
-//    entity.second->update();
-//  }
-//}
 
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
@@ -107,10 +114,10 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   int race_id = race_stats["id"].asInt();
   int class_id = class_stats["id"].asInt();
   // TO DO: Buscar coordenadas libres, resolver lo del type
-  Hero *hero =
-      new Hero(1, 1, race_id, 'h', level, strength, intelligence, agility,
-               constitution, base_mana, f_class_hp, f_race_hp, f_race_recovery,
-               f_race_mana, f_class_mana, f_class_meditation, gold, class_id, map);
+  Hero *hero = new Hero(1, 1, race_id, 'h', level, strength, intelligence,
+                        agility, constitution, base_mana, f_class_hp, f_race_hp,
+                        f_race_recovery, f_race_mana, f_class_mana,
+                        f_class_meditation, gold, class_id, map);
   // TO DO: que el id usado en monstruos se pueda usar aca
   map->place_entity(1, 1, hero);
   entities.emplace(entities_ids, hero);
@@ -120,7 +127,7 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
 void ArgentumGame::update(bool one_second_update) {
   std::unique_lock<std::mutex> lock(mutex);
   if (one_second_update) {
-    //auto_move_monsters();
+    // auto_move_monsters();
     for (auto &entity : entities) {
       entity.second->update();
     }

@@ -22,7 +22,4 @@ BaseCharacter::BaseCharacter(int x, int y, int type, char repr)
   max_hp = current_hp = level = 1;
 }
 
-void BaseCharacter::update() {
-  //std::cout << "Trying to update BaseCharacter, this method should be removed" << std::endl;
-}
 BaseCharacter::~BaseCharacter() {}

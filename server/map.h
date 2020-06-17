@@ -28,13 +28,12 @@ class Map {
   void debug_print();
   /*
     Devuelve true si el personaje colocado en x1,y1
-    puede moverse a x2,y2. Si no, devuelve false y se queda
-    donde estaba. Si logra moverse, los datos del personaje
-    son actualizados.
+    puede moverse a x2,y2. Si no, devuelve false. Es responsabilidad luego
+    actualizar el x,y de la entidad
       */
   bool move_entity(int x1, int y1, int x2, int y2);
   // Posiciona un personaje en la fila x, columna y
-  //void place_character(int x, int y, BaseCharacter *b);
+  // void place_character(int x, int y, BaseCharacter *b);
   void place_entity(int x, int y, Entity *e);
   Map(const Map &) = delete;
 

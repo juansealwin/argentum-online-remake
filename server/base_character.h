@@ -17,8 +17,6 @@ class BaseCharacter : public Entity {
   BaseCharacter(int x, int y, int type, char repr);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
-  //eliminar
-  void update() override;
  protected:
   int max_hp;
   int level;
