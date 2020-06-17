@@ -47,6 +47,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
       col = 0;
     }
   }
+
 }
 
 void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
@@ -83,8 +84,9 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       row++;
       col = 0;
     }
+
   }
-  add_new_hero("human", "warrior");
+  //add_new_hero("human", "warrior");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {

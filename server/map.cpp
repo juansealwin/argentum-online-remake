@@ -15,15 +15,21 @@ void Map::load_terrain(Json::Value &map_json) {
     it.reserve(cols);
     for (int curr_col = 0; curr_col < cols; ++curr_col) {
       Tile *tile = nullptr;
+      bool fixed = false;
+      bool safe = false;
       int type = map_json["layers"][0]["data"][i].asInt();
       int type2 = map_json["layers"][1]["data"][i].asInt();
+      char repr = '.';
       if (type2 != 0) {
-        tile = new FixedTile(type, 'b');
+        fixed = true;
+        repr = 'b';
       } else if (type == FLOOR) {
-        tile = new Tile(type, ',');
+        safe = true;
+        repr = 'f';
       } else {
-        tile = new Tile(type, '.');
       }
+      tile = new Tile(type, repr, safe, fixed);
+
       it.push_back(tile);
       i++;
     }
@@ -46,7 +52,8 @@ void Map::place_entity(int x, int y, Entity *e) {
 
 bool Map::move_entity(int x1, int y1, int x2, int y2) {
   if (x2 >= rows || y2 >= cols || x2 < 0 || y2 < 0) return false;
-  if (matrix[x2][y2]->can_hold_character()) {
+  if (!matrix[x2][y2]->fixed) {
+    //Cambiar este swap por poner al lugar como ocupado
     std::swap(matrix[x1][y1]->entity, matrix[x2][y2]->entity);
     return true;
   }
