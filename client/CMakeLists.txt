@@ -7,6 +7,7 @@ set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(COMMON_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../common)
 set(PROTOCOL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../protocol)
 set(NET_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../net)
+set(UTIL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../util)
 
 find_package(SDL2 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
@@ -23,6 +24,7 @@ include_directories(${PROJECT_SOURCE_DIR})
 include_directories(${COMMON_SOURCE_DIR})
 include_directories(${PROTOCOL_SOURCE_DIR})
 include_directories(${NET_SOURCE_DIR})
+include_directories(${UTIL_SOURCE_DIR})
 
 
 #qt5_wrap_ui(UIS_HEADERS
@@ -47,6 +49,9 @@ file(GLOB protocol_header_files ${PROTOCOL_SOURCE_DIR}/*.h)
 file(GLOB net_source_files ${NET_SOURCE_DIR}/*.cpp)
 file(GLOB net_header_files ${NET_SOURCE_DIR}/*.h)
 
+file(GLOB util_source_files ${UTIL_SOURCE_DIR}/*.cpp)
+file(GLOB util_header_files ${UTIL_SOURCE_DIR}/*.h)
+
 add_executable(client
 		${client_source_files}
 		${client_header_files}
@@ -56,6 +61,8 @@ add_executable(client
 		${protocol_header_files}
 		${net_source_files}
 		${net_header_files}
+    ${util_source_files}
+		${util_header_files}
 		)
 
 #target_link_libraries(client Qt5::Widgets Qt5::DBus)

@@ -1,7 +1,8 @@
 #include "client_listener.h"
 
+#include <iostream>
+
 #include "client_handler.h"
-#include "server_protocol.h"
 
 ClientListener::ClientListener(const char *port, const char *map_cfg_file) {
   Socket server_socket;
@@ -43,7 +44,9 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
-    unsigned int room_number = ServerProtocol::receive_room_no(clientSkt);
+    Json::Value starting_info = Protocol::receiveMessage(clientSkt);
+    std::cout << "numero hab: " << starting_info["roomNumber"] << std::endl;
+    unsigned int room_number = starting_info["roomNumber"].asInt();
     ClientHandler *client =
         new ClientHandler(std::move(clientSkt), games[room_number]);
     clients.push_back(client);
