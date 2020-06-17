@@ -21,4 +21,22 @@ Hero::Hero(int x, int y, int race_id, char repr, int level,
         max_hp = constitution * f_class_hp * f_race_hp * level;
       }
 
+  int Hero::damage(Hero *other) { //deberia cambiarlo por un baseCharacter ya que puedo atacar a monstruos
+    int dmg = strength; //+ sumar lo de los items
+    //actualizar experiencia
+    return other->receive_damage(dmg, false);
+  }
+  //devuelve el dano que efectivamente recibi
+  int Hero::receive_damage(int damage, bool critical) {
+    int actual_damage = damage;
+    if (critical) actual_damage *= CRITICAL_DAMAGE_MULTIPLIER;
+    else { //esquivar si rand(0,1) ** agilidad < 0.001
+    // si no se pudo esquivar:
+    //defensa = rand(armaduramin,armaduramax) + rand(cascomin,cascomas) + rand(cascomin,cascomax)
+    int defense = 0;
+    actual_damage -= defense;
+    } //Hacer chequeos si esta vivo etc?
+    return actual_damage;
+  }
+
 Hero::~Hero() {}

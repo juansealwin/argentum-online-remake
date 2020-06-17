@@ -5,9 +5,13 @@
 
 class BaseCharacter : public Entity {
  public:
-  BaseCharacter(int x, int y, int type, char repr, int max_hp, int level);
-  BaseCharacter(int x, int y, int type, char repr, int level);
-  BaseCharacter(int x, int y, int type, char repr);
++  //Este primer constructor lo usa la clase hija Monster
++  BaseCharacter(int x, int y, int type, char repr, int max_hp, int level, Map *map);
++  //Este segundo constructor lo usa el heroe ya que max_hp en ese caso es calculado
++  BaseCharacter(int x, int y, int type, char repr, int level, Map *map);
++  //Este tercer constructor es temporal para los npcs (sacerdote, etc) ya que no tienen nada que ver con los monstruos/heroes
++  //se puede borrar esto y hacer que esos npcs hereden directamente de entidad
++  BaseCharacter(int x, int y, int type, char repr, Map *map);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
 
