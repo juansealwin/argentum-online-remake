@@ -11,10 +11,6 @@ class BaseCharacter : public Entity {
   // Este segundo constructor lo usa el heroe ya que max_hp en ese caso es
   // calculado
   BaseCharacter(int x, int y, int type, char repr, int level, Map* map);
-  // Este tercer constructor es temporal para los npcs (sacerdote, etc) ya que
-  // no tienen nada que ver con los monstruos/heroes se puede borrar esto y hacer
-  // que esos npcs hereden directamente de entidad. No necesitan mapa ya que son fijos
-  BaseCharacter(int x, int y, int type, char repr);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
  protected:

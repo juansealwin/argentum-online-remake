@@ -1,8 +1,8 @@
-#include "base_character.h"
+#include "entity.h"
 #include "stdint.h"
 #ifndef BANKER_H
 #define BANKER_H
-class Banker : public BaseCharacter {
+class Banker : public Entity {
  public:
   Banker(int x, int y, int type, char repr);
   virtual ~Banker();

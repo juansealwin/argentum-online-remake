@@ -1,8 +1,8 @@
-#include "base_character.h"
+#include "entity.h"
 #include "stdint.h"
 #ifndef MERCHANT_H
 #define MERCHANT_H
-class Merchant : public BaseCharacter {
+class Merchant : public Entity {
  public:
   Merchant(int x, int y, int type, char repr);
   virtual ~Merchant();

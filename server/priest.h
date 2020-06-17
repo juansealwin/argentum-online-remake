@@ -1,8 +1,8 @@
-#include "base_character.h"
+#include "entity.h"
 #include "stdint.h"
 #ifndef PRIEST_H
 #define PRIEST_H
-class Priest : public BaseCharacter {
+class Priest : public Entity {
  public:
   Priest(int x, int y, int type, char repr);
   virtual ~Priest();
