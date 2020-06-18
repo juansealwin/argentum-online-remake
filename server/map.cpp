@@ -46,18 +46,20 @@ Map::~Map() {
   }
 }
 
-void Map::place_entity(int x, int y, Entity *e) {
-  matrix[x][y]->place_entity(e);
+void Map::empty_cell(int x, int y) { matrix[x][y]->free = true; }
+
+bool Map::tile_is_safe(int x, int y) { return matrix[x][y]->safe; }
+
+bool Map::can_ocupy_cell(int x, int y) {
+  if (x >= rows || y >= cols || x < 0 || y < 0) return false;
+  if (matrix[x][y]->fixed || !matrix[x][y]->free) return false;
+  return true;
 }
 
-bool Map::move_entity(int x1, int y1, int x2, int y2) {
-  if (x2 >= rows || y2 >= cols || x2 < 0 || y2 < 0) return false;
-  if (!matrix[x2][y2]->fixed) {
-    //Cambiar este swap por poner al lugar como ocupado
-    std::swap(matrix[x1][y1]->entity, matrix[x2][y2]->entity);
-    return true;
-  }
-  return false;
+bool Map::ocupy_cell(int x, int y) {
+  if (!can_ocupy_cell(x, y)) return false;
+  matrix[x][y]->free = false;
+  return true;
 }
 
 void Map::debug_print() {

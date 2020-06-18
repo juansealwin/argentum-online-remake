@@ -6,9 +6,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            std::ifstream &map_config,
                            std::ifstream &entities_config)
-    : room(room_number),
-      commands_queue(commands_queue),
-      mutex() { 
+    : room(room_number), commands_queue(commands_queue), mutex() {
   std::unique_lock<std::mutex> lock(mutex);
   Json::Value map_cfg;
   map_config >> map_cfg;
@@ -37,7 +35,8 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
       e = new Banker(row, col, type, 'b');
     }
     if (e) {
-      map->place_entity(row, col, e);
+      // map->place_entity(row, col, e);
+      map->ocupy_cell(row, col);
       entities.emplace(entities_ids, e);
       entities_ids++;
     }
@@ -47,7 +46,6 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
       col = 0;
     }
   }
-
 }
 
 void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
@@ -69,13 +67,15 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     } else if (type == SKELETON) {
       entity = entities_cfg["npcs"]["skeleton"];
     }
-    if (type == GOBLIN || type == ZOMBIE || type == SPIDER || type == SKELETON) {
+    if (type == GOBLIN || type == ZOMBIE || type == SPIDER ||
+        type == SKELETON) {
       e = new Monster(row, col, entity["id"].asInt(), 'g',
                       entity["maxHp"].asInt(), entity["level"].asInt(),
                       entity["dps"].asInt(), map);
     }
     if (e) {
-      map->place_entity(row, col, e);
+      // map->place_entity(row, col, e);
+      map->ocupy_cell(row, col);
       entities.emplace(entities_ids, e);
       entities_ids++;
     }
@@ -84,44 +84,37 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       row++;
       col = 0;
     }
-
   }
-  //add_new_hero("human", "warrior");
+  Entity *e = new Monster(99, 99, 133, 'g', 133, 133, 133, map);
+  map->ocupy_cell(0, 99);
+  entities.emplace(entities_ids, e);
+  entities_ids++;
+  // add_new_hero("human", "warrior");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   Entity *entity = entities.at(entity_id);
-  map->move_entity(entity->x_position, entity->y_position, x, y);
+  map->ocupy_cell(x, y);
+  map->empty_cell(entity->x_position, entity->y_position);
 }
 
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
-  int strength =
-      race_stats["strength"].asInt() + class_stats["strength"].asInt();
-  int agility = race_stats["agility"].asInt() + class_stats["agility"].asInt();
-  int intelligence =
-      race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt();
-  int base_mana =
-      race_stats["baseMana"].asInt() + class_stats["baseMana"].asInt();
-  int f_race_hp = race_stats["fRaceHp"].asInt();
-  int f_race_recovery = race_stats["fRaceRecovery"].asInt();
-  int f_race_mana = race_stats["fRaceMana"].asInt();
-  int gold = race_stats["gold"].asInt();
-  int constitution = race_stats["constitution"].asInt();
-  int f_class_hp = class_stats["fClassHp"].asInt();
-  int f_class_mana = class_stats["fClassMana"].asInt();
-  int f_class_meditation = class_stats["fClassMeditation"].asInt();
-  int level = class_stats["level"].asInt();
-  int race_id = race_stats["id"].asInt();
-  int class_id = class_stats["id"].asInt();
-  // TO DO: Buscar coordenadas libres, resolver lo del type
-  Hero *hero = new Hero(1, 1, race_id, 'h', level, strength, intelligence,
-                        agility, constitution, base_mana, f_class_hp, f_race_hp,
-                        f_race_recovery, f_race_mana, f_class_mana,
-                        f_class_meditation, gold, class_id, map);
+  Hero *hero = new Hero(
+      1, 1, race_stats["id"].asInt(), 'h', class_stats["level"].asInt(),
+      race_stats["strength"].asInt() + class_stats["strength"].asInt(),
+      race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt(),
+      race_stats["agility"].asInt() + class_stats["agility"].asInt(),
+      race_stats["constitution"].asInt(),
+      race_stats["baseMana"].asInt() + class_stats["baseMana"].asInt(),
+      class_stats["fClassHp"].asInt(), race_stats["fRaceHp"].asInt(),
+      race_stats["fRaceRecovery"].asInt(), race_stats["fRaceMana"].asInt(),
+      class_stats["fClassMana"].asInt(),
+      class_stats["fClassMeditation"].asInt(), race_stats["gold"].asInt(),
+      class_stats["id"].asInt(), map);
   // TO DO: que el id usado en monstruos se pueda usar aca
-  map->place_entity(1, 1, hero);
+  map->ocupy_cell(1, 1);
   entities.emplace(entities_ids, hero);
   entities_ids++;
 }

@@ -7,8 +7,8 @@ class Tile {
   ~Tile();
   Tile(const Tile &) = delete;
   char char_representation();
-  void place_entity(Entity *character);
-  Entity *entity = nullptr;
+  void fill_cell();
+  void empty_cell();
 
  private:
   int representation_id;

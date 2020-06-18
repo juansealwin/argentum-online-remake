@@ -25,17 +25,18 @@ class Map {
   Map(Json::Value &map_json);
   ~Map();
   void debug_print();
-  /*
-    Devuelve true si el personaje colocado en x1,y1
-    puede moverse a x2,y2. Si no, devuelve false. Es responsabilidad luego
-    actualizar el x,y de la entidad
-      */
-  bool move_entity(int x1, int y1, int x2, int y2);
-  // Posiciona un personaje en la fila x, columna y
-  // void place_character(int x, int y, BaseCharacter *b);
-  void place_entity(int x, int y, Entity *e);
-  Map(const Map &) = delete;
 
+  void empty_cell(int x, int y);
+  bool can_ocupy_cell(int x, int y);
+  /*
+  Devuelve true si el personaje colocado en x1,y1
+  puede moverse a x2,y2. Si no, devuelve false. Es responsabilidad luego
+  actualizar el x,y de la entidad. La celda en x1,y1 quedara como liberada,
+  x2,y2 ocupada. Se debe llamar a empty_cell con el lugar anterior.
+    */
+  bool ocupy_cell(int x, int y);
+  Map(const Map &) = delete;
+  bool tile_is_safe(int x, int y);
  private:
   int rows;
   int cols;
