@@ -85,11 +85,11 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       col = 0;
     }
   }
-  Entity *e = new Monster(99, 99, 133, 'g', 133, 133, 133, map);
-  map->ocupy_cell(0, 99);
-  entities.emplace(entities_ids, e);
-  entities_ids++;
-  // add_new_hero("human", "warrior");
+  // Entity *e = new Monster(99, 99, 133, 'g', 133, 133, 133, map);
+  // map->ocupy_cell(0, 99);
+  // entities.emplace(entities_ids, e);
+  // entities_ids++;
+  add_new_hero("human", "warrior");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {

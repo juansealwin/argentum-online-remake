@@ -25,7 +25,7 @@ void Monster::update() {
   int next_x_pos = x_position + x_step;
   int next_y_pos = y_position + y_step;
   if (map->can_ocupy_cell(next_x_pos, next_y_pos) &&
-      map->tile_is_safe(next_x_pos, next_y_pos)) {
+      !map->tile_is_safe(next_x_pos, next_y_pos)) {
     map->ocupy_cell(next_x_pos, next_y_pos);
     map->empty_cell(x_position, y_position);
     x_position = next_x_pos;
