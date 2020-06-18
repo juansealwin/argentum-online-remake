@@ -13,10 +13,12 @@ class BaseCharacter : public Entity {
   BaseCharacter(int x, int y, int type, char repr, int level, Map* map);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
- protected:
-  int max_hp;
-  int level;
+
   int current_hp;
+  int max_hp;
+
+ protected:
+  int level;
   int type;
   char representation;
   Map *map;

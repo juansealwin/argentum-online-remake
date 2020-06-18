@@ -109,11 +109,9 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
       race_stats["strength"].asInt() + class_stats["strength"].asInt(),
       race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt(),
       race_stats["agility"].asInt() + class_stats["agility"].asInt(),
-      race_stats["constitution"].asInt(),
-      race_stats["baseMana"].asInt() + class_stats["baseMana"].asInt(),
-      class_stats["fClassHp"].asInt(), race_stats["fRaceHp"].asInt(),
-      race_stats["fRaceRecovery"].asInt(), race_stats["fRaceMana"].asInt(),
-      class_stats["fClassMana"].asInt(),
+      race_stats["constitution"].asInt(), class_stats["fClassHp"].asInt(),
+      race_stats["fRaceHp"].asInt(), race_stats["fRaceRecovery"].asInt(),
+      race_stats["fRaceMana"].asInt(), class_stats["fClassMana"].asInt(),
       class_stats["fClassMeditation"].asInt(), race_stats["gold"].asInt(),
       class_stats["id"].asInt(), map);
   map->ocupy_cell(x, y);
