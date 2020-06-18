@@ -25,55 +25,56 @@
       "id" : 1288
     }
   },
-  "defense": {
-    "shields": {
-      "turtleShield": {
-        "minDefense": 1,
-        "maxDefense": 2,
-        "id" : 1
-      },
-      "ironShield": {
-        "minDefense": 1,
-        "maxDefense": 4,
-        "id" : 2
-      }
-    },
-    "helmets": {
-      "hood": {
-        "minDefense": 1,
-        "maxDefense": 4,
-        "id" : 3
-      },
-      "ironHelmet": {
-        "minDefense": 4,
-        "maxDefense": 8,
-        "id" : 4
-      },
-      "magicHat": {
-        "minDefense": 4,
-        "maxDefense": 12,
-        "id" : 5
-      }
-    },
-    "armour": {
-      "leatherArmour": {
-        "minDefense": 2,
-        "maxDefense": 16,
-        "id" : 6
-      },
-      "plateArmour": {
-        "minDefense": 15,
-        "maxDefense": 30,
-        "id" : 7
-      },
-      "blueTunic": {
-        "minDefense": 6,
-        "maxDefense": 10,
-        "id" : 8
-      }
-    }
-  },
   "items": {
+
+    "defense": {
+      "shields": {
+        "turtleShield": {
+          "minDefense": 1,
+          "maxDefense": 2,
+          "id" : 1
+        },
+        "ironShield": {
+          "minDefense": 1,
+          "maxDefense": 4,
+          "id" : 2
+        }
+      },
+      "helmets": {
+        "hood": {
+          "minDefense": 1,
+          "maxDefense": 4,
+          "id" : 3
+        },
+        "ironHelmet": {
+          "minDefense": 4,
+          "maxDefense": 8,
+          "id" : 4
+        },
+        "magicHat": {
+          "minDefense": 4,
+          "maxDefense": 12,
+          "id" : 5
+        }
+      },
+      "armour": {
+        "leatherArmour": {
+          "minDefense": 2,
+          "maxDefense": 16,
+          "id" : 6
+        },
+        "plateArmour": {
+          "minDefense": 15,
+          "maxDefense": 30,
+          "id" : 7
+        },
+        "blueTunic": {
+          "minDefense": 6,
+          "maxDefense": 10,
+          "id" : 8
+        }
+      }
+    },
     "consumables": {
       "hpPotion": {
         "hpRegen": 50,
