@@ -46,6 +46,16 @@ Map::~Map() {
   }
 }
 
+std::tuple<int, int> Map::get_random_free_space() {
+  while (true) {
+    int x = rand() % 100;
+    int y = rand() % 100;
+    if (matrix[x][y]->free && !matrix[x][y]->fixed) {
+      return std::tuple<int, int>(x, y);
+    }
+  }
+}
+
 void Map::empty_cell(int x, int y) { matrix[x][y]->free = true; }
 
 bool Map::tile_is_safe(int x, int y) { return matrix[x][y]->safe; }

@@ -37,12 +37,14 @@ class Map {
   bool ocupy_cell(int x, int y);
   Map(const Map &) = delete;
   bool tile_is_safe(int x, int y);
+  std::tuple<int, int> get_random_free_space();
  private:
   int rows;
   int cols;
   // Procesa la primera capa del mapa de tiled en el json
   void load_terrain(Json::Value &map_json);
   std::vector<std::vector<Tile *> > matrix;
+  
 };
 
 #endif  // MAP_H

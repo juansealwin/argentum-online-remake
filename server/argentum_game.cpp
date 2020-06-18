@@ -101,8 +101,11 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
+  std::tuple<int, int> free_tile = map->get_random_free_space();
+  int x = std::get<0>(free_tile);
+  int y = std::get<1>(free_tile);
   Hero *hero = new Hero(
-      1, 1, race_stats["id"].asInt(), 'h', class_stats["level"].asInt(),
+      x, y, race_stats["id"].asInt(), 'h', class_stats["level"].asInt(),
       race_stats["strength"].asInt() + class_stats["strength"].asInt(),
       race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt(),
       race_stats["agility"].asInt() + class_stats["agility"].asInt(),
@@ -113,8 +116,7 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
       class_stats["fClassMana"].asInt(),
       class_stats["fClassMeditation"].asInt(), race_stats["gold"].asInt(),
       class_stats["id"].asInt(), map);
-  // TO DO: que el id usado en monstruos se pueda usar aca
-  map->ocupy_cell(1, 1);
+  map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;
 }
