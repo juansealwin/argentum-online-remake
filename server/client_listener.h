@@ -9,6 +9,9 @@
 #include "client_handler.h"
 #include "common_socket.h"
 #include "thread.h"
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
+#include "protocol.h"
 
 class ClientListener : public Thread {
  public:

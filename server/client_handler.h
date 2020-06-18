@@ -3,9 +3,11 @@
 
 #include <string>
 
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "argentum_game.h"
 #include "common_socket.h"
-#include "server_protocol.h"
+#include "protocol.h"
 #include "thread.h"
 
 class ClientHandler : public Thread {
@@ -27,14 +29,7 @@ class ClientHandler : public Thread {
  private:
   ArgentumGame *game;
   Socket peer_socket;
-
   bool alive = true;
-  /* Recibe un nuevo comando del cliente
-   (AYUDA, RENDIRSE, o un numero de 3 cifras)*/
-  unsigned char receive_request();
-  /*Envia una respuesta al comando recibido, segun como afecte el comando
-  al juego*/
-  void send_response(const unsigned char *response, const uint16_t *size);
 };
 
 #endif  // CLIENTHANDLER_H
