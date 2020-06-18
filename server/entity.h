@@ -4,13 +4,14 @@
 class Entity {
  public:
   Entity(int x, int y, int type, char repr);
+  Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
-  virtual bool is_movable();
-  virtual void set_x_y_position(int x, int y);
   virtual int get_type();
+  virtual void update() = 0;
   int x_position;
   int y_position;
+
 
  private:
   int type;

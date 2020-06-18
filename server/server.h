@@ -9,7 +9,8 @@
 
 class Server {
  public:
-  explicit Server(const char *port, const char *map_cfg_file);
+  explicit Server(const char *port, const char *map_cfg_file,
+                  const char *entities_cfg_file);
   // Corre un servidor para que los clientes que se conecten
   // Juegen a GuessNumberGame
   void run();

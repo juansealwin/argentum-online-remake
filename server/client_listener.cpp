@@ -4,17 +4,19 @@
 
 #include "client_handler.h"
 
-ClientListener::ClientListener(const char *port, const char *map_cfg_file) {
+ClientListener::ClientListener(const char *port, const char *map_cfg_file,
+                               const char *entities_cfg_file) {
   Socket server_socket;
   server_socket.bind_and_listen(port);
   this->server_socket = std::move(server_socket);
   const int rooms = 1;
   for (int i = 0; i < rooms; i++) {
-    std::ifstream file(map_cfg_file);
+    std::ifstream map_file(map_cfg_file);
+    std::ifstream entities_file(entities_cfg_file);
     ThreadSafeQueue<Command *> *commands_queue =
         new ThreadSafeQueue<Command *>();
 
-    ArgentumGame *game = new ArgentumGame(i, commands_queue, file);
+    ArgentumGame *game = new ArgentumGame(i, commands_queue, map_file, entities_file);
     game->start();
     games.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
