@@ -12,6 +12,7 @@ class Event {
   Event();
   Event(int, request_t);
   Event(request_t);
+  Event(int);
   Event(Event&);
   ~Event();
   bool isEnding();

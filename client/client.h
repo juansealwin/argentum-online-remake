@@ -3,15 +3,21 @@
 
 #include <string>
 #include <vector>
-
+#include "game_renderer.h"
+#include "game_updater.h"
+#include "event_sender.h"
+#include "event_handler.h"
 #include "client_protocol.h"
 #include "common_socket.h"
 #include "game.h"
 #include "texture.h"
+#include "blockingqueue.h"
 #define FRAME_DELAY 5000 / 60
 
 class Client {
  private:
+  int id_player;
+
   Socket socket;
   /*Devuelve True si el usuario esta intentando pedir ayuda,
   rendirse o enviar un numero al servidor.
