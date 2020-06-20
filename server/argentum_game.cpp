@@ -177,15 +177,16 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      print_debug_map();
+      //print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      // game_status();
+      game_status();
       // commands_queue->push(new MoveCommand(14, 0, 0));
       // MoveCommand cmd(14, 0, 0);
       // cmd.execute(this);
     }
+    //std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
 
   // std::cout << "UPS: " << updates << std::endl;
@@ -213,23 +214,42 @@ ArgentumGame::~ArgentumGame() {
 
 unsigned int ArgentumGame::get_room() { return room; }
 
-Json::Value ArgentumGame::game_status() {
+std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
-  Json::Value status;
-  status["map"] = map_name;
-  status["op"] = "game_status";
-  status["entities"] = Json::Value(Json::arrayValue);
+  std::vector<unsigned char> status;
+  uint16_t notification_id = 01;
+  status.push_back(notification_id);
+  std::cout <<"Hello " << std::endl;
   for (auto &entity : entities) {
-    Json::Value current_entity_status;
-    current_entity_status["id"] = entity.first;
-    current_entity_status["x"] = entity.second->x_position;
-    current_entity_status["y"] = entity.second->y_position;
-    current_entity_status["type"] = entity.second->get_type();
-    status["entities"].append(current_entity_status);
-    // std::cout << status << std::endl;
-    // std::cout << "id: " << entity.first << " at: "
-    //           << "(" << entity.second->x_position << ", "
-    //           << entity.second->y_position << ")" << std::endl;
+    status.push_back(entity.second->type);
+    status.push_back(entity.second->x_position);
+    status.push_back(entity.second->y_position);
   }
+  std::cout << "vector size is " << status.size() << std::endl;
+  for (int i = 0; i < status.size(); i++) {
+    std::cout << "Vector at pos " << i << ": " << (int)status[i] << std::endl;
+  }
+  //vector d unsigned char [tipo(es un int), x_pos(es un int), y_pos(un int)]
   return status;
 }
+
+// Json::Value ArgentumGame::game_status() {
+//   std::unique_lock<std::mutex> lock(mutex);
+//   Json::Value status;
+//   status["map"] = map_name;
+//   status["op"] = "game_status";
+//   status["entities"] = Json::Value(Json::arrayValue);
+//   for (auto &entity : entities) {
+//     Json::Value current_entity_status;
+//     current_entity_status["id"] = entity.first;
+//     current_entity_status["x"] = entity.second->x_position;
+//     current_entity_status["y"] = entity.second->y_position;
+//     current_entity_status["type"] = entity.second->get_type();
+//     status["entities"].append(current_entity_status);
+//     // std::cout << status << std::endl;
+//     // std::cout << "id: " << entity.first << " at: "
+//     //           << "(" << entity.second->x_position << ", "
+//     //           << entity.second->y_position << ")" << std::endl;
+//   }
+//   return status;
+// }

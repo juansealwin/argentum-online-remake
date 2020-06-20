@@ -6,21 +6,21 @@
 
 ClientHandler::ClientHandler(Socket socket, ArgentumGame* game) : game(game) {
   this->peer_socket = std::move(socket);
+  sender = new ClientNotificationSender(peer_socket, game);
+  receiver = new ClientCommandReceiver(peer_socket, game);
+  sender->start();
+  receiver->start();
 }
 
-ClientHandler::~ClientHandler() { this->join(); }
-
-void ClientHandler::run() {
-  std::cout << "connected to the game room :" << game->get_room() << std::endl;
-  while (alive) {
-    Json::Value command = Protocol::receiveMessage(this->peer_socket);
-    std::string message = "Ganaste";
-    const unsigned char* response =
-        reinterpret_cast<const unsigned char*>(message.c_str());
-    uint16_t message_length = 7;
-    alive = false;
-  }
+ClientHandler::~ClientHandler() {
+  this->sender->stop(); 
+  this->receiver->stop();
+  delete sender;
+  delete receiver;
   this->peer_socket.close();
+
 }
 
-bool ClientHandler::is_alive() { return this->alive; }
+bool ClientHandler::is_alive() {
+   return (this->receiver->is_alive() || this->sender->is_alive());
+}

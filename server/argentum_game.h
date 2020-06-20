@@ -59,7 +59,8 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
   std::map<int, Entity *> entities;
-  Json::Value game_status();
+  //Json::Value game_status();
+  std::vector<unsigned char> game_status();
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
 };

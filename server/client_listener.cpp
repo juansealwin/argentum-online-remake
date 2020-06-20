@@ -46,13 +46,20 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
+    /*
+    descomentar luego de tests 
+    std::cout << "New client trying to join server!" << std::endl;
     Json::Value starting_info = Protocol::receiveMessage(clientSkt);
     std::cout << "numero hab: " << starting_info["roomNumber"] << std::endl;
     unsigned int room_number = starting_info["roomNumber"].asInt();
+    */
+   std::cout << "trying to get rno" << std::endl;
+    unsigned int room_number = static_cast<unsigned int>(Protocol::receive_command(clientSkt) - '0');
+    std::cout << "room number received: " << room_number << std::endl;
     ClientHandler *client =
         new ClientHandler(std::move(clientSkt), games[room_number]);
     clients.push_back(client);
-    client->start();
+    //client->start();
     garbage_collector();
   }
 }
@@ -61,6 +68,7 @@ void ClientListener::garbage_collector() {
   std::list<ClientHandler *>::iterator it = clients.begin();
   while (it != clients.end()) {
     if (!(*it)->is_alive()) {
+      std::cout << "Client is dead!" << std::endl;
       delete *it;
       it = clients.erase(it);
     } else {

@@ -26,3 +26,16 @@ void Protocol::sendMessage(const Socket& socket, const Json::Value& info) {
   socket.send(&size, REQUEST_LENGTH);
   socket.send(&message[0], message.size());
 }
+
+void Protocol::send_response_to_command
+(const Socket& skt, const unsigned char *message, const uint16_t *size) {
+    uint16_t size_converted = htons(*size);
+    skt.send(&size_converted, 2);
+    skt.send(message, *size);
+}
+
+unsigned char Protocol::receive_command(const Socket& skt) {
+    unsigned char c = 0;
+    skt.recv(&c, 1);
+    return c;
+}
