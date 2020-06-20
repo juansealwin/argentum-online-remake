@@ -4,7 +4,7 @@ BlockingMap::BlockingMap() {}
 
 BlockingMap::~BlockingMap() {}
 
-void BlockingMap::updateMap(std::map<int, CharacterStatus>& updated) {
+void BlockingMap::update_map(std::map<int, CharacterStatus>& updated) {
   std::unique_lock<std::mutex> lock(block_map);
 
   std::map<int, CharacterStatus>::iterator it;
@@ -22,7 +22,7 @@ void BlockingMap::updateMap(std::map<int, CharacterStatus>& updated) {
   cv.notify_all();
 }
 
-void BlockingMap::readMap(std::map<int, CharacterStatus>& to_update) {
+void BlockingMap::read_map(std::map<int, CharacterStatus>& to_update) {
   std::unique_lock<std::mutex> lock(block_map);
 
   while (map.empty()) {
@@ -30,7 +30,7 @@ void BlockingMap::readMap(std::map<int, CharacterStatus>& to_update) {
   }
   // If the thread wake up because there won't be more
   // events then it must return
-  if (no_more_updates && map.empty()) {
+  if (!(more_updates) && map.empty()) {
     return;
   }
   std::map<int, CharacterStatus>::iterator it;
@@ -45,7 +45,7 @@ void BlockingMap::readMap(std::map<int, CharacterStatus>& to_update) {
   }
 }
 
-void BlockingMap::noMoreUpdates() {
-  no_more_updates = true;
+void BlockingMap::no_more_updates() {
+  more_updates = false;
   cv.notify_all();
 }

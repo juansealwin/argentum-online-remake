@@ -3,10 +3,10 @@
 Npc::Npc(SDL_Renderer* ren, character_t id, int new_x, int new_y) {
   x = new_x;
   y = new_y;
-  setNpcDimensions(id);
+  set_npc_dimensions(id);
   renderer = ren;
   body_rect = {0, 0, width, height};
-  body_texture.loadTexture(id, renderer);
+  body_texture.load_texture(id, renderer);
 }
 
 Npc::~Npc() {
@@ -14,7 +14,7 @@ Npc::~Npc() {
   renderer = nullptr;
 }
 
-int Npc::setNpcDimensions(character_t id_npc) {
+int Npc::set_npc_dimensions(character_t id_npc) {
   // cambiar esto
   int id_move;
 

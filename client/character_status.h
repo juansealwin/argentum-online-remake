@@ -15,10 +15,10 @@ class CharacterStatus {
   CharacterStatus(int, int, int);
   ~CharacterStatus();
   void operator=(CharacterStatus);
-  bool isEqual(CharacterStatus);
-  character_t getTypeCharacter() const;
-  int getX() const;
-  int getY() const;
+  bool is_equal(CharacterStatus);
+  character_t get_type_character() const;
+  int get_x() const;
+  int get_y() const;
 };
 
 

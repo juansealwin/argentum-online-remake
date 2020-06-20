@@ -32,12 +32,12 @@ class Map {
   Map(int, int, SDL_Renderer*, int, int);
   ~Map();
   void render();
-  void updateMap(int, int);
-  void updateCharacter(int, int, int);
-  void changeMap(int);
-  void loadCharacter(SDL_Renderer*, character_t, int, int, int);
-  void renderCharacters();
-  void cleanCharactersVector();
+  void update_map(int, int);
+  void update_character(int, int, int);
+  void change_map(int);
+  void load_character(SDL_Renderer*, character_t, int, int, int);
+  void render_characters();
+  void clean_characters_vector();
 };
 
 #endif

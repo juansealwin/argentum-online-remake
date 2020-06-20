@@ -6,7 +6,7 @@ ClientArgumentsValidator::ClientArgumentsValidator(int argc, char** argv)
 ClientArgumentsValidator::~ClientArgumentsValidator() {}
 
 // Cambiar los valores harcodeados
-void ClientArgumentsValidator::validateArguments() {
+void ClientArgumentsValidator::validate_arguments() {
   if (argc != CLI_ARGS) throw ArgumentsException("%s", MSG_ERROR_QUANTITY_ARGS);
 
   port = argv[PORT_ARG];
@@ -17,4 +17,4 @@ void ClientArgumentsValidator::validateArguments() {
     ip = argv[IP_ARG];
 }
 
-const char* ClientArgumentsValidator::getIp() { return ip.c_str(); }
+const char* ClientArgumentsValidator::get_ip() { return ip.c_str(); }

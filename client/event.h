@@ -14,8 +14,8 @@ class Event {
   Event(request_t);
   Event(int);
   ~Event();
-  bool isEnding();
-  void setRequest(request_t);
+  bool is_ending();
+  void set_request(request_t);
 };
 
 #endif

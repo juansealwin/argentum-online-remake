@@ -14,10 +14,10 @@ class Drawable {
 
  public:
   virtual void render(int, int) = 0;
-  virtual int getWidth() const = 0;
-  virtual int getHeight() const = 0;
-  virtual int getX() const = 0;
-  virtual int getY() const = 0;
+  virtual int get_width() const = 0;
+  virtual int get_height() const = 0;
+  virtual int get_x() const = 0;
+  virtual int get_y() const = 0;
 };
 
 #endif

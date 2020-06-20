@@ -13,8 +13,8 @@ Event::Event(){}
 
 Event::~Event() {}
 
-void Event::setRequest(request_t new_request){
+void Event::set_request(request_t new_request){
   request = new_request;
 }
 
-bool Event::isEnding() { return (request == quit) ? true : false; }
+bool Event::is_ending() { return (request == quit) ? true : false; }

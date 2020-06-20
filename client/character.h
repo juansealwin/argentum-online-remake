@@ -33,12 +33,12 @@ class Character : public Drawable {
   virtual ~Character();
   virtual void render(int, int) override;
   virtual void move(move_t);
-  virtual void updatePosition(int, int);
-  virtual int getWidth() const override;
-  virtual int getHeight() const override;
-  virtual int getX() const override;
-  virtual int getY() const override;
-  virtual int getId() const;
+  virtual void update_position(int, int);
+  virtual int get_width() const override;
+  virtual int get_height() const override;
+  virtual int get_x() const override;
+  virtual int get_y() const override;
+  virtual int get_id() const;
 };
 
 #endif

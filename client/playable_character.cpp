@@ -8,15 +8,15 @@ PlayableCharacter::~PlayableCharacter() {
 }
 
 void PlayableCharacter::move(move_t move_type) {
-  body_rect = animation_move->getNextClip(move_type);
-  updateFaceProfile(move_type);
+  body_rect = animation_move->get_next_clip(move_type);
+  update_face_profile(move_type);
 }
 
-void PlayableCharacter::updateFaceProfile(move_t move_type) {
+void PlayableCharacter::update_face_profile(move_t move_type) {
   head_rect.x = move_type * head_rect.w;
 }
 
-void PlayableCharacter::renderAsHero() {
+void PlayableCharacter::render_as_hero() {
   body_texture.render(renderer, &body_rect, half_screen_w - width / 2,
                       half_screen_h - height / 2);
   head_texture.render(renderer, &head_rect, half_screen_w - head_rect.w / 2,
@@ -30,6 +30,6 @@ void PlayableCharacter::render(int x_rel, int y_rel) {
                       y - height / 2 - head_rect.h / 2 - y_rel);
 }
 
-int PlayableCharacter::getHeadW() const { return head_rect.w; }
+int PlayableCharacter::get_head_w() const { return head_rect.w; }
 
-int PlayableCharacter::getHeadH() const { return head_rect.h; }
+int PlayableCharacter::get_head_h() const { return head_rect.h; }

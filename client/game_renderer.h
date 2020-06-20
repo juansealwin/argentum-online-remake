@@ -26,7 +26,7 @@ class GameRenderer : public Thread {
  public:
   GameRenderer(int, int, PlayableCharacter&, Map&);
   ~GameRenderer();
-  void windowInit();
+  void window_init();
   void run();
 };
 

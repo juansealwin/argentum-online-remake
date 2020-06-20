@@ -12,15 +12,15 @@ class BlockingQueue {
   std::deque<Event> queue;
   std::mutex block_queue;
   std::condition_variable cv;
-  bool no_more_events = false;
+  bool more_events = true;
 
  public:
   BlockingQueue();
   ~BlockingQueue();
   BlockingQueue(BlockingQueue&) = delete;
-  void pushEvent(const Event);
-  Event& popEvent();
-  void noMoreEvents();
+  void push_event(const Event);
+  Event& pop_event();
+  void no_more_events();
   BlockingQueue& operator=(const BlockingQueue&) = delete;
 };
 #endif

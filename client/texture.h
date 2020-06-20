@@ -27,13 +27,13 @@ class Texture {
 
   void render(SDL_Renderer*, SDL_Rect*, SDL_Rect*);
 
-  void loadTexture(int, SDL_Renderer*);
+  void load_texture(int, SDL_Renderer*);
 
   void free();
 
-  int getWidth() const;
+  int get_width() const;
 
-  int getHeight() const;
+  int get_height() const;
 };
 
 #endif

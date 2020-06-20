@@ -4,13 +4,13 @@ BlockingQueue::BlockingQueue() {}
 
 BlockingQueue::~BlockingQueue() {}
 
-void BlockingQueue::pushEvent(const Event event) {
+void BlockingQueue::push_event(const Event event) {
   std::unique_lock<std::mutex> lock(block_queue);
   queue.push_front(event);
   cv.notify_all();
 }
 
-Event& BlockingQueue::popEvent() {
+Event& BlockingQueue::pop_event() {
   std::unique_lock<std::mutex> lock(block_queue);
   Event last_element;
   while (queue.empty()) {
@@ -18,8 +18,8 @@ Event& BlockingQueue::popEvent() {
   }
   // If the thread wake up because there won't be more
   // events then it must return
-  if (no_more_events && queue.empty()) {
-    last_element.setRequest(quit);
+  if (!(more_events) && queue.empty()) {
+    last_element.set_request(quit);
     return last_element;
   }
   last_element = queue.back();
@@ -27,7 +27,7 @@ Event& BlockingQueue::popEvent() {
   return last_element;
 }
 
-void BlockingQueue::noMoreEvents() {
-  no_more_events = true;
+void BlockingQueue::no_more_events() {
+  more_events = false;
   cv.notify_all();
 }

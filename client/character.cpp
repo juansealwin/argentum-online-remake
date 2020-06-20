@@ -7,7 +7,7 @@ Character::~Character() {
 }
 
 void Character::move(move_t move_type) {
-  body_rect = animation_move->getNextClip(move_type);
+  body_rect = animation_move->get_next_clip(move_type);
 }
 
 void Character::render(int x_rel, int y_rel) {
@@ -15,7 +15,7 @@ void Character::render(int x_rel, int y_rel) {
                       y - height / 2 - y_rel);
 }
 
-void Character::updatePosition(int new_x, int new_y) {
+void Character::update_position(int new_x, int new_y) {
   move_t move_type;
   while (x != new_x) {
     if (x < new_x) {
@@ -38,12 +38,12 @@ void Character::updatePosition(int new_x, int new_y) {
   move(move_type);
 }
 
-int Character::getWidth() const { return width; }
+int Character::get_width() const { return width; }
 
-int Character::getHeight() const { return height; }
+int Character::get_height() const { return height; }
 
-int Character::getX() const { return x; }
+int Character::get_x() const { return x; }
 
-int Character::getY() const { return y; }
+int Character::get_y() const { return y; }
 
-int Character::getId() const { return id; }
+int Character::get_id() const { return id; }

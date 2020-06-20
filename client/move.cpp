@@ -2,7 +2,7 @@
 
 Move::Move(int char_width, int char_height, int id_character)
     : character_width(char_width), character_height(char_height) {
-  setTotalClips(id_character);
+  set_total_clips(id_character);
   current_clip[CLIP_DOWN] = 0;
   current_clip[CLIP_UP] = 0;
   current_clip[CLIP_LEFT] = 0;
@@ -11,27 +11,27 @@ Move::Move(int char_width, int char_height, int id_character)
 
 Move::~Move() {}
 
-SDL_Rect Move::getNextClip(move_t move_type) {
+SDL_Rect Move::get_next_clip(move_t move_type) {
   switch (move_type) {
     case MOVE_DOWN:
-      return nextClipMoveDown();
+      return next_clip_move_down();
       break;
 
     case MOVE_UP:
-      return nextClipMoveUp();
+      return next_clip_move_up();
       break;
 
     case MOVE_LEFT:
-      return nextClipMoveLeft();
+      return next_clip_move_left();
       break;
 
     case MOVE_RIGHT:
-      return nextClipMoveRight();
+      return next_clip_move_right();
       break;
   }
 }
 
-SDL_Rect Move::nextClipMoveUp() {
+SDL_Rect Move::next_clip_move_up() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_UP],
                         character_height + offset_y, character_width,
                         character_height};
@@ -44,7 +44,7 @@ SDL_Rect Move::nextClipMoveUp() {
   return next_clip;
 }
 
-SDL_Rect Move::nextClipMoveDown() {
+SDL_Rect Move::next_clip_move_down() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_DOWN], 0 + offset_y,
                         character_width, character_height};
 
@@ -56,7 +56,7 @@ SDL_Rect Move::nextClipMoveDown() {
   return next_clip;
 }
 
-SDL_Rect Move::nextClipMoveLeft() {
+SDL_Rect Move::next_clip_move_left() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_LEFT],
                         character_height * 2 + offset_y, character_width,
                         character_height};
@@ -69,7 +69,7 @@ SDL_Rect Move::nextClipMoveLeft() {
   return next_clip;
 }
 
-SDL_Rect Move::nextClipMoveRight() {
+SDL_Rect Move::next_clip_move_right() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_RIGHT],
                         character_height * 3 + offset_y, character_width,
                         character_height};
@@ -82,7 +82,7 @@ SDL_Rect Move::nextClipMoveRight() {
   return next_clip;
 }
 
-int Move::setTotalClips(int id) {
+int Move::set_total_clips(int id) {
   //Seteamos el total de clips -1, ya que el 0 lo cuenta
   switch (id) {
     case ID_HUMAN:
@@ -130,4 +130,4 @@ int Move::setTotalClips(int id) {
   }
 }
 
-void Move::setOffsetY(int offset) { offset_y = offset; }
+void Move::set_offset_y(int offset) { offset_y = offset; }

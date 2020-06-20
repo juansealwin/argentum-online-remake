@@ -29,14 +29,14 @@ void Client::play() {
   EventSender sender(id_player, events_to_send);
   Game game(id_player, events_to_send);
 
-  game.eventHandler();
+  game.event_handler();
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al server
   //game_renderer.run();
   model_receiver.run();
   updater.run();
   sender.run();
 
-  while (game.isRunning()) {
+  while (game.is_up()) {
     /*frame_start = SDL_GetTicks();
 
     game.eventHandler();

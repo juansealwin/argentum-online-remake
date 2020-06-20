@@ -24,14 +24,14 @@ class ClientArgumentsValidator : public ArgumentsValidator {
    * implement. It validate the arguments on the client side.
    *
    */
-  void validateArguments();
+  void validate_arguments();
 
   /*
    * @brief Get the Ip to know where we want to connect
    *
    * @return const char* that is the ip value
    */
-  const char* getIp();
+  const char* get_ip();
 };
 
 #endif

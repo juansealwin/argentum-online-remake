@@ -33,7 +33,7 @@ class GameUpdater : public Thread {
   GameUpdater(int, int, int, BlockingMap&);
   ~GameUpdater();
   void run();
-  void windowInit();
+  void window_init();
 };
 
 #endif

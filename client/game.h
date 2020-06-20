@@ -33,16 +33,16 @@ class Game {
  public:
   Game(int, BlockingQueue&);
   ~Game();
-  void windowInit();
+  void window_init();
   void fill(int, int, int, int);
-  bool isRunning();
-  void newPlayer(PlayableCharacter*);
-  void eventHandler();
+  bool is_up();
+  void new_player(PlayableCharacter*);
+  void event_handler();
   void update();
   void render();
-  SDL_Renderer* getRenderer();
-  Texture* getTexture(int);
-  void deleteTextures();
+  SDL_Renderer* get_renderer();
+  Texture* get_texture(int);
+  void delete_textures();
 };
 
 #endif

@@ -6,22 +6,22 @@ Map::Map(int id_player, int id_background_path, SDL_Renderer* ren,
       renderer(ren),
       screen_width(scr_width),
       screen_height(scr_height) {
-  background_texture.loadTexture(ID_MAP_GRASS, renderer);
+  background_texture.load_texture(ID_MAP_GRASS, renderer);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, 0, screen_width, screen_height};
 }
 
 Map::~Map() {
-  cleanCharactersVector();
+  clean_characters_vector();
   renderer = nullptr;
 }
 
-void Map::updateCharacter(int id, int new_x, int new_y) {
-  characters[id].updatePosition(new_x, new_y);
-  if (id == id_hero) updateMap(new_x, new_y);
+void Map::update_character(int id, int new_x, int new_y) {
+  characters[id].update_position(new_x, new_y);
+  if (id == id_hero) update_map(new_x, new_y);
 }
 
-void Map::updateMap(int new_x, int new_y) {
+void Map::update_map(int new_x, int new_y) {
   map_piece.x += new_x;
   map_piece.y += new_y;
   if (map_piece.x > MAP_SIZE - screen_width) {
@@ -56,15 +56,15 @@ void Map::updateMap(int new_x, int new_y) {
 
 void Map::render() {
   background_texture.render(renderer, &map_piece, &viewport);
-  renderCharacters();
+  render_characters();
 }
 
-void Map::changeMap(int id_new_map) {
-  cleanCharactersVector();
-  background_texture.loadTexture(id_new_map, renderer);
+void Map::change_map(int id_new_map) {
+  clean_characters_vector();
+  background_texture.load_texture(id_new_map, renderer);
 }
 
-void Map::loadCharacter(SDL_Renderer* ren, character_t char_type, int id, int x,
+void Map::load_character(SDL_Renderer* ren, character_t char_type, int id, int x,
                         int y) {
   if (char_type == HUMAN)
     characters[id] = Human(ren, id, x, y);
@@ -90,20 +90,20 @@ void Map::loadCharacter(SDL_Renderer* ren, character_t char_type, int id, int x,
     characters[id] = Npc(ren, char_type, x, y);
 }
 
-void Map::renderCharacters() {
+void Map::render_characters() {
   std::map<int, Character>::iterator it;
   for (it = characters.begin(); it != characters.end(); it++) {
     // El personaje DEBE estar dentro del viewport
-    if ((map_piece.x <= it->second.getX()) &&
-        (it->second.getX() <= map_piece.x + screen_width))
-      if ((map_piece.y <= it->second.getY()) &&
-          (it->second.getY() <= map_piece.y + screen_height)) {
+    if ((map_piece.x <= it->second.get_x()) &&
+        (it->second.get_x() <= map_piece.x + screen_width))
+      if ((map_piece.y <= it->second.get_y()) &&
+          (it->second.get_y() <= map_piece.y + screen_height)) {
         it->second.render(map_piece.x, map_piece.y);
       }
   }
 }
 
-void Map::cleanCharactersVector() {
+void Map::clean_characters_vector() {
   /*std::vector<Character*>::iterator it;
   for (it = characters.begin(); it != characters.end(); it++) {
     delete *it;

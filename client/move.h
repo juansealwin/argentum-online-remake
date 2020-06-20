@@ -32,13 +32,13 @@ class Move {
  public:
   Move(int, int, int);
   ~Move();
-  void setOffsetY(int);
-  SDL_Rect getNextClip(move_t);
-  SDL_Rect nextClipMoveUp();
-  SDL_Rect nextClipMoveDown();
-  SDL_Rect nextClipMoveLeft();
-  SDL_Rect nextClipMoveRight();
-  int setTotalClips(int);
+  void set_offset_y(int);
+  SDL_Rect get_next_clip(move_t);
+  SDL_Rect next_clip_move_up();
+  SDL_Rect next_clip_move_down();
+  SDL_Rect next_clip_move_left();
+  SDL_Rect next_clip_move_right();
+  int set_total_clips(int);
 };
 
 #endif

@@ -12,15 +12,15 @@ class BlockingMap {
   std::map<int, CharacterStatus> map;
   std::mutex block_map;
   std::condition_variable cv;
-  bool no_more_updates = false;
+  bool more_updates = true;
 
  public:
   BlockingMap();
   ~BlockingMap();
   BlockingMap(BlockingMap&) = delete;
-  void updateMap(std::map<int, CharacterStatus>&);
-  void readMap(std::map<int, CharacterStatus>&);
-  void noMoreUpdates();
+  void update_map(std::map<int, CharacterStatus>&);
+  void read_map(std::map<int, CharacterStatus>&);
+  void no_more_updates();
   BlockingMap& operator=(const BlockingMap&) = delete;
 };
 #endif
