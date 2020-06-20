@@ -5,7 +5,7 @@
 
 #include <map>
 
-#include "blockingmap.h"
+#include "blocking_map.h"
 #include "character_status.h"
 #include "exception_messages.h"
 #include "map.h"

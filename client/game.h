@@ -15,7 +15,7 @@
 #include "npc.h"
 #include "sdl_exception.h"
 #include "texture.h"
-#include "blockingqueue.h"
+#include "blocking_queue.h"
 #define GAME_NAME "Argentum"
 #define PATH_IMG_LOBBY "Argentum_online.jpg"
 

@@ -14,7 +14,7 @@
 #include "game.h"
 #include "protocol.h"
 #include "texture.h"
-#include "blockingqueue.h"
+#include "blocking_queue.h"
 #define FRAME_DELAY 5000 / 60
 
 class Client {

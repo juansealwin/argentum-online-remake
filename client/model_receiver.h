@@ -2,7 +2,7 @@
 #define MODEL_RECEIVER_H
 
 #include "thread.h"
-#include "blockingmap.h"
+#include "blocking_map.h"
 #include <map>
 
 class ModelReceiver : public Thread{

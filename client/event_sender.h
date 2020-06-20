@@ -3,7 +3,7 @@
 
 #include "thread.h"
 #include "event.h"
-#include "blockingqueue.h"
+#include "blocking_queue.h"
 #include <iostream>
 
 class EventSender : public Thread {
