@@ -64,9 +64,7 @@ void CharacterStatus::operator=(CharacterStatus other_status) {
 bool CharacterStatus::isEqual(CharacterStatus other_status) {
   return (type_character == other_status.type_character &&
           x == other_status.x && y == other_status.y &&
-          is_alive == other_status.is_alive)
-             ? true
-             : false;
+          is_alive == other_status.is_alive);
 }
 
 character_t CharacterStatus::getTypeCharacter() const { return type_character; }
