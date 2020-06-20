@@ -6,7 +6,6 @@
 #include "game_renderer.h"
 #include "game_updater.h"
 #include "event_sender.h"
-#include "event_handler.h"
 #include "client_protocol.h"
 #include "common_socket.h"
 #include "game.h"

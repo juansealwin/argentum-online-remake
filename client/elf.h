@@ -10,7 +10,7 @@
 
 class Elf : public PlayableCharacter {
  public:
-  Elf(SDL_Renderer*, int, int);
+  Elf(SDL_Renderer*,int, int, int);
   ~Elf();
 };
 

@@ -10,13 +10,15 @@ void Client::play() {
   
   Uint32 frame_start;
   int frame_time;
-  BlockingQueue events_queue;
+  BlockingQueue events_to_send;
+  BlockingQueue events_recived;
   GameRenderer game_renderer(800, 600);
-  GameUpdater updater;
-  EventSender sender(id_player, events_queue);
-  Game game(id_player, events_queue);
+  GameUpdater updater(events_recived);
+  EventSender sender(id_player, events_to_send);
+  Game game(id_player, events_to_send);
 
   game.eventHandler();
+  // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al server
   game_renderer.run();
   updater.run();
   sender.run();

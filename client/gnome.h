@@ -10,7 +10,7 @@
 
 class Gnome : public PlayableCharacter {
  public:
-  Gnome(SDL_Renderer*, int, int);
+  Gnome(SDL_Renderer*,int, int, int);
   ~Gnome();
 };
 

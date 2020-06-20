@@ -1,10 +1,14 @@
 #include "game_renderer.h"
 
-GameRenderer::GameRenderer(int width, int height)
-    : screen_width(width), screen_height(height) {
+GameRenderer::GameRenderer(int width, int height, PlayableCharacter& hero,
+                           Map& map)
+    : screen_width(width),
+      screen_height(height),
+      player(hero),
+      current_map(map) {
   windowInit();
-  player = nullptr;
-  current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
+
+  //current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
   /*current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
 
   current_map->loadCharacter(renderer, ID_SPIDER, 128, 128);
@@ -77,11 +81,12 @@ void GameRenderer::deleteTextures() {
   }
 }
 */
-
+// Hay que pasarle el renderer a los objetos y hay que hacer swap de renderers
+// entre el actual y el del updater
 void GameRenderer::run() {
   SDL_RenderClear(renderer);
-  current_map->render();
-  player->renderAsHero();
+  current_map.render();
+  player.renderAsHero();
   SDL_RenderPresent(renderer);
 }
 

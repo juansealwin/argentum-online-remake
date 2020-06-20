@@ -3,9 +3,15 @@
 
 #include <string>
 #include <vector>
+#include <map>
 #include "texture.h"
 #include "character.h"
 #include "npc.h"
+#include "human.h"
+#include "elf.h"
+#include "gnome.h"
+#include "dwarf.h"
+
 #define MAP_SIZE 3200
 
 
@@ -19,15 +25,17 @@ class Map {
   SDL_Rect viewport;
   int screen_width;
   int screen_height;
-  std::vector<Character*> characters;
+  //std::vector<Character*> characters;
+  std::map<int, Character> characters;
 
  public:
   Map(int, SDL_Renderer*, int, int);
   ~Map();
   void render();
-  void update(int, int);
+  void updateMap(int, int);
+  void updateCharacter(int, move_t);
   void changeMap(int);
-  void loadCharacter(SDL_Renderer*, int, int , int);
+  void loadCharacter(character_t, SDL_Renderer*, int, int , int);
   void renderCharacters();
   void cleanCharactersVector();
 };

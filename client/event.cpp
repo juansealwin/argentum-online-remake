@@ -13,11 +13,6 @@ Event::Event(){}
 
 Event::~Event() {}
 
-Event::Event(Event& other) {
-  id_player = other.id_player;
-  request = other.request;
-}
-
 void Event::setRequest(request_t new_request){
   request = new_request;
 }

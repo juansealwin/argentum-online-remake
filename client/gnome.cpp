@@ -1,6 +1,7 @@
 #include "gnome.h"
 
-Gnome::Gnome(SDL_Renderer* ren, int new_x, int new_y) {
+Gnome::Gnome(SDL_Renderer* ren, int id_char, int new_x, int new_y) {
+  id = id_char;
   half_screen_w = new_x;
   half_screen_h = new_y;
   x = new_x;

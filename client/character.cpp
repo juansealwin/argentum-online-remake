@@ -12,7 +12,8 @@ void Character::move(move_t move_type) {
 }
 
 void Character::render(int x_rel, int y_rel) {
-  body_texture.render(renderer, &body_rect, x - width / 2 - x_rel, y - height / 2 - y_rel);
+  body_texture.render(renderer, &body_rect, x - width / 2 - x_rel,
+                      y - height / 2 - y_rel);
 }
 
 void Character::updatePosition(move_t move_type) {
@@ -33,6 +34,7 @@ void Character::updatePosition(move_t move_type) {
       x += TILE_SIZE;
       break;
   }
+  move(move_type);
 }
 
 int Character::getWidth() const { return width; }
@@ -42,3 +44,5 @@ int Character::getHeight() const { return height; }
 int Character::getX() const { return x; }
 
 int Character::getY() const { return y; }
+
+int Character::getId() const { return id; }

@@ -9,7 +9,7 @@ void EventSender::run() {
     while (is_running) {
       Event event = queue_events.popEvent();
       if (event.isEnding()) is_running = false;
-      // courier->sendEvent(event);
+        // ClientProtocol::send_request(/* Aca deberia mandar el evento para que protocol lo serialice*/);
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
