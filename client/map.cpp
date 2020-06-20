@@ -1,8 +1,11 @@
 #include "map.h"
 
-Map::Map(int id_background_path, SDL_Renderer* ren, int scr_width,
-         int scr_height)
-    : renderer(ren), screen_width(scr_width), screen_height(scr_height) {
+Map::Map(int id_player, int id_background_path, SDL_Renderer* ren,
+         int scr_width, int scr_height)
+    : id_hero(id_player),
+      renderer(ren),
+      screen_width(scr_width),
+      screen_height(scr_height) {
   background_texture.loadTexture(ID_MAP_GRASS, renderer);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, 0, screen_width, screen_height};
@@ -13,8 +16,9 @@ Map::~Map() {
   renderer = nullptr;
 }
 
-void Map::updateCharacter(int id, move_t move_type) {
-  characters[id].updatePosition(move_type);
+void Map::updateCharacter(int id, int new_x, int new_y) {
+  characters[id].updatePosition(new_x, new_y);
+  if (id == id_hero) updateMap(new_x, new_y);
 }
 
 void Map::updateMap(int new_x, int new_y) {
@@ -60,12 +64,9 @@ void Map::changeMap(int id_new_map) {
   background_texture.loadTexture(id_new_map, renderer);
 }
 
-void Map::loadCharacter(character_t char_type, SDL_Renderer* ren, int id, int x,
+void Map::loadCharacter(SDL_Renderer* ren, character_t char_type, int id, int x,
                         int y) {
-  // characters.push_back(new Npc(ren, id, x, y));
-  if (char_type == NPC)
-    characters[id] = Npc(ren, id, x, y);
-  else if (char_type == HUMAN)
+  if (char_type == HUMAN)
     characters[id] = Human(ren, id, x, y);
   else if (char_type == ELF)
     characters[id] = Elf(ren, id, x, y);
@@ -73,6 +74,20 @@ void Map::loadCharacter(character_t char_type, SDL_Renderer* ren, int id, int x,
     characters[id] = Gnome(ren, id, x, y);
   else if (char_type == DWARF)
     characters[id] = Dwarf(ren, id, x, y);
+  else if (char_type == SPIDER)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == GOBLIN)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == SKELETON)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == ZOMBIE)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == MERCHANT)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == BANKER)
+    characters[id] = Npc(ren, char_type, x, y);
+  else if (char_type == PRIEST)
+    characters[id] = Npc(ren, char_type, x, y);
 }
 
 void Map::renderCharacters() {

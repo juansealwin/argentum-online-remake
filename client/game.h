@@ -22,8 +22,6 @@
 class Game {
  private:
   int id_player;
-  SDL_Window* window;
-  SDL_Renderer* renderer;
   BlockingQueue& events_queue;
   bool is_running;
   /*std::vector<Texture*> textures;

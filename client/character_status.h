@@ -11,10 +11,14 @@ class CharacterStatus {
   bool is_alive;
 
  public:
+  CharacterStatus();
   CharacterStatus(int, int, int);
   ~CharacterStatus();
   void operator=(CharacterStatus);
   bool isEqual(CharacterStatus);
+  character_t getTypeCharacter() const;
+  int getX() const;
+  int getY() const;
 };
 
 

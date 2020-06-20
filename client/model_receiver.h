@@ -2,15 +2,19 @@
 #define MODEL_RECEIVER_H
 
 #include "thread.h"
-#include "blockingqueue.h"
+#include "blockingmap.h"
+#include "client_protocol.h"
+#include <map>
 
 class ModelReceiver : public Thread{
  private:
-  BlockingQueue& recived_events;
+  BlockingMap& blocking_map;
+  std::map<int, CharacterStatus> map_updated;
+  //ClientProtocol courier;
   bool is_running;
 
  public:
-  ModelReceiver(BlockingQueue&);
+  ModelReceiver(BlockingMap&);
   ~ModelReceiver();
   void run();
 };

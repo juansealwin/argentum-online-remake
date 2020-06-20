@@ -7,7 +7,19 @@
 #include "drawable.h"
 #include "move.h"
 
-typedef enum { NPC = 0, HUMAN, ELF, GNOME, DWARF } character_t;
+typedef enum {
+  HUMAN = 0,
+  ELF,
+  GNOME,
+  DWARF,
+  SPIDER,
+  GOBLIN,
+  ZOMBIE,
+  SKELETON,
+  MERCHANT,
+  BANKER,
+  PRIEST
+} character_t;
 
 class Character : public Drawable {
  protected:
@@ -21,7 +33,7 @@ class Character : public Drawable {
   virtual ~Character();
   virtual void render(int, int) override;
   virtual void move(move_t);
-  virtual void updatePosition(move_t);
+  virtual void updatePosition(int, int);
   virtual int getWidth() const override;
   virtual int getHeight() const override;
   virtual int getX() const override;

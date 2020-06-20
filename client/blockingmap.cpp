@@ -6,10 +6,13 @@ BlockingMap::~BlockingMap() {}
 
 void BlockingMap::updateMap(std::map<int, CharacterStatus>& updated) {
   std::unique_lock<std::mutex> lock(block_map);
+
   std::map<int, CharacterStatus>::iterator it;
   std::map<int, CharacterStatus>::iterator it2;
+
   for (it = updated.begin(); it != updated.end(); it++) {
     it2 = map.find(it->first);
+    // Chequeamos si la entidad existe
     if (it2 != map.end()) {
       it2->second = it->second;
     } else {

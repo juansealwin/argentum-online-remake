@@ -1,10 +1,53 @@
 #include "character_status.h"
 
+CharacterStatus::CharacterStatus() {}
+
 CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y)
     : x(new_x), y(new_y) {
   // poner los id que usa el server
   switch (type_char) {
-    case 1112:
+    case 25:
+      type_character = HUMAN;
+      break;
+
+    case 26:
+      type_character = ELF;
+      break;
+
+    case 27:
+      type_character = DWARF;
+      break;
+
+    case 28:
+      type_character = GNOME;
+      break;
+
+    case 1288:
+      type_character = ZOMBIE;
+      break;
+
+    case 1677:
+      type_character = GOBLIN;
+      break;
+
+    case 1712:
+      type_character = SPIDER;
+      break;
+
+    case 1750:
+      type_character = SKELETON;
+      break;
+
+    case 1221:
+      type_character = MERCHANT;
+      break;
+
+    case 1222:
+      type_character = BANKER;
+      break;
+
+    case 1223:
+      type_character = PRIEST;
       break;
   }
 }
@@ -25,3 +68,9 @@ bool CharacterStatus::isEqual(CharacterStatus other_status) {
              ? true
              : false;
 }
+
+character_t CharacterStatus::getTypeCharacter() const { return type_character; }
+
+int CharacterStatus::getX() const { return x; }
+
+int CharacterStatus::getY() const { return y; }

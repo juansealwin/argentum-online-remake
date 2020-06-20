@@ -19,7 +19,7 @@ class GameRenderer : public Thread {
   bool is_running;
   int screen_width;
   int screen_height;
-  std::vector<Texture*> textures;
+  //std::vector<Texture*> textures;
   PlayableCharacter& player;
   Map& current_map;
 

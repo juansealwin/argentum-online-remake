@@ -7,32 +7,6 @@ GameRenderer::GameRenderer(int width, int height, PlayableCharacter& hero,
       player(hero),
       current_map(map) {
   windowInit();
-
-  //current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
-  /*current_map = new Map(ID_MAP_GRASS, renderer, screen_width, screen_height);
-
-  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128);
-  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128);
-  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128);
-  current_map->loadCharacter(renderer, ID_ZOMBIE, 250, 128);
-  current_map->loadCharacter(renderer, ID_PRIEST, 280, 128);
-  current_map->loadCharacter(renderer, ID_MERCHANT, 320, 128);
-  current_map->loadCharacter(renderer, ID_BANKER, 360, 128);
-  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128 + 100);
-  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128 + 100);
-  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128 + 100);
-  current_map->loadCharacter(renderer, ID_ZOMBIE, 250, 128);
-  current_map->loadCharacter(renderer, ID_PRIEST, 280, 128 + 100);
-  current_map->loadCharacter(renderer, ID_MERCHANT, 320, 128 + 100);
-  current_map->loadCharacter(renderer, ID_BANKER, 360, 128 + 100);
-  current_map->loadCharacter(renderer, ID_SPIDER, 128, 128 + 300);
-  current_map->loadCharacter(renderer, ID_SKELETON, 160, 128 + 300);
-  current_map->loadCharacter(renderer, ID_GOBLIN, 200, 128 + 200);
-  current_map->loadCharacter(renderer, ID_ZOMBIE, 250 + 50, 128 + 250);
-  current_map->loadCharacter(renderer, ID_PRIEST, 280 + 200, 128 + 200);
-  current_map->loadCharacter(renderer, ID_MERCHANT, 320 + 300, 128 + 200);
-  current_map->loadCharacter(renderer, ID_BANKER, 360 + 300, 128 + 300);
-  player = new Gnome(renderer, screen_width / 2, screen_height / 2);*/
 }
 
 void GameRenderer::windowInit() {
@@ -81,6 +55,7 @@ void GameRenderer::deleteTextures() {
   }
 }
 */
+
 // Hay que pasarle el renderer a los objetos y hay que hacer swap de renderers
 // entre el actual y el del updater
 void GameRenderer::run() {

@@ -7,22 +7,33 @@
 
 #include "blockingmap.h"
 #include "character_status.h"
+#include "exception_messages.h"
 #include "map.h"
+#include "sdl_exception.h"
 #include "thread.h"
 
 class GameUpdater : public Thread {
  private:
-  BlockingMap& map_updated;
-  SDL_Renderer* next_renderer;
-  SDL_Renderer* current_renderer;
-  Map& current_map;
-  std::map<int, CharacterStatus> next_map;
+  //Esto deberia ir en el GameRenderer
+  SDL_Window* window;
+  SDL_Renderer* renderer;
+  int screen_width;
+  int screen_height;
+  int id_hero;
+
+  // Esto es del GameUpdater
+  BlockingMap& blocking_map;
+  // SDL_Renderer* next_renderer;
+  Map* current_map;
+  std::map<int, CharacterStatus> next_status;
+  std::map<int, CharacterStatus> current_status;
   bool is_running;
 
  public:
-  GameUpdater(BlockingMap&, Map&);
+  GameUpdater(int, int, int, BlockingMap&);
   ~GameUpdater();
   void run();
+  void windowInit();
 };
 
 #endif

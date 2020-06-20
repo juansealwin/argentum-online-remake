@@ -49,22 +49,6 @@ void Game::windowInit() {
   }
 }
 
-Game::~Game() {
-  if (renderer) {
-    SDL_DestroyRenderer(renderer);
-    renderer = nullptr;
-  }
-  if (window) {
-    SDL_DestroyWindow(window);
-    window = nullptr;
-  }
-  IMG_Quit();
-  SDL_Quit();
-  // currentmap->~Map();
-  current_map = nullptr;
-  // player->~Player();
-  player = nullptr;
-}
 
 void Game::deleteTextures() {
   std::vector<Texture*>::iterator it;
@@ -80,6 +64,8 @@ void Game::fill(int r, int g, int b, int alpha) {
   SDL_RenderClear(renderer);
 }
 */
+
+Game::~Game() {}
 
 Game::Game(int id, BlockingQueue& queue) : id_player(id), events_queue(queue) {}
 

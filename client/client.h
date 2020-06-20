@@ -5,6 +5,7 @@
 #include <vector>
 #include "game_renderer.h"
 #include "game_updater.h"
+#include "model_receiver.h"
 #include "event_sender.h"
 #include "client_protocol.h"
 #include "common_socket.h"

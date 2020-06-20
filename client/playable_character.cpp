@@ -10,7 +10,6 @@ PlayableCharacter::~PlayableCharacter() {
 void PlayableCharacter::move(move_t move_type) {
   body_rect = animation_move->getNextClip(move_type);
   updateFaceProfile(move_type);
-  updatePosition(move_type);
 }
 
 void PlayableCharacter::updateFaceProfile(move_t move_type) {
