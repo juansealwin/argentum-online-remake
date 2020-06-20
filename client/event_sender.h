@@ -4,7 +4,6 @@
 #include "thread.h"
 #include "event.h"
 #include "blockingqueue.h"
-#include "client_protocol.h"
 #include <iostream>
 
 class EventSender : public Thread {

@@ -3,7 +3,6 @@
 
 #include "thread.h"
 #include "blockingmap.h"
-#include "client_protocol.h"
 #include <map>
 
 class ModelReceiver : public Thread{

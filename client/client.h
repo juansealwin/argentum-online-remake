@@ -7,7 +7,6 @@
 #include "game_updater.h"
 #include "model_receiver.h"
 #include "event_sender.h"
-#include "client_protocol.h"
 
 #include "../util/json/json-forwards.h"
 #include "../util/json/json.h"
