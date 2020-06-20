@@ -4,18 +4,21 @@
 #include <list>
 #include <vector>
 
+#include "../util/thread_safe_queue.h"
 #include "argentum_game.h"
 #include "client_handler.h"
 #include "common_socket.h"
 #include "thread.h"
-#include "../util/thread_safe_queue.h"
-
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
+#include "protocol.h"
 
 class ClientListener : public Thread {
  public:
   /*Crea un nuevo ClientListener que escuchara en el puerto port
   y utilizara numbers para asignarle a cada cliente que se conecte*/
-  explicit ClientListener(const char *port, const char *map_cfg_file);
+  explicit ClientListener(const char *port, const char *map_cfg_file,
+                          const char *entities_cfg_file);
 
   ~ClientListener() override;
   /*Escucha nuevos clientes en el puerto 'port'.
@@ -28,7 +31,7 @@ class ClientListener : public Thread {
 
  private:
   std::vector<ArgentumGame *> games;
-  std::vector<ThreadSafeQueue<Command *>*> queues_commands;
+  std::vector<ThreadSafeQueue<Command *> *> queues_commands;
   Socket server_socket;
   std::list<ClientHandler *> clients;
   /*Remueve a los clientes del vector clients

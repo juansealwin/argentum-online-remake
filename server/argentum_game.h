@@ -11,10 +11,14 @@
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
 #include "base_character.h"
+#include "hero.h"
+#include "command.h"  //<- guarda con esto y dependencias circulares
 #include "map.h"
 #include "monster.h"
-#include "command.h" //<- guarda con esto y dependencias circulares
 #include "move_command.h"
+#include "banker.h"
+#include "merchant.h"
+#include "priest.h"
 #define PRIEST 1334
 #define MERCHANT 1320
 #define BANKER 1352
@@ -26,14 +30,16 @@
 class ArgentumGame : public Thread {
  public:
   // Instancia una nueva sala de Argentum
-  ArgentumGame(const unsigned int room, ThreadSafeQueue<Command *> *commands_queue, std::ifstream &map_config);
+  ArgentumGame(const unsigned int room,
+               ThreadSafeQueue<Command *> *commands_queue,
+               std::ifstream &map_config, std::ifstream &entities_config);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
   void kill();
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
-
+  void add_new_hero(std::string hero_race, std::string hero_class);
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -48,12 +54,14 @@ class ArgentumGame : public Thread {
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
   void update(bool one_second_update);
-  void auto_move_monsters();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);
+  void place_initial_npcs(Json::Value map_cfg);
   std::map<int, Entity *> entities;
   Json::Value game_status();
+  Json::Value entities_cfg;
+  unsigned int entities_ids = 0;
 };
 
 #endif  // ARGENTUMGAME_H

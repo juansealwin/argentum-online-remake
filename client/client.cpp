@@ -1,10 +1,19 @@
 #include "client.h"
+#include <iostream>
 
-Client::Client(const char *host, const char *port) {
-  // this->socket.connect(host, port);
+Client::Client(const char* host, const char* port) {
+  Socket socket;
+  socket.connect(host, port);
+  this->socket = std::move(socket);
+
+  Json::Value starting_info;
+  starting_info["roomNumber"] = 0;
+  Protocol::sendMessage(this->socket, starting_info);
 }
 
-const bool Client::valid_request(std::string &request) { return true; }
+Client::~Client() {}
+
+const bool Client::valid_request(std::string& request) { return true; }
 
 void Client::play() {
   
@@ -43,12 +52,4 @@ void Client::play() {
   updater.join();
   sender.join();
   game.~Game();
-}
-
-void Client::send_request(const unsigned char *request, std::size_t size) {
-  ClientProtocol::send_request(socket, request, size);
-}
-
-std::vector<unsigned char> Client::get_response() {
-  return ClientProtocol::receive_request_response(socket);
 }

@@ -6,6 +6,7 @@ class ArgentumGame;
 class MoveCommand : public Command {
  public:
   MoveCommand(int entity_id, int next_x, int next_y);
+  MoveCommand(const MoveCommand &) = delete;
   virtual ~MoveCommand();
   // Ejecuta cambios en el juego segun
   virtual void execute(ArgentumGame *game);

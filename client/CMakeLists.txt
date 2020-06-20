@@ -27,6 +27,7 @@ include_directories(${PROTOCOL_SOURCE_DIR})
 include_directories(${NET_SOURCE_DIR})
 include_directories(${UTIL_SOURCE_DIR})
 
+
 #qt5_wrap_ui(UIS_HEADERS
 #	${PROJECT_SOURCE_DIR}/qtdesigner/clientlobby.ui
 #)
@@ -61,7 +62,7 @@ add_executable(client
 		${protocol_header_files}
 		${net_source_files}
 		${net_header_files}
-		${util_source_files}
+    ${util_source_files}
 		${util_header_files}
 		)
 

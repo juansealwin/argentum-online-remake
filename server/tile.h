@@ -3,16 +3,20 @@
 #define TILE_H
 class Tile {
  public:
-  explicit Tile(int representation_id, char representation);
-  virtual ~Tile();
+  explicit Tile(int representation_id, char representation, bool safe, bool fixed);
+  ~Tile();
+  Tile(const Tile &) = delete;
   char char_representation();
-  void place_character(BaseCharacter *character);
-  virtual bool can_hold_character();
-  BaseCharacter *character = nullptr;
+  void fill_cell();
+  void empty_cell();
 
  private:
   int representation_id;
   char representation;
+  bool safe;
+  bool fixed;
+  bool free;
+  friend class Map;
 };
 
 #endif  // TILE_H

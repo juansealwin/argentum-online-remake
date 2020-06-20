@@ -1,17 +1,19 @@
 #include "tile.h"
 
-Tile::Tile(int representation_id, char representation)
-    : representation_id(representation_id), representation(representation) {}
+Tile::Tile(int representation_id, char representation, bool safe, bool fixed)
+    : representation_id(representation_id), representation(representation), safe(safe), fixed(fixed), free(!fixed) {}
 
 Tile::~Tile() {}
 
 char Tile::char_representation() {
-  if (character) {
-    return character->char_representation();
-  }
-  return representation;
+  if (free) return representation;
+  else return 'o';
 }
 
-bool Tile::can_hold_character() { return character == nullptr; }
+void Tile::empty_cell() {
+  free = true;
+}
 
-void Tile::place_character(BaseCharacter *b) { character = b; }
+void Tile::fill_cell() {
+  free = false;
+}
