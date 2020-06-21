@@ -12,8 +12,10 @@
 
 class ClientNotificationSender : public Thread {
  public:
-  //Recibe los comandos del cliente y los encola para que el juego los procese
-  ClientNotificationSender(Socket &peer_socket, ArgentumGame *game);
+  // Recibe los comandos del cliente y los encola para que el juego los procese
+  ClientNotificationSender(
+      Socket &peer_socket, ArgentumGame *game,
+      BlockingThreadSafeQueue<Notification *> *notifications_queue);
   ~ClientNotificationSender() override;
   void run() override;
   bool is_alive();
@@ -22,6 +24,7 @@ class ClientNotificationSender : public Thread {
  private:
   ArgentumGame *game;
   Socket &peer_socket;
+  BlockingThreadSafeQueue<Notification *> *notifications_queue;
   bool alive = true;
 };
 

@@ -4,14 +4,13 @@
 #include <sstream>
 #include <vector>
 
-ClientNotificationSender::ClientNotificationSender(Socket& peer_socket,
-                                                   ArgentumGame* game)
-    : game(game), peer_socket(peer_socket) {}
+ClientNotificationSender::ClientNotificationSender(
+    Socket& peer_socket, ArgentumGame* game,
+    BlockingThreadSafeQueue<Notification*>* notifications_queue)
+    : game(game), peer_socket(peer_socket), notifications_queue(notifications_queue) {}
 
 ClientNotificationSender::~ClientNotificationSender() {
-  // std::cout << "trying to join cliente sender" << std::endl;
   join();
-  //  std::cout << "joined client sender" << std::endl;
 }
 
 void ClientNotificationSender::stop() { this->alive = false; }
@@ -21,6 +20,27 @@ void ClientNotificationSender::run() {
 
   int loops = 0;
   while (alive) {
+
+
+    /*  Despues de que el protocol este listo:   
+        //bloquea mientras no haya notificaciones
+    Notification *n = notifications_queue->pop();
+    Protocol::send_notification(n->vector);
+*/
+
+
+
+
+
+
+
+
+
+
+
+
+
+
     std::cout << "In sender thread" << std::endl;
     /*descomentar luego de tests
     Json::Value command = Protocol::receiveMessage(this->peer_socket);*/

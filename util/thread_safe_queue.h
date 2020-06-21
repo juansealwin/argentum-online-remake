@@ -96,7 +96,7 @@ class BlockingThreadSafeQueue {
     while(queue.empty() && !closed)
       cv.wait(lock);
 
-  	if (closed)
+  	if (queue.empty() && closed)
   		return nullptr;
 
     T item = queue.front();

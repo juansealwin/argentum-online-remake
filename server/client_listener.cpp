@@ -16,7 +16,8 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
     ThreadSafeQueue<Command *> *commands_queue =
         new ThreadSafeQueue<Command *>();
 
-    ArgentumGame *game = new ArgentumGame(i, commands_queue, map_file, entities_file);
+    ArgentumGame *game =
+        new ArgentumGame(i, commands_queue, map_file, entities_file);
     game->start();
     games.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
@@ -47,19 +48,26 @@ void ClientListener::run() {
       break;
     }
     /*
-    descomentar luego de tests 
     std::cout << "New client trying to join server!" << std::endl;
     Json::Value starting_info = Protocol::receiveMessage(clientSkt);
     std::cout << "numero hab: " << starting_info["roomNumber"] << std::endl;
     unsigned int room_number = starting_info["roomNumber"].asInt();
     */
-   std::cout << "trying to get rno" << std::endl;
-    unsigned int room_number = static_cast<unsigned int>(Protocol::receive_command(clientSkt) - '0');
+    std::cout << "trying to get rno" << std::endl;
+    unsigned int room_number =
+        static_cast<unsigned int>(Protocol::receive_command(clientSkt) - '0');
     std::cout << "room number received: " << room_number << std::endl;
+    BlockingThreadSafeQueue<Notification *> *notifications_queue =
+        new BlockingThreadSafeQueue<Notification *>();
+    // aca a game pasarle la cola de notificaciones para que la agregue de
+    // manera segura (con locks) a el vector de notificaciones, si no puede
+    // haber race conditions
+    games[room_number]->add_notification_queue(notifications_queue);
     ClientHandler *client =
-        new ClientHandler(std::move(clientSkt), games[room_number]);
+        new ClientHandler(std::move(clientSkt), games[room_number],
+                          queues_commands[room_number], notifications_queue);
     clients.push_back(client);
-    //client->start();
+    // client->start();
     garbage_collector();
   }
 }

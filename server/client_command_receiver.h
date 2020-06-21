@@ -12,8 +12,9 @@
 
 class ClientCommandReceiver : public Thread {
  public:
-  //Recibe los comandos del cliente y los encola para que el juego los procese
-  ClientCommandReceiver(Socket &peer_socket, ArgentumGame *game);
+  // Recibe los comandos del cliente y los encola para que el juego los procese
+  ClientCommandReceiver(Socket &peer_socket, ArgentumGame *game,
+                        ThreadSafeQueue<Command *> *commands_queue);
   ~ClientCommandReceiver() override;
   void run() override;
   bool is_alive();
@@ -22,6 +23,7 @@ class ClientCommandReceiver : public Thread {
  private:
   ArgentumGame *game;
   Socket &peer_socket;
+  ThreadSafeQueue<Command *> *commands_queue;
   bool alive = true;
 };
 

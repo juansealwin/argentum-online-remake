@@ -177,7 +177,7 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      //print_debug_map();
+      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
@@ -186,7 +186,7 @@ void ArgentumGame::run() {
       // MoveCommand cmd(14, 0, 0);
       // cmd.execute(this);
     }
-    //std::this_thread::sleep_for(std::chrono::milliseconds(30));
+    // std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
 
   // std::cout << "UPS: " << updates << std::endl;
@@ -209,6 +209,21 @@ ArgentumGame::~ArgentumGame() {
     Command *cmd = commands_queue->pop();
     delete cmd;
   }
+  // cierro y elimino las colas de notificaciones a los clientes y limpio sus
+  // notificaciones
+  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+    std::cout << "@@@@@@@new queue@@@@@@@@@" << std::endl;
+    q->close();
+    
+    std::cout << "deleting notification queue!" << std::endl;
+    Notification *n;
+    while (!q->is_empty()) {
+      std::cout << "Deleting notification!" << std::endl;
+      n = q->pop();
+      delete n;
+    }
+    delete q;
+  }
   this->join();
 }
 
@@ -219,18 +234,29 @@ std::vector<unsigned char> ArgentumGame::game_status() {
   std::vector<unsigned char> status;
   uint16_t notification_id = 01;
   status.push_back(notification_id);
-  std::cout <<"Hello " << std::endl;
   for (auto &entity : entities) {
     status.push_back(entity.second->type);
     status.push_back(entity.second->x_position);
     status.push_back(entity.second->y_position);
   }
-  std::cout << "vector size is " << status.size() << std::endl;
-  for (int i = 0; i < status.size(); i++) {
-    std::cout << "Vector at pos " << i << ": " << (int)status[i] << std::endl;
+  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+    std::cout << "pushing notification!" << std::endl;
+    q->push(new GameStatusNotification(status));
   }
-  //vector d unsigned char [tipo(es un int), x_pos(es un int), y_pos(un int)]
+  // std::cout << "vector size is " << status.size() << std::endl;
+  // for (int i = 0; i < status.size(); i++) {
+  //   std::cout << "Vector at pos " << i << ": " << (int)status[i] <<
+  //   std::endl;
+  // }
+  // recorrer las colas de notificaciones y agregar en todas un game status
+  // notif
   return status;
+}
+
+void ArgentumGame::add_notification_queue(
+    BlockingThreadSafeQueue<Notification *> *queue) {
+  std::unique_lock<std::mutex> lock(mutex);
+  queues_notifications.push_back(queue);
 }
 
 // Json::Value ArgentumGame::game_status() {
