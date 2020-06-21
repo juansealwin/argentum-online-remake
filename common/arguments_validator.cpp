@@ -5,4 +5,4 @@ ArgumentsValidator::ArgumentsValidator(int argc, char** argv)
 
 ArgumentsValidator::~ArgumentsValidator() {}
 
-const char* ArgumentsValidator::getPort() { return port.c_str(); }
+const char* ArgumentsValidator::get_port() { return port.c_str(); }

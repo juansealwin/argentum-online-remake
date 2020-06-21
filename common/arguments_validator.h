@@ -18,14 +18,14 @@ class ArgumentsValidator {
    * @brief force to childs to implemente that function
    *
    */
-  virtual void validateArguments() = 0;
+  virtual void validate_arguments() = 0;
 
   /*
    * @brief Get the Port object
    *
    * @return const char*
    */
-  const char* getPort();
+  const char* get_port();
 };
 
 #endif

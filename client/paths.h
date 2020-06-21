@@ -28,7 +28,7 @@ class Paths {
  public:
   Paths();
   ~Paths();
-  const char* getPathTexture(int);
+  const char* get_path_texture(int);
 };
 
 

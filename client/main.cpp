@@ -8,8 +8,8 @@
 int main(int argc, char *argv[]) {
   try {
     ClientArgumentsValidator validator(argc, argv);
-    validator.validateArguments();
-    Client client(validator.getIp(), validator.getPort());
+    validator.validate_arguments();
+    Client client(validator.get_ip(), validator.get_port());
     client.play();
     return EXIT_SUCCESS;
   } catch (ArgumentsException excep) {

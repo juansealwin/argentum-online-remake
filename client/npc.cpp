@@ -1,13 +1,12 @@
 #include "npc.h"
 
-Npc::Npc(SDL_Renderer* ren, int id, int new_x, int new_y) {
+Npc::Npc(SDL_Renderer* ren, character_t id, int new_x, int new_y) {
   x = new_x;
   y = new_y;
-  setNpcDimensions(id);
+  set_npc_dimensions(id);
   renderer = ren;
   body_rect = {0, 0, width, height};
-  animation_move = new Move(width, height, id);
-  body_texture.loadTexture(id, renderer);
+  body_texture.load_texture(id, renderer);
 }
 
 Npc::~Npc() {
@@ -15,41 +14,53 @@ Npc::~Npc() {
   renderer = nullptr;
 }
 
-int Npc::setNpcDimensions(int id_npc) {
+int Npc::set_npc_dimensions(character_t id_npc) {
+  // cambiar esto
+  int id_move;
+
   switch (id_npc) {
-    case ID_SPIDER:
+    case SPIDER:
       width = 53;
       height = 33;
+      id_move = ID_SPIDER;
       break;
 
-    case ID_SKELETON:
+    case SKELETON:
       width = 25;
       height = 52;
+      id_move = ID_SKELETON;
       break;
 
-    case ID_GOBLIN:
+    case GOBLIN:
       width = 24;
       height = 33;
+      id_move = ID_GOBLIN;
+
       break;
 
-    case ID_ZOMBIE:
+    case ZOMBIE:
       width = 25;
       height = 47;
+      id_move = ID_ZOMBIE;
       break;
 
-    case ID_PRIEST:
+    case PRIEST:
       width = 25;
       height = 45;
+      id_move = ID_PRIEST;
       break;
 
-    case ID_MERCHANT:
+    case MERCHANT:
       width = 23;
       height = 48;
+      id_move = ID_MERCHANT;
       break;
 
-    case ID_BANKER:
+    case BANKER:
       width = 25;
       height = 33;
+      id_move = ID_BANKER;
       break;
   }
+  animation_move = new Move(width, height, id_move);
 }

@@ -8,14 +8,14 @@ Texture::Texture() {
 
 Texture::~Texture() { free(); }
 
-void Texture::loadTexture(int id_path, SDL_Renderer* renderer) {
+void Texture::load_texture(int id_path, SDL_Renderer* renderer) {
   // Libera la textura si ya tenia algo cargado
   free();
   
   // La textura final
   SDL_Texture* new_texture = NULL;
 
-  SDL_Surface* new_surface = IMG_Load(texture_paths.getPathTexture(id_path));
+  SDL_Surface* new_surface = IMG_Load(texture_paths.get_path_texture(id_path));
   // texture = IMG_LoadTexture(renderer, filename.c_str());
 
   if (!new_surface)
@@ -69,6 +69,6 @@ void Texture::free() {
   }
 }
 
-int Texture::getWidth(void) const { return width; }
+int Texture::get_width(void) const { return width; }
 
-int Texture::getHeight(void) const { return height; }
+int Texture::get_height(void) const { return height; }

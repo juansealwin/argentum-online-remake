@@ -1,6 +1,7 @@
 #include "dwarf.h"
 
-Dwarf::Dwarf(SDL_Renderer* ren, int new_x, int new_y) {
+Dwarf::Dwarf(SDL_Renderer* ren, int id_char, int new_x, int new_y) {
+  id = id_char;
   half_screen_w = new_x;
   half_screen_h = new_y;
   x = new_x;
@@ -12,9 +13,9 @@ Dwarf::Dwarf(SDL_Renderer* ren, int new_x, int new_y) {
   body_rect = {0, 10, width, height};
   head_rect = {0, 0, 17, 17};
   animation_move = new Move(width, height, ID_DWARF);
-  animation_move->setOffsetY(10);
-  body_texture.loadTexture(ID_DWARF, renderer);
-  head_texture.loadTexture(ID_DWARF_HEAD, renderer);
+  animation_move->set_offset_y(10);
+  body_texture.load_texture(ID_DWARF, renderer);
+  head_texture.load_texture(ID_DWARF_HEAD, renderer);
 }
 
 Dwarf::~Dwarf() {

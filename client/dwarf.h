@@ -10,7 +10,7 @@
 
 class Dwarf : public PlayableCharacter {
  public:
-  Dwarf(SDL_Renderer*, int, int);
+  Dwarf(SDL_Renderer*,int, int, int);
   ~Dwarf();
 };
 

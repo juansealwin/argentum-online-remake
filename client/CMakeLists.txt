@@ -9,6 +9,7 @@ set(PROTOCOL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../protocol)
 set(NET_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../net)
 set(UTIL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../util)
 
+
 find_package(SDL2 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
 find_package(Threads)
