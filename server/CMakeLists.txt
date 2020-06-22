@@ -9,6 +9,13 @@ set(PROTOCOL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../protocol)
 set(NET_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../net)
 set(UTIL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../util)
 set(MODEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model)
+set(ENTITIES_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model/entities)
+set(ITEMS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model/items)
+set(MAP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model/map)
+set(COMMANDS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/commands)
+set(NOTIFICATIONS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/notifications)
+
+
 
 
 find_package(SDL2 REQUIRED)
@@ -28,6 +35,13 @@ include_directories(${PROTOCOL_SOURCE_DIR})
 include_directories(${NET_SOURCE_DIR})
 include_directories(${UTIL_SOURCE_DIR})
 include_directories(${MODEL_SOURCE_DIR})
+include_directories(${ENTITIES_SOURCE_DIR})
+include_directories(${ITEMS_SOURCE_DIR})
+include_directories(${MAP_SOURCE_DIR})
+include_directories(${COMMANDS_SOURCE_DIR})
+include_directories(${NOTIFICATIONS_SOURCE_DIR})
+
+
 
 
 #qt5_wrap_ui(UIS_HEADERS
@@ -58,6 +72,21 @@ file(GLOB util_header_files ${UTIL_SOURCE_DIR}/*.h)
 file(GLOB model_source_files ${MODEL_SOURCE_DIR}/*.cpp)
 file(GLOB model_header_files ${MODEL_SOURCE_DIR}/*.h)
 
+file(GLOB entities_source_files ${ENTITIES_SOURCE_DIR}/*.cpp)
+file(GLOB entities_header_files ${ENTITIES_SOURCE_DIR}/*.h)
+
+file(GLOB items_source_files ${ITEMS_SOURCE_DIR}/*.cpp)
+file(GLOB items_header_files ${ITEMS_SOURCE_DIR}/*.h)
+
+file(GLOB map_source_files ${MAP_SOURCE_DIR}/*.cpp)
+file(GLOB map_header_files ${MAP_SOURCE_DIR}/*.h)
+
+file(GLOB commands_source_files ${COMMANDS_SOURCE_DIR}/*.cpp)
+file(GLOB commands_header_files ${COMMANDS_SOURCE_DIR}/*.h)
+
+file(GLOB notifications_source_files ${NOTIFICATIONS_SOURCE_DIR}/*.cpp)
+file(GLOB notifications_header_files ${NOTIFICATIONS_SOURCE_DIR}/*.h)
+
 add_executable(server
 		${server_source_files}
 		${server_header_files}
@@ -71,6 +100,16 @@ add_executable(server
 		${util_header_files}
 		${model_source_files}
 		${model_header_files}
+		${entities_source_files}
+		${entities_header_files}
+		${items_source_files}
+		${items_header_files}
+		${map_source_files}
+		${map_header_files}
+		${commands_source_files}
+		${commands_header_files}
+		${notifications_source_files}
+		${notifications_header_files}
 		)
 
 #target_link_libraries(server Qt5::Widgets Qt5::DBus)
