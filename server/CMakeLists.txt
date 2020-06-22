@@ -8,6 +8,8 @@ set(COMMON_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../common)
 set(PROTOCOL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../protocol)
 set(NET_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../net)
 set(UTIL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../util)
+set(MODEL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model)
+
 
 find_package(SDL2 REQUIRED)
 find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
@@ -25,6 +27,7 @@ include_directories(${COMMON_SOURCE_DIR})
 include_directories(${PROTOCOL_SOURCE_DIR})
 include_directories(${NET_SOURCE_DIR})
 include_directories(${UTIL_SOURCE_DIR})
+include_directories(${MODEL_SOURCE_DIR})
 
 
 #qt5_wrap_ui(UIS_HEADERS
@@ -52,6 +55,9 @@ file(GLOB net_header_files ${NET_SOURCE_DIR}/*.h)
 file(GLOB util_source_files ${UTIL_SOURCE_DIR}/*.cpp)
 file(GLOB util_header_files ${UTIL_SOURCE_DIR}/*.h)
 
+file(GLOB model_source_files ${MODEL_SOURCE_DIR}/*.cpp)
+file(GLOB model_header_files ${MODEL_SOURCE_DIR}/*.h)
+
 add_executable(server
 		${server_source_files}
 		${server_header_files}
@@ -63,6 +69,8 @@ add_executable(server
 		${net_header_files}
 		${util_source_files}
 		${util_header_files}
+		${model_source_files}
+		${model_header_files}
 		)
 
 #target_link_libraries(server Qt5::Widgets Qt5::DBus)
