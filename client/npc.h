@@ -7,9 +7,9 @@
 
 class Npc : public Character {
  public:
-  Npc(SDL_Renderer*, int, int, int);
+  Npc(SDL_Renderer*, character_t, int, int);
   ~Npc();
-  int setNpcDimensions(int);
+  int set_npc_dimensions(character_t);
 };
 
 #endif

@@ -13,11 +13,11 @@ class PlayableCharacter : public Character {
  public:
   ~PlayableCharacter();
   virtual void move(move_t) override;
-  virtual void updateFaceProfile(move_t);
+  virtual void update_face_profile(move_t);
   virtual void render(int, int) override;
-  virtual void renderAsHero();
-  virtual int getHeadW() const;
-  virtual int getHeadH() const;
+  virtual void render_as_hero();
+  virtual int get_head_w() const;
+  virtual int get_head_h() const;
 };
 
 #endif

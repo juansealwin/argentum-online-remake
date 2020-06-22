@@ -9,7 +9,7 @@
 
 class Human : public PlayableCharacter {
  public:
-  Human(SDL_Renderer*, int, int);
+  Human(SDL_Renderer*, int, int, int);
   ~Human();
 };
 
