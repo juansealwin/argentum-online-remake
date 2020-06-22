@@ -19,6 +19,7 @@
 #include "banker.h"
 #include "merchant.h"
 #include "priest.h"
+#include "game_status_notification.h"
 #define PRIEST 1334
 #define MERCHANT 1320
 #define BANKER 1352
@@ -40,6 +41,10 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
   void add_new_hero(std::string hero_race, std::string hero_class);
+  void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
+  //remueve colas de notificaciones para no notificar a clientes meurtos
+  void clean_notifications_queues();
+
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -59,9 +64,11 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
   std::map<int, Entity *> entities;
-  Json::Value game_status();
+  //Json::Value game_status();
+  std::vector<unsigned char> game_status();
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
+  std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
 };
 
 #endif  // ARGENTUMGAME_H
