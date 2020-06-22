@@ -28,6 +28,7 @@ class ClientHandler {  //: public Thread {
   ClientCommandReceiver *receiver;
   ClientNotificationSender *sender;
   ArgentumGame *game;
+  BlockingThreadSafeQueue<Notification *> *notifications_queue;
   Socket peer_socket;
   bool alive = true;
 };

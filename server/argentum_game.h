@@ -42,6 +42,8 @@ class ArgentumGame : public Thread {
   void move_entity(int entity_id, int x, int y);
   void add_new_hero(std::string hero_race, std::string hero_class);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
+  //remueve colas de notificaciones para no notificar a clientes meurtos
+  void clean_notifications_queues();
 
  private:
   unsigned int room = 0;

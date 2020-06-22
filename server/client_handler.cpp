@@ -8,7 +8,7 @@ ClientHandler::ClientHandler(
     Socket socket, ArgentumGame *game,
     ThreadSafeQueue<Command *> *commands_queue,
     BlockingThreadSafeQueue<Notification *> *notifications_queue)
-    : game(game) {
+    : game(game), notifications_queue(notifications_queue) {
   this->peer_socket = std::move(socket);
   sender = new ClientNotificationSender(peer_socket, game, notifications_queue);
   receiver = new ClientCommandReceiver(peer_socket, game, commands_queue);

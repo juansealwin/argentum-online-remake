@@ -56,7 +56,6 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   for (const auto &jv : map_cfg["layers"][2]["data"]) {
     Entity *e = nullptr;
     int type = jv.asInt();
-    // en el futuro podria simplificarse, el caracter lo recibo para debug
     Json::Value entity = Json::arrayValue;
     if (type == GOBLIN) {
       entity = entities_cfg["npcs"]["goblin"];
@@ -209,16 +208,11 @@ ArgentumGame::~ArgentumGame() {
     Command *cmd = commands_queue->pop();
     delete cmd;
   }
-  // cierro y elimino las colas de notificaciones a los clientes y limpio sus
-  // notificaciones
+  // cierro y elimino las colas de notificaciones
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    std::cout << "@@@@@@@new queue@@@@@@@@@" << std::endl;
     q->close();
-    
-    std::cout << "deleting notification queue!" << std::endl;
     Notification *n;
     while (!q->is_empty()) {
-      std::cout << "Deleting notification!" << std::endl;
       n = q->pop();
       delete n;
     }
@@ -240,7 +234,6 @@ std::vector<unsigned char> ArgentumGame::game_status() {
     status.push_back(entity.second->y_position);
   }
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    std::cout << "pushing notification!" << std::endl;
     q->push(new GameStatusNotification(status));
   }
   // std::cout << "vector size is " << status.size() << std::endl;
@@ -248,8 +241,6 @@ std::vector<unsigned char> ArgentumGame::game_status() {
   //   std::cout << "Vector at pos " << i << ": " << (int)status[i] <<
   //   std::endl;
   // }
-  // recorrer las colas de notificaciones y agregar en todas un game status
-  // notif
   return status;
 }
 
@@ -257,6 +248,25 @@ void ArgentumGame::add_notification_queue(
     BlockingThreadSafeQueue<Notification *> *queue) {
   std::unique_lock<std::mutex> lock(mutex);
   queues_notifications.push_back(queue);
+}
+
+void ArgentumGame::clean_notifications_queues() {
+  std::unique_lock<std::mutex> lock(mutex);
+  std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
+  for (it = queues_notifications.begin(); it != queues_notifications.end();) {
+    if ((*it)->is_closed()) {
+      Notification *n;
+      while (!(*it)->is_empty()) {
+        n = (*it)->pop();
+        delete n;
+      }
+      delete (*it);
+      it = queues_notifications.erase(it);
+    }
+
+    else
+      ++it;
+  }
 }
 
 // Json::Value ArgentumGame::game_status() {
