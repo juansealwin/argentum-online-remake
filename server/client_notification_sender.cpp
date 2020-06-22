@@ -32,7 +32,6 @@ void ClientNotificationSender::run() {
     notificaciones
 */
 
-    std::cout << "In sender thread" << std::endl;
     /*descomentar luego de tests
     Json::Value command = Protocol::receiveMessage(this->peer_socket);*/
     std::string message = "Ganaste";
@@ -46,8 +45,6 @@ void ClientNotificationSender::run() {
     loops++;
     if (loops == 5) {
       alive = false;
-      std::cout << "alive was set to false" << std::endl;
-      std::cout << "finishing notif sender run()";
     }
   }
   // de esto se encargaria clienthandler
