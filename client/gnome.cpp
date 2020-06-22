@@ -14,8 +14,8 @@ Gnome::Gnome(SDL_Renderer* ren, int id_char, int new_x, int new_y) {
   head_rect = {0, 0, 17, 17};
   animation_move = new Move(width, height, ID_GNOME);
   animation_move->set_offset_y(10);
-  body_texture.load_texture(ID_GNOME, renderer);
-  head_texture.load_texture(ID_GNOME_HEAD, renderer);
+  body_texture.load_texture(paths->get_path_texture(ID_GNOME), renderer);
+  head_texture.load_texture(paths->get_path_texture(ID_GNOME_HEAD), renderer);
 }
 
 Gnome::~Gnome() {

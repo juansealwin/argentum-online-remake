@@ -12,8 +12,8 @@ Human::Human(SDL_Renderer* ren, int id_char, int new_x, int new_y) {
   body_rect = {0, 0, width, height};
   head_rect = {0, 0, 17, 16};
   animation_move = new Move(width, height, ID_HUMAN);
-  body_texture.load_texture(ID_HUMAN, renderer);
-  head_texture.load_texture(ID_HUMAN_HEAD, renderer);
+  body_texture.load_texture(paths->get_path_texture(ID_HUMAN), renderer);
+  head_texture.load_texture(paths->get_path_texture(ID_HUMAN_HEAD), renderer);
 }
 
 Human::~Human() {

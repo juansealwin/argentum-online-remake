@@ -6,6 +6,7 @@
 
 #include "drawable.h"
 #include "move.h"
+#include "paths.h"
 
 typedef enum {
   HUMAN = 0,

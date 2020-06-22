@@ -1,8 +1,8 @@
 #ifndef PATHS_H
 #define PATHS_H
 
-#include <string>
 #include <map>
+#include <string>
 
 #define ID_HUMAN 0
 #define ID_HUMAN_HEAD 1
@@ -23,14 +23,16 @@
 
 class Paths {
  private:
+  static Paths* instance_paths;
+  Paths();
   std::map<int, std::string> map_paths;
 
  public:
-  Paths();
+  static Paths* get_instance();
   ~Paths();
   const char* get_path_texture(int);
 };
 
-
+extern Paths* paths = Paths::get_instance();
 
 #endif

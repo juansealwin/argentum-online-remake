@@ -19,10 +19,8 @@ void Client::play() {
   
   //Uint32 frame_start;
   //int frame_time;
-
   BlockingQueue events_to_send;
   BlockingMap map_updated;
-  
   //GameRenderer game_renderer(800, 600);
   GameUpdater updater(id_player, 800, 600, map_updated);
   ModelReceiver model_receiver(map_updated);

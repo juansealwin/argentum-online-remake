@@ -1,4 +1,12 @@
 #include "paths.h"
+Paths* Paths::instance_paths = nullptr;
+
+Paths* Paths::get_instance() {
+   if (instance_paths == NULL) {
+      instance_paths = new Paths();
+   }
+   return(instance_paths);
+}
 
 Paths::Paths() {
   /* PLAYABLE CHARACTER PATHS */
