@@ -7,9 +7,11 @@
 #include "blocking_queue.h"
 #include "character.h"
 #include "event.h"
+#include "commands_blocking_queue.h"
 #include "exception_messages.h"
 #include "playable_character.h"
 #include "map.h"
+#include "move_command_dto.h"
 #include "npc.h"
 #include "sdl_exception.h"
 #include "texture.h"
@@ -18,9 +20,9 @@
 
 class Game {
  private:
-  int id_player;
-  BlockingQueue& events_queue;
-  bool is_running;
+  const int player_id;
+  CommandsBlockingQueue& commands_queue;
+  bool is_running = true;
   /*std::vector<Texture*> textures;
   PlayableCharacter* player;
   Map* current_map;
@@ -28,7 +30,7 @@ class Game {
   int screen_height = 600;*/
 
  public:
-  Game(int, BlockingQueue&);
+  Game(const int player_id, CommandsBlockingQueue& commands_queue);
   ~Game();
   void window_init();
   void fill(int, int, int, int);
