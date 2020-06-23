@@ -49,9 +49,6 @@ void ClientListener::run() {
       break;
     }
     std::cout << "trying to get rno" << std::endl;
-    // unsigned int room_number =
-    //     static_cast<unsigned int>(Protocol::receive_command(clientSkt) -
-    //     '0');
     LoginCommandDTO *login_command =
         static_cast<LoginCommandDTO *>(Protocol::receive_command(clientSkt));
     std::cout << "room number received: " << login_command->room_number

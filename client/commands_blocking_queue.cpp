@@ -8,7 +8,6 @@ CommandsBlockingQueue::~CommandsBlockingQueue() {}
 
 void CommandsBlockingQueue::push(CommandDTO* command) {
   std::unique_lock<std::mutex> lock(block_queue);
-  std::cout << "pusheo comando\n";
   queue.push_front(command);
   cv.notify_all();
 }

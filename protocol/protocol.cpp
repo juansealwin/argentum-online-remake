@@ -9,7 +9,7 @@
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
 
-#define ID_LENGTH 1
+#define ID_LENGTH 2
 
 LoginCommandDTO* receive_login(const Socket& socket) {
   uint16_t room_number;
@@ -35,6 +35,7 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint16_t command_id;
   socket.recv(&command_id, ID_LENGTH);
   command_id = ntohs(command_id);
+  std::cout << "comando redibido id: " << command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);
@@ -61,8 +62,8 @@ void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
       short_int_to_unsigned_char(LOGIN_COMMAND, ID_LENGTH);
   std::unique_ptr<unsigned char[]> room_number =
       short_int_to_unsigned_char(login_command->room_number, 2);
-  socket.send(&command_id, ID_LENGTH);
-  socket.send(&room_number, 2);
+  socket.send(command_id.get(), ID_LENGTH);
+  socket.send(room_number.get(), 2);
 }
 
 void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
@@ -87,7 +88,6 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->getId()) {
     case LOGIN_COMMAND:
-      std::cout << "estoy enviando un login\n";
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
       break;
     case QUIT_COMMAND:
