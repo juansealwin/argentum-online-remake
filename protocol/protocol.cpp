@@ -1,5 +1,10 @@
 #include "protocol.h"
 
+#include <string.h>
+
+#include <iostream>
+#include <memory>
+
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
@@ -42,24 +47,47 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   }
 }
 
+std::unique_ptr<unsigned char[]> short_int_to_unsigned_char(int number,
+                                                            int size) {
+  std::unique_ptr<unsigned char[]> message;
+  message = std::unique_ptr<unsigned char[]>{new unsigned char[size]};
+  uint16_t short_number = htons(static_cast<uint16_t>(number));
+  memcpy(&message[0], &short_number, size);
+  return message;
+}
+
 void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
-  socket.send((void*)LOGIN_COMMAND, ID_LENGTH);
-  socket.send((void*)login_command->room_number, 2);
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(LOGIN_COMMAND, ID_LENGTH);
+  std::unique_ptr<unsigned char[]> room_number =
+      short_int_to_unsigned_char(login_command->room_number, 2);
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&room_number, 2);
 }
 
 void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
-  socket.send((void*)QUIT_COMMAND, ID_LENGTH);
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(QUIT_COMMAND, ID_LENGTH);
+  socket.send(&command_id, ID_LENGTH);
 }
 
 void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
-  socket.send((void*)MOVE_COMMAND, ID_LENGTH);
-  socket.send((void*)move_command->player_id, 2);
-  socket.send((void*)move_command->movement_type, 1);
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(MOVE_COMMAND, ID_LENGTH);
+  std::unique_ptr<unsigned char[]> player_id =
+      short_int_to_unsigned_char(move_command->player_id, 2);
+  std::unique_ptr<unsigned char[]> movement_type =
+      short_int_to_unsigned_char(move_command->movement_type, 1);
+
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&player_id, 2);
+  socket.send(&movement_type, 1);
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->getId()) {
     case LOGIN_COMMAND:
+      std::cout << "estoy enviando un login\n";
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
       break;
     case QUIT_COMMAND:
