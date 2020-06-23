@@ -1,6 +1,6 @@
 #include "item.h"
 
-Item::Item(int id) : id(id) {}
+Item::Item(unsigned int id) : id(id) {}
 
 Item::~Item() {}
 

@@ -4,12 +4,11 @@
 class Hero;
 class Item {
  public:
-  Item(int id);
+  Item(unsigned int id);
   virtual bool can_be_used_by(Hero &hero);
   virtual void self_apply(Hero &hero);
   virtual ~Item();
   Item(const Item &) = delete;
- protected:
   int id;
 };
 #endif  // ITEM_H

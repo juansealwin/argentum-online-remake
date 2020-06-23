@@ -3,6 +3,8 @@
 #include "item.h"
 #include <vector>
 #include "model_exceptions.h"
+#include <list>
+
 class Inventory {
  public:
   //constructores de equipamiento vacio o con items
@@ -11,6 +13,8 @@ class Inventory {
   ~Inventory();
   Inventory(const Inventory &) = delete;
   void add_item(Item *item);
+  bool has_item(unsigned int id);
+  Item* remove_item(unsigned int id);
   private:
   std::vector<Item*> items;
 
