@@ -19,12 +19,44 @@ Hero::Hero(int x, int y, int race_id, char repr, int level, int strength,
       class_id(class_id) {
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
+  equipment = new Equipment();
 }
 
 void Hero::update() {
   // aumento de vida, mana, etc.
   // std::cout << "Updating hero: not implemented" << std::endl;
 }
+
+  void Hero::equip_weapon(Weapon *weapon) {
+    equipment->equip_weapon(weapon);
+  }
+  void Hero::equip_staff(Staff *staff) {
+    equipment->equip_staff(staff);
+  }
+  void Hero::equip_shield(DefensiveItem *shield) {
+    equipment->equip_shield(shield);
+  }
+  void Hero::equip_helmet(DefensiveItem *helmet) {
+    equipment->equip_helmet(helmet);
+  }
+  void Hero::equip_armour(DefensiveItem *armour) {
+    equipment->equip_armour(armour);
+  }
+  void Hero::unequip_weapon() {
+    Weapon *weapon = equipment->unequip_weapon();
+  }
+  void Hero::unequip_staff() {
+    Staff *staff = equipment->unequip_staff();
+  }
+  void Hero::unequip_shield() {
+    DefensiveItem *shield = equipment->unequip_shield();
+  }
+  void Hero::unequip_helmet() {
+    DefensiveItem *helmet = equipment->unequip_helmet();
+  }
+  void Hero::unequip_armour() {
+    DefensiveItem *armour = equipment->unequip_armour();
+  }
 
 int Hero::damage(Hero *other) {  // deberia cambiarlo por un baseCharacter ya
                                  // que puedo atacar a monstruos

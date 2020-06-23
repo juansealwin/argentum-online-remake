@@ -5,8 +5,10 @@
 #include "weapon.h"
 class Equipment {
  public:
+  //constructores de equipamiento vacio o con items
   Equipment(Weapon *weapon, Staff *staff, DefensiveItem *helmet,
             DefensiveItem *armour, DefensiveItem *shield);
+  Equipment();
   ~Equipment();
   Equipment(const Equipment &) = delete;
   //PRE: Se debe llamar a unequip_x antes de equipar, si no
