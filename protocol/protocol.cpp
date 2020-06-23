@@ -26,9 +26,9 @@ MoveCommandDTO* receive_move(const Socket& socket) {
   return new MoveCommandDTO(player_id, movement_t(movement_type));
 }
 
-const CommandDTO* Protocol::receive_message(const Socket& socket) {
+CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint16_t command_id;
-  socket.recv(&command_id, 1);
+  socket.recv(&command_id, ID_LENGTH);
   command_id = ntohs(command_id);
   switch (command_id) {
     case LOGIN_COMMAND:
@@ -57,7 +57,7 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
   socket.send((void*)move_command->movement_type, 1);
 }
 
-void Protocol::send_message(const Socket& socket, CommandDTO* commandDTO) {
+void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->getId()) {
     case LOGIN_COMMAND:
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
@@ -71,17 +71,4 @@ void Protocol::send_message(const Socket& socket, CommandDTO* commandDTO) {
     default:
       break;
   }
-}
-
-void Protocol::send_response_to_command
-(const Socket& skt, const unsigned char *message, const uint16_t *size) {
-    uint16_t size_converted = htons(*size);
-    skt.send(&size_converted, 2);
-    skt.send(message, *size);
-}
-
-unsigned char Protocol::receive_command(const Socket& skt) {
-    unsigned char c = 0;
-    skt.recv(&c, 1);
-    return c;
 }

@@ -14,7 +14,7 @@ void CommandsSender::run() {
       if (command.stops_run()) {
         is_running = false;
       }
-      Protocol::send_message(socket, &command);
+      Protocol::send_command(socket, &command);
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;

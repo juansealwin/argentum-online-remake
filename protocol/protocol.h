@@ -11,8 +11,8 @@
 #define MOVE_COMMAND 3
 
 namespace Protocol {
-const CommandDTO* receive_message(const Socket& socket);
-void send_message(const Socket& socket, CommandDTO* commandDTO);
+CommandDTO* receive_command(const Socket& socket);
+void send_command(const Socket& socket, CommandDTO* commandDTO);
 };  // namespace Protocol
 
 #endif
