@@ -1,11 +1,8 @@
 #ifndef EQUIPMENT_H
 #define EQUIPMENT_H
-//#include "defensive_item.h"
-//#include "staff.h"
-//#include "weapon.h"
 class Weapon;
-class Staff;
 class DefensiveItem;
+class Staff;
 class Equipment {
  public:
   //constructores de equipamiento vacio o con items

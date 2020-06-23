@@ -1,3 +1,5 @@
+#include "item.h"
+
 #include "defensive_item.h"
 
 DefensiveItem::DefensiveItem(int id, unsigned int min_defense,

@@ -1,0 +1,22 @@
+
+#include <iostream>
+#include "inventory.h"
+#include "item.h"
+#include "weapon.h"
+#include "staff.h"
+int main() {
+  Inventory inventory(5);
+  Weapon *w1 = new Weapon(5,5,5,5);
+  Weapon *w2 = new Weapon(5,5,5,5);
+  Weapon *w3 = new Weapon(5,5,5,5);
+  Weapon *w4 = new Weapon(5,5,5,5);
+  Weapon *w5 = new Weapon(5,5,5,5);
+  Staff *s = new Staff(1,2,3,4,5,6);
+  inventory.add_item(w1);
+  inventory.add_item(w2);
+  inventory.add_item(w3);
+  inventory.add_item(w4);
+  inventory.add_item(w5);
+  inventory.add_item(s);
+  std::cout <<"Goodbye" <<std::endl;
+}

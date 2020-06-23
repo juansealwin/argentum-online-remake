@@ -6,8 +6,8 @@ Equipment::Equipment(Weapon *weapon, Staff *staff, DefensiveItem *helmet,
       helmet(helmet),
       armour(armour),
       shield(shield) {}
-Equipment::Equipment() {}
 
+Equipment::Equipment() {}
 void Equipment::equip_weapon(Weapon *weapon) { this->weapon = weapon; }
 void Equipment::equip_staff(Staff *staff) { this->staff = staff; }
 void Equipment::equip_shield(DefensiveItem *shield) { this->shield = shield; }

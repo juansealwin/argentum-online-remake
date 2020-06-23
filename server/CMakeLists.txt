@@ -14,6 +14,8 @@ set(ITEMS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model/items)
 set(MAP_SOURCE_DIR ${PROJECT_SOURCE_DIR}/model/map)
 set(COMMANDS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/commands)
 set(NOTIFICATIONS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/notifications)
+set(SERVER_EXCEPTIONS_SOURCE_DIR ${PROJECT_SOURCE_DIR}/exceptions)
+
 
 
 
@@ -40,6 +42,8 @@ include_directories(${ITEMS_SOURCE_DIR})
 include_directories(${MAP_SOURCE_DIR})
 include_directories(${COMMANDS_SOURCE_DIR})
 include_directories(${NOTIFICATIONS_SOURCE_DIR})
+include_directories(${SERVER_EXCEPTIONS_SOURCE_DIR})
+
 
 
 
@@ -87,6 +91,9 @@ file(GLOB commands_header_files ${COMMANDS_SOURCE_DIR}/*.h)
 file(GLOB notifications_source_files ${NOTIFICATIONS_SOURCE_DIR}/*.cpp)
 file(GLOB notifications_header_files ${NOTIFICATIONS_SOURCE_DIR}/*.h)
 
+file(GLOB server_exceptions_source_files ${SERVER_EXCEPTIONS_SOURCE_DIR}/*.cpp)
+file(GLOB server_exceptions_header_files ${SERVER_EXCEPTIONS_SOURCE_DIR}/*.h)
+
 add_executable(server
 		${server_source_files}
 		${server_header_files}
@@ -110,6 +117,9 @@ add_executable(server
 		${commands_header_files}
 		${notifications_source_files}
 		${notifications_header_files}
+		${server_exceptions_source_files}
+		${server_exceptions_header_files}
+		
 		)
 
 #target_link_libraries(server Qt5::Widgets Qt5::DBus)

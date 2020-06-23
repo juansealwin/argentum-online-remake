@@ -8,6 +8,7 @@
 #define CRITICAL_DAMAGE_MULTIPLIER 2
 class Hero : public BaseCharacter {
  public:
+  //constructor para heroes nuevos
   Hero(int x, int y, int race_id, char repr, int level, int strength,
        int intelligence, int agility, int constitution, int f_class_hp,
        int f_race_hp, int f_race_recovery, int f_race_mana, int f_class_mana,
