@@ -10,11 +10,12 @@ CommandsSender::~CommandsSender() {}
 void CommandsSender::run() {
   try {
     while (is_running) {
-      CommandDTO& command = commands_queue.pop();
-      if (command.stops_run()) {
+      CommandDTO* command = commands_queue.pop();
+      if (command->stops_run()) {
         is_running = false;
       }
-      Protocol::send_command(socket, &command);
+      Protocol::send_command(socket, command);
+      delete command;
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;

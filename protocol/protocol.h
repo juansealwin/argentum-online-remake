@@ -3,16 +3,17 @@
 
 #include <string>
 
-#include "command_dto.h"
 #include "common_socket.h"
 
 #define LOGIN_COMMAND 1
 #define QUIT_COMMAND 2
 #define MOVE_COMMAND 3
 
+class CommandDTO;
+
 namespace Protocol {
 CommandDTO* receive_command(const Socket& socket);
 void send_command(const Socket& socket, CommandDTO* commandDTO);
-};  // namespace Protocol
+}  // namespace Protocol
 
 #endif

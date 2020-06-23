@@ -85,19 +85,23 @@ void Game::event_handler() {
         else if (event.type == SDL_KEYDOWN) {
           // Select surfaces based on key press
           if (event.key.keysym.sym == SDLK_UP) {
-            MoveCommandDTO move_command(player_id, move_up);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_up);
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_DOWN) {
-            MoveCommandDTO move_command(player_id, move_down);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_down);
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_LEFT) {
-            MoveCommandDTO move_command(player_id, move_left);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_left);
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_RIGHT) {
-            MoveCommandDTO move_command(player_id, move_right);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_right);
             commands_queue.push(move_command);
           }
         }

@@ -10,7 +10,7 @@
 
 class CommandsBlockingQueue {
  private:
-  std::deque<CommandDTO> queue;
+  std::deque<CommandDTO*> queue;
   std::mutex block_queue;
   std::condition_variable cv;
   bool more_commands = true;
@@ -18,8 +18,8 @@ class CommandsBlockingQueue {
  public:
   CommandsBlockingQueue();
   ~CommandsBlockingQueue();
-  void push(CommandDTO& command);
-  CommandDTO& pop();
+  void push(CommandDTO* command);
+  CommandDTO* pop();
   void no_more_commands();
   CommandsBlockingQueue(CommandsBlockingQueue&) = delete;
   CommandsBlockingQueue& operator=(const CommandsBlockingQueue&) = delete;

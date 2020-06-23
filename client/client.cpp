@@ -25,8 +25,8 @@ void Client::play() {
   CommandsSender sender(player_id, commands_to_send, socket);
   Game game(player_id, commands_to_send);
 
-  LoginCommandDTO login_command(0);
-  commands_to_send.push_event(login_command);
+  LoginCommandDTO* login_command = new LoginCommandDTO(0);
+  commands_to_send.push(login_command);
 
   game.event_handler();
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al

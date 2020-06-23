@@ -2,8 +2,6 @@
 
 #include <iostream>
 
-#include "argentum_game.h"
-
 LoginCommand::LoginCommand(const int room_number) : room_number(room_number) {}
 
 LoginCommand::~LoginCommand() {}

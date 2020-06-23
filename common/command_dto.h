@@ -7,8 +7,8 @@ class CommandDTO {
  public:
   CommandDTO();
   virtual ~CommandDTO();
-  virtual const bool stops_run();
-  virtual const int getId();
+  virtual bool stops_run() = 0;
+  virtual int getId() = 0;
   CommandDTO(const CommandDTO &) = delete;
 };
 

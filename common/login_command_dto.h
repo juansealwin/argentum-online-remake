@@ -8,8 +8,8 @@ class LoginCommandDTO : public CommandDTO {
   explicit LoginCommandDTO(const int room_number);
   LoginCommandDTO(const LoginCommandDTO &) = delete;
   ~LoginCommandDTO();
-  const bool stops_run();
-  const int getId();
+  bool stops_run();
+  int getId();
   const int room_number;
 };
 
