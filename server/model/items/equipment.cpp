@@ -7,7 +7,13 @@ Equipment::Equipment(Weapon *weapon, Staff *staff, DefensiveItem *helmet,
       armour(armour),
       shield(shield) {}
 
-Equipment::Equipment() {}
+Equipment::Equipment() {
+  if (weapon) delete weapon;
+  if (staff) delete staff;
+  if (shield) delete shield;
+  if (helmet) delete helmet;
+  if (armour) delete armour;
+}
 
 void Equipment::equip_weapon(Weapon *weapon) { this->weapon = weapon; }
 
