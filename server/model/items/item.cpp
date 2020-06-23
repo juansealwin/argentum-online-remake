@@ -1,3 +1,4 @@
+#include "hero.h"
 #include "item.h"
 
 Item::Item(int id) : id(id) {}

@@ -1,6 +1,7 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include "hero.h"
+class Hero;
 class Item {
  public:
   Item(int id);
