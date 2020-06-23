@@ -18,6 +18,8 @@ void ClientHandler::run() {
     const unsigned char* response =
         reinterpret_cast<const unsigned char*>(message.c_str());
     uint16_t message_length = 7;
+    // send_response(response, &message_length);
+    // Protocol::sendMessage(this->peer_socket);
     alive = false;
   }
   this->peer_socket.close();

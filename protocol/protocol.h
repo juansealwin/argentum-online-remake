@@ -3,13 +3,16 @@
 
 #include <string>
 
-#include "../util/json/json-forwards.h"
-#include "../util/json/json.h"
+#include "command_dto.h"
 #include "common_socket.h"
 
+#define LOGIN_COMMAND 1
+#define QUIT_COMMAND 2
+#define MOVE_COMMAND 3
+
 namespace Protocol {
-const Json::Value receiveMessage(const Socket& socket);
-void sendMessage(const Socket& socket, const Json::Value& info);
+const CommandDTO* receive_message(const Socket& socket);
+void send_message(const Socket& socket, CommandDTO* commandDTO);
 };  // namespace Protocol
 
 #endif

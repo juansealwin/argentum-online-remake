@@ -177,7 +177,7 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      print_debug_map();
+      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
