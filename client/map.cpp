@@ -6,7 +6,8 @@ Map::Map(int id_player, int id_background_path, SDL_Renderer* ren,
       renderer(ren),
       screen_width(scr_width),
       screen_height(scr_height) {
-  background_texture.load_texture(ID_MAP_GRASS, renderer);
+  background_texture.load_texture(paths->get_path_texture(ID_MAP_GRASS),
+                                  renderer);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, 0, screen_width, screen_height};
 }
@@ -61,11 +62,12 @@ void Map::render() {
 
 void Map::change_map(int id_new_map) {
   clean_characters_vector();
-  background_texture.load_texture(id_new_map, renderer);
+  background_texture.load_texture(paths->get_path_texture(id_new_map),
+                                  renderer);
 }
 
-void Map::load_character(SDL_Renderer* ren, character_t char_type, int id, int x,
-                        int y) {
+void Map::load_character(SDL_Renderer* ren, character_t char_type, int id,
+                         int x, int y) {
   if (char_type == HUMAN)
     characters[id] = Human(ren, id, x, y);
   else if (char_type == ELF)
