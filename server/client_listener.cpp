@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "client_handler.h"
+#include "login_command_dto.h"
 
 ClientListener::ClientListener(const char *port, const char *map_cfg_file,
                                const char *entities_cfg_file) {
@@ -47,25 +48,21 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
-    /*
-    std::cout << "New client trying to join server!" << std::endl;
-    Json::Value starting_info = Protocol::receiveMessage(clientSkt);
-    std::cout << "numero hab: " << starting_info["roomNumber"] << std::endl;
-    unsigned int room_number = starting_info["roomNumber"].asInt();
-    */
     std::cout << "trying to get rno" << std::endl;
-    unsigned int room_number =
-        static_cast<unsigned int>(Protocol::receive_command(clientSkt) - '0');
-    std::cout << "room number received: " << room_number << std::endl;
+    LoginCommandDTO *login_command =
+        static_cast<LoginCommandDTO *>(Protocol::receive_command(clientSkt));
+    std::cout << "room number received: " << login_command->room_number
+              << std::endl;
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
     // aca a game pasarle la cola de notificaciones para que la agregue de
     // manera segura (con locks) a el vector de notificaciones, si no puede
     // haber race conditions
-    games[room_number]->add_notification_queue(notifications_queue);
-    ClientHandler *client =
-        new ClientHandler(std::move(clientSkt), games[room_number],
-                          queues_commands[room_number], notifications_queue);
+    games[login_command->room_number]->add_notification_queue(
+        notifications_queue);
+    ClientHandler *client = new ClientHandler(
+        std::move(clientSkt), games[login_command->room_number],
+        queues_commands[login_command->room_number], notifications_queue);
     clients.push_back(client);
     // client->start();
     garbage_collector();

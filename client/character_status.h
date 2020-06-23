@@ -21,6 +21,4 @@ class CharacterStatus {
   int get_y() const;
 };
 
-
-
 #endif

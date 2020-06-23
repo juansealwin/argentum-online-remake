@@ -5,7 +5,6 @@
 #include <iostream>
 #include <mutex>
 #include "character_status.h"
-#include "event.h"
 
 class BlockingMap {
  private:

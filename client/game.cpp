@@ -67,7 +67,8 @@ void Game::fill(int r, int g, int b, int alpha) {
 
 Game::~Game() {}
 
-Game::Game(int id, BlockingQueue& queue) : id_player(id), events_queue(queue) {}
+Game::Game(const int player_id, CommandsBlockingQueue& commands_queue)
+    : player_id(player_id), commands_queue(commands_queue) {}
 
 void Game::event_handler() {
   try {
@@ -79,31 +80,33 @@ void Game::event_handler() {
           is_running = false;
           // queue_events.pushEvent();
           break;
-
         }
         // User presses a key
         else if (event.type == SDL_KEYDOWN) {
           // Select surfaces based on key press
           if (event.key.keysym.sym == SDLK_UP) {
-            Event send_event(id_player, move_up);
-            events_queue.push_event(send_event);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_up);
+            commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_DOWN) {
-            Event send_event(id_player, move_down);
-            events_queue.push_event(send_event);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_down);
+            commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_LEFT) {
-            Event send_event(id_player, move_left);
-            events_queue.push_event(send_event);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_left);
+            commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_RIGHT) {
-            Event send_event(id_player, move_right);
-            events_queue.push_event(send_event);
+            MoveCommandDTO* move_command =
+                new MoveCommandDTO(player_id, move_right);
+            commands_queue.push(move_command);
           }
         }
       }
     }
-
   } catch (const std::exception& e) {
     std::cerr << e.what() << '\n';
   }

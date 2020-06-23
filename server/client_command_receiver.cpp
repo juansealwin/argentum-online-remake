@@ -47,7 +47,7 @@ void ClientCommandReceiver::run() {
     
     /*descomentar luego de tests
     Json::Value command = Protocol::receiveMessage(this->peer_socket);*/
-    unsigned char c = Protocol::receive_command(this->peer_socket);
+    // unsigned char c = Protocol::receive_command(this->peer_socket);
     loops++;
     if (loops == 5) {
       alive = false;
