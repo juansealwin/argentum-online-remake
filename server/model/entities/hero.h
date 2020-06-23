@@ -1,11 +1,16 @@
 
 #ifndef HERO_H
 #define HERO_H
+
 #include "base_character.h"
 #include "equipment.h"
 #include "stdint.h"
+#include "inventory.h"
 
+//meter en el json!
 #define CRITICAL_DAMAGE_MULTIPLIER 2
+#define INVENTORY_SIZE 20
+class Inventory;
 class Hero : public BaseCharacter {
  public:
   //constructor para heroes nuevos
@@ -21,11 +26,11 @@ class Hero : public BaseCharacter {
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario. refactorizar para que los metodos de equip reciban un id y los
   // busquen en su inventario
-  void equip_weapon(Weapon *weapon);
-  void equip_staff(Staff *staff);
-  void equip_shield(DefensiveItem *shield);
-  void equip_helmet(DefensiveItem *helmet);
-  void equip_armour(DefensiveItem *armour);
+  void equip_weapon(unsigned int weapon_id);
+  void equip_staff(unsigned int staff_id);
+  void equip_shield(unsigned int shield_id);
+  void equip_helmet(unsigned int helmet_id);
+  void equip_armour(unsigned int armour_id);
   void unequip_weapon();
   void unequip_staff();
   void unequip_shield();
@@ -51,5 +56,6 @@ class Hero : public BaseCharacter {
   int gold;
   int class_id;
   Equipment *equipment;
+  Inventory *inventory;
 };
 #endif  // HERO_H

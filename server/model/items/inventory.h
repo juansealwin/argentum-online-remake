@@ -4,7 +4,7 @@
 #include <vector>
 #include "model_exceptions.h"
 #include <list>
-
+class Item;
 class Inventory {
  public:
   //constructores de equipamiento vacio o con items

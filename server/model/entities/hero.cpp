@@ -1,4 +1,8 @@
 #include "hero.h"
+#include "weapon.h"
+#include "defensive_item.h"
+#include "staff.h"
+
 Hero::Hero(int x, int y, int race_id, char repr, int level, int strength,
            int intelligence, int agility, int constitution, int f_class_hp,
            int f_race_hp, int f_race_recovery, int f_race_mana,
@@ -20,6 +24,7 @@ Hero::Hero(int x, int y, int race_id, char repr, int level, int strength,
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
   equipment = new Equipment();
+  inventory = new Inventory(INVENTORY_SIZE);
 }
 
 void Hero::update() {
@@ -27,20 +32,37 @@ void Hero::update() {
   // std::cout << "Updating hero: not implemented" << std::endl;
 }
 
-  void Hero::equip_weapon(Weapon *weapon) {
-    equipment->equip_weapon(weapon);
+
+  void Hero::equip_weapon(unsigned int weapon_id) {
+    if (inventory->has_item(weapon_id)) {
+      Item *w = inventory->remove_item(weapon_id);
+      equipment->equip_weapon(dynamic_cast<Weapon*>(w));
+    }
+    
   }
-  void Hero::equip_staff(Staff *staff) {
-    equipment->equip_staff(staff);
+  void Hero::equip_staff(unsigned int staff_id) {
+    if (inventory->has_item(staff_id)) {
+      Item *w = inventory->remove_item(staff_id);
+      equipment->equip_staff(dynamic_cast<Staff*>(w));
+    }
   }
-  void Hero::equip_shield(DefensiveItem *shield) {
-    equipment->equip_shield(shield);
+  void Hero::equip_shield(unsigned int shield_id) {
+    if (inventory->has_item(shield_id)) {
+      Item *w = inventory->remove_item(shield_id);
+      equipment->equip_shield(dynamic_cast<DefensiveItem*>(w));
+    }
   }
-  void Hero::equip_helmet(DefensiveItem *helmet) {
-    equipment->equip_helmet(helmet);
+  void Hero::equip_helmet(unsigned int helmet_id) {
+    if (inventory->has_item(helmet_id)) {
+      Item *w = inventory->remove_item(helmet_id);
+      equipment->equip_helmet(dynamic_cast<DefensiveItem*>(w));
+    }
   }
-  void Hero::equip_armour(DefensiveItem *armour) {
-    equipment->equip_armour(armour);
+  void Hero::equip_armour(unsigned int armour_id) {
+    if (inventory->has_item(armour_id)) {
+      Item *w = inventory->remove_item(armour_id);
+      equipment->equip_armour(dynamic_cast<DefensiveItem*>(w));
+    }
   }
   void Hero::unequip_weapon() {
     Weapon *weapon = equipment->unequip_weapon();

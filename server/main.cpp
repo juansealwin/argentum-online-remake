@@ -22,6 +22,10 @@ int main() {
   std::cout << "inventory has item: 1?: " << inventory.has_item(1) << std::endl;
   Item *item_removido = inventory.remove_item(2);
   std::cout << "id item removido: " << item_removido->id << std::endl;
+  Weapon* weapon_removido = dynamic_cast<Weapon*>(inventory.remove_item(1));
+  std::cout << "weapon damage: " << weapon_removido->max_damage << std::endl;
+
   delete item_removido;
+  delete weapon_removido;
   std::cout << "inventory has item: 1?: " << inventory.has_item(1) << std::endl;
 }
