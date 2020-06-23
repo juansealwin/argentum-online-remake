@@ -5,6 +5,4 @@ Entity::Entity(int x, int y, int type, char repr)
 
 Entity::~Entity() {}
 
-int Entity::get_type() { return type; }
-
 char Entity::char_representation() { return representation; }

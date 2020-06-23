@@ -7,14 +7,13 @@ class Entity {
   Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
-  virtual int get_type();
   virtual void update() = 0;
   int x_position;
   int y_position;
-
+  int type;
 
  private:
-  int type;
+
   char representation;
 };
 
