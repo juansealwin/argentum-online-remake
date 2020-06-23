@@ -6,11 +6,9 @@
 #include <vector>
 
 #include "character.h"
-#include "dwarf.h"
 #include "elf.h"
-#include "gnome.h"
-#include "human.h"
 #include "npc.h"
+#include "playable_character.h"
 #include "texture.h"
 
 #define MAP_SIZE 3200

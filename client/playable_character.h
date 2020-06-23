@@ -5,7 +5,7 @@
 
 class PlayableCharacter : public Character {
  protected:
-  int type_head;
+  id_texture_t type_head;
   Texture head_texture;
   SDL_Rect head_rect;
   int half_screen_w;

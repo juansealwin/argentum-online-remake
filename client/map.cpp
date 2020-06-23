@@ -59,36 +59,21 @@ void Map::render() {
   background_texture.render(renderer, &map_piece, &viewport);
   render_characters();
 }
-
+// Por ahora no la usariamos
+/*
 void Map::change_map(int id_new_map) {
   clean_characters_vector();
   background_texture.load_texture(paths->get_path_texture(id_new_map),
                                   renderer);
 }
+*/
 
 void Map::load_character(SDL_Renderer* ren, character_t char_type, int id,
                          int x, int y) {
-  if (char_type == HUMAN)
-    characters[id] = Human(ren, id, x, y);
-  else if (char_type == ELF)
-    characters[id] = Elf(ren, id, x, y);
-  else if (char_type == GNOME)
-    characters[id] = Gnome(ren, id, x, y);
-  else if (char_type == DWARF)
-    characters[id] = Dwarf(ren, id, x, y);
-  else if (char_type == SPIDER)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == GOBLIN)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == SKELETON)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == ZOMBIE)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == MERCHANT)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == BANKER)
-    characters[id] = Npc(ren, char_type, x, y);
-  else if (char_type == PRIEST)
+  if (char_type == HUMAN || char_type == ELF || char_type == GNOME ||
+      char_type == DWARF)
+    characters[id] = PlayableCharacter(ren, char_type, x, y);
+  else
     characters[id] = Npc(ren, char_type, x, y);
 }
 

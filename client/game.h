@@ -4,18 +4,15 @@
 
 #include <vector>
 
+#include "blocking_queue.h"
 #include "character.h"
-#include "dwarf.h"
-#include "elf.h"
 #include "event.h"
 #include "exception_messages.h"
-#include "gnome.h"
-#include "human.h"
+#include "playable_character.h"
 #include "map.h"
 #include "npc.h"
 #include "sdl_exception.h"
 #include "texture.h"
-#include "blocking_queue.h"
 #define GAME_NAME "Argentum"
 #define PATH_IMG_LOBBY "Argentum_online.jpg"
 
