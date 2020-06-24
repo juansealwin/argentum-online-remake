@@ -78,6 +78,7 @@ class Hero : public BaseCharacter {
   bool ghost_mode;
   // calculados
   unsigned int next_level_xp_limit;
+  unsigned int max_safe_gold;
   Equipment *equipment;
   Inventory *inventory;
 
