@@ -18,6 +18,7 @@ class BaseCharacter : public Entity {
   virtual unsigned int receive_damage(unsigned int damage, bool critical) = 0;
   int current_hp;
   int max_hp;
+  bool alive = true;
 
  protected:
   int level;

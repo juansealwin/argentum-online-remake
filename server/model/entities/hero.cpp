@@ -29,12 +29,18 @@ Hero::Hero(int x, int y, int race_id, char repr, int level, int strength,
 }
 
 void Hero::update() {
-  // aumento de vida, mana, etc.
-  // std::cout << "Updating hero: not implemented" << std::endl;
+  if (!alive) return;
+  current_hp = std::min(current_hp + f_race_recovery, max_hp);
+  if (!meditating)
+    current_mana = std::min(current_mana + f_race_recovery, max_mana);
+  else
+    current_mana =
+        std::min(current_mana + (f_class_meditation * intelligence), max_mana);
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   if (inventory->has_item(weapon_id)) {
     Item *w = inventory->remove_item(weapon_id);
     equipment->equip_weapon(dynamic_cast<Weapon *>(w));
@@ -42,6 +48,7 @@ void Hero::equip_weapon(unsigned int weapon_id) {
 }
 void Hero::equip_staff(unsigned int staff_id) {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   if (inventory->has_item(staff_id)) {
     Item *w = inventory->remove_item(staff_id);
     equipment->equip_staff(dynamic_cast<Staff *>(w));
@@ -49,6 +56,7 @@ void Hero::equip_staff(unsigned int staff_id) {
 }
 void Hero::equip_shield(unsigned int shield_id) {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   if (inventory->has_item(shield_id)) {
     Item *w = inventory->remove_item(shield_id);
     equipment->equip_shield(dynamic_cast<DefensiveItem *>(w));
@@ -56,6 +64,7 @@ void Hero::equip_shield(unsigned int shield_id) {
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   if (inventory->has_item(helmet_id)) {
     Item *w = inventory->remove_item(helmet_id);
     equipment->equip_helmet(dynamic_cast<DefensiveItem *>(w));
@@ -63,6 +72,7 @@ void Hero::equip_helmet(unsigned int helmet_id) {
 }
 void Hero::equip_armour(unsigned int armour_id) {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   if (inventory->has_item(armour_id)) {
     Item *w = inventory->remove_item(armour_id);
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
@@ -70,45 +80,54 @@ void Hero::equip_armour(unsigned int armour_id) {
 }
 void Hero::unequip_weapon() {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
   if (weapon) inventory->add_item(weapon);
 }
 void Hero::unequip_staff() {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
   if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
   if (!alive) ModelException("Ghosts can't add items to inventory!", "5");
+  meditating = false;
   Item *i = inventory->remove_item(item_id);
   return i;
 }
 
 void Hero::add_item(Item *item) {
   if (!alive) ModelException("Ghosts can't add items to inventory!", "4");
+  meditating = false;
   inventory->add_item(item);
 }
 
 unsigned int Hero::damage(BaseCharacter *b) {
   if (!alive) ModelException("Ghosts can't attack!", "3");
   if (!close_enough(b)) ModelException("Too far to attack!", "7");
-  if (!equipment->can_use_primary_weapon(this)) ModelException("Cant use primary weapon! (not enough mana?)", "8");
+  if (!equipment->can_use_primary_weapon(this))
+    ModelException("Cant use primary weapon! (not enough mana?)", "8");
+  meditating = false;
   // mover a json!
   const float critical_damage_probability = 0.125;
   bool critical = false;
@@ -121,6 +140,7 @@ unsigned int Hero::damage(BaseCharacter *b) {
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
   if (!alive) ModelException("Can't attack ghosts!", "2");
+  meditating = false;
   // meter en json!
   const float evasion = 0.001;
   int actual_damage = damage;
@@ -136,6 +156,10 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
   current_hp -= actual_damage;
   if (current_hp <= 0) alive = false;
   return actual_damage;
+}
+
+void Hero::meditate() {
+  meditating = true;
 }
 
 Hero::~Hero() {

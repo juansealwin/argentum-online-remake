@@ -27,7 +27,8 @@ class Hero : public BaseCharacter {
   // unsigned int damage(Hero *other);
   // unsigned int damage(Monster *m);
   // devuelve el dano que efectivamente recibi
-  virtual unsigned int receive_damage(unsigned int damage, bool critical) override;
+  virtual unsigned int receive_damage(unsigned int damage,
+                                      bool critical) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
   void equip_weapon(unsigned int weapon_id);
@@ -45,6 +46,9 @@ class Hero : public BaseCharacter {
   Item *remove_item(unsigned int item_id);
   // Agrega un item al inventario, lanza excepcion si este esta lleno
   void add_item(Item *item);
+  // Empieza a meditar. Se termina de meditar una vez que se hace cualquier otra
+  // cosa (llamado a cualquier otro metodo)
+  void meditate();
   virtual ~Hero();
   Hero(const Hero &) = delete;
   friend class Staff;
@@ -64,9 +68,9 @@ class Hero : public BaseCharacter {
   int f_class_meditation;
   int gold;
   int class_id;
-  int alive = true;
   Equipment *equipment;
   Inventory *inventory;
+  bool meditating = false;
   unsigned int calculate_damage();
   bool close_enough(BaseCharacter *other);
 };
