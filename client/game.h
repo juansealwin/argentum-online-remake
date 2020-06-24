@@ -1,45 +1,44 @@
 #ifndef GAME_H
 #define GAME_H
-#include <SDL2/SDL.h>
 
+#include <map>
+#include <string>
 #include <vector>
 
 #include "character.h"
-#include "commands_blocking_queue.h"
-#include "exception_messages.h"
-#include "map.h"
-#include "move_command_dto.h"
 #include "npc.h"
 #include "playable_character.h"
-#include "sdl_exception.h"
 #include "texture.h"
-#define GAME_NAME "Argentum"
-#define PATH_IMG_LOBBY "Argentum_online.jpg"
+#include "texture_manager.h"
+#include "types.h"
+
+#define MAP_SIZE 3200
 
 class Game {
  private:
-  const int player_id;
-  CommandsBlockingQueue& commands_queue;
-  bool is_running = true;
-  /*std::vector<Texture*> textures;
-  PlayableCharacter* player;
-  Map* current_map;
-  int screen_width = 800;
-  int screen_height = 600;*/
+  int id_hero;
+  id_texture_t type_map;
+  SDL_Renderer* renderer;
+  // La porción del Gamea que queremos renderizar
+  SDL_Rect map_piece;
+  // La parte de la ventana que es renderizable
+  SDL_Rect viewport;
+  int screen_width;
+  int screen_height;
+  std::map<int, Character> characters;
 
  public:
-  Game(const int player_id, CommandsBlockingQueue& commands_queue);
+  Game(int, id_texture_t, SDL_Renderer*, int, int);
+  Game(const Game&);
+  Game& operator=(const Game&);
   ~Game();
-  void window_init();
-  void fill(int, int, int, int);
-  bool is_up();
-  void new_player(PlayableCharacter*);
-  void event_handler();
-  void update();
   void render();
-  SDL_Renderer* get_renderer();
-  Texture* get_texture(int);
-  void delete_textures();
+  void update_map(int, int);
+  void update_character(int, int, int);
+  void change_map(int);
+  void load_character(character_t, int, int, int);
+  void render_characters();
+  void clean_character(int i);
 };
 
 #endif

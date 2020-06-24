@@ -16,6 +16,8 @@ class Texture {
  public:
   Texture();
 
+  Texture(std::string, SDL_Renderer*);
+
   ~Texture();
 
   // Renderiza la textura en un x e y concreto

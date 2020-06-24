@@ -3,22 +3,14 @@
 
 #include <map>
 #include <vector>
-#include "types.h"
+
 #include "texture.h"
+#include "types.h"
 #define CLIP_DOWN 'D'
 #define CLIP_UP 'U'
 #define CLIP_LEFT 'L'
 #define CLIP_RIGHT 'R'
-#define CHARACTER_HEIGHT 45
-#define CHARACTER_WIDTH 25
 #define TILE_SIZE 32
-
-typedef enum {
-  MOVE_DOWN = 0,
-  MOVE_UP = 3,
-  MOVE_LEFT = 2,
-  MOVE_RIGHT = 1
-} move_t;
 
 class Move {
  private:
@@ -30,7 +22,9 @@ class Move {
   int clips_left_right;
 
  public:
+  Move();
   Move(int, int, int);
+  Move(const Move&);
   ~Move();
   void set_offset_y(int);
   SDL_Rect get_next_clip(move_t);

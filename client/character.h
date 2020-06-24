@@ -6,16 +6,13 @@
 #include "types.h"
 #include "drawable.h"
 #include "move.h"
-#include "paths.h"
-
-
+#include "texture_manager.h"
 
 class Character : public Drawable {
  protected:
   id_texture_t type_character;
-  Texture body_texture;
   SDL_Renderer* renderer = NULL;
-  Move* animation_move = NULL;
+  Move animation_move;
   SDL_Rect body_rect;
 
  public:

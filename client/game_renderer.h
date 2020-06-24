@@ -6,7 +6,7 @@
 #include <vector>
 
 #include "exception_messages.h"
-#include "map.h"
+#include "game.h"
 #include "playable_character.h"
 #include "sdl_exception.h"
 #include "texture.h"
@@ -16,16 +16,16 @@ class GameRenderer : public Thread {
  private:
   SDL_Window* window;
   SDL_Renderer* renderer;
-
+  int id_hero;
   bool is_running;
   int screen_width;
   int screen_height;
   // std::vector<Texture*> textures;
   PlayableCharacter& player;
-  Map& current_map;
+  Game& current_map;
 
  public:
-  GameRenderer(int, int, PlayableCharacter&, Map&);
+  GameRenderer(int, int, PlayableCharacter&, Game&);
   ~GameRenderer();
   void window_init();
   void run();

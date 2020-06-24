@@ -1,11 +1,11 @@
 #include "game_renderer.h"
 
 GameRenderer::GameRenderer(int width, int height, PlayableCharacter& hero,
-                           Map& map)
+                           Game& game)
     : screen_width(width),
       screen_height(height),
       player(hero),
-      current_map(map) {
+      current_map(game) {
   window_init();
 }
 
@@ -67,6 +67,12 @@ void GameRenderer::run() {
 }
 
 /*
+
+void Game::fill(int r, int g, int b, int alpha) {
+  SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
+  SDL_RenderClear(renderer);
+}
+
 void Game::render() {
   SDL_RenderClear(renderer);
   current_map->render();
