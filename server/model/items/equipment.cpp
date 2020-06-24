@@ -74,9 +74,17 @@ void Equipment::use_primary_weapon(Hero *hero) {
     weapon->use(hero);
 }
 
-void Equipment::equip_weapon(Weapon *weapon) { this->weapon = weapon; }
+void Equipment::equip_weapon(Weapon *weapon) {
+  if (staff)
+    throw ModelException("Can't equip weapon if you are using a staff!", "10");
+  this->weapon = weapon;
+}
 
-void Equipment::equip_staff(Staff *staff) { this->staff = staff; }
+void Equipment::equip_staff(Staff *staff) {
+  if (weapon)
+    throw ModelException("Can't equip staff if you are using a weapon!", "10");
+  this->staff = staff;
+}
 
 void Equipment::equip_shield(DefensiveItem *shield) { this->shield = shield; }
 
