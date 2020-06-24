@@ -33,7 +33,7 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 Game::~Game() {
-  // clean_characters_vector();
+  characters.clear();
 }
 
 void Game::update_character(int id, int new_x, int new_y) {
