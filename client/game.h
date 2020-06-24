@@ -4,15 +4,13 @@
 
 #include <vector>
 
-#include "blocking_queue.h"
 #include "character.h"
-#include "event.h"
 #include "commands_blocking_queue.h"
 #include "exception_messages.h"
-#include "playable_character.h"
 #include "map.h"
 #include "move_command_dto.h"
 #include "npc.h"
+#include "playable_character.h"
 #include "sdl_exception.h"
 #include "texture.h"
 #define GAME_NAME "Argentum"

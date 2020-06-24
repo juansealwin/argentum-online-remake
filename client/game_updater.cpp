@@ -20,6 +20,14 @@ void GameUpdater::run() {
       std::map<int, CharacterStatus>::iterator it;
       std::map<int, CharacterStatus>::iterator it2;
 
+      // Comprobamos si hay entidades que no están más en el mapa
+      for(it = current_status.begin(); it != next_status.end(); it++) {
+        it2 = next_status.find(it->first);
+        // Si no están más, las borramos
+        if (it2 == next_status.end())
+          current_status.erase(it->first);
+      }
+
       for (it = next_status.begin(); it != next_status.end(); it++) {
         // Chequeamos si dicho personaje ya existia dentro del mapa
         it2 = current_status.find(it->first);
@@ -30,8 +38,6 @@ void GameUpdater::run() {
             // Si cambio hacemos un update del personaje
             current_map->update_character(it->first, it->second.get_x(),
                                           it->second.get_y());
-            // Mofificamos el status para la proxima pasada
-            it2->second = it->second;
           }
         } else {
           // Como no existe lo creamos
@@ -39,6 +45,8 @@ void GameUpdater::run() {
                                       it->first, it->second.get_x(),
                                       it->second.get_y());
         }
+        // Mofificamos/creamos el status para la proxima pasada
+        current_status[it->first] = it->second;
       }
       // No deberia hacer el render, por ahora queda asi
       current_map->render();
