@@ -74,6 +74,7 @@ class Hero : public BaseCharacter {
   Equipment *equipment;
   Inventory *inventory;
   bool meditating = false;
+  bool ghost_mode = false;
   unsigned int calculate_damage();
   bool close_enough(BaseCharacter *other);
 };

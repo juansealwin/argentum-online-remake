@@ -106,7 +106,8 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   Hero *hero = new Hero(
       x, y, race_stats["id"].asUInt(), 'h', class_stats["level"].asUInt(),
       race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
-      race_stats["intelligence"].asUInt() + class_stats["intelligence"].asUInt(),
+      race_stats["intelligence"].asUInt() +
+          class_stats["intelligence"].asUInt(),
       race_stats["agility"].asUInt() + class_stats["agility"].asUInt(),
       race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
@@ -120,17 +121,20 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
 
 void ArgentumGame::update(bool one_second_update) {
   std::unique_lock<std::mutex> lock(mutex);
+  // pensar bien que hacer primero, ejecutar los comandos o updatear el mundo?
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    cmd->execute(this);
+    delete cmd;
+  }
   if (one_second_update) {
     // auto_move_monsters();
     for (auto &entity : entities) {
       entity.second->update();
     }
   }
-  while (!commands_queue->is_empty()) {
-    Command *cmd = commands_queue->pop();
-    cmd->execute(this);
-    delete cmd;
-  }
+  remove_death_entities();
+
   // TO DO:
   // - Chequear si monstruos murieron para eliminarlos del mapa y poner sus
   // drops
@@ -270,5 +274,24 @@ void ArgentumGame::clean_notifications_queues() {
 
     else
       ++it;
+  }
+}
+
+/* private methods */
+
+void ArgentumGame::remove_death_entities() {
+  for (auto it = entities.cbegin(); it != entities.cend() /* not hoisted */;
+       /* no increment */) {
+    if (it->second->alive == false) {
+      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
+      // devuelva un drop (o no) para poner en el mapa
+      int x_pos = it->second->x_position;
+      int y_pos = it->second->y_position;
+      map->empty_cell(x_pos, y_pos);
+      delete it->second;
+      it = entities.erase(it++);
+    } else {
+      ++it;
+    }
   }
 }

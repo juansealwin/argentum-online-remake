@@ -11,6 +11,7 @@ class Entity {
   int x_position;
   int y_position;
   int type;
+  bool alive = true;
 
  private:
 

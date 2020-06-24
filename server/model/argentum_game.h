@@ -63,6 +63,7 @@ class ArgentumGame : public Thread {
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
+  void remove_death_entities();
   std::map<int, Entity *> entities;
   //Json::Value game_status();
   std::vector<unsigned char> game_status();

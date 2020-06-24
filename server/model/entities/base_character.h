@@ -21,7 +21,6 @@ class BaseCharacter : public Entity {
   virtual void move(int next_x, int next_y);
   unsigned int current_hp;
   unsigned int max_hp;
-  bool alive = true;
 
  protected:
   unsigned int level;
