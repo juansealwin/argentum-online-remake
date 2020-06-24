@@ -174,6 +174,12 @@ void Hero::meditate() {
 
 bool Hero::is_death() { return ghost_mode; }
 
+void Hero::consume(unsigned int item_id) {
+  Item *consumable = inventory->remove_item(item_id);
+  consumable->use(this);
+  delete consumable;
+}
+
 Hero::~Hero() {
   delete inventory;
   delete equipment;

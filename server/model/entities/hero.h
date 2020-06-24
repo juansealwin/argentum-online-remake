@@ -55,6 +55,9 @@ class Hero : public BaseCharacter {
   virtual ~Hero();
   Hero(const Hero &) = delete;
   virtual bool is_death() override;
+  //consume un item (Deberia ser llamado solo para pociones)
+  //para el caso del staff que cura podria hacerse algo parecido
+  void consume(unsigned int item_id);
   friend class Staff;
   unsigned int current_mana;
   unsigned int max_mana;
