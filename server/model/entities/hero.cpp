@@ -4,11 +4,13 @@
 #include "staff.h"
 #include "weapon.h"
 
-Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level, unsigned int strength,
-           unsigned int intelligence, unsigned int agility, unsigned int constitution, unsigned int f_class_hp,
-           unsigned int f_race_hp, unsigned int f_race_recovery, unsigned int f_race_mana,
-           unsigned int f_class_mana, unsigned int f_class_meditation, unsigned int gold, unsigned int class_id,
-           Map *map)
+Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
+           unsigned int strength, unsigned int intelligence,
+           unsigned int agility, unsigned int constitution,
+           unsigned int f_class_hp, unsigned int f_race_hp,
+           unsigned int f_race_recovery, unsigned int f_race_mana,
+           unsigned int f_class_mana, unsigned int f_class_meditation,
+           unsigned int gold, unsigned int class_id, Map *map)
     : BaseCharacter(x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
@@ -21,9 +23,11 @@ Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level, un
       f_class_mana(f_class_mana),
       f_class_meditation(f_class_meditation),
       gold(gold),
-      class_id(class_id) {
-  max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
-  max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
+      class_id(class_id),
+      experience(0),
+      meditating(false),
+      ghost_mode(false) {
+  level_up();
   equipment = new Equipment();
   inventory = new Inventory(INVENTORY_SIZE);
 }
@@ -110,21 +114,23 @@ void Hero::unequip_armour() {
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
-  if (!ghost_mode) throw ModelException("Ghosts can't add items to inventory!", "5");
+  if (!ghost_mode)
+    throw ModelException("Ghosts can't add items to inventory!", "5");
   meditating = false;
   Item *i = inventory->remove_item(item_id);
   return i;
 }
 
 void Hero::add_item(Item *item) {
-  if (!ghost_mode) throw ModelException("Ghosts can't add items to inventory!", "4");
+  if (!ghost_mode)
+    throw ModelException("Ghosts can't add items to inventory!", "4");
   meditating = false;
   inventory->add_item(item);
 }
 
-unsigned int Hero::damage(BaseCharacter *b) {
+unsigned int Hero::damage(BaseCharacter *other) {
   if (!ghost_mode) throw ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(b)) throw ModelException("Too far to attack!", "7");
+  if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
   if (!equipment->can_use_primary_weapon(this))
     throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
   meditating = false;
@@ -135,7 +141,9 @@ unsigned int Hero::damage(BaseCharacter *b) {
   float p = rand() / double(RAND_MAX);
   if (p < critical_damage_probability) critical = true;
   // actualizar experiencia
-  return b->receive_damage(dmg, critical);
+  unsigned int dmg_done = other->receive_damage(dmg, critical);
+  update_experience(dmg_done, other);
+  return dmg;
 }
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
@@ -159,7 +167,8 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
 }
 
 void Hero::meditate() {
-  if (!ghost_mode) throw ModelException("Can't meditate death!", "2");;
+  if (!ghost_mode) throw ModelException("Can't meditate death!", "2");
+  ;
   meditating = true;
 }
 
@@ -175,8 +184,33 @@ unsigned int Hero::calculate_damage() {
 }
 
 bool Hero::close_enough(BaseCharacter *other) {
-  unsigned int distance =
-      floor(sqrt(pow(x_position - other->x_position, 2) +
-                 pow(y_position - other->y_position, 2) * 1.0));
+  unsigned int distance = floor(sqrt(pow(x_position - other->x_position, 2) +
+                                     pow(y_position - other->y_position, 2)));
   return (((int)equipment->range() - (int)distance) >= 0);
+}
+
+void Hero::update_experience(unsigned int dmg_done, BaseCharacter *other) {
+  experience += floor(
+      dmg_done * std::max((other->level - this->level) + 10, (unsigned int)0));
+  if (other->is_death()) {
+    float p = rand() / double(RAND_MAX);
+    experience +=
+        floor(p * other->max_hp *
+              std::max((other->level - this->level) + 10, (unsigned int)0));
+  }
+  while (experience >= next_level_xp_limit) {
+    experience -= next_level_xp_limit;
+    level_up();
+  }
+}
+
+bool Hero::is_death() { return ghost_mode; }
+
+void Hero::level_up() {
+  level++;
+  max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
+  max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
+  // meter en json!
+  const float levelup_limit_pow = 1.8;
+  next_level_xp_limit = 1000 * floor(pow(level, levelup_limit_pow));
 }

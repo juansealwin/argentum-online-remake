@@ -19,11 +19,12 @@ class BaseCharacter : public Entity {
   virtual unsigned int damage(BaseCharacter *other) = 0;
   virtual unsigned int receive_damage(unsigned int damage, bool critical) = 0;
   virtual void move(int next_x, int next_y);
+  virtual bool is_death() = 0;
   unsigned int current_hp;
   unsigned int max_hp;
+  unsigned int level;
 
  protected:
-  unsigned int level;
   unsigned int type;
   char representation;
   Map *map;

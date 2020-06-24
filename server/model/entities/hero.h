@@ -54,11 +54,13 @@ class Hero : public BaseCharacter {
   void meditate();
   virtual ~Hero();
   Hero(const Hero &) = delete;
+  virtual bool is_death() override;
   friend class Staff;
   unsigned int current_mana;
   unsigned int max_mana;
 
  private:
+  // inicializados en member initialization list
   unsigned int strength;
   unsigned int intelligence;
   unsigned int agility;
@@ -71,11 +73,19 @@ class Hero : public BaseCharacter {
   unsigned int f_class_meditation;
   unsigned int gold;
   unsigned int class_id;
+  unsigned int experience;
+  bool meditating;
+  bool ghost_mode;
+  // calculados
+  unsigned int next_level_xp_limit;
   Equipment *equipment;
   Inventory *inventory;
-  bool meditating = false;
-  bool ghost_mode = false;
+
+  // metodos privados
   unsigned int calculate_damage();
   bool close_enough(BaseCharacter *other);
+  // actualiza la experiencia, sube niveles
+  void update_experience(unsigned int dmg_done, BaseCharacter *other);
+  void level_up();
 };
 #endif  // HERO_H

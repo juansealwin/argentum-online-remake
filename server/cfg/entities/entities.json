@@ -166,7 +166,7 @@
       "fClassHp": 2,
       "fClassMana": 3,
       "fClassMeditation": 10,
-      "level": 1,
+      "level": 0,
       "id" : 20
     },
     "cleric": {
@@ -176,7 +176,7 @@
       "fClassHp": 2,
       "fClassMana": 3,
       "fClassMeditation": 5,
-      "level": 1,
+      "level": 0,
       "id" : 21
     },
     "paladin": {
@@ -186,7 +186,7 @@
       "fClassHp": 2,
       "fClassMana": 2,
       "fClassMeditation": 2,
-      "level": 1,
+      "level": 0,
       "id" : 23
     },
     "warrior": {
@@ -196,7 +196,7 @@
       "fClassHp": 2,
       "fClassMana": 0,
       "fClassMeditation": 0,
-      "level": 1,
+      "level": 0,
       "id" : 24
     }
   },
