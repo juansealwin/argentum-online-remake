@@ -9,6 +9,6 @@ class Item {
   virtual void use(Hero *hero);
   virtual ~Item();
   Item(const Item &) = delete;
-  int id;
+  unsigned int id;
 };
 #endif  // ITEM_H

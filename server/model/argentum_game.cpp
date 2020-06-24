@@ -104,15 +104,15 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   Hero *hero = new Hero(
-      x, y, race_stats["id"].asInt(), 'h', class_stats["level"].asInt(),
-      race_stats["strength"].asInt() + class_stats["strength"].asInt(),
-      race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt(),
-      race_stats["agility"].asInt() + class_stats["agility"].asInt(),
-      race_stats["constitution"].asInt(), class_stats["fClassHp"].asInt(),
-      race_stats["fRaceHp"].asInt(), race_stats["fRaceRecovery"].asInt(),
-      race_stats["fRaceMana"].asInt(), class_stats["fClassMana"].asInt(),
-      class_stats["fClassMeditation"].asInt(), race_stats["gold"].asInt(),
-      class_stats["id"].asInt(), map);
+      x, y, race_stats["id"].asUInt(), 'h', class_stats["level"].asUInt(),
+      race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
+      race_stats["intelligence"].asUInt() + class_stats["intelligence"].asUInt(),
+      race_stats["agility"].asUInt() + class_stats["agility"].asUInt(),
+      race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
+      race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
+      race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
+      class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
+      class_stats["id"].asUInt(), map);
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;

@@ -10,7 +10,7 @@ class Staff : public Weapon {
         unsigned int hp_regen);
   virtual ~Staff();
   virtual bool can_be_used_by(Hero *hero);
-  //Aca lo redefino para el caso de la vara que cura
+  //No deberia llamarse a use() si can_be_used_by devolvio false
   virtual void use(Hero *hero) override;
   Staff(const Staff &) = delete;
 

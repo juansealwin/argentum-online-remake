@@ -64,6 +64,7 @@ bool Equipment::can_use_primary_weapon(Hero *hero) {
     return weapon->can_be_used_by(hero);
   else if (staff)
     return staff->can_be_used_by(hero);
+  return false;
 }
 
 void Equipment::use_primary_weapon(Hero *hero) {

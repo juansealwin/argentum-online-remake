@@ -17,10 +17,13 @@ class Item;
 class Hero : public BaseCharacter {
  public:
   // constructor para heroes nuevos
-  Hero(int x, int y, int race_id, char repr, int level, int strength,
-       int intelligence, int agility, int constitution, int f_class_hp,
-       int f_race_hp, int f_race_recovery, int f_race_mana, int f_class_mana,
-       int f_class_meditation, int gold, int class_id, Map *map);
+  Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
+       unsigned int strength, unsigned int intelligence, unsigned int agility,
+       unsigned int constitution, unsigned int f_class_hp,
+       unsigned int f_race_hp, unsigned int f_race_recovery,
+       unsigned int f_race_mana, unsigned int f_class_mana,
+       unsigned int f_class_meditation, unsigned int gold,
+       unsigned int class_id, Map *map);
   // devuelve el dano causado
   void update() override;
   virtual unsigned int damage(BaseCharacter *other) override;
@@ -52,22 +55,22 @@ class Hero : public BaseCharacter {
   virtual ~Hero();
   Hero(const Hero &) = delete;
   friend class Staff;
-  int current_mana;
-  int max_mana;
+  unsigned int current_mana;
+  unsigned int max_mana;
 
  private:
-  int strength;
-  int intelligence;
-  int agility;
-  int constitution;
-  int f_class_hp;
-  int f_race_hp;
-  int f_race_recovery;
-  int f_race_mana;
-  int f_class_mana;
-  int f_class_meditation;
-  int gold;
-  int class_id;
+  unsigned int strength;
+  unsigned int intelligence;
+  unsigned int agility;
+  unsigned int constitution;
+  unsigned int f_class_hp;
+  unsigned int f_race_hp;
+  unsigned int f_race_recovery;
+  unsigned int f_race_mana;
+  unsigned int f_class_mana;
+  unsigned int f_class_meditation;
+  unsigned int gold;
+  unsigned int class_id;
   Equipment *equipment;
   Inventory *inventory;
   bool meditating = false;

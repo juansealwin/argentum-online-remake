@@ -4,10 +4,10 @@
 #include "staff.h"
 #include "weapon.h"
 
-Hero::Hero(int x, int y, int race_id, char repr, int level, int strength,
-           int intelligence, int agility, int constitution, int f_class_hp,
-           int f_race_hp, int f_race_recovery, int f_race_mana,
-           int f_class_mana, int f_class_meditation, int gold, int class_id,
+Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level, unsigned int strength,
+           unsigned int intelligence, unsigned int agility, unsigned int constitution, unsigned int f_class_hp,
+           unsigned int f_race_hp, unsigned int f_race_recovery, unsigned int f_race_mana,
+           unsigned int f_class_mana, unsigned int f_class_meditation, unsigned int gold, unsigned int class_id,
            Map *map)
     : BaseCharacter(x, y, race_id, repr, level, map),
       strength(strength),
@@ -39,7 +39,7 @@ void Hero::update() {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(weapon_id)) {
     Item *w = inventory->remove_item(weapon_id);
@@ -47,7 +47,7 @@ void Hero::equip_weapon(unsigned int weapon_id) {
   }
 }
 void Hero::equip_staff(unsigned int staff_id) {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(staff_id)) {
     Item *w = inventory->remove_item(staff_id);
@@ -55,7 +55,7 @@ void Hero::equip_staff(unsigned int staff_id) {
   }
 }
 void Hero::equip_shield(unsigned int shield_id) {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(shield_id)) {
     Item *w = inventory->remove_item(shield_id);
@@ -63,7 +63,7 @@ void Hero::equip_shield(unsigned int shield_id) {
   }
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(helmet_id)) {
     Item *w = inventory->remove_item(helmet_id);
@@ -71,7 +71,7 @@ void Hero::equip_helmet(unsigned int helmet_id) {
   }
 }
 void Hero::equip_armour(unsigned int armour_id) {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(armour_id)) {
     Item *w = inventory->remove_item(armour_id);
@@ -79,54 +79,54 @@ void Hero::equip_armour(unsigned int armour_id) {
   }
 }
 void Hero::unequip_weapon() {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
   if (weapon) inventory->add_item(weapon);
 }
 void Hero::unequip_staff() {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
-  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
+  if (!alive) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
-  if (!alive) ModelException("Ghosts can't add items to inventory!", "5");
+  if (!alive) throw ModelException("Ghosts can't add items to inventory!", "5");
   meditating = false;
   Item *i = inventory->remove_item(item_id);
   return i;
 }
 
 void Hero::add_item(Item *item) {
-  if (!alive) ModelException("Ghosts can't add items to inventory!", "4");
+  if (!alive) throw ModelException("Ghosts can't add items to inventory!", "4");
   meditating = false;
   inventory->add_item(item);
 }
 
 unsigned int Hero::damage(BaseCharacter *b) {
-  if (!alive) ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(b)) ModelException("Too far to attack!", "7");
+  if (!alive) throw ModelException("Ghosts can't attack!", "3");
+  if (!close_enough(b)) throw ModelException("Too far to attack!", "7");
   if (!equipment->can_use_primary_weapon(this))
-    ModelException("Cant use primary weapon! (not enough mana?)", "8");
+    throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
   meditating = false;
   // mover a json!
   const float critical_damage_probability = 0.125;
@@ -139,7 +139,7 @@ unsigned int Hero::damage(BaseCharacter *b) {
 }
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
-  if (!alive) ModelException("Can't attack ghosts!", "2");
+  if (!alive) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
   const float evasion = 0.001;
@@ -159,6 +159,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
 }
 
 void Hero::meditate() {
+  if (!alive) throw ModelException("Can't meditate death!", "2");;
   meditating = true;
 }
 
@@ -177,5 +178,5 @@ bool Hero::close_enough(BaseCharacter *other) {
   unsigned int distance =
       floor(sqrt(pow(x_position - other->x_position, 2) +
                  pow(y_position - other->y_position, 2) * 1.0));
-  return ((equipment->range() - distance) >= 0);
+  return (((int)equipment->range() - (int)distance) >= 0);
 }
