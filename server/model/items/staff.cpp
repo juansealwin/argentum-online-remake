@@ -9,12 +9,12 @@ Staff::Staff(int id, unsigned int min_damage, unsigned int max_damage,
 
 Staff::~Staff() {}
 
-bool Staff::can_be_used_by(Hero &hero) {
-  return hero.current_mana >= mana_consumption;
+bool Staff::can_be_used_by(Hero *hero) {
+  return hero->current_mana >= mana_consumption;
 }
 
-void Staff::use(Hero &hero)  {
-  hero.current_hp += hp_regen;
-  if (hero.current_hp >= hero.max_hp) hero.current_hp = hero.max_hp;
-  hero.current_mana -= mana_consumption;
+void Staff::use(Hero *hero) {
+  hero->current_hp += hp_regen;
+  if (hero->current_hp >= hero->max_hp) hero->current_hp = hero->max_hp;
+  hero->current_mana -= mana_consumption;
 }

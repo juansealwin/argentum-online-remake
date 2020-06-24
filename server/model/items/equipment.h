@@ -3,6 +3,7 @@
 class Weapon;
 class DefensiveItem;
 class Staff;
+class Hero;
 class Equipment {
  public:
   // constructores de equipamiento vacio o con items
@@ -20,6 +21,8 @@ class Equipment {
   void equip_armour(DefensiveItem *armour);
   // devuelve distancia a la cual puede llegar a atacar
   unsigned int range();
+  bool can_use_primary_weapon(Hero *hero);
+  void use_primary_weapon(Hero *hero);
   Weapon *unequip_weapon();
   Staff *unequip_staff();
   DefensiveItem *unequip_shield();

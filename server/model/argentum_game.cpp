@@ -131,6 +131,10 @@ void ArgentumGame::update(bool one_second_update) {
     cmd->execute(this);
     delete cmd;
   }
+  // TO DO:
+  // - Chequear si monstruos murieron para eliminarlos del mapa y poner sus
+  // drops
+  // Desconexion de clientes: Podria ser un command a ejecutar
 }
 
 void ArgentumGame::kill() {
@@ -268,24 +272,3 @@ void ArgentumGame::clean_notifications_queues() {
       ++it;
   }
 }
-
-// Json::Value ArgentumGame::game_status() {
-//   std::unique_lock<std::mutex> lock(mutex);
-//   Json::Value status;
-//   status["map"] = map_name;
-//   status["op"] = "game_status";
-//   status["entities"] = Json::Value(Json::arrayValue);
-//   for (auto &entity : entities) {
-//     Json::Value current_entity_status;
-//     current_entity_status["id"] = entity.first;
-//     current_entity_status["x"] = entity.second->x_position;
-//     current_entity_status["y"] = entity.second->y_position;
-//     current_entity_status["type"] = entity.second->get_type();
-//     status["entities"].append(current_entity_status);
-//     // std::cout << status << std::endl;
-//     // std::cout << "id: " << entity.first << " at: "
-//     //           << "(" << entity.second->x_position << ", "
-//     //           << entity.second->y_position << ")" << std::endl;
-//   }
-//   return status;
-// }

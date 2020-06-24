@@ -108,6 +108,7 @@ void Hero::add_item(Item *item) {
 unsigned int Hero::damage(Monster *m) {
   if (!alive) ModelException("Ghosts can't attack!", "3");
   if (!close_enough(m)) ModelException("Too far to attack!", "7");
+  if (!equipment->can_use_primary_weapon(this)) ModelException("Cant use primary weapon! (not enough mana?)", "8");
   // mover a json!
   const float critical_damage_probability = 0.125;
   bool critical = false;
@@ -123,6 +124,7 @@ unsigned int Hero::damage(Monster *m) {
 unsigned int Hero::damage(Hero *other) {
   if (!alive) ModelException("Ghosts can't attack!", "3");
   if (!close_enough(other)) ModelException("Too far to attack!", "7");
+  if (!equipment->can_use_primary_weapon(this)) ModelException("Cant use primary weapon! (not enough mana?)", "8");
   // mover a json!
   const float critical_damage_probability = 0.125;
   bool critical = false;
