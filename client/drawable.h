@@ -13,7 +13,7 @@ class Drawable {
   int height;
 
  public:
-  virtual void render(int, int) = 0;
+  virtual void render(SDL_Renderer*, int, int) = 0;
   virtual int get_width() const;
   virtual int get_height() const;
   virtual int get_x() const;

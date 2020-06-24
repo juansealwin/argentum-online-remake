@@ -6,6 +6,10 @@ Texture::Texture() {
   height = 0;
 }
 
+Texture::Texture(std::string path, SDL_Renderer* renderer) {
+  load_texture(path.c_str(), renderer);
+}
+
 Texture::~Texture() { free(); }
 
 void Texture::load_texture(const char* id_path, SDL_Renderer* renderer) {

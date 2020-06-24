@@ -1,11 +1,8 @@
 #include "game_renderer.h"
 
-GameRenderer::GameRenderer(int width, int height, PlayableCharacter& hero,
-                           Map& map)
-    : screen_width(width),
-      screen_height(height),
-      player(hero),
-      current_map(map) {
+GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map)
+    : screen_width(width), screen_height(height), protected_map(prot_map) {
+  current_game = nullptr;
   window_init();
 }
 
@@ -42,40 +39,37 @@ GameRenderer::~GameRenderer() {
   }
   IMG_Quit();
   SDL_Quit();
-  // current_map = nullptr;
-  // player = nullptr;
 }
-
-/*
-void GameRenderer::deleteTextures() {
-  std::vector<Texture*>::iterator it;
-  for (it = textures.begin(); it != textures.end(); it++) {
-    (*it)->free();
-    delete (*it);
-    it = textures.erase(it);
-  }
-}
-*/
 
 // Hay que pasarle el renderer a los objetos y hay que hacer swap de renderers
 // entre el actual y el del updater
 void GameRenderer::run() {
-  SDL_RenderClear(renderer);
-  current_map.render();
-  player.render_as_hero();
-  SDL_RenderPresent(renderer);
+  try {
+    Uint32 frame_start;
+    int frame_time;
+    while (is_running) {
+      frame_start = SDL_GetTicks();
+
+      *current_game = protected_map.map_reader();
+      SDL_RenderClear(renderer);
+      current_game->render(renderer);
+      // creo que no va a hacer falta
+      // player.render_as_hero(renderer);
+      SDL_RenderPresent(renderer);
+
+      frame_time = SDL_GetTicks() - frame_start;
+      if (FRAME_DELAY > frame_time) SDL_Delay(FRAME_DELAY - frame_time);
+    }
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+  }
 }
 
 /*
-void Game::render() {
+
+void Game::fill(int r, int g, int b, int alpha) {
+  SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
   SDL_RenderClear(renderer);
-  current_map->render();
-  player->renderAsHero();
-  SDL_RenderPresent(renderer);
-}*/
+}
 
-// void Game::newPlayer(PlayableCharacter* new_player) { player = new_player; }
-
-// SDL_Renderer* GameRenderer::getRenderer() { return renderer; }
-
-// Texture* GameRenderer::getTexture(int index) { return textures.at(index); }
+*/

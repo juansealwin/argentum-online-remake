@@ -1,96 +1,21 @@
 #include "game_updater.h"
 
-GameUpdater::GameUpdater(int id, int width, int height, BlockingMap& block_map)
-    : id_hero(id),
-      screen_width(width),
-      screen_height(height),
-      blocking_map(block_map) {
-  window_init();
-  current_map = new Map(id_hero, ID_MAP_GRASS, renderer, 800, 600);
-}
+GameUpdater::GameUpdater(ProtectedMap& map, Socket& socket)
+    : protected_map(map), read_socket(socket) {}
 
-// GameUpdater::~GameUpdater() {}
+GameUpdater::~GameUpdater() {}
 
 void GameUpdater::run() {
   try {
     while (is_running) {
-      // Recibimos las entidades dentro del mapa con sus cambios
-      blocking_map.update_map(next_status);
+      // Recibimos las actualizaciones del mapa
 
-      std::map<int, CharacterStatus>::iterator it;
-      std::map<int, CharacterStatus>::iterator it2;
+      // Protocol::recieve_updates(read_socket, next_status);
 
-      // Comprobamos si hay entidades que no están más en el mapa
-      for(it = current_status.begin(); it != next_status.end(); it++) {
-        it2 = next_status.find(it->first);
-        // Si no están más, las borramos
-        if (it2 == next_status.end())
-          current_status.erase(it->first);
-      }
-
-      for (it = next_status.begin(); it != next_status.end(); it++) {
-        // Chequeamos si dicho personaje ya existia dentro del mapa
-        it2 = current_status.find(it->first);
-
-        if (it2 != current_status.end()) {
-          // Chequeamos si dicho personaje se mantuvo cte. o se modifico
-          if (!(it2->second.is_equal(it->second))) {
-            // Si cambio hacemos un update del personaje
-            current_map->update_character(it->first, it->second.get_x(),
-                                          it->second.get_y());
-          }
-        } else {
-          // Como no existe lo creamos
-          current_map->load_character(renderer, it->second.get_type_character(),
-                                      it->first, it->second.get_x(),
-                                      it->second.get_y());
-        }
-        // Mofificamos/creamos el status para la proxima pasada
-        current_status[it->first] = it->second;
-      }
-      // No deberia hacer el render, por ahora queda asi
-      current_map->render();
+      // Hacemos el write de los datos actualizados en el monitor de mapa
+      protected_map.map_writer(next_status);
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
-}
-
-/* Lo de aca para abajo habria que pasarlo al GameRenderer en un futuro */
-
-void GameUpdater::window_init() {
-  window = SDL_CreateWindow("Argentum Online", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, screen_width,
-                            screen_height, SDL_WINDOW_SHOWN);
-
-  if (!window) {
-    throw SdlException("Error en la inicialización de la ventana",
-                       SDL_GetError());
-  } else {
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-      throw SdlException("Error en la inicialización del render",
-                         SDL_GetError());
-    } else {
-      // Fondo negro
-      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-
-      is_running = true;
-    }
-  }
-}
-
-GameUpdater::~GameUpdater() {
-  if (renderer) {
-    SDL_DestroyRenderer(renderer);
-    renderer = nullptr;
-  }
-  if (window) {
-    SDL_DestroyWindow(window);
-    window = nullptr;
-  }
-  IMG_Quit();
-  SDL_Quit();
-  // current_map = nullptr;
-  // player = nullptr;
 }

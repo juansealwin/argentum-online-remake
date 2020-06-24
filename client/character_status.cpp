@@ -54,7 +54,8 @@ CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y)
 
 CharacterStatus::~CharacterStatus() {}
 
-void CharacterStatus::operator=(CharacterStatus other_status) {
+CharacterStatus& CharacterStatus::operator=(
+    const CharacterStatus& other_status) {
   type_character = other_status.type_character;
   x = other_status.x;
   y = other_status.y;
@@ -67,7 +68,9 @@ bool CharacterStatus::is_equal(CharacterStatus other_status) {
           is_alive == other_status.is_alive);
 }
 
-character_t CharacterStatus::get_type_character() const { return type_character; }
+character_t CharacterStatus::get_type_character() const {
+  return type_character;
+}
 
 int CharacterStatus::get_x() const { return x; }
 

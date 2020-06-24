@@ -5,35 +5,25 @@
 
 #include <map>
 
-#include "blocking_map.h"
+#include "protected_map.h"
 #include "character_status.h"
 #include "exception_messages.h"
-#include "map.h"
+#include "game.h"
 #include "sdl_exception.h"
 #include "thread.h"
+#include "common_socket.h"
 
 class GameUpdater : public Thread {
  private:
-  //Esto deberia ir en el GameRenderer
-  SDL_Window* window;
-  SDL_Renderer* renderer;
-  int screen_width;
-  int screen_height;
-  int id_hero;
-
-  // Esto es del GameUpdater
-  BlockingMap& blocking_map;
-  // SDL_Renderer* next_renderer;
-  Map* current_map;
+  ProtectedMap& protected_map;
   std::map<int, CharacterStatus> next_status;
-  std::map<int, CharacterStatus> current_status;
   bool is_running;
+  Socket& read_socket;
 
  public:
-  GameUpdater(int, int, int, BlockingMap&);
+  GameUpdater(ProtectedMap&, Socket&);
   ~GameUpdater();
   void run();
-  void window_init();
 };
 
 #endif

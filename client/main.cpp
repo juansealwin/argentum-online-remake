@@ -3,9 +3,9 @@
 #include "client.h"
 #include "client_arguments_validator.h"
 #include "connection_exceptions.h"
-#include "paths.h"
+#include "texture_manager.h"
 
-Paths* paths = Paths::get_instance();
+TextureManager* texture_manager = TextureManager::get_instance();
 
 int main(int argc, char *argv[]) {
   try {

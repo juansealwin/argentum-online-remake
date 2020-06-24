@@ -1,5 +1,7 @@
 #include "move.h"
 
+Move::Move() {}
+
 Move::Move(int char_width, int char_height, int id_character)
     : character_width(char_width), character_height(char_height) {
   set_total_clips(id_character);
@@ -7,6 +9,15 @@ Move::Move(int char_width, int char_height, int id_character)
   current_clip[CLIP_UP] = 0;
   current_clip[CLIP_LEFT] = 0;
   current_clip[CLIP_RIGHT] = 0;
+}
+
+Move::Move(const Move& other_move) {
+  character_width = other_move.character_width;
+  character_height = other_move.character_height;
+  offset_y = other_move.offset_y;
+  current_clip = other_move.current_clip;
+  clips_up_down = other_move.clips_up_down;
+  clips_left_right = other_move.clips_left_right;
 }
 
 Move::~Move() {}
