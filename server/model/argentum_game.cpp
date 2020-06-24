@@ -104,15 +104,16 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   Hero *hero = new Hero(
-      x, y, race_stats["id"].asInt(), 'h', class_stats["level"].asInt(),
-      race_stats["strength"].asInt() + class_stats["strength"].asInt(),
-      race_stats["intelligence"].asInt() + class_stats["intelligence"].asInt(),
-      race_stats["agility"].asInt() + class_stats["agility"].asInt(),
-      race_stats["constitution"].asInt(), class_stats["fClassHp"].asInt(),
-      race_stats["fRaceHp"].asInt(), race_stats["fRaceRecovery"].asInt(),
-      race_stats["fRaceMana"].asInt(), class_stats["fClassMana"].asInt(),
-      class_stats["fClassMeditation"].asInt(), race_stats["gold"].asInt(),
-      class_stats["id"].asInt(), map);
+      x, y, race_stats["id"].asUInt(), 'h', class_stats["level"].asUInt(),
+      race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
+      race_stats["intelligence"].asUInt() +
+          class_stats["intelligence"].asUInt(),
+      race_stats["agility"].asUInt() + class_stats["agility"].asUInt(),
+      race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
+      race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
+      race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
+      class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
+      class_stats["id"].asUInt(), map);
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;
@@ -120,17 +121,24 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
 
 void ArgentumGame::update(bool one_second_update) {
   std::unique_lock<std::mutex> lock(mutex);
+  // pensar bien que hacer primero, ejecutar los comandos o updatear el mundo?
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    cmd->execute(this);
+    delete cmd;
+  }
   if (one_second_update) {
     // auto_move_monsters();
     for (auto &entity : entities) {
       entity.second->update();
     }
   }
-  while (!commands_queue->is_empty()) {
-    Command *cmd = commands_queue->pop();
-    cmd->execute(this);
-    delete cmd;
-  }
+  remove_death_entities();
+
+  // TO DO:
+  // - Chequear si monstruos murieron para eliminarlos del mapa y poner sus
+  // drops
+  // Desconexion de clientes: Podria ser un command a ejecutar
 }
 
 void ArgentumGame::kill() {
@@ -269,23 +277,21 @@ void ArgentumGame::clean_notifications_queues() {
   }
 }
 
-// Json::Value ArgentumGame::game_status() {
-//   std::unique_lock<std::mutex> lock(mutex);
-//   Json::Value status;
-//   status["map"] = map_name;
-//   status["op"] = "game_status";
-//   status["entities"] = Json::Value(Json::arrayValue);
-//   for (auto &entity : entities) {
-//     Json::Value current_entity_status;
-//     current_entity_status["id"] = entity.first;
-//     current_entity_status["x"] = entity.second->x_position;
-//     current_entity_status["y"] = entity.second->y_position;
-//     current_entity_status["type"] = entity.second->get_type();
-//     status["entities"].append(current_entity_status);
-//     // std::cout << status << std::endl;
-//     // std::cout << "id: " << entity.first << " at: "
-//     //           << "(" << entity.second->x_position << ", "
-//     //           << entity.second->y_position << ")" << std::endl;
-//   }
-//   return status;
-// }
+/* private methods */
+
+void ArgentumGame::remove_death_entities() {
+  for (auto it = entities.cbegin(); it != entities.cend() /* not hoisted */;
+       /* no increment */) {
+    if (it->second->alive == false) {
+      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
+      // devuelva un drop (o no) para poner en el mapa
+      int x_pos = it->second->x_position;
+      int y_pos = it->second->y_position;
+      map->empty_cell(x_pos, y_pos);
+      delete it->second;
+      it = entities.erase(it++);
+    } else {
+      ++it;
+    }
+  }
+}

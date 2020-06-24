@@ -4,7 +4,6 @@
 
 #include "../util/json/json-forwards.h"
 #include "../util/json/json.h"
-#include "base_character.h"
 #include "stdint.h"
 #include "tile.h"
 // 1st layer

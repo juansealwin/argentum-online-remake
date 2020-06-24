@@ -1,7 +1,8 @@
 #ifndef WEAPON_H
 #define WEAPON_H
 #include "item.h"
-class Weapon : Item {
+class Item;
+class Weapon : public Item {
  public:
   Weapon(int id, unsigned int min_damage, unsigned int max_damage,
          unsigned int range);

@@ -56,7 +56,7 @@ std::tuple<int, int> Map::get_random_free_space() {
   }
 }
 
-void Map::empty_cell(int x, int y) { matrix[x][y]->free = true; }
+void Map::empty_cell(int x, int y) { matrix[x][y]->empty_cell(); }
 
 bool Map::tile_is_safe(int x, int y) { return matrix[x][y]->safe; }
 
@@ -68,7 +68,7 @@ bool Map::can_ocupy_cell(int x, int y) {
 
 bool Map::ocupy_cell(int x, int y) {
   if (!can_ocupy_cell(x, y)) return false;
-  matrix[x][y]->free = false;
+  matrix[x][y]->fill_cell();
   return true;
 }
 

@@ -1,6 +1,6 @@
 #ifndef ENTITY_H
 #define ENTITY_H
-
+#include "model_exceptions.h"
 class Entity {
  public:
   Entity(int x, int y, int type, char repr);
@@ -11,6 +11,7 @@ class Entity {
   int x_position;
   int y_position;
   int type;
+  bool alive = true;
 
  private:
 

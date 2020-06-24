@@ -1,14 +1,14 @@
 #ifndef ITEM_H
 #define ITEM_H
 #include "hero.h"
+class Hero;
 class Item {
  public:
-  Item(int id);
-  virtual bool can_be_used_by(Hero &hero);
-  virtual void self_apply(Hero &hero);
+  Item(unsigned int id);
+  virtual bool can_be_used_by(Hero *hero);
+  virtual void use(Hero *hero);
   virtual ~Item();
   Item(const Item &) = delete;
- protected:
-  int id;
+  unsigned int id;
 };
 #endif  // ITEM_H
