@@ -3,27 +3,16 @@
 
 #include <string>
 #include <vector>
-
+#include "types.h"
 #include "drawable.h"
 #include "move.h"
+#include "paths.h"
 
-typedef enum {
-  HUMAN = 0,
-  ELF,
-  GNOME,
-  DWARF,
-  SPIDER,
-  GOBLIN,
-  ZOMBIE,
-  SKELETON,
-  MERCHANT,
-  BANKER,
-  PRIEST
-} character_t;
+
 
 class Character : public Drawable {
  protected:
-  int id;
+  id_texture_t type_character;
   Texture body_texture;
   SDL_Renderer* renderer = NULL;
   Move* animation_move = NULL;
@@ -34,11 +23,7 @@ class Character : public Drawable {
   virtual void render(int, int) override;
   virtual void move(move_t);
   virtual void update_position(int, int);
-  virtual int get_width() const override;
-  virtual int get_height() const override;
-  virtual int get_x() const override;
-  virtual int get_y() const override;
-  virtual int get_id() const;
+  virtual int set_character_dimensions(character_t);
 };
 
 #endif

@@ -14,17 +14,18 @@ void GameRenderer::window_init() {
                             SDL_WINDOWPOS_UNDEFINED, screen_width,
                             screen_height, SDL_WINDOW_SHOWN);
 
-  if (!window)
+  if (!window) {
     throw SdlException("Error en la inicialización de la ventana",
                        SDL_GetError());
-  else {
+  } else {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer)
+    if (!renderer) {
       throw SdlException("Error en la inicialización del render",
                          SDL_GetError());
-    else
+    } else {
       // Fondo negro
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
+    }
 
     is_running = true;
   }

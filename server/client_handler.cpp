@@ -25,5 +25,5 @@ ClientHandler::~ClientHandler() {
 }
 
 bool ClientHandler::is_alive() {
-  return (this->receiver->is_alive() || this->sender->is_alive());
+  return this->receiver->is_alive() || this->sender->is_alive();
 }

@@ -7,6 +7,7 @@
 
 #include "exception_messages.h"
 #include "map.h"
+#include "playable_character.h"
 #include "sdl_exception.h"
 #include "texture.h"
 #include "thread.h"
@@ -19,7 +20,7 @@ class GameRenderer : public Thread {
   bool is_running;
   int screen_width;
   int screen_height;
-  //std::vector<Texture*> textures;
+  // std::vector<Texture*> textures;
   PlayableCharacter& player;
   Map& current_map;
 

@@ -1,9 +1,11 @@
 #include "game_updater.h"
 
 GameUpdater::GameUpdater(int id, int width, int height, BlockingMap& block_map)
-    : id_hero(id), screen_width(width), screen_height(height), blocking_map(block_map) {
+    : id_hero(id),
+      screen_width(width),
+      screen_height(height),
+      blocking_map(block_map) {
   window_init();
-  
   current_map = new Map(id_hero, ID_MAP_GRASS, renderer, 800, 600);
 }
 
@@ -18,6 +20,14 @@ void GameUpdater::run() {
       std::map<int, CharacterStatus>::iterator it;
       std::map<int, CharacterStatus>::iterator it2;
 
+      // Comprobamos si hay entidades que no están más en el mapa
+      for(it = current_status.begin(); it != next_status.end(); it++) {
+        it2 = next_status.find(it->first);
+        // Si no están más, las borramos
+        if (it2 == next_status.end())
+          current_status.erase(it->first);
+      }
+
       for (it = next_status.begin(); it != next_status.end(); it++) {
         // Chequeamos si dicho personaje ya existia dentro del mapa
         it2 = current_status.find(it->first);
@@ -27,16 +37,16 @@ void GameUpdater::run() {
           if (!(it2->second.is_equal(it->second))) {
             // Si cambio hacemos un update del personaje
             current_map->update_character(it->first, it->second.get_x(),
-                                        it->second.get_y());
-            // Mofificamos el status para la proxima pasada
-            it2->second = it->second;
+                                          it->second.get_y());
           }
         } else {
           // Como no existe lo creamos
           current_map->load_character(renderer, it->second.get_type_character(),
-                                    it->first, it->second.get_x(),
-                                    it->second.get_y());
+                                      it->first, it->second.get_x(),
+                                      it->second.get_y());
         }
+        // Mofificamos/creamos el status para la proxima pasada
+        current_status[it->first] = it->second;
       }
       // No deberia hacer el render, por ahora queda asi
       current_map->render();
@@ -53,19 +63,20 @@ void GameUpdater::window_init() {
                             SDL_WINDOWPOS_UNDEFINED, screen_width,
                             screen_height, SDL_WINDOW_SHOWN);
 
-  if (!window)
+  if (!window) {
     throw SdlException("Error en la inicialización de la ventana",
                        SDL_GetError());
-  else {
+  } else {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer)
+    if (!renderer) {
       throw SdlException("Error en la inicialización del render",
                          SDL_GetError());
-    else
+    } else {
       // Fondo negro
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
 
-    is_running = true;
+      is_running = true;
+    }
   }
 }
 

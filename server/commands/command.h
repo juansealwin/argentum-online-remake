@@ -9,7 +9,7 @@ class Command {
   Command();
   virtual ~Command();
   Command(const Command &) = delete;
-  // Ejecuta cambios en el juego segun
+  // Ejecuta cambios en el juego
   virtual void execute(ArgentumGame *game) = 0;
 };
 #endif

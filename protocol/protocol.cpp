@@ -1,41 +1,102 @@
 #include "protocol.h"
 
-#define REQUEST_LENGTH 4
+#include <string.h>
 
-const Json::Value Protocol::receiveMessage(const Socket& socket) {
-  uint32_t string_size;
-  socket.recv(&string_size, REQUEST_LENGTH);
-  string_size = ntohl(string_size);
-  std::string message(string_size, '\0');
-  socket.recv(&message[0], string_size);
+#include <iostream>
+#include <memory>
 
-  Json::CharReaderBuilder builder;
-  Json::CharReader* reader = builder.newCharReader();
-  Json::Value info;
-  reader->parse(message.c_str(), message.c_str() + message.size(), &info,
-                nullptr);
-  delete reader;
-  return info;
+#include "login_command_dto.h"
+#include "move_command_dto.h"
+#include "quit_command_dto.h"
+
+#define ID_LENGTH 2
+
+LoginCommandDTO* receive_login(const Socket& socket) {
+  uint16_t room_number;
+  socket.recv(&room_number, 2);
+  room_number = ntohs(room_number);
+  return new LoginCommandDTO(room_number);
 }
 
-void Protocol::sendMessage(const Socket& socket, const Json::Value& info) {
-  Json::FastWriter fastWriter;
-  const std::string message = fastWriter.write(info);
-
-  uint32_t size = htonl(message.size());
-  socket.send(&size, REQUEST_LENGTH);
-  socket.send(&message[0], message.size());
+QuitCommandDTO* receive_quit(const Socket& socket) {
+  return new QuitCommandDTO();
 }
 
-void Protocol::send_response_to_command
-(const Socket& skt, const unsigned char *message, const uint16_t *size) {
-    uint16_t size_converted = htons(*size);
-    skt.send(&size_converted, 2);
-    skt.send(message, *size);
+MoveCommandDTO* receive_move(const Socket& socket) {
+  uint16_t player_id, movement_type;
+  socket.recv(&player_id, 2);
+  socket.recv(&movement_type, 1);
+  player_id = ntohs(player_id);
+  movement_type = ntohs(movement_type);
+  return new MoveCommandDTO(player_id, movement_t(movement_type));
 }
 
-unsigned char Protocol::receive_command(const Socket& skt) {
-    unsigned char c = 0;
-    skt.recv(&c, 1);
-    return c;
+CommandDTO* Protocol::receive_command(const Socket& socket) {
+  uint16_t command_id;
+  socket.recv(&command_id, ID_LENGTH);
+  command_id = ntohs(command_id);
+  std::cout << "comando redibido id: " << command_id << std::endl;
+  switch (command_id) {
+    case LOGIN_COMMAND:
+      return receive_login(socket);
+    case QUIT_COMMAND:
+      return receive_quit(socket);
+    case MOVE_COMMAND:
+      return receive_move(socket);
+    default:
+      return nullptr;
+  }
+}
+
+std::unique_ptr<unsigned char[]> short_int_to_unsigned_char(int number,
+                                                            int size) {
+  std::unique_ptr<unsigned char[]> message;
+  message = std::unique_ptr<unsigned char[]>{new unsigned char[size]};
+  uint16_t short_number = htons(static_cast<uint16_t>(number));
+  memcpy(&message[0], &short_number, size);
+  return message;
+}
+
+void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(LOGIN_COMMAND, ID_LENGTH);
+  std::unique_ptr<unsigned char[]> room_number =
+      short_int_to_unsigned_char(login_command->room_number, 2);
+  socket.send(command_id.get(), ID_LENGTH);
+  socket.send(room_number.get(), 2);
+}
+
+void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(QUIT_COMMAND, ID_LENGTH);
+  socket.send(&command_id, ID_LENGTH);
+}
+
+void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
+  std::unique_ptr<unsigned char[]> command_id =
+      short_int_to_unsigned_char(MOVE_COMMAND, ID_LENGTH);
+  std::unique_ptr<unsigned char[]> player_id =
+      short_int_to_unsigned_char(move_command->player_id, 2);
+  std::unique_ptr<unsigned char[]> movement_type =
+      short_int_to_unsigned_char(move_command->movement_type, 1);
+
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&player_id, 2);
+  socket.send(&movement_type, 1);
+}
+
+void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
+  switch (commandDTO->getId()) {
+    case LOGIN_COMMAND:
+      send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
+      break;
+    case QUIT_COMMAND:
+      send_quit(socket, static_cast<QuitCommandDTO*>(commandDTO));
+      break;
+    case MOVE_COMMAND:
+      send_move(socket, static_cast<MoveCommandDTO*>(commandDTO));
+      break;
+    default:
+      break;
+  }
 }

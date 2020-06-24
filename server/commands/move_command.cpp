@@ -3,7 +3,8 @@
 #include <iostream>
 
 #include "argentum_game.h"
-MoveCommand::MoveCommand(int entity_id, int next_x, int next_y)
+
+MoveCommand::MoveCommand(const int entity_id, const int next_x, const int next_y)
     : entity_id(entity_id), next_x(next_x), next_y(next_y) {}
 
 MoveCommand::~MoveCommand() {}

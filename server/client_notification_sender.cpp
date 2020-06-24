@@ -38,8 +38,8 @@ void ClientNotificationSender::run() {
     const unsigned char* response =
         reinterpret_cast<const unsigned char*>(message.c_str());
     const uint16_t message_length = 7;
-    Protocol::send_response_to_command(this->peer_socket, response,
-                                       &message_length);
+    // Protocol::send_response_to_command(this->peer_socket, response,
+    //                                    &message_length);
     std::this_thread::sleep_for(std::chrono::milliseconds(500));
 
     loops++;
