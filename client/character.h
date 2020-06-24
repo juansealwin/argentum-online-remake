@@ -11,13 +11,12 @@
 class Character : public Drawable {
  protected:
   id_texture_t type_character;
-  SDL_Renderer* renderer = NULL;
   Move animation_move;
   SDL_Rect body_rect;
 
  public:
   virtual ~Character();
-  virtual void render(int, int) override;
+  virtual void render(SDL_Renderer*, int, int) override;
   virtual void move(move_t);
   virtual void update_position(int, int);
   virtual int set_character_dimensions(character_t);

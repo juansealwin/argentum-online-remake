@@ -1,10 +1,9 @@
 #include "game.h"
 
-Game::Game(int id_player, id_texture_t id_background, SDL_Renderer* ren,
-           int scr_width, int scr_height)
+Game::Game(int id_player, id_texture_t id_background, int scr_width,
+           int scr_height)
     : id_hero(id_player),
       type_map(id_background),
-      renderer(ren),
       screen_width(scr_width),
       screen_height(scr_height) {
   map_piece = {0, 0, screen_width, screen_height};
@@ -13,7 +12,6 @@ Game::Game(int id_player, id_texture_t id_background, SDL_Renderer* ren,
 
 Game::Game(const Game& other_game) {
   id_hero = other_game.id_hero;
-  renderer = other_game.renderer;
   screen_width = other_game.screen_width;
   screen_height = other_game.screen_height;
   type_map = other_game.type_map;
@@ -25,7 +23,6 @@ Game::Game(const Game& other_game) {
 
 Game& Game::operator=(const Game& other_game) {
   id_hero = other_game.id_hero;
-  renderer = other_game.renderer;
   screen_width = other_game.screen_width;
   screen_height = other_game.screen_height;
   type_map = other_game.type_map;
@@ -37,7 +34,6 @@ Game& Game::operator=(const Game& other_game) {
 
 Game::~Game() {
   // clean_characters_vector();
-  renderer = nullptr;
 }
 
 void Game::update_character(int id, int new_x, int new_y) {
@@ -78,10 +74,10 @@ void Game::update_map(int new_x, int new_y) {
   }
 }
 
-void Game::render() {
+void Game::render(SDL_Renderer* renderer) {
   texture_manager->get_texture(type_map).render(renderer, &map_piece,
                                                 &viewport);
-  render_characters();
+  render_characters(renderer);
 }
 
 // Por ahora no la usariamos
@@ -96,12 +92,12 @@ void Map::change_map(int id_new_map) {
 void Game::load_character(character_t char_type, int id, int x, int y) {
   if (char_type == HUMAN || char_type == ELF || char_type == GNOME ||
       char_type == DWARF)
-    characters[id] = PlayableCharacter(renderer, char_type, x, y);
+    characters[id] = PlayableCharacter(char_type, x, y);
   else
-    characters[id] = Npc(renderer, char_type, x, y);
+    characters[id] = Npc(char_type, x, y);
 }
 
-void Game::render_characters() {
+void Game::render_characters(SDL_Renderer* renderer) {
   std::map<int, Character>::iterator it;
   for (it = characters.begin(); it != characters.end(); it++) {
     // El personaje DEBE estar dentro del viewport
@@ -109,7 +105,7 @@ void Game::render_characters() {
         (it->second.get_x() <= map_piece.x + screen_width))
       if ((map_piece.y <= it->second.get_y()) &&
           (it->second.get_y() <= map_piece.y + screen_height)) {
-        it->second.render(map_piece.x, map_piece.y);
+        it->second.render(renderer, map_piece.x, map_piece.y);
       }
   }
 }

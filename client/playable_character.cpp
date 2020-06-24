@@ -1,11 +1,10 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(SDL_Renderer* ren, character_t id_char,
+PlayableCharacter::PlayableCharacter(character_t id_char,
                                      int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
   x = new_x;
   y = new_y;
-  renderer = ren;
   set_character_dimensions(id_char);
   set_head_dimensions(id_char);
   animation_move = Move(width, height, type_character);
@@ -16,7 +15,6 @@ PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
   half_screen_h = other_pc.half_screen_h;
   x = other_pc.x;
   y = other_pc.y;
-  renderer = other_pc.renderer;
   type_character = other_pc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_pc.width;
@@ -35,7 +33,6 @@ PlayableCharacter& PlayableCharacter::operator=(
   half_screen_h = other_pc.half_screen_h;
   x = other_pc.x;
   y = other_pc.y;
-  renderer = other_pc.renderer;
   type_character = other_pc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_pc.width;
@@ -65,7 +62,7 @@ void PlayableCharacter::update_face_profile(move_t move_type) {
 }
 
 // Creo que esta funcion se va a poder borrar
-void PlayableCharacter::render_as_hero() {
+void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
   texture_manager->get_texture(type_character)
       .render(renderer, &body_rect, half_screen_w - width / 2,
               half_screen_h - height / 2);
@@ -74,7 +71,7 @@ void PlayableCharacter::render_as_hero() {
       half_screen_h - height / 2 - head_rect.h / 2);
 }
 
-void PlayableCharacter::render(int x_rel, int y_rel) {
+void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   texture_manager->get_texture(type_character)
       .render(renderer, &body_rect, x - width / 2 - x_rel,
               y - height / 2 - y_rel);

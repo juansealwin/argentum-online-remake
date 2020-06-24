@@ -4,7 +4,7 @@
 #include <SDL2/SDL.h>
 
 #include <vector>
-
+#include "protected_map.h"
 #include "exception_messages.h"
 #include "game.h"
 #include "playable_character.h"
@@ -20,12 +20,12 @@ class GameRenderer : public Thread {
   bool is_running;
   int screen_width;
   int screen_height;
-  // std::vector<Texture*> textures;
   PlayableCharacter& player;
-  Game& current_map;
+  ProtectedMap& protected_map;
+  Game* current_game;
 
  public:
-  GameRenderer(int, int, PlayableCharacter&, Game&);
+  GameRenderer(int, int, PlayableCharacter&, ProtectedMap&);
   ~GameRenderer();
   void window_init();
   void run();

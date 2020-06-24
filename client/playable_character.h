@@ -11,14 +11,14 @@ class PlayableCharacter : public Character {
   int half_screen_h;
 
  public:
-  PlayableCharacter(SDL_Renderer*, character_t, int, int);
+  PlayableCharacter(character_t, int, int);
   PlayableCharacter(const PlayableCharacter&);
   PlayableCharacter& operator=(const PlayableCharacter&);
   ~PlayableCharacter();
   virtual void move(move_t) override;
   virtual void update_face_profile(move_t);
-  virtual void render(int, int) override;
-  virtual void render_as_hero();
+  virtual void render(SDL_Renderer*, int, int) override;
+  virtual void render_as_hero(SDL_Renderer*);
   virtual int set_head_dimensions(character_t);
   virtual int get_head_w() const;
   virtual int get_head_h() const;

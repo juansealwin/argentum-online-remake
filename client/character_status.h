@@ -14,7 +14,7 @@ class CharacterStatus {
   CharacterStatus();
   CharacterStatus(int, int, int);
   ~CharacterStatus();
-  void operator=(CharacterStatus);
+  CharacterStatus& operator=(const CharacterStatus&);
   bool is_equal(CharacterStatus);
   character_t get_type_character() const;
   int get_x() const;

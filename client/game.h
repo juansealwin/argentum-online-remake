@@ -18,7 +18,6 @@ class Game {
  private:
   int id_hero;
   id_texture_t type_map;
-  SDL_Renderer* renderer;
   // La porción del Gamea que queremos renderizar
   SDL_Rect map_piece;
   // La parte de la ventana que es renderizable
@@ -28,16 +27,16 @@ class Game {
   std::map<int, Character> characters;
 
  public:
-  Game(int, id_texture_t, SDL_Renderer*, int, int);
+  Game(int, id_texture_t, int, int);
   Game(const Game&);
   Game& operator=(const Game&);
   ~Game();
-  void render();
+  void render(SDL_Renderer*);
   void update_map(int, int);
   void update_character(int, int, int);
   void change_map(int);
   void load_character(character_t, int, int, int);
-  void render_characters();
+  void render_characters(SDL_Renderer*);
   void clean_character(int i);
 };
 

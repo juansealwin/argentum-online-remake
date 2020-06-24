@@ -1,14 +1,12 @@
 #include "character.h"
 
-Character::~Character() {
-  renderer = nullptr;
-}
+Character::~Character() { renderer = nullptr; }
 
 void Character::move(move_t move_type) {
   body_rect = animation_move.get_next_clip(move_type);
 }
 
-void Character::render(int x_rel, int y_rel) {
+void Character::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   texture_manager->get_texture(type_character)
       .render(renderer, &body_rect, x - width / 2 - x_rel,
               y - height / 2 - y_rel);
