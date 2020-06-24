@@ -1,9 +1,11 @@
 #include <iostream>
-
 #include "arguments_exceptions.h"
 #include "client.h"
 #include "client_arguments_validator.h"
 #include "connection_exceptions.h"
+#include "paths.h"
+
+Paths* paths = Paths::get_instance();
 
 int main(int argc, char *argv[]) {
   try {

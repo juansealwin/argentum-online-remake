@@ -3,7 +3,7 @@
 
 #include <map>
 #include <vector>
-
+#include "types.h"
 #include "texture.h"
 #define CLIP_DOWN 'D'
 #define CLIP_UP 'U'

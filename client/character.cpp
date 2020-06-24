@@ -38,12 +38,83 @@ void Character::update_position(int new_x, int new_y) {
   move(move_type);
 }
 
-int Character::get_width() const { return width; }
+int Character::set_character_dimensions(character_t id) {
+  // Lo seteamos de antemano porque en algunos personajes cambia
+  body_rect.x = 0;
+  body_rect.y = 0;
 
-int Character::get_height() const { return height; }
+  switch (id) {
+    case HUMAN:
+      width = 25;
+      height = 45;
+      type_character = ID_HUMAN;
+      break;
 
-int Character::get_x() const { return x; }
+    case ELF:
+      width = 25;
+      height = 45;
+      type_character = ID_ELF;
+      break;
 
-int Character::get_y() const { return y; }
+    case GNOME:
+      width = 25;
+      height = 45;
+      // Esto se debe a que el grafico es distinto
+      body_rect.y = 10;
+      type_character = ID_GNOME;
+      break;
 
-int Character::get_id() const { return id; }
+    case DWARF:
+      width = 25;
+      height = 45;
+      // Esto se debe a que el grafico es distinto
+      body_rect.y = 10;
+      type_character = ID_DWARF;
+      break;
+
+    case SPIDER:
+      width = 53;
+      height = 33;
+      type_character = ID_SPIDER;
+      break;
+
+    case SKELETON:
+      width = 25;
+      height = 52;
+      type_character = ID_SKELETON;
+      break;
+
+    case GOBLIN:
+      width = 24;
+      height = 33;
+      type_character = ID_GOBLIN;
+      break;
+
+    case ZOMBIE:
+      width = 25;
+      height = 47;
+      type_character = ID_ZOMBIE;
+      break;
+
+    case PRIEST:
+      width = 25;
+      height = 45;
+      type_character = ID_PRIEST;
+      break;
+
+    case MERCHANT:
+      width = 23;
+      height = 48;
+      type_character = ID_MERCHANT;
+      break;
+
+    case BANKER:
+      width = 25;
+      height = 33;
+      type_character = ID_BANKER;
+      break;
+  }
+  // Seteamos las dimensiones de la porcion a renderizar
+  body_rect.w = width;
+  body_rect.h = height;
+}

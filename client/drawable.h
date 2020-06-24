@@ -1,5 +1,5 @@
-#ifndef __DRAWABLE_H__
-#define __DRAWABLE_H__
+#ifndef DRAWABLE_H
+#define DRAWABLE_H
 
 #include <SDL2/SDL.h>
 
@@ -14,10 +14,10 @@ class Drawable {
 
  public:
   virtual void render(int, int) = 0;
-  virtual int get_width() const = 0;
-  virtual int get_height() const = 0;
-  virtual int get_x() const = 0;
-  virtual int get_y() const = 0;
+  virtual int get_width() const;
+  virtual int get_height() const;
+  virtual int get_x() const;
+  virtual int get_y() const;
 };
 
 #endif

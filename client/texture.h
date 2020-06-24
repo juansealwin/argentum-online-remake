@@ -6,14 +6,10 @@
 
 #include "drawable.h"
 #include "sdl_exception.h"
-#include "paths.h"
-
-
 
 class Texture {
  private:
   SDL_Texture* texture;
-  Paths texture_paths;
   int width;
   int height;
 
@@ -27,7 +23,7 @@ class Texture {
 
   void render(SDL_Renderer*, SDL_Rect*, SDL_Rect*);
 
-  void load_texture(int, SDL_Renderer*);
+  void load_texture(const char*, SDL_Renderer*);
 
   void free();
 

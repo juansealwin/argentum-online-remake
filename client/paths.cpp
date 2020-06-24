@@ -1,4 +1,12 @@
 #include "paths.h"
+Paths* Paths::instance_paths = nullptr;
+
+Paths* Paths::get_instance() {
+   if (instance_paths == NULL) {
+      instance_paths = new Paths();
+   }
+   return(instance_paths);
+}
 
 Paths::Paths() {
   /* PLAYABLE CHARACTER PATHS */
@@ -26,4 +34,4 @@ Paths::Paths() {
 
 Paths::~Paths() {}
 
-const char* Paths::get_path_texture(int id) { return map_paths[id].c_str(); }
+const char* Paths::get_path_texture(id_texture_t id) { return map_paths[id].c_str(); }
