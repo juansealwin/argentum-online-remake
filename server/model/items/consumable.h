@@ -1,11 +1,11 @@
 #ifndef CONSUMABLE_H
 #define CONSUMABLE_H
 #include "item.h"
-class Consumable : Item {
+class Consumable : public Item {
  public:
   Consumable(int id, unsigned int mana_regen, unsigned int hp_regen);
   virtual ~Consumable();
-  virtual void self_apply(Hero &hero);
+  virtual void use(Hero *hero) override;
   Consumable(const Consumable &) = delete;
 
   unsigned int mana_regen, hp_regen;
