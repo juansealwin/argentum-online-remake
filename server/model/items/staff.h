@@ -11,7 +11,7 @@ class Staff : public Weapon {
   virtual ~Staff();
   virtual bool can_be_used_by(Hero &hero);
   //Aca lo redefino para el caso de la vara que cura
-  virtual void self_apply(Hero &hero);
+  virtual void use(Hero &hero) override;
   Staff(const Staff &) = delete;
 
   unsigned int mana_consumption, hp_regen;

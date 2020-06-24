@@ -1,5 +1,5 @@
 #include "monster.h"
-
+#include <iostream>
 Monster::Monster(int x, int y, int id, char repr, int hp, int level, int dps,
                  Map *map)
     : BaseCharacter(x, y, id, repr, hp, level, map), dps(dps) {
@@ -33,6 +33,11 @@ void Monster::update() {
   }
 
   if (current_move >= moves.size()) current_move = 0;
+}
+
+unsigned int Monster::receive_damage(unsigned int damage, bool critical) {
+  current_hp -= damage;
+  //chequear si current_hp es menor o igual a 0 y si es asi eliminar monstruo
 }
 
 Monster::~Monster() {}

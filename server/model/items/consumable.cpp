@@ -5,7 +5,7 @@ Consumable::Consumable(int id, unsigned int mana_regen, unsigned int hp_regen)
 
 Consumable::~Consumable() {}
 
-void Consumable::self_apply(Hero &hero) {
+void Consumable::use(Hero &hero) {
   hero.current_hp += hp_regen;
   if (hero.current_hp >= hero.max_hp) hero.current_hp = hero.max_hp;
   hero.current_mana += mana_regen;

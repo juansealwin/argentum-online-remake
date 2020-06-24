@@ -11,6 +11,7 @@ class Monster : public BaseCharacter {
   Monster(const Monster &) = delete;
   void update() override;
   virtual ~Monster();
+  virtual unsigned int receive_damage(unsigned int damage, bool critical) override;
 
  private:
   int dps;

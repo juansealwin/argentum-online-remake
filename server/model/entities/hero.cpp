@@ -34,84 +34,140 @@ void Hero::update() {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   if (inventory->has_item(weapon_id)) {
     Item *w = inventory->remove_item(weapon_id);
     equipment->equip_weapon(dynamic_cast<Weapon *>(w));
   }
 }
 void Hero::equip_staff(unsigned int staff_id) {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   if (inventory->has_item(staff_id)) {
     Item *w = inventory->remove_item(staff_id);
     equipment->equip_staff(dynamic_cast<Staff *>(w));
   }
 }
 void Hero::equip_shield(unsigned int shield_id) {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   if (inventory->has_item(shield_id)) {
     Item *w = inventory->remove_item(shield_id);
     equipment->equip_shield(dynamic_cast<DefensiveItem *>(w));
   }
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   if (inventory->has_item(helmet_id)) {
     Item *w = inventory->remove_item(helmet_id);
     equipment->equip_helmet(dynamic_cast<DefensiveItem *>(w));
   }
 }
 void Hero::equip_armour(unsigned int armour_id) {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   if (inventory->has_item(armour_id)) {
     Item *w = inventory->remove_item(armour_id);
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
   }
 }
 void Hero::unequip_weapon() {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   Weapon *weapon = equipment->unequip_weapon();
   if (weapon) inventory->add_item(weapon);
 }
 void Hero::unequip_staff() {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
+  if (!alive) ModelException("Ghosts can't unequip/equip!", "6");
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
 }
 
-Item * Hero::remove_item(unsigned int item_id) {
+Item *Hero::remove_item(unsigned int item_id) {
+  if (!alive) ModelException("Ghosts can't add items to inventory!", "5");
   Item *i = inventory->remove_item(item_id);
   return i;
 }
 
 void Hero::add_item(Item *item) {
+  if (!alive) ModelException("Ghosts can't add items to inventory!", "4");
   inventory->add_item(item);
 }
 
-int Hero::damage(Hero *other) {  // deberia cambiarlo por un baseCharacter ya
-                                 // que puedo atacar a monstruos
-  int dmg = strength;            //+ sumar lo de los items
+unsigned int Hero::damage(Monster *m) {
+  if (!alive) ModelException("Ghosts can't attack!", "3");
+  if (!close_enough(m)) ModelException("Too far to attack!", "7");
+  // mover a json!
+  const float critical_damage_probability = 0.125;
+  bool critical = false;
+  // deberia cambiarlo por un baseCharacter ya
+  // que puedo atacar a monstruos
+  unsigned int dmg = calculate_damage();
+  float p = rand() / double(RAND_MAX);
+  if (p < critical_damage_probability) critical = true;
   // actualizar experiencia
-  return other->receive_damage(dmg, false);
+  return m->receive_damage(dmg, critical);
+}
+
+unsigned int Hero::damage(Hero *other) {
+  if (!alive) ModelException("Ghosts can't attack!", "3");
+  if (!close_enough(other)) ModelException("Too far to attack!", "7");
+  // mover a json!
+  const float critical_damage_probability = 0.125;
+  bool critical = false;
+  // deberia cambiarlo por un baseCharacter ya
+  // que puedo atacar a monstruos
+  unsigned int dmg = calculate_damage();
+  float p = rand() / double(RAND_MAX);
+  if (p < critical_damage_probability) critical = true;
+  // actualizar experiencia
+  return other->receive_damage(dmg, critical);
 }
 // devuelve el dano que efectivamente recibi
-int Hero::receive_damage(int damage, bool critical) {
+unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
+  if (!alive) ModelException("Can't attack ghosts!", "2");
+  // meter en json!
+  const float evasion = 0.001;
   int actual_damage = damage;
+  float p = pow(rand() / double(RAND_MAX), agility);
   if (critical)
     actual_damage *= CRITICAL_DAMAGE_MULTIPLIER;
-  else {  // esquivar si rand(0,1) ** agilidad < 0.001
-    // si no se pudo esquivar:
-    // defensa = rand(armaduramin,armaduramax) + rand(cascomin,cascomas) +
-    // rand(cascomin,cascomax)
-    int defense = 0;
-    actual_damage -= defense;
+  else if (p < evasion) {
+    actual_damage = 0;
+  } else {
+    actual_damage =
+        std::max(damage - equipment->get_defense_bonus(), (unsigned int)0);
   }  // Hacer chequeos si esta vivo etc?
+  current_hp -= actual_damage;
+  if (current_hp <= 0) alive = false;
   return actual_damage;
 }
 
-Hero::~Hero() {}
+Hero::~Hero() {
+  delete inventory;
+  delete equipment;
+}
+
+/* private methods */
+
+unsigned int Hero::calculate_damage() {
+  return strength * equipment->get_attack_bonus();
+}
+
+bool Hero::close_enough(BaseCharacter *other) {
+  unsigned int distance =
+      floor(sqrt(pow(x_position - other->x_position, 2) +
+                 pow(y_position - other->y_position, 2) * 1.0));
+  return ((equipment->range() - distance) >= 0);
+}

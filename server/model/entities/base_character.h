@@ -1,8 +1,9 @@
+
+#ifndef BASE_CHARACTER_H
+#define BASE_CHARACTER_H
 #include "entity.h"
 #include "stdint.h"
 #include "map.h"
-#ifndef BASE_CHARACTER_H
-#define BASE_CHARACTER_H
 class Map;
 class BaseCharacter : public Entity {
  public:
@@ -13,7 +14,7 @@ class BaseCharacter : public Entity {
   BaseCharacter(int x, int y, int type, char repr, int level, Map* map);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
-
+  virtual unsigned int receive_damage(unsigned int damage, bool critical) = 0;
   int current_hp;
   int max_hp;
 

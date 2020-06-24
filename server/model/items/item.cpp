@@ -8,4 +8,4 @@ bool Item::can_be_used_by(Hero &hero) {
   return true;
 }
 
-void Item::self_apply(Hero &hero) {}
+void Item::use(Hero &hero) {}

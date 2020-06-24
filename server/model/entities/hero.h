@@ -2,11 +2,13 @@
 #ifndef HERO_H
 #define HERO_H
 
+#include <cmath>
+
 #include "base_character.h"
 #include "equipment.h"
 #include "inventory.h"
+#include "monster.h"
 #include "stdint.h"
-
 // meter en el json!
 #define CRITICAL_DAMAGE_MULTIPLIER 2
 #define INVENTORY_SIZE 20
@@ -21,9 +23,10 @@ class Hero : public BaseCharacter {
        int f_class_meditation, int gold, int class_id, Map *map);
   // devuelve el dano causado
   void update() override;
-  int damage(Hero *other);
+  unsigned int damage(Hero *other);
+  unsigned int damage(Monster *m);
   // devuelve el dano que efectivamente recibi
-  int receive_damage(int damage, bool critical);
+  virtual unsigned int receive_damage(unsigned int damage, bool critical) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
   void equip_weapon(unsigned int weapon_id);
@@ -60,7 +63,10 @@ class Hero : public BaseCharacter {
   int f_class_meditation;
   int gold;
   int class_id;
+  int alive = true;
   Equipment *equipment;
   Inventory *inventory;
+  unsigned int calculate_damage();
+  bool close_enough(BaseCharacter *other);
 };
 #endif  // HERO_H
