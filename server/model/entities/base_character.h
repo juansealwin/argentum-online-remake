@@ -14,6 +14,7 @@ class BaseCharacter : public Entity {
   BaseCharacter(int x, int y, int type, char repr, int level, Map* map);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
+  virtual unsigned int damage(BaseCharacter *other) = 0;
   virtual unsigned int receive_damage(unsigned int damage, bool critical) = 0;
   int current_hp;
   int max_hp;

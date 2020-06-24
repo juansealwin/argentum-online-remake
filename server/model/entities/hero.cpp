@@ -105,38 +105,20 @@ void Hero::add_item(Item *item) {
   inventory->add_item(item);
 }
 
-unsigned int Hero::damage(Monster *m) {
+unsigned int Hero::damage(BaseCharacter *b) {
   if (!alive) ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(m)) ModelException("Too far to attack!", "7");
+  if (!close_enough(b)) ModelException("Too far to attack!", "7");
   if (!equipment->can_use_primary_weapon(this)) ModelException("Cant use primary weapon! (not enough mana?)", "8");
   // mover a json!
   const float critical_damage_probability = 0.125;
   bool critical = false;
-  // deberia cambiarlo por un baseCharacter ya
-  // que puedo atacar a monstruos
   unsigned int dmg = calculate_damage();
   float p = rand() / double(RAND_MAX);
   if (p < critical_damage_probability) critical = true;
   // actualizar experiencia
-  return m->receive_damage(dmg, critical);
+  return b->receive_damage(dmg, critical);
 }
 
-unsigned int Hero::damage(Hero *other) {
-  if (!alive) ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(other)) ModelException("Too far to attack!", "7");
-  if (!equipment->can_use_primary_weapon(this)) ModelException("Cant use primary weapon! (not enough mana?)", "8");
-  // mover a json!
-  const float critical_damage_probability = 0.125;
-  bool critical = false;
-  // deberia cambiarlo por un baseCharacter ya
-  // que puedo atacar a monstruos
-  unsigned int dmg = calculate_damage();
-  float p = rand() / double(RAND_MAX);
-  if (p < critical_damage_probability) critical = true;
-  // actualizar experiencia
-  return other->receive_damage(dmg, critical);
-}
-// devuelve el dano que efectivamente recibi
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
   if (!alive) ModelException("Can't attack ghosts!", "2");
   // meter en json!

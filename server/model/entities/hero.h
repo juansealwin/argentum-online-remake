@@ -23,8 +23,9 @@ class Hero : public BaseCharacter {
        int f_class_meditation, int gold, int class_id, Map *map);
   // devuelve el dano causado
   void update() override;
-  unsigned int damage(Hero *other);
-  unsigned int damage(Monster *m);
+  virtual unsigned int damage(BaseCharacter *other) override;
+  // unsigned int damage(Hero *other);
+  // unsigned int damage(Monster *m);
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en

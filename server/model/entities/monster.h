@@ -12,6 +12,7 @@ class Monster : public BaseCharacter {
   void update() override;
   virtual ~Monster();
   virtual unsigned int receive_damage(unsigned int damage, bool critical) override;
+  virtual unsigned int damage(BaseCharacter *other) override;
 
  private:
   int dps;

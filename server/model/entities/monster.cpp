@@ -35,6 +35,10 @@ void Monster::update() {
   if (current_move >= moves.size()) current_move = 0;
 }
 
+unsigned int Monster::damage(BaseCharacter *other) {
+  other->receive_damage(dps, false);
+}
+
 unsigned int Monster::receive_damage(unsigned int damage, bool critical) {
   current_hp -= damage;
   //chequear si current_hp es menor o igual a 0 y si es asi eliminar monstruo
