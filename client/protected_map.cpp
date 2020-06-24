@@ -1,8 +1,14 @@
 #include "protected_map.h"
 
-ProtectedMap::ProtectedMap() : read_map(nullptr), write_map(nullptr) {}
+ProtectedMap::ProtectedMap(int id_player, id_texture_t text_map, int screen_width, int screen_height) {
+  read_map = new Game(id_player, text_map, screen_width, screen_height);
+  write_map = new Game(id_player, text_map, screen_width, screen_height);
+}
 
-ProtectedMap::~ProtectedMap() {}
+ProtectedMap::~ProtectedMap() {
+  read_map->~Game();
+  write_map->~Game();
+}
 
 Game ProtectedMap::map_reader() {
   std::unique_lock<std::mutex> lock(block_maps);

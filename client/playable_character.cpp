@@ -45,11 +45,7 @@ PlayableCharacter& PlayableCharacter::operator=(
   animation_move = other_pc.animation_move;
 }
 
-PlayableCharacter::~PlayableCharacter() {
-  renderer = nullptr;
-  // body_texture.free();
-  // shead_texture.free();
-}
+PlayableCharacter::~PlayableCharacter() {}
 
 // A los jugables hay que actualizarles el perfil
 void PlayableCharacter::move(move_t move_type) {

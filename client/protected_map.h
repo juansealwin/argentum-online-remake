@@ -5,6 +5,7 @@
 #include <mutex>
 #include "game.h"
 #include "character_status.h"
+#include "types.h"
 
 class ProtectedMap {
  private:
@@ -15,7 +16,7 @@ class ProtectedMap {
   std::condition_variable cv;
 
  public:
-  ProtectedMap();
+  ProtectedMap(int, id_texture_t, int, int);
   ~ProtectedMap();
   Game map_reader();
   void map_writer(std::map<int, CharacterStatus>&);

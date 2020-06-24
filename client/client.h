@@ -12,6 +12,7 @@
 #include "game.h"
 #include "game_renderer.h"
 #include "game_updater.h"
+#include "event_handler.h"
 #include "protocol.h"
 #include "texture.h"
 #define FRAME_DELAY 5000 / 60

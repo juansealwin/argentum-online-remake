@@ -7,7 +7,6 @@
 #include "character.h"
 #include "commands_blocking_queue.h"
 #include "exception_messages.h"
-#include "map.h"
 #include "move_command_dto.h"
 #include "npc.h"
 #include "playable_character.h"
@@ -24,7 +23,7 @@ class EventHandler {
   EventHandler(const int player_id, CommandsBlockingQueue& commands_queue);
   ~EventHandler();
   bool is_up();
-  void event_handler();
+  void get_events();
 };
 
 #endif

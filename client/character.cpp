@@ -1,6 +1,6 @@
 #include "character.h"
 
-Character::~Character() { renderer = nullptr; }
+Character::~Character() {}
 
 void Character::move(move_t move_type) {
   body_rect = animation_move.get_next_clip(move_type);

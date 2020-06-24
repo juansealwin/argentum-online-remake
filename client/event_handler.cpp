@@ -5,7 +5,7 @@ EventHandler::~EventHandler() {}
 EventHandler::EventHandler(const int player_id, CommandsBlockingQueue& commands_queue)
     : player_id(player_id), commands_queue(commands_queue) {}
 
-void EventHandler::event_handler() {
+void EventHandler::get_events() {
   try {
     SDL_Event event;
     while (is_running) {
@@ -49,21 +49,3 @@ void EventHandler::event_handler() {
 
 bool EventHandler::is_up() { return is_running; }
 
-/*
-void EventHandler::update() {}
-
-void EventHandler::render() {
-  SDL_RenderClear(renderer);
-  current_map->render();
-  player->renderAsHero();
-  SDL_RenderPresent(renderer);
-}
-
-void EventHandler::newPlayer(PlayableCharacter* new_player) { player = new_player; }
-
-
-
-SDL_Renderer* EventHandler::getRenderer() { return renderer; }
-
-Texture* EventHandler::getTexture(int index) { return textures.at(index); }
-*/

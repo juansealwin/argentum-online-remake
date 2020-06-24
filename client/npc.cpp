@@ -29,4 +29,4 @@ Npc& Npc::operator=(const Npc& other_npc) {
   animation_move = other_npc.animation_move;
 }
 
-Npc::~Npc() { renderer = nullptr; }
+Npc::~Npc() {}
