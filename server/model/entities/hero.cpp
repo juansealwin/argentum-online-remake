@@ -180,6 +180,8 @@ void Hero::consume(unsigned int item_id) {
   delete consumable;
 }
 
+void Hero::revive() { ghost_mode = false; }
+
 Hero::~Hero() {
   delete inventory;
   delete equipment;
