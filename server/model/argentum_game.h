@@ -21,9 +21,9 @@
 #include "priest.h"
 #include "game_status_notification.h"
 #include "serializer.h"
-#define PRIEST 32
-#define MERCHANT 33
-#define BANKER 34
+#define PRIEST 33
+#define MERCHANT 34
+#define BANKER 35
 #define GOBLIN 29
 #define ZOMBIE 32
 #define SPIDER 30
