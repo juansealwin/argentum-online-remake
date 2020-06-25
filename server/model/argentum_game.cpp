@@ -233,23 +233,23 @@ unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
-  std::vector<unsigned char> status;
-  uint16_t notification_id = 01;
-  status.push_back(notification_id);
-  for (auto &entity : entities) {
-    status.push_back(entity.second->type);
-    status.push_back(entity.second->x_position);
-    status.push_back(entity.second->y_position);
-  }
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->push(new GameStatusNotification(status));
-  }
-  // std::cout << "vector size is " << status.size() << std::endl;
-  // for (int i = 0; i < status.size(); i++) {
-  //   std::cout << "Vector at pos " << i << ": " << (int)status[i] <<
-  //   std::endl;
+  std::vector<unsigned char> game_status = Serializer::serialize_game_status(this);
+  // uint8_t notification_id = 1;
+  // status.push_back(notification_id);
+  // for (auto &entity : entities) {
+  //   uint16_t id = htons(entity.first);
+  //   uint8_t type = htons(entity.second->type);
+  //   uint8_t x = htons(entity.second->x_position);
+  //   uint8_t y = htons(entity.second->y_position);
+  //   status.push_back(type);
+  //   status.push_back(x);
+  //   status.push_back(y);
   // }
-  return status;
+  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+    q->push(new GameStatusNotification(game_status));
+  }
+
+  return game_status;
 }
 
 void ArgentumGame::add_notification_queue(

@@ -20,13 +20,14 @@
 #include "merchant.h"
 #include "priest.h"
 #include "game_status_notification.h"
-#define PRIEST 1334
-#define MERCHANT 1320
-#define BANKER 1352
-#define GOBLIN 1677
-#define ZOMBIE 1288
-#define SPIDER 1712
-#define SKELETON 1750
+#include "serializer.h"
+#define PRIEST 32
+#define MERCHANT 33
+#define BANKER 34
+#define GOBLIN 29
+#define ZOMBIE 32
+#define SPIDER 30
+#define SKELETON 31
 
 class ArgentumGame : public Thread {
  public:
@@ -44,7 +45,7 @@ class ArgentumGame : public Thread {
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
   //remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
-
+  friend class Serializer;
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
