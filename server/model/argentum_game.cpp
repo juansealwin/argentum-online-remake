@@ -164,6 +164,7 @@ void ArgentumGame::run() {
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
   const unsigned int game_updates_after = 850;  // A TUNEAR
+  const unsigned int send_games_updates_ms = 100; // A TUNEAR
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -188,10 +189,13 @@ void ArgentumGame::run() {
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      game_status();
       // commands_queue->push(new MoveCommand(14, 0, 0));
       // MoveCommand cmd(14, 0, 0);
       // cmd.execute(this);
+    }
+    if (total_time_elapsed >= send_games_updates_ms) {
+      game_status();
+
     }
     // std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
@@ -234,17 +238,6 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status = Serializer::serialize_game_status(this);
-  // uint8_t notification_id = 1;
-  // status.push_back(notification_id);
-  // for (auto &entity : entities) {
-  //   uint16_t id = htons(entity.first);
-  //   uint8_t type = htons(entity.second->type);
-  //   uint8_t x = htons(entity.second->x_position);
-  //   uint8_t y = htons(entity.second->y_position);
-  //   status.push_back(type);
-  //   status.push_back(x);
-  //   status.push_back(y);
-  // }
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }

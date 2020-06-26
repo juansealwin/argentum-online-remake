@@ -9,6 +9,9 @@ T extract(const std::vector<unsigned char> &v, int pos)
 }
 
 std::vector<unsigned char> Serializer::serialize_game_status(ArgentumGame *game) {
+
+  //serializacion actual:
+  //<uint8_t>(notification id),<uint16_t>(id unico por entidad), <uint8_t>(id del tipo de entidad), <uint8_t>(pos x), <uint8_t>(pos y), ....
   std::vector<unsigned char> serialization;
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
@@ -24,6 +27,12 @@ std::vector<unsigned char> Serializer::serialize_game_status(ArgentumGame *game)
     serialization.push_back(x);
     serialization.push_back(y);
   }
+  
+  //debug_deserialize(serialization);
+  return serialization;
+}
+
+void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
   std::cout << "vector size is " << serialization.size() << std::endl;
   // uint16_t id = ntohs(extract<uint16_t>(serialization, 21)); 
   // int entity_type = (int)serialization.at(23);
@@ -53,5 +62,4 @@ std::vector<unsigned char> Serializer::serialize_game_status(ArgentumGame *game)
   //   std::cout << "Vector at pos " << i << ": " << (int)serialization[i] <<
   //   std::endl;
   // }
-  return serialization;
 }
