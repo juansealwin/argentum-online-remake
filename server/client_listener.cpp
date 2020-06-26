@@ -66,6 +66,7 @@ void ClientListener::run() {
     clients.push_back(client);
     // client->start();
     garbage_collector();
+    delete login_command;
   }
 }
 

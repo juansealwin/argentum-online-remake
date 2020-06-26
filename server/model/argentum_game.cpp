@@ -164,6 +164,7 @@ void ArgentumGame::run() {
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
   const unsigned int game_updates_after = 850;  // A TUNEAR
+  const unsigned int send_games_updates_ms = 100; // A TUNEAR
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -188,10 +189,13 @@ void ArgentumGame::run() {
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      game_status();
       // commands_queue->push(new MoveCommand(14, 0, 0));
       // MoveCommand cmd(14, 0, 0);
       // cmd.execute(this);
+    }
+    if (total_time_elapsed >= send_games_updates_ms) {
+      game_status();
+
     }
     // std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
@@ -233,23 +237,12 @@ unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
-  std::vector<unsigned char> status;
-  uint16_t notification_id = 01;
-  status.push_back(notification_id);
-  for (auto &entity : entities) {
-    status.push_back(entity.second->type);
-    status.push_back(entity.second->x_position);
-    status.push_back(entity.second->y_position);
-  }
+  std::vector<unsigned char> game_status = Serializer::serialize_game_status(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->push(new GameStatusNotification(status));
+    q->push(new GameStatusNotification(game_status));
   }
-  // std::cout << "vector size is " << status.size() << std::endl;
-  // for (int i = 0; i < status.size(); i++) {
-  //   std::cout << "Vector at pos " << i << ": " << (int)status[i] <<
-  //   std::endl;
-  // }
-  return status;
+
+  return game_status;
 }
 
 void ArgentumGame::add_notification_queue(
