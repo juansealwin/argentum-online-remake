@@ -1,7 +1,6 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(character_t id_char,
-                                     int new_x, int new_y)
+PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
   x = new_x;
   y = new_y;
@@ -68,9 +67,17 @@ void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
 }
 
 void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
-  texture_manager->get_texture(type_character)
-      .render(renderer, &body_rect, x - width / 2 - x_rel,
-              y - height / 2 - y_rel);
+  // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
+  if (armor.equiped()) {
+    texture_manager->get_texture(armor.get_texture(type_character))
+        .render(renderer, &body_rect, x - width / 2 - x_rel,
+                y - height / 2 - y_rel);
+  } else {
+    texture_manager->get_texture(type_character)
+        .render(renderer, &body_rect, x - width / 2 - x_rel,
+                y - height / 2 - y_rel);
+  }
+  //Renderizamos cabeza
   texture_manager->get_texture(type_head).render(
       renderer, &head_rect, x - head_rect.w / 2 - x_rel,
       y - height / 2 - head_rect.h / 2 - y_rel);

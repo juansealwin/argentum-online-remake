@@ -2,6 +2,7 @@
 #define PLAYABLE_CHARACTER_H
 
 #include "character.h"
+#include "item.h"
 
 class PlayableCharacter : public Character {
  protected:
@@ -9,6 +10,10 @@ class PlayableCharacter : public Character {
   SDL_Rect head_rect;
   int half_screen_w;
   int half_screen_h;
+  Item helmet;
+  Item armor;
+  Item shield;
+  Item weapon;
 
  public:
   PlayableCharacter(character_t, int, int);
