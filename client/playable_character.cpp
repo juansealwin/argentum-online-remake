@@ -7,7 +7,7 @@ PlayableCharacter::PlayableCharacter(character_t id_char,
   y = new_y;
   set_character_dimensions(id_char);
   set_head_dimensions(id_char);
-  animation_move = Move(width, height, type_character);
+  animation_move = Animation(width, height, type_character);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {

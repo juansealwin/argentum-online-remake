@@ -1,5 +1,5 @@
-#ifndef MOVE_H
-#define MOVE_H
+#ifndef ANIMATION_H
+#define ANIMATION_H
 
 #include <map>
 #include <vector>
@@ -12,7 +12,7 @@
 #define CLIP_RIGHT 'R'
 #define TILE_SIZE 32
 
-class Move {
+class Animation {
  private:
   int character_width;
   int character_height;
@@ -22,17 +22,17 @@ class Move {
   int clips_left_right;
 
  public:
-  Move();
-  Move(int, int, int);
-  Move(const Move&);
-  ~Move();
+  Animation();
+  Animation(int, int, id_texture_t);
+  Animation(const Animation&);
+  ~Animation();
   void set_offset_y(int);
   SDL_Rect get_next_clip(move_t);
   SDL_Rect next_clip_move_up();
   SDL_Rect next_clip_move_down();
   SDL_Rect next_clip_move_left();
   SDL_Rect next_clip_move_right();
-  int set_total_clips(int);
+  int set_total_clips(id_texture_t);
 };
 
 #endif
