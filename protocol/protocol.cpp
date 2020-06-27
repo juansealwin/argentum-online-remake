@@ -8,8 +8,11 @@
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
-
+#include <vector>
+#include "../server/notifications/notification.h"
 #define ID_LENGTH 2
+
+/********************** COMANDOS ***********************************/
 
 LoginCommandDTO* receive_login(const Socket& socket) {
   uint16_t room_number;
@@ -89,6 +92,7 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->getId()) {
     case LOGIN_COMMAND:
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
+      std::cout << "sent command!" << std::endl;
       break;
     case QUIT_COMMAND:
       send_quit(socket, static_cast<QuitCommandDTO*>(commandDTO));
@@ -99,4 +103,50 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     default:
       break;
   }
+
+}
+
+/********************** NOTIFICACIONES ***********************************/
+
+
+void Protocol::send_notification(const Socket& socket, Notification* n) {
+  std::vector<unsigned char> serialization = n->vector;
+  uint16_t size = htons(serialization.size());
+  socket.send(&size, 2);
+  socket.send(serialization.data(), serialization.size());
+}
+
+
+//para mostrar lo que se recibe, descomentar este template y todo lo comentado en receive_notifation
+
+// template <typename T>
+// T extract(const std::vector<unsigned char> &v, int pos)
+// {
+//   T value;
+//   memcpy(&value, &v[pos], sizeof(T));
+//   return value;
+// }
+
+
+//Definir que devuelve la clase (Puede moverse la notificacion que tengo en el server a protocol/common y usar eso)
+void Protocol::receive_notification(const Socket& socket) {
+  
+  uint16_t notification_size = 0;
+  socket.recv(&notification_size, 2);
+  notification_size = ntohs(notification_size);
+  unsigned char buffer[notification_size];
+  socket.recv(buffer, notification_size);
+  std::vector<unsigned char> vector = std::vector<unsigned char>(buffer, buffer + notification_size);
+  // int j = 1;
+  // while (j < vector.size()) {
+  //   uint16_t id = ntohs(extract<uint16_t>(vector, j));
+  //   j += 2;
+  //   int entity_type = (int)vector.at(j);
+  //   j++;
+  //   int x = (int)vector.at(j);
+  //   j++;
+  //   int y = (int)vector.at(j);
+  //   std::cout << "Entity id: " << id << ", type: " << entity_type << ", x_pos: " << x << ", y_pos: " << y << std::endl;
+  //   j++;
+  // }
 }

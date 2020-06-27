@@ -20,6 +20,7 @@ void BaseCharacter::move(int next_x, int next_y) {
     map->empty_cell(x_position, y_position);
     x_position = next_x;
     y_position = next_y;
+
   }
 }
 
