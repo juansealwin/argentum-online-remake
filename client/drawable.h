@@ -3,6 +3,9 @@
 
 #include <SDL2/SDL.h>
 
+#include "texture_manager.h"
+#include "types.h"
+
 class Drawable {
  protected:
   // En que lugar de la imagen nos ubicamos

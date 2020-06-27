@@ -2,6 +2,7 @@
 #define PLAYABLE_CHARACTER_H
 
 #include "character.h"
+#include "item.h"
 
 class PlayableCharacter : public Character {
  protected:
@@ -9,6 +10,10 @@ class PlayableCharacter : public Character {
   SDL_Rect head_rect;
   int half_screen_w;
   int half_screen_h;
+  id_texture_t helmet;
+  id_texture_t armor;
+  id_texture_t shield;
+  id_texture_t weapon;
 
  public:
   PlayableCharacter(character_t, int, int);
@@ -16,12 +21,14 @@ class PlayableCharacter : public Character {
   PlayableCharacter& operator=(const PlayableCharacter&);
   ~PlayableCharacter();
   virtual void move(move_t) override;
-  virtual void update_face_profile(move_t);
   virtual void render(SDL_Renderer*, int, int) override;
-  virtual void render_as_hero(SDL_Renderer*);
-  virtual int set_head_dimensions(character_t);
-  virtual int get_head_w() const;
-  virtual int get_head_h() const;
+  void update_face_profile(move_t);
+  void render_as_hero(SDL_Renderer*);
+  void equip_item(item_t, id_texture_t);
+  void unequip_item(item_t);
+  int set_head_dimensions(character_t);
+  int get_head_w() const;
+  int get_head_h() const;
 };
 
 #endif
