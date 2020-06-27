@@ -4,7 +4,7 @@ Npc::Npc(character_t id_npc, int new_x, int new_y) {
   x = new_x;
   y = new_y;
   set_character_dimensions(id_npc);
-  animation_move = Move(width, height, type_character);
+  animation_move = Animation(width, height, type_character);
 }
 
 Npc::Npc(const Npc& other_npc) {
