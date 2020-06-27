@@ -20,12 +20,13 @@ void Item::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
       renderer, NULL, x - width / 2 - x_rel, y - height / 2 - y_rel);
 }
 
+// Posiblemente no haga falta
 // Debe recibir del pj el body_rect.x y el body_rect.y + height/2
-void Item::render_weapon_equipped(SDL_Renderer* renderer, int x_player,
+/*void Item::render_weapon_equipped(SDL_Renderer* renderer, int x_player,
                                   int y_player) {
   texture_manager->get_texture(item_equipped)
       .render(renderer, &frame_equipped, x_player, y_player);
-}
+}*/
 
 void Item::get_next_frame(move_t move_type) {
   frame_equipped = animation_equipped.get_next_clip(move_type);
@@ -126,8 +127,9 @@ void Item::set_item_dimensions(id_texture_t id) {
   }
 }
 
-bool Item::equiped() { return is_equipped; }
+//bool Item::equiped() { return is_equipped; }
 
+/*
 id_texture_t Item::get_texture(id_texture_t type_character) {
   if ((type_character == ID_GNOME || type_character == ID_DWARF) && size_xs) {
     return item_equipped_xs;
@@ -136,3 +138,4 @@ id_texture_t Item::get_texture(id_texture_t type_character) {
     return item_equipped;
   }
 }
+*/

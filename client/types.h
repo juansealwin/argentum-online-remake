@@ -2,7 +2,8 @@
 #define TYPES_H
 
 typedef enum {
-  ID_HUMAN = 0,
+  ID_NULL = 0,
+  ID_HUMAN,
   ID_HUMAN_HEAD,
   ID_ELF,
   ID_ELF_HEAD,
@@ -74,5 +75,12 @@ typedef enum {
   MOVE_LEFT = 2,
   MOVE_RIGHT = 1
 } move_t;
+
+typedef enum {
+  HELMET,
+  ARMOR,
+  WEAPON,
+  SHIELD
+}item_t;
 
 #endif
