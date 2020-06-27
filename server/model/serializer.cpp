@@ -1,5 +1,6 @@
 #include "serializer.h"
-
+#include "defensive_item.h"
+#include "staff.h"
 template <typename T>
 // debe llamarse a este metodo si se necesita extraer del vector elementos de
 // mas de 1 byte
@@ -85,6 +86,7 @@ void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
 
 void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
                                 Hero *h) {
+  /************** serializacion del estado del heroe ***************/
   uint16_t max_hp = htons(h->max_hp);
   uint16_t current_hp = htons(h->current_hp);
   uint16_t level = htons(h->level);
@@ -117,6 +119,36 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   insert(serialization, current_xp);
   serialization.push_back(meditating);
   serialization.push_back(ghost_mode);
+  /*********** serializacion del equipamiento **********/
+  uint8_t items_equiped = h->equipment->count();
+  serialization.push_back(items_equiped);
+  if (items_equiped > 0) {
+    if (h->equipment->helmet != nullptr) {
+      serialization.push_back(0); //slot de casco
+      uint8_t helmet_id = h->equipment->helmet->id;
+      serialization.push_back(helmet_id);
+    }
+    if (h->equipment->armour != nullptr) {
+      serialization.push_back(1); //slot de armadura
+      uint8_t armour_id = h->equipment->armour->id;
+      serialization.push_back(armour_id);
+    }
+    if (h->equipment->shield != nullptr) {
+      serialization.push_back(2); //slot de escudo
+      uint8_t shield_id = h->equipment->shield->id;
+      serialization.push_back(shield_id);
+    }
+    if (h->equipment->staff != nullptr) {
+      serialization.push_back(3); //slot de vara
+      uint8_t staff_id = h->equipment->staff->id;
+      serialization.push_back(staff_id);
+    }
+    if (h->equipment->weapon != nullptr) {
+      serialization.push_back(4); //slot de arma
+      uint8_t weapon_id = h->equipment->weapon->id;
+      serialization.push_back(weapon_id);
+    }
+  }
 }
 
 void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
@@ -173,13 +205,26 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       j += 2;
       uint16_t current_xp = ntohs(extract<uint16_t>(serialization, j));
       j += 2;
-      uint8_t meditating = (int)serialization.at(j);
+      int meditating = (int)serialization.at(j);
       j++;
-      uint8_t ghost_mode = (int)serialization.at(j);
+      int ghost_mode = (int)serialization.at(j);
+      j++;
+      int items_equiped = (int)serialization.at(j);
       j++;
       std::cout << "@@@Hero stats@@@" << std::endl
                 << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
-                << gold << " ghost mode " << ghost_mode << std::endl;
+                << gold << " ghost mode " << ghost_mode << " items equiped "
+                << items_equiped << std::endl;
+      if (items_equiped > 0) { 
+        std::cout << "@@Deserializing items equiped@@" << std::endl;
+        for (int x = items_equiped; x > 0; x--) {
+          int current_item_slot = (int)serialization.at(j);
+          j++;
+          int current_item_id = (int)serialization.at(j);
+          j++;
+          std::cout << "equiped " << current_item_id << " at " << current_item_slot << std::endl;
+        }
+      }
     }
   }
 }

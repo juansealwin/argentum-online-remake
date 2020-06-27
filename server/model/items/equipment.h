@@ -1,5 +1,6 @@
 #ifndef EQUIPMENT_H
 #define EQUIPMENT_H
+#include <cstdint>
 class Weapon;
 class DefensiveItem;
 class Staff;
@@ -30,6 +31,8 @@ class Equipment {
   DefensiveItem *unequip_armour();
   unsigned int get_attack_bonus();
   unsigned int get_defense_bonus();
+  //devuelve cantidad de items equipados
+  uint8_t count();
   Weapon *weapon = nullptr;
   Staff *staff = nullptr;
   DefensiveItem *helmet = nullptr;

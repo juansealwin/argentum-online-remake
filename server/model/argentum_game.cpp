@@ -1,5 +1,5 @@
 #include "argentum_game.h"
-
+#include "defensive_item.h"
 #include <iostream>
 
 ArgentumGame::ArgentumGame(const unsigned int room_number,
@@ -115,6 +115,10 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
       class_stats["id"].asUInt(), map, hero_name);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(2, 8, 10));
+  hero->equip_armour(6);
+  hero->equip_helmet(2);
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;
