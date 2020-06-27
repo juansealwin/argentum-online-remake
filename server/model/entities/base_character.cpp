@@ -24,13 +24,18 @@ void BaseCharacter::move(int next_x, int next_y) {
   }
 }
 
-void BaseCharacter::change_orientation(int old_x, int old_y, int new_x, int new_y) {
+void BaseCharacter::change_orientation(int old_x, int old_y, int new_x,
+                                       int new_y) {
   int x_diff = old_x - new_x;
   int y_diff = old_y - new_y;
-  if (x_diff > 0) orientation = 2; //se movio hacia abajo
-  else if (x_diff < 0) orientation = 0; //hacia arriba
-  else if (y_diff > 0) orientation = 1; //derecha
-  else if (y_diff < 0) orientation = 3;
+  if (x_diff > 0)
+    orientation = 2;  // se movio hacia abajo
+  else if (x_diff < 0)
+    orientation = 0;  // hacia arriba
+  else if (y_diff > 0)
+    orientation = 1;  // derecha
+  else if (y_diff < 0)
+    orientation = 3;
 }
 
 BaseCharacter::~BaseCharacter() {}

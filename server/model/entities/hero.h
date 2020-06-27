@@ -23,7 +23,7 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map *map);
+       unsigned int class_id, Map *map, std::string name);
   // devuelve el dano causado
   void update() override;
   virtual unsigned int damage(BaseCharacter *other) override;
@@ -55,8 +55,8 @@ class Hero : public BaseCharacter {
   virtual ~Hero();
   Hero(const Hero &) = delete;
   virtual bool is_death() override;
-  //consume un item (Deberia ser llamado solo para pociones)
-  //para el caso del staff que cura podria hacerse algo parecido
+  // consume un item (Deberia ser llamado solo para pociones)
+  // para el caso del staff que cura podria hacerse algo parecido
   void consume(unsigned int item_id);
   void revive();
   friend class Staff;
@@ -80,6 +80,7 @@ class Hero : public BaseCharacter {
   unsigned int experience;
   bool meditating;
   bool ghost_mode;
+  std::string name;
   // calculados
   unsigned int next_level_xp_limit;
   unsigned int max_safe_gold;
