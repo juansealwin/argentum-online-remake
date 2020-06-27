@@ -13,12 +13,13 @@ class Serializer {
 
  private:
   //  //deben coincidir con los config del json
-  // static bool is_hero(uint8_t t);
+  static bool is_hero(uint8_t t);
   // static bool is_npc(uint8_t t);
   static bool is_monster(uint8_t t);
   static bool vector_contains(std::vector<uint8_t> v, uint8_t x);
   // //serializan atributos y los inserta al final del vector
   static void serialize_monster(std::vector<unsigned char> &serialization, Monster *m);
+  static void serialize_hero(std::vector<unsigned char> &serialization, Hero *m);
 
 };
 

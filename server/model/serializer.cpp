@@ -63,7 +63,9 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
     if (dynamic_cast<Monster *>(entity.second) != nullptr) {
       serialize_monster(serialization, dynamic_cast<Monster *>(entity.second));
     } else if (dynamic_cast<Hero *>(entity.second) != nullptr) {
+      serialize_hero(serialization, dynamic_cast<Hero *>(entity.second));
     } else {
+      // es un NPC o algun error hubo.
     }
   }
 
@@ -81,19 +83,44 @@ void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
   insert(serialization, level);
 }
 
+void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
+                                Hero *h) {
+  uint16_t max_hp = htons(h->max_hp);
+  uint16_t current_hp = htons(h->current_hp);
+  uint16_t level = htons(h->level);
+  // aca meter el nombre
+  uint8_t class_id = h->class_id;
+  uint16_t mana_max = htons(h->max_mana);
+  uint16_t curr_mana = htons(h->current_mana);
+  uint16_t str = htons(h->strength);
+  uint16_t intelligence = htons(h->intelligence);
+  uint16_t agility = htons(h->agility);
+  uint16_t constitution = htons(h->constitution);
+  uint16_t gold = htons(h->gold);
+  uint16_t xp_limit = htons(h->next_level_xp_limit);
+  uint16_t current_xp = htons(h->experience);
+  uint8_t meditating = (int)h->meditating;
+  uint8_t ghost_mode = (int)h->ghost_mode;
+
+  insert(serialization, max_hp);
+  insert(serialization, current_hp);
+  insert(serialization, level);
+  serialization.push_back(class_id);
+  insert(serialization, mana_max);
+  insert(serialization, curr_mana);
+  insert(serialization, str);
+  insert(serialization, intelligence);
+  insert(serialization, agility);
+  insert(serialization, constitution);
+  insert(serialization, gold);
+  insert(serialization, xp_limit);
+  insert(serialization, current_xp);
+  serialization.push_back(meditating);
+  serialization.push_back(ghost_mode);
+}
+
 void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
   std::cout << "vector size is " << serialization.size() << std::endl;
-  // uint16_t id = ntohs(extract<uint16_t>(serialization, 21));
-  // int entity_type = (int)serialization.at(23);
-  // int x = (int)serialization.at(24);
-  // int y = (int)serialization.at(25);
-  // std::cout << "Entity id: " << id << ", type: " << entity_type << ", x_pos:
-  // " << x << ", y_pos: " << y << std::endl;
-
-  // for (int i = 1; i < serialization.size(); i++) {
-  //   std::cout << "Vector at pos " << i << ": " << (int)serialization[i] <<
-  //   std::endl;
-  // }
   int j = 1;
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
@@ -118,6 +145,41 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       j += 2;
       std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
                 << "current_hp" << current_hp << std::endl;
+    } else if (is_hero(entity_type)) {
+      uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t level = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      // aca meter el nombre
+      uint8_t class_id = (int)serialization.at(j);
+      j++;
+      uint16_t mana_max = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t curr_mana = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t str = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t intelligence = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t agility = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t constitution = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t gold = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t xp_limit = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint16_t current_xp = ntohs(extract<uint16_t>(serialization, j));
+      j += 2;
+      uint8_t meditating = (int)serialization.at(j);
+      j++;
+      uint8_t ghost_mode = (int)serialization.at(j);
+      j++;
+      std::cout << "@@@Hero stats@@@" << std::endl
+                << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
+                << gold << " ghost mode " << ghost_mode << std::endl;
     }
   }
 }
@@ -134,10 +196,10 @@ bool Serializer::vector_contains(std::vector<uint8_t> v, uint8_t x) {
 //   return vector_contains(npcs, t);
 // }
 
-// bool Serializer::is_hero(uint8_t t) {
-//   const std::vector<uint8_t> heroes = {25, 26, 27, 28};
-//   return vector_contains(heroes, t);
-// }
+bool Serializer::is_hero(uint8_t t) {
+  const std::vector<uint8_t> heroes = {25, 26, 27, 28};
+  return vector_contains(heroes, t);
+}
 
 bool Serializer::is_monster(uint8_t t) {
   const std::vector<uint8_t> monsters = {29, 30, 31, 32};

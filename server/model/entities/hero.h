@@ -60,6 +60,7 @@ class Hero : public BaseCharacter {
   void consume(unsigned int item_id);
   void revive();
   friend class Staff;
+  friend class Serializer;
   unsigned int current_mana;
   unsigned int max_mana;
 
