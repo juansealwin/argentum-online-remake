@@ -13,7 +13,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
-  std::cout << "New game in map " << map_name << std::endl;
+  std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 }
@@ -210,6 +210,7 @@ void ArgentumGame::print_debug_map() {
 }
 
 ArgentumGame::~ArgentumGame() {
+  std::unique_lock<std::mutex> lock(mutex);
   for (auto &entity : entities) {
     delete entity.second;
   }
@@ -230,7 +231,6 @@ ArgentumGame::~ArgentumGame() {
     }
     delete q;
   }
-  this->join();
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
@@ -238,7 +238,7 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status(this);
+      Serializer::serialize_game_status_v2(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -264,9 +264,7 @@ void ArgentumGame::clean_notifications_queues() {
       }
       delete (*it);
       it = queues_notifications.erase(it);
-    }
-
-    else
+    } else
       ++it;
   }
 }
