@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "defensive_item.h"
+
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            std::ifstream &map_config,
@@ -13,7 +15,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
-  std::cout << "New game in map " << map_name << std::endl;
+  std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 }
@@ -88,7 +90,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   // map->ocupy_cell(0, 99);
   // entities.emplace(entities_ids, e);
   // entities_ids++;
-  add_new_hero("human", "warrior");
+  add_new_hero("human", "warrior", "test_name1");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
@@ -97,7 +99,8 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   map->empty_cell(entity->x_position, entity->y_position);
 }
 
-void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
+void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
+                                std::string hero_name) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   std::tuple<int, int> free_tile = map->get_random_free_space();
@@ -113,7 +116,16 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class) {
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
-      class_stats["id"].asUInt(), map);
+      class_stats["id"].asUInt(), map, hero_name);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(2, 8, 10));
+  hero->equip_armour(6);
+  hero->equip_helmet(2);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(90, 7, 7));
+  hero->equip_shield(90);
+
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;
@@ -163,8 +175,8 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 850;  // A TUNEAR
-  const unsigned int send_games_updates_ms = 100; // A TUNEAR
+  const unsigned int game_updates_after = 850;     // A TUNEAR
+  const unsigned int send_games_updates_ms = 100;  // A TUNEAR
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -195,7 +207,6 @@ void ArgentumGame::run() {
     }
     if (total_time_elapsed >= send_games_updates_ms) {
       game_status();
-
     }
     // std::this_thread::sleep_for(std::chrono::milliseconds(30));
   }
@@ -210,6 +221,7 @@ void ArgentumGame::print_debug_map() {
 }
 
 ArgentumGame::~ArgentumGame() {
+  std::unique_lock<std::mutex> lock(mutex);
   for (auto &entity : entities) {
     delete entity.second;
   }
@@ -230,14 +242,14 @@ ArgentumGame::~ArgentumGame() {
     }
     delete q;
   }
-  this->join();
 }
 
 unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
-  std::vector<unsigned char> game_status = Serializer::serialize_game_status(this);
+  std::vector<unsigned char> game_status =
+      Serializer::serialize_game_status(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -263,9 +275,7 @@ void ArgentumGame::clean_notifications_queues() {
       }
       delete (*it);
       it = queues_notifications.erase(it);
-    }
-
-    else
+    } else
       ++it;
   }
 }

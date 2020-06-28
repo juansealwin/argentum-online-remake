@@ -125,3 +125,9 @@ add_executable(server
 #target_link_libraries(server Qt5::Widgets Qt5::DBus)
 target_link_libraries(server ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 
+#Install the entities file
+install(DIRECTORY cfg/entities/ DESTINATION ${CMAKE_BINARY_DIR}/server)
+
+#Install the map file
+install(DIRECTORY cfg/map/ DESTINATION ${CMAKE_BINARY_DIR}/server)
+

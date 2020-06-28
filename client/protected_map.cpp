@@ -12,6 +12,8 @@ ProtectedMap::~ProtectedMap() {
 
 Game ProtectedMap::map_reader() {
   std::unique_lock<std::mutex> lock(block_maps);
+  std::cout<<"nuevo definiendo"<<std::endl;
+  Game nuevo = *read_map;
   return *read_map;
 }
 

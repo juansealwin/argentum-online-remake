@@ -22,32 +22,32 @@ CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y)
       type_character = GNOME;
       break;
 
-    case 1288:
-      type_character = ZOMBIE;
-      break;
-
-    case 1677:
+    case 29:
       type_character = GOBLIN;
       break;
 
-    case 1712:
+    case 30:
       type_character = SPIDER;
       break;
 
-    case 1750:
+    case 31:
       type_character = SKELETON;
       break;
+      
+    case 32:
+      type_character = ZOMBIE;
+      break;
 
-    case 1221:
+    case 33:
+      type_character = PRIEST;
+      break;
+
+    case 34:
       type_character = MERCHANT;
       break;
 
-    case 1222:
+    case 35:
       type_character = BANKER;
-      break;
-
-    case 1223:
-      type_character = PRIEST;
       break;
   }
 }

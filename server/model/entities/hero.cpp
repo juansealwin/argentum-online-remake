@@ -10,7 +10,7 @@ Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
            unsigned int f_class_hp, unsigned int f_race_hp,
            unsigned int f_race_recovery, unsigned int f_race_mana,
            unsigned int f_class_mana, unsigned int f_class_meditation,
-           unsigned int gold, unsigned int class_id, Map *map)
+           unsigned int gold, unsigned int class_id, Map *map, std::string name)
     : BaseCharacter(x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
@@ -26,7 +26,8 @@ Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
       class_id(class_id),
       experience(0),
       meditating(false),
-      ghost_mode(false) {
+      ghost_mode(false),
+      name(name) {
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(INVENTORY_SIZE);

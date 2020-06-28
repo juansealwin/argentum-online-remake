@@ -62,10 +62,10 @@ void PlayableCharacter::update_face_profile(move_t move_type) {
 
 // Creo que esta funcion se va a poder borrar
 void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
-  texture_manager->get_texture(type_character)
+  texture_manager.get_texture(type_character)
       .render(renderer, &body_rect, half_screen_w - width / 2,
               half_screen_h - height / 2);
-  texture_manager->get_texture(type_head).render(
+  texture_manager.get_texture(type_head).render(
       renderer, &head_rect, half_screen_w - head_rect.w / 2,
       half_screen_h - height / 2 - head_rect.h / 2);
 }
@@ -73,29 +73,29 @@ void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
 void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
   if (armor) {
-    texture_manager->get_texture(armor)
+    texture_manager.get_texture(armor)
         .render(renderer, &body_rect, x - width / 2 - x_rel,
                 y - height / 2 - y_rel);
   } else {
-    texture_manager->get_texture(type_character)
+    texture_manager.get_texture(type_character)
         .render(renderer, &body_rect, x - width / 2 - x_rel,
                 y - height / 2 - y_rel);
   }
   // Renderizamos cabeza
-  texture_manager->get_texture(type_head).render(
+  texture_manager.get_texture(type_head).render(
       renderer, &head_rect, x - head_rect.w / 2 - x_rel,
       y - height / 2 - head_rect.h / 2 - y_rel);
 
   // Si tiene el casco equipado lo renderizamos
   if (helmet) {
-    texture_manager->get_texture(helmet)
+    texture_manager.get_texture(helmet)
         .render(renderer, &head_rect, x - head_rect.w / 2 - x_rel,
                 y - height / 2 - head_rect.h / 2 - y_rel);
   }
 
   // Si tiene el arma equipada la renderizamos
   if (weapon) {
-    texture_manager->get_texture(weapon)
+    texture_manager.get_texture(weapon)
         .render(renderer, &body_rect, x - width / 2 - x_rel,
                 y - height / 2 - y_rel);
   }

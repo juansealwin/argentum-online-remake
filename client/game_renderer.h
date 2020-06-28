@@ -11,6 +11,7 @@
 #include "sdl_exception.h"
 #include "texture.h"
 #include "thread.h"
+#include "texture_manager.h"
 
 #define FRAME_DELAY 2000
 
@@ -18,19 +19,18 @@ class GameRenderer : public Thread {
  private:
   SDL_Window* window;
   SDL_Renderer* renderer;
-  //int id_hero;
   bool is_running;
   int screen_width;
   int screen_height;
-  //PlayableCharacter& player;
   ProtectedMap& protected_map;
-  Game* current_game;
+  //Game* current_game;
 
  public:
   GameRenderer(int, int, ProtectedMap&);
   ~GameRenderer();
   void window_init();
   void run();
+  SDL_Renderer* get();
 };
 
 #endif

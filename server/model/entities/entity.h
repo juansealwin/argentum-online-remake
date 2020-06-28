@@ -11,7 +11,9 @@ class Entity {
   int x_position;
   int y_position;
   int type;
-  bool alive = true;
+  bool alive;
+  //toma valores de 0 a 3
+  uint8_t orientation;
 
  private:
 

@@ -2,7 +2,6 @@
 
 GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map)
     : screen_width(width), screen_height(height), protected_map(prot_map) {
-  current_game = nullptr;
   window_init();
 }
 
@@ -45,14 +44,15 @@ GameRenderer::~GameRenderer() {
 // entre el actual y el del updater
 void GameRenderer::run() {
   try {
+    texture_manager.load_textures(renderer);
     Uint32 frame_start;
+
     int frame_time;
     while (is_running) {
       frame_start = SDL_GetTicks();
-
-      *current_game = protected_map.map_reader();
+      Game current_game = protected_map.map_reader();
       SDL_RenderClear(renderer);
-      current_game->render(renderer);
+      current_game.render(renderer);
       // creo que no va a hacer falta
       // player.render_as_hero(renderer);
       SDL_RenderPresent(renderer);
@@ -73,3 +73,5 @@ void Game::fill(int r, int g, int b, int alpha) {
 }
 
 */
+
+SDL_Renderer* GameRenderer::get() {return renderer;}

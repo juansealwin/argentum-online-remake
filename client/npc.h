@@ -2,7 +2,6 @@
 #define NPC_H
 
 #include "character.h"
-#include "drawable.h"
 
 class Npc : public Character {
  public:

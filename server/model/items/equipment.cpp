@@ -121,3 +121,13 @@ DefensiveItem *Equipment::unequip_armour() {
   armour = nullptr;
   return a;
 }
+
+uint8_t Equipment::count() { 
+  uint8_t count = 0;
+  if (weapon) count++;
+  if (staff) count++;
+  if (shield) count++;
+  if (helmet) count++;
+  if (armour) count++;
+  return count;
+}

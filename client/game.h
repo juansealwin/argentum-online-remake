@@ -29,7 +29,7 @@ class Game {
  public:
   Game(int, id_texture_t, int, int);
   Game(const Game&);
-  Game& operator=(const Game&);
+  Game operator=(const Game&);
   ~Game();
   void render(SDL_Renderer*);
   void update_map(int, int);

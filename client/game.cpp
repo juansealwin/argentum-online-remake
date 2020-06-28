@@ -21,7 +21,7 @@ Game::Game(const Game& other_game) {
   characters = other_game.characters;
 }
 
-Game& Game::operator=(const Game& other_game) {
+Game Game::operator=(const Game& other_game) {
   id_hero = other_game.id_hero;
   screen_width = other_game.screen_width;
   screen_height = other_game.screen_height;
@@ -32,9 +32,7 @@ Game& Game::operator=(const Game& other_game) {
   characters = other_game.characters;
 }
 
-Game::~Game() {
-  characters.clear();
-}
+Game::~Game() { characters.clear(); }
 
 void Game::update_character(int id, int new_x, int new_y) {
   characters[id].update_position(new_x, new_y);
@@ -75,8 +73,7 @@ void Game::update_map(int new_x, int new_y) {
 }
 
 void Game::render(SDL_Renderer* renderer) {
-  texture_manager->get_texture(type_map).render(renderer, &map_piece,
-                                                &viewport);
+  texture_manager.get_texture(type_map).render(renderer, &map_piece, &viewport);
   render_characters(renderer);
 }
 
