@@ -5,17 +5,10 @@
 template <typename T>
 // debe llamarse a este metodo si se necesita extraer del vector elementos de
 // mas de 1 byte
-T extract(const std::vector<unsigned char> &v, int pos) {
+T extract(const std::vector<unsigned char> &v, int &pos) {
   T value;
   memcpy(&value, &v[pos], sizeof(T));
-  return value;
-}
-
-template <typename G>
-G extract2(const std::vector<unsigned char> &v, int &pos) {
-  G value;
-  memcpy(&value, &v[pos], sizeof(G));
-  pos += sizeof(G);
+  pos += sizeof(T);
   return value;
 }
 
@@ -160,9 +153,9 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   }
   uint8_t items_inventory = h->inventory->items.size();
   serialization.push_back(items_inventory);
-  std::vector<Item*> items = h->inventory->items;
+  std::vector<Item *> items = h->inventory->items;
   for (int i = 0; i < items_inventory; i++) {
-    uint8_t item_id =items.at(i)->id;    
+    uint8_t item_id = items.at(i)->id;
     serialization.push_back(item_id);
   }
 }
@@ -172,84 +165,55 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
   int j = 1;
   while (j < serialization.size()) {
     // uint16_t id = ntohs(extract<uint16_t>(serialization, j));
-    // j += 2;
-    uint16_t id = ntohs(extract2<uint16_t>(serialization, j));
-    int entity_type = (int)serialization.at(j);
-    j++;
-    int x = (int)serialization.at(j);
-    j++;
-    int y = (int)serialization.at(j);
-    j++;
-    int orientation = (int)serialization.at(j);
-    j++;
+    uint16_t id = ntohs(extract<uint16_t>(serialization, j));
+    int entity_type = extract<uint8_t>(serialization, j);
+    int x = extract<uint8_t>(serialization, j);
+    int y = extract<uint8_t>(serialization, j);
+    int orientation = extract<uint8_t>(serialization, j);
     std::cout << "Entity id: " << id << ", type: " << entity_type
               << ", x_pos: " << x << ", y_pos: " << y
               << "orientation: " << orientation << std::endl;
     if (is_monster(entity_type)) {
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
                 << "current_hp" << current_hp << std::endl;
     } else if (is_hero(entity_type)) {
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       // aca meter el nombre
-      uint8_t class_id = (int)serialization.at(j);
-      j++;
+      uint8_t class_id = extract<uint8_t>(serialization, j);
       uint16_t mana_max = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t curr_mana = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t str = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t intelligence = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t agility = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t constitution = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t gold = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t xp_limit = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
       uint16_t current_xp = ntohs(extract<uint16_t>(serialization, j));
-      j += 2;
-      int meditating = (int)serialization.at(j);
-      j++;
-      int ghost_mode = (int)serialization.at(j);
-      j++;
-      int items_equiped = (int)serialization.at(j);
-      j++;
+      int meditating = extract<uint8_t>(serialization, j);
+      int ghost_mode = extract<uint8_t>(serialization, j);
+      int items_equiped = extract<uint8_t>(serialization, j);
       std::cout << "@@@Hero stats@@@" << std::endl
                 << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
                 << gold << " ghost mode " << ghost_mode << " items equiped "
                 << items_equiped << std::endl;
-
       std::cout << "@@Deserializing items equiped@@" << std::endl;
       for (int x = items_equiped; x > 0; x--) {
-        int current_item_slot = (int)serialization.at(j);
-        j++;
-        int current_item_id = (int)serialization.at(j);
-        j++;
+        int current_item_slot = extract<uint8_t>(serialization, j);
+        int current_item_id = extract<uint8_t>(serialization, j);
         std::cout << "equiped " << current_item_id << " at "
                   << current_item_slot << std::endl;
       }
 
-      int items_inventory = (int)serialization.at(j);
-      j++;
+      int items_inventory = extract<uint8_t>(serialization, j);
       std::cout << "items in inventory: " << items_inventory << std::endl;
       std::cout << "@@Deserializing items in invetory@@" << std::endl;
       for (int x = items_inventory; x > 0; x--) {
-        int inventory_item_id = (int)serialization.at(j);
-        j++;
+        int inventory_item_id = extract<uint8_t>(serialization, j);
         std::cout << "item in inventory " << inventory_item_id << std::endl;
       }
     }
