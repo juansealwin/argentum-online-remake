@@ -1,6 +1,8 @@
 #include "argentum_game.h"
-#include "defensive_item.h"
+
 #include <iostream>
+
+#include "defensive_item.h"
 
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
@@ -88,7 +90,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   // map->ocupy_cell(0, 99);
   // entities.emplace(entities_ids, e);
   // entities_ids++;
-  add_new_hero("human", "warrior", "test_name");
+  add_new_hero("human", "warrior", "test_name1");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
@@ -247,7 +249,7 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status_v2(this);
+      Serializer::serialize_game_status(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
