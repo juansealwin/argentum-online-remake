@@ -28,6 +28,14 @@ class BaseCharacter : public Entity {
   unsigned int type;
   char representation;
   Map *map;
+
+ private:
+  //settea orientacion segun el movimiento del personaje:
+  //0: mirando hacia arriba
+  //1: hacia la derecha
+  //2: hacia abajo
+  //3: hacia la izquierda
+  void change_orientation(int old_x, int old_y, int new_x, int new_y);
 };
 
 #endif  // BASE_CHARACTER_H

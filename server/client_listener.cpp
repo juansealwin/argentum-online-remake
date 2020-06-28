@@ -33,6 +33,7 @@ void ClientListener::stop_listening() {
   }
   for (ArgentumGame *g : games) {
     g->kill();
+    g->join();
     delete g;
   }
   for (ThreadSafeQueue<Command *> *q : queues_commands) {
