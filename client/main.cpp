@@ -9,6 +9,7 @@ TextureManager* texture_manager;// = TextureManager::get_instance();
 
 int main(int argc, char *argv[]) {
   try {
+    std::cout<<"HASTA ACA00"<<std::endl;
     ClientArgumentsValidator validator(argc, argv);
     validator.validate_arguments();
     Client client(validator.get_ip(), validator.get_port());

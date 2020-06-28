@@ -3,15 +3,14 @@
 
 #include <string>
 #include <vector>
-#include "types.h"
 #include "drawable.h"
-#include "move.h"
-#include "texture_manager.h"
+#include "animation.h"
+
 
 class Character : public Drawable {
  protected:
   id_texture_t type_character;
-  Move animation_move;
+  Animation animation_move;
   SDL_Rect body_rect;
 
  public:

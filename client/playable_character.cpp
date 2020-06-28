@@ -1,13 +1,16 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(character_t id_char,
-                                     int new_x, int new_y)
+PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
   x = new_x;
   y = new_y;
   set_character_dimensions(id_char);
   set_head_dimensions(id_char);
-  animation_move = Move(width, height, type_character);
+  animation_move = Animation(width, height, type_character);
+  helmet = ID_NULL;
+  armor = ID_NULL;
+  weapon = ID_NULL;
+  shield = ID_NULL;
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -68,12 +71,34 @@ void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
 }
 
 void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
-  texture_manager->get_texture(type_character)
-      .render(renderer, &body_rect, x - width / 2 - x_rel,
-              y - height / 2 - y_rel);
+  // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
+  if (armor) {
+    texture_manager->get_texture(armor)
+        .render(renderer, &body_rect, x - width / 2 - x_rel,
+                y - height / 2 - y_rel);
+  } else {
+    texture_manager->get_texture(type_character)
+        .render(renderer, &body_rect, x - width / 2 - x_rel,
+                y - height / 2 - y_rel);
+  }
+  // Renderizamos cabeza
   texture_manager->get_texture(type_head).render(
       renderer, &head_rect, x - head_rect.w / 2 - x_rel,
       y - height / 2 - head_rect.h / 2 - y_rel);
+
+  // Si tiene el casco equipado lo renderizamos
+  if (helmet) {
+    texture_manager->get_texture(helmet)
+        .render(renderer, &head_rect, x - head_rect.w / 2 - x_rel,
+                y - height / 2 - head_rect.h / 2 - y_rel);
+  }
+
+  // Si tiene el arma equipada la renderizamos
+  if (weapon) {
+    texture_manager->get_texture(weapon)
+        .render(renderer, &body_rect, x - width / 2 - x_rel,
+                y - height / 2 - y_rel);
+  }
 }
 
 int PlayableCharacter::set_head_dimensions(character_t id) {
@@ -96,6 +121,48 @@ int PlayableCharacter::set_head_dimensions(character_t id) {
     case DWARF:
       head_rect = {0, 0, 17, 17};
       type_head = ID_DWARF_HEAD;
+      break;
+  }
+}
+
+void PlayableCharacter::unequip_item(item_t id) {
+  // Reinicializamos el item para que no tenga valores dentro
+  switch (id) {
+    case HELMET:
+      helmet = ID_NULL;
+      break;
+
+    case ARMOR:
+      armor = ID_NULL;
+      break;
+
+    case SHIELD:
+      shield = ID_NULL;
+      break;
+
+    case WEAPON:
+      weapon = ID_NULL;
+      break;
+  }
+}
+
+void PlayableCharacter::equip_item(item_t item, id_texture_t id) {
+  // Reinicializamos el item para que no tenga valores dentro
+  switch (item) {
+    case HELMET:
+      helmet = id;
+      break;
+
+    case ARMOR:
+      armor = id;
+      break;
+
+    case SHIELD:
+      shield = id;
+      break;
+
+    case WEAPON:
+      weapon = id;
       break;
   }
 }

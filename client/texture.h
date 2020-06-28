@@ -4,7 +4,6 @@
 
 #include <string>
 
-#include "drawable.h"
 #include "sdl_exception.h"
 
 class Texture {
