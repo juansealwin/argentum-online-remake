@@ -1,4 +1,5 @@
 #include "serializer.h"
+
 #include "defensive_item.h"
 #include "staff.h"
 template <typename T>
@@ -7,6 +8,14 @@ template <typename T>
 T extract(const std::vector<unsigned char> &v, int pos) {
   T value;
   memcpy(&value, &v[pos], sizeof(T));
+  return value;
+}
+
+template <typename G>
+G extract2(const std::vector<unsigned char> &v, int &pos) {
+  G value;
+  memcpy(&value, &v[pos], sizeof(G));
+  pos += sizeof(G);
   return value;
 }
 
@@ -124,30 +133,37 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   serialization.push_back(items_equiped);
   if (items_equiped > 0) {
     if (h->equipment->helmet != nullptr) {
-      serialization.push_back(0); //slot de casco
+      serialization.push_back(0);  // slot de casco
       uint8_t helmet_id = h->equipment->helmet->id;
       serialization.push_back(helmet_id);
     }
     if (h->equipment->armour != nullptr) {
-      serialization.push_back(1); //slot de armadura
+      serialization.push_back(1);  // slot de armadura
       uint8_t armour_id = h->equipment->armour->id;
       serialization.push_back(armour_id);
     }
     if (h->equipment->shield != nullptr) {
-      serialization.push_back(2); //slot de escudo
+      serialization.push_back(2);  // slot de escudo
       uint8_t shield_id = h->equipment->shield->id;
       serialization.push_back(shield_id);
     }
     if (h->equipment->staff != nullptr) {
-      serialization.push_back(3); //slot de vara
+      serialization.push_back(3);  // slot de vara
       uint8_t staff_id = h->equipment->staff->id;
       serialization.push_back(staff_id);
     }
     if (h->equipment->weapon != nullptr) {
-      serialization.push_back(4); //slot de arma
+      serialization.push_back(4);  // slot de arma
       uint8_t weapon_id = h->equipment->weapon->id;
       serialization.push_back(weapon_id);
     }
+  }
+  uint8_t items_inventory = h->inventory->items.size();
+  serialization.push_back(items_inventory);
+  std::vector<Item*> items = h->inventory->items;
+  for (int i = 0; i < items_inventory; i++) {
+    uint8_t item_id =items.at(i)->id;    
+    serialization.push_back(item_id);
   }
 }
 
@@ -155,8 +171,9 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
   std::cout << "vector size is " << serialization.size() << std::endl;
   int j = 1;
   while (j < serialization.size()) {
-    uint16_t id = ntohs(extract<uint16_t>(serialization, j));
-    j += 2;
+    // uint16_t id = ntohs(extract<uint16_t>(serialization, j));
+    // j += 2;
+    uint16_t id = ntohs(extract2<uint16_t>(serialization, j));
     int entity_type = (int)serialization.at(j);
     j++;
     int x = (int)serialization.at(j);
@@ -215,15 +232,25 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
                 << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
                 << gold << " ghost mode " << ghost_mode << " items equiped "
                 << items_equiped << std::endl;
-      if (items_equiped > 0) { 
-        std::cout << "@@Deserializing items equiped@@" << std::endl;
-        for (int x = items_equiped; x > 0; x--) {
-          int current_item_slot = (int)serialization.at(j);
-          j++;
-          int current_item_id = (int)serialization.at(j);
-          j++;
-          std::cout << "equiped " << current_item_id << " at " << current_item_slot << std::endl;
-        }
+
+      std::cout << "@@Deserializing items equiped@@" << std::endl;
+      for (int x = items_equiped; x > 0; x--) {
+        int current_item_slot = (int)serialization.at(j);
+        j++;
+        int current_item_id = (int)serialization.at(j);
+        j++;
+        std::cout << "equiped " << current_item_id << " at "
+                  << current_item_slot << std::endl;
+      }
+
+      int items_inventory = (int)serialization.at(j);
+      j++;
+      std::cout << "items in inventory: " << items_inventory << std::endl;
+      std::cout << "@@Deserializing items in invetory@@" << std::endl;
+      for (int x = items_inventory; x > 0; x--) {
+        int inventory_item_id = (int)serialization.at(j);
+        j++;
+        std::cout << "item in inventory " << inventory_item_id << std::endl;
       }
     }
   }

@@ -119,6 +119,11 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
   hero->add_item(new DefensiveItem(2, 8, 10));
   hero->equip_armour(6);
   hero->equip_helmet(2);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(90, 7, 7));
+  hero->equip_shield(90);
+
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
   entities_ids++;
