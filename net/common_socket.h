@@ -25,7 +25,7 @@ class Socket {
 
   void send(const void *msg, const size_t length) const;
 
-  void recv(void *response, const size_t length) const;
+  int recv(void *response, const size_t length) const;
 
   void close();
 

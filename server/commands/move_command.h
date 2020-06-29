@@ -7,7 +7,7 @@ class ArgentumGame;
 
 class MoveCommand : public Command {
  public:
-  MoveCommand(const int entity_id, const int next_x, const int next_y);
+  MoveCommand(const int entity_id, const int x_move, const int y_move);
   MoveCommand(const MoveCommand &) = delete;
   ~MoveCommand();
   // Ejecuta cambios en el juego segun
@@ -15,8 +15,8 @@ class MoveCommand : public Command {
 
  private:
   int entity_id;
-  int next_x;
-  int next_y;
+  int x_move;
+  int y_move;
 };
 
 #endif
