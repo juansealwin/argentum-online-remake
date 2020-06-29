@@ -23,7 +23,7 @@ void GameUpdater::run() {
 
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status);
-      
+
       // Copiamos todo el update en el mapa de lectura
       protected_map.copy_buffer();
     }
@@ -39,11 +39,12 @@ void GameUpdater::deserialize_status() {
     j += 2;
     int entity_type = (int)status_serialized.at(j);
     j++;
-    int x = (int)status_serialized.at(j);
-    j++;
     int y = (int)status_serialized.at(j);
-    // std::cout << "Entity id: " << (int)id << ", type: " << entity_type
-    //<< ", x_pos: " << x << ", y_pos: " << y << std::endl;
+    j++;
+    int x = (int)status_serialized.at(j);
+    /*if (id == 15)
+      std::cout << "Entity id: " << (int)id << ", type: " << entity_type
+                << ", x_pos: " << x << ", y_pos: " << y << std::endl;*/
     next_status[(int)id] = CharacterStatus(entity_type, x, y);
     j++;
   }

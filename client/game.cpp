@@ -34,13 +34,16 @@ Game& Game::operator=(const Game& other_game) {
 Game::~Game() { characters.clear(); }
 
 void Game::update_character(int id, int new_x, int new_y) {
+  if (id == id_hero)
+    update_map((new_x * TILE_SIZE) - (characters[id]->get_x()),
+               (new_y * TILE_SIZE) - (characters[id]->get_y()));
   characters[id]->update_position(new_x, new_y);
-  if (id == id_hero) update_map(new_x * TILE_SIZE, new_y * TILE_SIZE);
 }
 
 void Game::update_map(int new_x, int new_y) {
   map_piece.x += new_x;
   map_piece.y += new_y;
+
   if (map_piece.x > MAP_SIZE - screen_width) {
     viewport.w = screen_width - (map_piece.x - (MAP_SIZE - screen_width));
     map_piece.w = screen_width - (map_piece.x - (MAP_SIZE - screen_width));
@@ -84,15 +87,14 @@ void Game::render(SDL_Renderer* renderer) {
       .render(renderer, &map_piece, &viewport);
 }
 
-
 void Game::load_character(int id, character_t char_type, int x, int y) {
   if (char_type == HUMAN || char_type == ELF || char_type == GNOME ||
       char_type == DWARF) {
     characters[id] = new PlayableCharacter(char_type, x, y);
     // Si cargamos a hero por primera vez ubicamos el viewport donde debe
-    if (id == id_hero) 
-    update_map(x * TILE_SIZE - screen_width / 2,
-               y * TILE_SIZE - screen_height / 2);
+    if (id == id_hero)
+      update_map(x * TILE_SIZE - screen_width / 2,
+                 y * TILE_SIZE - screen_height / 2);
   } else {
     characters[id] = new Npc(char_type, x, y);
   }
@@ -111,7 +113,7 @@ void Game::render_characters(SDL_Renderer* renderer) {
   }
 }
 
-void Game::clean_character(int i) { 
+void Game::clean_character(int i) {
   delete characters[i];
-  characters.erase(i); 
+  characters.erase(i);
 }
