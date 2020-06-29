@@ -182,7 +182,7 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 850;     // A TUNEAR
+  const unsigned int game_updates_after = 750;     // A TUNEAR
   //const unsigned int send_games_updates_ms = 100;  // A TUNEAR
   const unsigned int send_games_updates_ms = 600;  // A TUNEAR
 
