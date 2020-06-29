@@ -94,9 +94,16 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  Entity *entity = entities.at(entity_id);
-  map->ocupy_cell(x, y);
-  map->empty_cell(entity->x_position, entity->y_position);
+  std::cout << "moving player!" << std::endl;
+    BaseCharacter *character = dynamic_cast<BaseCharacter *>(entities.at(entity_id));
+    std::cout << "Preivos position is (" << character->x_position << ", " << character->y_position << ")" << std::endl;
+    character->move(character->x_position + x, character->y_position + y);
+    std::cout << "After position is (" << character->x_position << ", " << character->y_position << ")" << std::endl;
+
+    // int current_x = entity->x_position;
+    // int current_y = entity->y_position;
+    // map->ocupy_cell(x, y);
+    // map->empty_cell(entity->x_position, entity->y_position);
 }
 
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
@@ -249,7 +256,7 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status(this);
+      Serializer::serialize_game_status_v2(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
