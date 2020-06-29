@@ -21,6 +21,7 @@ void BaseCharacter::move(int next_x, int next_y) {
     change_orientation(x_position, y_position, next_x, next_y);
     x_position = next_x;
     y_position = next_y;
+    std::cout << "Updated character position! " << "x:" << x_position << "y:" << y_position << std::endl;
   }
 }
 

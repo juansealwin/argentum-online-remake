@@ -18,7 +18,7 @@ void Monster::update() {
   if (!alive) return;
   // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
   // Atacar si hay enemigo cercano (danando con dps)
-
+  return;//deshabilito temporalmente
   //-------- Movimiento -----------//
   int x_step = std::get<0>(moves.at(current_move));
   int y_step = std::get<1>(moves.at(current_move));
