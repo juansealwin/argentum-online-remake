@@ -26,11 +26,12 @@ QuitCommandDTO* receive_quit(const Socket& socket) {
 }
 
 MoveCommandDTO* receive_move(const Socket& socket) {
-  uint16_t player_id, movement_type;
+  int player_id, movement_type;
   socket.recv(&player_id, 2);
-  socket.recv(&movement_type, 1);
+  socket.recv(&movement_type, 2);
   player_id = ntohs(player_id);
   movement_type = ntohs(movement_type);
+  std::cout << "player_id: " << player_id << " movement type: " << movement_type << std::endl;
   return new MoveCommandDTO(player_id, movement_t(movement_type));
 }
 
@@ -39,7 +40,7 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
   if (bytes_rcv <= 0) return nullptr; //cerro conexion
   command_id = ntohs(command_id);
-  //std::cout << "comando redibido id: " << command_id << std::endl;
+  std::cout << "comando redibido id: " << command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);
@@ -81,12 +82,11 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
       short_int_to_unsigned_char(MOVE_COMMAND, ID_LENGTH);
   std::unique_ptr<unsigned char[]> player_id =
       short_int_to_unsigned_char(move_command->player_id, 2);
-  std::unique_ptr<unsigned char[]> movement_type =
-      short_int_to_unsigned_char(move_command->movement_type, 1);
-
-  socket.send(&command_id, ID_LENGTH);
-  socket.send(&player_id, 2);
-  socket.send(&movement_type, 1);
+  std::cout << "Enviando movimiento " << move_command->movement_type << std::endl;
+  socket.send(command_id.get(), ID_LENGTH);
+  socket.send(player_id.get(), 2);
+  uint16_t move_type = ntohs(move_command->movement_type);
+  socket.send(&move_type, 2);
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
