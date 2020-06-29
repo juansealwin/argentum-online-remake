@@ -4,7 +4,7 @@
 
 #include "login_command_dto.h"
 
-Client::Client(const char* host, const char* port) : player_id(0) {
+Client::Client(const char* host, const char* port) : player_id(15) {
   Socket socket;
   socket.connect(host, port);
   this->socket = std::move(socket);

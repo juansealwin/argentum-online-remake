@@ -15,7 +15,7 @@ class Character : public Drawable {
 
  public:
   virtual ~Character();
-  virtual void render(SDL_Renderer*, int, int) override;
+  virtual void render(SDL_Renderer*, int, int);
   virtual void move(move_t);
   virtual void update_position(int, int);
   virtual int set_character_dimensions(character_t);

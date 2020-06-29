@@ -57,6 +57,4 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
       write_map->clean_character(it->first);
     }
   }
-  // Copiamos todo el update en el mapa de lectura
-  copy_buffer();
 }

@@ -16,6 +16,7 @@ class PlayableCharacter : public Character {
   id_texture_t weapon;
 
  public:
+  PlayableCharacter();
   PlayableCharacter(character_t, int, int);
   PlayableCharacter(const PlayableCharacter&);
   PlayableCharacter& operator=(const PlayableCharacter&);

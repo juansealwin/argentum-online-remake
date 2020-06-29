@@ -90,14 +90,3 @@ void GameRenderer::run() {
     std::cerr << e.what() << std::endl;
   }
 }
-
-/*
-
-void Game::fill(int r, int g, int b, int alpha) {
-  SDL_SetRenderDrawColor(renderer, r, g, b, alpha);
-  SDL_RenderClear(renderer);
-}
-
-*/
-
-SDL_Renderer* GameRenderer::get() { return renderer; }

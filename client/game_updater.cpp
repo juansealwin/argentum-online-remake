@@ -8,8 +8,7 @@ T extract(const std::vector<unsigned char>& v, int pos) {
 }
 
 GameUpdater::GameUpdater(ProtectedMap& map, Socket& socket, bool& run)
-    : protected_map(map), read_socket(socket), is_running(run) {
-}
+    : protected_map(map), read_socket(socket), is_running(run) {}
 
 GameUpdater::~GameUpdater() {}
 
@@ -24,6 +23,9 @@ void GameUpdater::run() {
 
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status);
+      
+      // Copiamos todo el update en el mapa de lectura
+      protected_map.copy_buffer();
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;

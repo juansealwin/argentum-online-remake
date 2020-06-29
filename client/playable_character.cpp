@@ -1,5 +1,7 @@
 #include "playable_character.h"
 
+PlayableCharacter::PlayableCharacter() {}
+
 PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
   x = new_x*TILE_SIZE;

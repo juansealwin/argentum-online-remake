@@ -19,6 +19,7 @@
 
 class Client {
  private:
+  // Por ahora lo dejamos harcodeado
   int player_id;
   Socket socket;
   bool is_running;

@@ -30,7 +30,6 @@ class GameRenderer : public Thread {
   ~GameRenderer();
   void window_init();
   void run();
-  SDL_Renderer* get();
 };
 
 #endif

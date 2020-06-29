@@ -5,6 +5,7 @@
 
 class Npc : public Character {
  public:
+  Npc();
   Npc(character_t, int, int);
   Npc(const Npc&);
   ~Npc();
