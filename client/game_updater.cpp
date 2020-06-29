@@ -7,9 +7,8 @@ T extract(const std::vector<unsigned char>& v, int pos) {
   return value;
 }
 
-GameUpdater::GameUpdater(ProtectedMap& map, Socket& socket)
-    : protected_map(map), read_socket(socket) {
-  is_running = true;
+GameUpdater::GameUpdater(ProtectedMap& map, Socket& socket, bool& run)
+    : protected_map(map), read_socket(socket), is_running(run) {
 }
 
 GameUpdater::~GameUpdater() {}

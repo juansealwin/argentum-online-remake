@@ -1,7 +1,11 @@
 #include "game_renderer.h"
 
-GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map)
-    : screen_width(width), screen_height(height), protected_map(prot_map) {
+GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map,
+                           EventsQueue& queue)
+    : screen_width(width),
+      screen_height(height),
+      protected_map(prot_map),
+      events_queue(queue) {
   window_init();
 }
 
@@ -40,29 +44,47 @@ GameRenderer::~GameRenderer() {
   SDL_Quit();
 }
 
-// Hay que pasarle el renderer a los objetos y hay que hacer swap de renderers
-// entre el actual y el del updater
 void GameRenderer::run() {
   try {
+    // Cargamos todas las texturas del juego
     texture_manager.load_textures(renderer);
     int frame_start;
     int frame_time;
+    // Leemos la primera instancia que nos manda el server
     Game current_game = protected_map.map_reader();
-    int i = 0;
+    event_t local_event;
+
     while (is_running) {
       frame_start = SDL_GetTicks();
+
+      // Vemos si hay algun evento local
+      local_event = events_queue.pop();
+      if (local_event) {
+        switch (local_event) {
+          case EVENT_QUIT:
+            is_running = false;
+            break;
+        }
+      }
+
+      // Leemos las actualizaciones mandadas desde el server
       current_game = protected_map.map_reader();
+
+      // Limpiamos el renderer
       SDL_RenderClear(renderer);
+
+      // Renderizamos con los datos actuales
       current_game.render(renderer);
       // creo que no va a hacer falta
       // player.render_as_hero(renderer);
       SDL_RenderPresent(renderer);
+
+      // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.
       frame_time = SDL_GetTicks() - frame_start;
       int to_sleep = FRAME_DELAY - frame_time;
       if (to_sleep > 0) {
         SDL_Delay(to_sleep);
       }
-      i++;
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;

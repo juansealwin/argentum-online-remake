@@ -18,12 +18,12 @@ class GameUpdater : public Thread {
  private:
   ProtectedMap& protected_map;
   std::map<int, CharacterStatus> next_status;
-  bool is_running;
+  bool& is_running;
   Socket& read_socket;
   std::vector<unsigned char> status_serialized;
 
  public:
-  GameUpdater(ProtectedMap&, Socket&);
+  GameUpdater(ProtectedMap&, Socket&, bool&);
   ~GameUpdater();
   void run();
   void deserialize_status();

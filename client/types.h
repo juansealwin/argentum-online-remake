@@ -77,6 +77,8 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
+typedef enum { EVENT_NONE = 0, EVENT_QUIT } event_t;
+
 typedef enum { HELMET, ARMOR, WEAPON, SHIELD } item_t;
 
 #endif

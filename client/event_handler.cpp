@@ -2,8 +2,13 @@
 
 EventHandler::~EventHandler() {}
 
-EventHandler::EventHandler(const int player_id, CommandsBlockingQueue& commands_queue)
-    : player_id(player_id), commands_queue(commands_queue) {}
+EventHandler::EventHandler(const int player_id,
+                           CommandsBlockingQueue& commands_queue,
+                           EventsQueue& queue, bool& run)
+    : player_id(player_id),
+      commands_queue(commands_queue),
+      events_queue(queue),
+      is_running(run) {}
 
 void EventHandler::get_events() {
   try {
@@ -13,7 +18,9 @@ void EventHandler::get_events() {
         // User requests quit
         if (event.type == SDL_QUIT) {
           is_running = false;
-          // queue_events.pushEvent();
+          QuitCommandDTO* quit_command = new QuitCommandDTO();
+          commands_queue.push(quit_command);
+          events_queue.push(EVENT_QUIT);
           break;
         }
         // User presses a key
@@ -48,4 +55,3 @@ void EventHandler::get_events() {
 }
 
 bool EventHandler::is_up() { return is_running; }
-
