@@ -111,10 +111,8 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   std::tuple<int, int> free_tile = map->get_random_free_space();
-  //int x = std::get<0>(free_tile);
-  //int y = std::get<1>(free_tile);
-  int x = 1;
-  int y = 1;
+  int x = std::get<0>(free_tile);
+  int y = std::get<1>(free_tile);
   Hero *hero = new Hero(
       x, y, race_stats["id"].asUInt(), 'h', class_stats["level"].asUInt(),
       race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
