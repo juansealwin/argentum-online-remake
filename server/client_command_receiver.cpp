@@ -18,6 +18,7 @@ void ClientCommandReceiver::run() {
     CommandDTO* command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
       Command* command = CommandFactory::create_command(command_dto);
+      std::cout << "Received a new command!" << std::endl;
       delete command_dto;
       commands_queue->push(command);
     }

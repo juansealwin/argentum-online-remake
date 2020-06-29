@@ -12,11 +12,6 @@ class QuitCommand : public Command {
   ~QuitCommand();
   // Ejecuta cambios en el juego segun
   virtual void execute(ArgentumGame *game);
-
- private:
-  int entity_id;
-  int next_x;
-  int next_y;
 };
 
 #endif
