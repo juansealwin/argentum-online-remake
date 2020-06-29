@@ -64,8 +64,8 @@ void Socket::send(const void *msg, const size_t length) const {
   } while (total_bytes_sent < length && bytes > 0);
 }
 
-void Socket::recv(void *response, const size_t length) const {
-  if (length == 0) return;
+int Socket::recv(void *response, const size_t length) const {
+  if (length == 0) return 0;
   uint remaining_bytes = length;
   uint total_bytes_received = 0;
   ssize_t bytes = 0;
@@ -75,6 +75,7 @@ void Socket::recv(void *response, const size_t length) const {
     total_bytes_received += bytes;
     remaining_bytes -= bytes;
   } while (total_bytes_received < length && bytes > 0);
+  return total_bytes_received;
 }
 
 struct addrinfo *Socket::getAddr(const char *host, const char *service,

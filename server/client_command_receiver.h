@@ -9,6 +9,7 @@
 #include "common_socket.h"
 #include "protocol.h"
 #include "thread.h"
+#include "command_factory.h"
 
 class ClientCommandReceiver : public Thread {
  public:
