@@ -8,21 +8,22 @@ T extract(const std::vector<unsigned char>& v, int pos) {
 }
 
 GameUpdater::GameUpdater(ProtectedMap& map, Socket& socket)
-    : protected_map(map), read_socket(socket) {}
+    : protected_map(map), read_socket(socket) {
+  is_running = true;
+}
 
 GameUpdater::~GameUpdater() {}
 
 void GameUpdater::run() {
   try {
     while (is_running) {
-      std::cout<<"GameUpdater: por recibir una notificacion"<<std::endl;
       // Recibimos las actualizaciones del mapa
       Protocol::receive_notification(read_socket, status_serialized);
-std::cout<<"GameUpdater: por deserializar la info"<<std::endl;
-      // Deserializamos la información recibida por el protocolo
+
+      // Deserializamos la información recibida
       deserialize_status();
-std::cout<<"GameUpdater: escribiendo en el protected map"<<std::endl;
-      // Hacemos el write de los datos actualizados en el monitor de mapa
+
+      // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status);
     }
   } catch (const std::exception& e) {
@@ -40,7 +41,9 @@ void GameUpdater::deserialize_status() {
     int x = (int)status_serialized.at(j);
     j++;
     int y = (int)status_serialized.at(j);
-    next_status[id] = CharacterStatus(entity_type, x, y);
+    // std::cout << "Entity id: " << (int)id << ", type: " << entity_type
+    //<< ", x_pos: " << x << ", y_pos: " << y << std::endl;
+    next_status[(int)id] = CharacterStatus(entity_type, x, y);
     j++;
   }
 }

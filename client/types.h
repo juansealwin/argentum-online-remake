@@ -18,7 +18,8 @@ typedef enum {
   ID_PRIEST,
   ID_MERCHANT,
   ID_BANKER,
-  ID_MAP_GRASS,
+  ID_MAP_GRASS_BACKGROUND,
+  ID_MAP_GRASS_OBJECTS,
   ID_SWORD,
   ID_SWORD_EQUIPPED,
   ID_AXE,
@@ -76,11 +77,6 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
-typedef enum {
-  HELMET,
-  ARMOR,
-  WEAPON,
-  SHIELD
-}item_t;
+typedef enum { HELMET, ARMOR, WEAPON, SHIELD } item_t;
 
 #endif

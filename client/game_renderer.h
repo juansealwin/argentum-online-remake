@@ -13,7 +13,7 @@
 #include "thread.h"
 #include "texture_manager.h"
 
-#define FRAME_DELAY 2000
+#define FRAME_DELAY 100/6
 
 class GameRenderer : public Thread {
  private:
@@ -23,7 +23,6 @@ class GameRenderer : public Thread {
   int screen_width;
   int screen_height;
   ProtectedMap& protected_map;
-  //Game* current_game;
 
  public:
   GameRenderer(int, int, ProtectedMap&);

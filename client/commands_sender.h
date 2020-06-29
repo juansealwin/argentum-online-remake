@@ -9,7 +9,7 @@
 class CommandsSender : public Thread {
  private:
   CommandsBlockingQueue& commands_queue;
-  bool is_running = true;
+  bool is_running;
   const Socket& socket;
 
  public:

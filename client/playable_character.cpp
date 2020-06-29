@@ -2,8 +2,8 @@
 
 PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
-  x = new_x;
-  y = new_y;
+  x = new_x*TILE_SIZE;
+  y = new_y*TILE_SIZE;
   set_character_dimensions(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
@@ -46,6 +46,7 @@ PlayableCharacter& PlayableCharacter::operator=(
   head_rect = other_pc.head_rect;
 
   animation_move = other_pc.animation_move;
+  return *this;
 }
 
 PlayableCharacter::~PlayableCharacter() {}

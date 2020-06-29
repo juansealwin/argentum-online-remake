@@ -45,20 +45,24 @@ GameRenderer::~GameRenderer() {
 void GameRenderer::run() {
   try {
     texture_manager.load_textures(renderer);
-    Uint32 frame_start;
-
+    int frame_start;
     int frame_time;
+    Game current_game = protected_map.map_reader();
+    int i = 0;
     while (is_running) {
       frame_start = SDL_GetTicks();
-      Game current_game = protected_map.map_reader();
+      current_game = protected_map.map_reader();
       SDL_RenderClear(renderer);
       current_game.render(renderer);
       // creo que no va a hacer falta
       // player.render_as_hero(renderer);
       SDL_RenderPresent(renderer);
-
       frame_time = SDL_GetTicks() - frame_start;
-      if (FRAME_DELAY > frame_time) SDL_Delay(FRAME_DELAY - frame_time);
+      int to_sleep = FRAME_DELAY - frame_time;
+      if (to_sleep > 0) {
+        SDL_Delay(to_sleep);
+      }
+      i++;
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
@@ -74,4 +78,4 @@ void Game::fill(int r, int g, int b, int alpha) {
 
 */
 
-SDL_Renderer* GameRenderer::get() {return renderer;}
+SDL_Renderer* GameRenderer::get() { return renderer; }

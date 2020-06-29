@@ -14,8 +14,8 @@ void Character::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
 void Character::update_position(int new_x, int new_y) {
   move_t move_type;
-  while (x != new_x) {
-    if (x < new_x) {
+  while (x/TILE_SIZE != new_x) {
+    if (x/TILE_SIZE < new_x) {
       x += TILE_SIZE;
       move_type = MOVE_RIGHT;
     } else {
@@ -23,8 +23,8 @@ void Character::update_position(int new_x, int new_y) {
       move_type = MOVE_LEFT;
     }
   }
-  while (y != new_y) {
-    if (y < new_y) {
+  while (y/TILE_SIZE != new_y) {
+    if (y/TILE_SIZE < new_y) {
       y += TILE_SIZE;
       move_type = MOVE_DOWN;
     } else {

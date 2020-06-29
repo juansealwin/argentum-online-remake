@@ -3,8 +3,8 @@
 Item::Item() { is_equipped = false; }
 
 Item::Item(id_texture_t id, int new_x, int new_y) {
-  x = new_x;
-  y = new_y;
+  x = new_x*TILE_SIZE;
+  y = new_y*TILE_SIZE;
   // Estas medidas son de la arma  sin equipar
   width = 32;
   height = 32;
