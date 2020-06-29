@@ -24,7 +24,6 @@ MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto) {
     case (move_right):
       y_move = 1;
       break;
-  std::cout << "x_move: " << x_move << " y_move " << y_move << std::endl;
   }
   return new MoveCommand(command_dto->player_id, x_move, y_move);
 }

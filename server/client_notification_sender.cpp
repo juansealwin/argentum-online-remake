@@ -28,7 +28,6 @@ void ClientNotificationSender::run() {
     //bloquea mientras no haya notificaciones
     Notification *n = notifications_queue->pop();
     Protocol::send_notification(this->peer_socket ,n);
-    //std::cout << "blocking..." << std::endl;
     //ver cuando settear alive = false para que se cierre la cola de
     //notificaciones
     delete n;

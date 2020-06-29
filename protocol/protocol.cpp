@@ -22,8 +22,8 @@ LoginCommandDTO* receive_login(const Socket& socket) {
 }
 
 QuitCommandDTO* receive_quit(const Socket& socket) {
-  //deshabilito temporalmente
-  //return new QuitCommandDTO();
+  // deshabilito temporalmente
+  // return new QuitCommandDTO();
   return nullptr;
 }
 
@@ -33,15 +33,13 @@ MoveCommandDTO* receive_move(const Socket& socket) {
   socket.recv(&player_id, 2);
   socket.recv(&movement_type, 1);
   player_id = ntohs(player_id);
-  std::cout << "player_id: " << player_id << " movement type: " << (int)movement_type << std::endl;
   return new MoveCommandDTO(player_id, movement_t(movement_type));
 }
 
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
-  if (bytes_rcv <= 0) return nullptr; //cerro conexion
-  std::cout << "comando redibido id: " << (int)command_id << std::endl;
+  if (bytes_rcv <= 0) return nullptr;  // cerro conexion
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);
@@ -70,7 +68,6 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
   uint8_t command_id = MOVE_COMMAND;
   uint16_t player_id = ntohs(move_command->player_id);
   uint8_t move_type = move_command->movement_type;
-  //std::cout << "Enviando movimiento " << move_command->movement_type << std::endl;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&player_id, 2);
   socket.send(&move_type, 1);
@@ -104,13 +101,12 @@ void Protocol::send_notification(const Socket& socket, Notification* n) {
 // para mostrar lo que se recibe, descomentar este template y todo lo comentado
 // en receive_notifation
 
-// template <typename T>
-// T extract(const std::vector<unsigned char> &v, int pos)
-// {
-//   T value;
-//   memcpy(&value, &v[pos], sizeof(T));
-//   return value;
-// }
+template <typename T>
+T extract(const std::vector<unsigned char>& v, int pos) {
+  T value;
+  memcpy(&value, &v[pos], sizeof(T));
+  return value;
+}
 
 // Definir que devuelve la clase (Puede moverse la notificacion que tengo en el
 // server a protocol/common y usar eso)
@@ -124,17 +120,15 @@ void Protocol::receive_notification(const Socket& socket,
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
   // std::vector<unsigned char> vector = std::vector<unsigned char>(buffer,
   // buffer + notification_size);
-  // int j = 1;
-  // while (j < vector.size()) {
-  //   uint16_t id = ntohs(extract<uint16_t>(vector, j));
-  //   j += 2;
-  //   int entity_type = (int)vector.at(j);
-  //   j++;
-  //   int x = (int)vector.at(j);
-  //   j++;
-  //   int y = (int)vector.at(j);
-  //   std::cout << "Entity id: " << id << ", type: " << entity_type << ",
-  //   x_pos: " << x << ", y_pos: " << y << std::endl; 
-  //   j++;
-  // }
+  int j = 1;
+  while (j < vector.size()) {
+    uint16_t id = ntohs(extract<uint16_t>(vector, j));
+    j += 2;
+    int entity_type = (int)vector.at(j);
+    j++;
+    int x = (int)vector.at(j);
+    j++;
+    int y = (int)vector.at(j);
+    j++;
+  }
 }

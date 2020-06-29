@@ -111,6 +111,8 @@ void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   std::tuple<int, int> free_tile = map->get_random_free_space();
+  //int x = std::get<0>(free_tile);
+  //int y = std::get<1>(free_tile);
   int x = 1;
   int y = 1;
   Hero *hero = new Hero(
@@ -183,7 +185,9 @@ void ArgentumGame::run() {
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
   const unsigned int game_updates_after = 850;     // A TUNEAR
-  const unsigned int send_games_updates_ms = 100;  // A TUNEAR
+  //const unsigned int send_games_updates_ms = 100;  // A TUNEAR
+  const unsigned int send_games_updates_ms = 600;  // A TUNEAR
+
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -204,13 +208,9 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      // commands_queue->push(new MoveCommand(14, 0, 0));
-      // MoveCommand cmd(14, 0, 0);
-      // cmd.execute(this);
     }
     if (total_time_elapsed >= send_games_updates_ms) {
       game_status();
