@@ -11,17 +11,17 @@
 
 class TextureManager {
  private:
-  SDL_Renderer* renderer;
-  static TextureManager* instance_texture_manager;
+  std::map<id_texture_t, Texture*> map;
   TextureManager();
-  std::map<id_texture_t, Texture> map;
 
  public:
-  static TextureManager* get_instance();
   ~TextureManager();
+  void load_textures(SDL_Renderer*);
   Texture& get_texture(id_texture_t);
+  TextureManager(const TextureManager&) = delete;
+  static TextureManager& get_instance();
 };
 
-extern TextureManager* texture_manager;
+extern TextureManager& texture_manager;
 
 #endif

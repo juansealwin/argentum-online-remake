@@ -3,8 +3,8 @@
 Item::Item() { is_equipped = false; }
 
 Item::Item(id_texture_t id, int new_x, int new_y) {
-  x = new_x;
-  y = new_y;
+  x = new_x*TILE_SIZE;
+  y = new_y*TILE_SIZE;
   // Estas medidas son de la arma  sin equipar
   width = 32;
   height = 32;
@@ -16,7 +16,7 @@ Item::Item(id_texture_t id, int new_x, int new_y) {
 Item::~Item() {}
 
 void Item::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
-  texture_manager->get_texture(item_type).render(
+  texture_manager.get_texture(item_type).render(
       renderer, NULL, x - width / 2 - x_rel, y - height / 2 - y_rel);
 }
 

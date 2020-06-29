@@ -16,9 +16,10 @@ class ProtectedMap {
   std::condition_variable cv;
 
  public:
-  ProtectedMap(int, id_texture_t, int, int);
+  ProtectedMap(int, int, int);
   ~ProtectedMap();
   Game map_reader();
+  void copy_buffer();
   void map_writer(std::map<int, CharacterStatus>&);
 };
 

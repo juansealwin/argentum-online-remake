@@ -12,6 +12,7 @@
 #include "sdl_exception.h"
 #include "thread.h"
 #include "common_socket.h"
+#include "protocol.h"
 
 class GameUpdater : public Thread {
  private:
@@ -19,11 +20,13 @@ class GameUpdater : public Thread {
   std::map<int, CharacterStatus> next_status;
   bool is_running;
   Socket& read_socket;
+  std::vector<unsigned char> status_serialized;
 
  public:
   GameUpdater(ProtectedMap&, Socket&);
   ~GameUpdater();
   void run();
+  void deserialize_status();
 };
 
 #endif

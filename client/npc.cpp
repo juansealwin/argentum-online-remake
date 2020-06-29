@@ -1,8 +1,8 @@
 #include "npc.h"
 
 Npc::Npc(character_t id_npc, int new_x, int new_y) {
-  x = new_x;
-  y = new_y;
+  x = new_x*TILE_SIZE;
+  y = new_y*TILE_SIZE;
   set_character_dimensions(id_npc);
   animation_move = Animation(width, height, type_character);
 }
@@ -27,6 +27,7 @@ Npc& Npc::operator=(const Npc& other_npc) {
   height = other_npc.height;
   body_rect = other_npc.body_rect;
   animation_move = other_npc.animation_move;
+  return *this;
 }
 
 Npc::~Npc() {}

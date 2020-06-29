@@ -11,6 +11,6 @@ Remake del Argentum
 | libmsgpack* | 3.3.0 |
 
 ## Para correr app:  
-valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./server 8080 ../../server/cfg/map/mapa.json ../../server/cfg/entities/entities.json
+valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./server 8080 mapa.json entities.json
 
 valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=../../client/suppressions.txt ./client localhost 8080
