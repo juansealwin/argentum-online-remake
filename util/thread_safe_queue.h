@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <mutex>
 #include <queue>
-
+#include <iostream>
 template <class T>
 class ThreadSafeQueue {
  private:
@@ -89,6 +89,11 @@ class BlockingThreadSafeQueue {
     std::lock_guard<std::mutex> lock(mutex);
     return closed;
   };
+
+  void size() {
+    std::lock_guard<std::mutex> lock(mutex);
+    std::cout << "Notifications queue size is " << (int)queue.size() << std::endl;
+  }
 
   T pop() {
 

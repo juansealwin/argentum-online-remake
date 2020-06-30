@@ -41,9 +41,14 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     serialization.push_back(entity_type);
     serialization.push_back(x);
     serialization.push_back(y);
+    // if (ntohs(entity_id) == 15) {
+    //   std::cout << "@@@@serializing Entity id: " << ntohs(entity_id)
+    //             << ", type: " << (int)entity_type << ", x_pos: " << (int)x
+    //             << ", y_pos: " << (int)y << std::endl;
+    // }
   }
 
-  //debug_deserialize(serialization);
+  // debug_deserialize(serialization);
   return serialization;
 }
 
@@ -63,6 +68,7 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
     serialization.push_back(x);
     serialization.push_back(y);
     serialization.push_back(orientation);
+
     if (dynamic_cast<Monster *>(entity.second) != nullptr) {
       serialize_monster(serialization, dynamic_cast<Monster *>(entity.second));
     } else if (dynamic_cast<Hero *>(entity.second) != nullptr) {
@@ -72,7 +78,7 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
     }
   }
 
-  //debug_deserialize(serialization);
+  // debug_deserialize(serialization);
   return serialization;
 }
 
@@ -167,7 +173,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 }
 
 void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
-  //std::cout << "vector size is " << serialization.size() << std::endl;
+  // std::cout << "vector size is " << serialization.size() << std::endl;
   int j = 1;
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));

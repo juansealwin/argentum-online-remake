@@ -12,7 +12,7 @@
 #include "texture.h"
 #include "thread.h"
 #include "texture_manager.h"
-
+#include "events_queue.h"
 #define FRAME_DELAY 100/6
 
 class GameRenderer : public Thread {
@@ -23,13 +23,13 @@ class GameRenderer : public Thread {
   int screen_width;
   int screen_height;
   ProtectedMap& protected_map;
+  EventsQueue& events_queue;
 
  public:
-  GameRenderer(int, int, ProtectedMap&);
+  GameRenderer(int, int, ProtectedMap&, EventsQueue&);
   ~GameRenderer();
   void window_init();
   void run();
-  SDL_Renderer* get();
 };
 
 #endif

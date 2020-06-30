@@ -16,7 +16,7 @@
 
 class Game {
  private:
-  int id_hero = 15;
+  int id_hero;
   id_texture_t background;
   id_texture_t static_objects;
   // La porción del Gamea que queremos renderizar
@@ -25,7 +25,7 @@ class Game {
   SDL_Rect viewport;
   int screen_width;
   int screen_height;
-  std::map<int, Character> characters;
+  std::map<int, Character*> characters;
 
  public:
   Game(int, int, int);

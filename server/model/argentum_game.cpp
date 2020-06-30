@@ -182,8 +182,10 @@ void ArgentumGame::run() {
   unsigned long long delay = 0;
   unsigned long long total_time_elapsed = 0;
   bool one_second_passed = false;
-  const unsigned int game_updates_after = 850;     // A TUNEAR
-  const unsigned int send_games_updates_ms = 100;  // A TUNEAR
+  const unsigned int game_updates_after = 750;     // A TUNEAR
+  //const unsigned int send_games_updates_ms = 100;  // A TUNEAR
+  const unsigned int send_games_updates_ms = 600;  // A TUNEAR
+
   int updates = 0;
   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
   // que el juego corra a 60fps.
@@ -204,13 +206,9 @@ void ArgentumGame::run() {
     }
     t1 = MSTimeStamp();
     if (total_time_elapsed >= game_updates_after) {
-      // print_debug_map();
       total_time_elapsed = 0;
       one_second_passed = true;
       updates = 0;
-      // commands_queue->push(new MoveCommand(14, 0, 0));
-      // MoveCommand cmd(14, 0, 0);
-      // cmd.execute(this);
     }
     if (total_time_elapsed >= send_games_updates_ms) {
       game_status();
