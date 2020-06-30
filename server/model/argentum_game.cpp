@@ -190,6 +190,7 @@ void ArgentumGame::run() {
         }
         update(one_second_passed);
         send_game_status();
+        //print_debug_map();
         long time_step = 1000/60.f; //60fps
         auto final = std::chrono::high_resolution_clock::now();
         auto loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);

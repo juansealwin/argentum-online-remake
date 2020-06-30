@@ -31,7 +31,7 @@ void GameRenderer::window_init() {
         throw SdlException(MSG_ERROR_SDL_IMG_INIT, IMG_GetError());
 
       // Inicializamos el mixer de audio
-      if (Mix_OpenAudio(44100, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+      if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
         throw SdlException(MSG_ERROR_SDL_MIXER_INIT, Mix_GetError());
 
       // Inicializamos TTF

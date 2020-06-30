@@ -21,8 +21,17 @@ void Map::load_terrain(Json::Value &map_json) {
       int type2 = map_json["layers"][1]["data"][i].asInt();
       char repr = '.';
       if (type2 != 0) {
-        fixed = true;
-        repr = 'b';
+        if ((type2 >= TREE_1) && (type2 <= TREE_2)) {
+          if (type2 == TREE_ROOT) {
+            fixed = true;
+            repr = 'b';
+          } else {
+            fixed = false;
+          }
+        } else {
+          fixed = true;
+          repr = 'b';
+        }
       } else if (type == FLOOR) {
         safe = true;
         repr = 'f';
