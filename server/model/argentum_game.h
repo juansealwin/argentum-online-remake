@@ -66,8 +66,7 @@ class ArgentumGame : public Thread {
   void place_initial_npcs(Json::Value map_cfg);
   void remove_death_entities();
   std::map<int, Entity *> entities;
-  //Json::Value game_status();
-  std::vector<unsigned char> game_status();
+  std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
   std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;

@@ -95,15 +95,18 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   std::cout << "moving player!" << std::endl;
-    BaseCharacter *character = dynamic_cast<BaseCharacter *>(entities.at(entity_id));
-    std::cout << "Preivos position is (" << character->x_position << ", " << character->y_position << ")" << std::endl;
-    character->move(character->x_position + x, character->y_position + y);
-    std::cout << "After position is (" << character->x_position << ", " << character->y_position << ")" << std::endl;
+  BaseCharacter *character =
+      dynamic_cast<BaseCharacter *>(entities.at(entity_id));
+  std::cout << "Preivos position is (" << character->x_position << ", "
+            << character->y_position << ")" << std::endl;
+  character->move(character->x_position + x, character->y_position + y);
+  std::cout << "After position is (" << character->x_position << ", "
+            << character->y_position << ")" << std::endl;
 
-    // int current_x = entity->x_position;
-    // int current_y = entity->y_position;
-    // map->ocupy_cell(x, y);
-    // map->empty_cell(entity->x_position, entity->y_position);
+  // int current_x = entity->x_position;
+  // int current_y = entity->y_position;
+  // map->ocupy_cell(x, y);
+  // map->empty_cell(entity->x_position, entity->y_position);
 }
 
 void ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
@@ -175,48 +178,26 @@ static unsigned long long MSTimeStamp() {
 }
 
 void ArgentumGame::run() {
-  unsigned long long t1 = MSTimeStamp();
-  unsigned long long t2 = 0;
-  unsigned long long delta = 0;
-  unsigned long long time_elapsed = 0;
-  unsigned long long delay = 0;
-  unsigned long long total_time_elapsed = 0;
-  bool one_second_passed = false;
-  const unsigned int game_updates_after = 750;     // A TUNEAR
-  //const unsigned int send_games_updates_ms = 100;  // A TUNEAR
-  const unsigned int send_games_updates_ms = 600;  // A TUNEAR
-
-  int updates = 0;
-  // con este valor obtengo acerca de 60 updates por segundo, con la idea de
-  // que el juego corra a 60fps.
-  const unsigned int ups = 17;
-  while (alive) {
-    update(one_second_passed);
-    one_second_passed &= false;
-    updates++;
-    t2 = MSTimeStamp();  // 0
-    time_elapsed += t2 - t1 + delta;
-    total_time_elapsed += t2 - t1 + delta;
-    delay = ups - time_elapsed;
-    if (time_elapsed < ups) {
-      std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-      delta = MSTimeStamp() - t2 - delay;
-    } else {
-      delta = 0;
+    auto start = std::chrono::high_resolution_clock::now();
+    bool one_second_passed;
+    while (alive) {
+        one_second_passed = false;
+        auto initial = std::chrono::high_resolution_clock::now();
+        auto time_difference = initial - start;
+        if (time_difference.count() >= 1000000000) {
+          one_second_passed = true;
+          start = initial;
+        }
+        update(one_second_passed);
+        send_game_status();
+        long time_step = 1000/60.f; //60fps
+        auto final = std::chrono::high_resolution_clock::now();
+        auto loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
+        long sleep_time = time_step - loop_duration.count();
+        if (sleep_time > 0) {
+            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+        }
     }
-    t1 = MSTimeStamp();
-    if (total_time_elapsed >= game_updates_after) {
-      total_time_elapsed = 0;
-      one_second_passed = true;
-      updates = 0;
-    }
-    if (total_time_elapsed >= send_games_updates_ms) {
-      game_status();
-    }
-    // std::this_thread::sleep_for(std::chrono::milliseconds(30));
-  }
-
-  // std::cout << "UPS: " << updates << std::endl;
 }
 
 void ArgentumGame::print_debug_map() {
@@ -251,10 +232,10 @@ ArgentumGame::~ArgentumGame() {
 
 unsigned int ArgentumGame::get_room() { return room; }
 
-std::vector<unsigned char> ArgentumGame::game_status() {
+std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status_v2(this);
+      Serializer::serialize_game_status(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
