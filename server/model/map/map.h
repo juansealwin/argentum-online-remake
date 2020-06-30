@@ -12,6 +12,7 @@
 // 2nd layer
 #define TREE_1 1153
 #define TREE_2 1216
+#define TREE_ROOT 1213
 #define HOUSE_1 1025
 #define HOUSE_2 1064
 #define HOUSE2_1 1089
