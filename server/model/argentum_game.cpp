@@ -189,7 +189,7 @@ void ArgentumGame::run() {
           start = initial;
         }
         update(one_second_passed);
-        game_status();
+        send_game_status();
         long time_step = 1000/60.f; //60fps
         auto final = std::chrono::high_resolution_clock::now();
         auto loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
@@ -199,48 +199,6 @@ void ArgentumGame::run() {
         }
     }
 }
-
-// void ArgentumGame::run() {
-//   unsigned long long t1 = MSTimeStamp();
-//   unsigned long long t2 = 0;
-//   unsigned long long delta = 0;
-//   unsigned long long time_elapsed = 0;
-//   unsigned long long delay = 0;
-//   unsigned long long total_time_elapsed = 0;
-//   bool one_second_passed = false;
-//   const unsigned int game_updates_after = 750;     // A TUNEAR
-//   //const unsigned int send_games_updates_ms = 100;  // A TUNEAR
-//   const unsigned int send_games_updates_ms = 600;  // A TUNEAR
-
-//   int updates = 0;
-//   // con este valor obtengo acerca de 60 updates por segundo, con la idea de
-//   // que el juego corra a 60fps.
-//   const unsigned int ups = 17;
-//   while (alive) {
-//     update(one_second_passed);
-//     one_second_passed &= false;
-//     updates++;
-//     t2 = MSTimeStamp();  // 0
-//     time_elapsed += t2 - t1 + delta;
-//     total_time_elapsed += t2 - t1 + delta;
-//     delay = ups - time_elapsed;
-//     if (time_elapsed < ups) {
-//       std::this_thread::sleep_for(std::chrono::milliseconds(delay));
-//       delta = MSTimeStamp() - t2 - delay;
-//     } else {
-//       delta = 0;
-//     }
-//     t1 = MSTimeStamp();
-//     if (total_time_elapsed >= game_updates_after) {
-//       total_time_elapsed = 0;
-//       one_second_passed = true;
-//       updates = 0;
-//     }
-//     if (total_time_elapsed >= send_games_updates_ms) {
-//       game_status();
-//     }
-//   }
-// }
 
 void ArgentumGame::print_debug_map() {
   std::unique_lock<std::mutex> lock(mutex);
@@ -274,7 +232,7 @@ ArgentumGame::~ArgentumGame() {
 
 unsigned int ArgentumGame::get_room() { return room; }
 
-std::vector<unsigned char> ArgentumGame::game_status() {
+std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status(this);
