@@ -8,9 +8,9 @@ SoundEffect::SoundEffect() {
   music = nullptr;
   playing_music = false;
   playing_sound = false;
-  if (CHANNEL_COUNTER == INT_MAX) {
+  if (CHANNEL_COUNTER == INT_MAX) 
     CHANNEL_COUNTER = 1;
-  }
+  
   channel = CHANNEL_COUNTER++;
   Mix_AllocateChannels(Mix_AllocateChannels(-1) + 1);
 }
@@ -73,9 +73,8 @@ void SoundEffect::play_music(int loops) {
     }
   }
 
-  if (Mix_PausedMusic()) {
+  if (Mix_PausedMusic())
     Mix_ResumeMusic();
-  }
 }
 
 void SoundEffect::increase_music_volume(int inc) {
