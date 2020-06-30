@@ -3,6 +3,10 @@
 
 #include "protocol.h"
 
+#define LOGIN_COMMAND 1
+#define QUIT_COMMAND 2
+#define MOVE_COMMAND 3
+
 class CommandDTO {
  public:
   CommandDTO();

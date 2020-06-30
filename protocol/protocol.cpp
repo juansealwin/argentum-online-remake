@@ -36,9 +36,10 @@ MoveCommandDTO* receive_move(const Socket& socket) {
 
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint16_t command_id;
-  socket.recv(&command_id, ID_LENGTH);
+  int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
+  if (bytes_rcv <= 0) return nullptr; //cerro conexion
   command_id = ntohs(command_id);
-  std::cout << "comando redibido id: " << command_id << std::endl;
+  //std::cout << "comando redibido id: " << command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);

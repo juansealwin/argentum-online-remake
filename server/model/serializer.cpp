@@ -72,7 +72,7 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
     }
   }
 
-  debug_deserialize(serialization);
+  //debug_deserialize(serialization);
   return serialization;
 }
 
@@ -167,7 +167,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 }
 
 void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
-  std::cout << "vector size is " << serialization.size() << std::endl;
+  //std::cout << "vector size is " << serialization.size() << std::endl;
   int j = 1;
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
