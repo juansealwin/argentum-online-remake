@@ -8,6 +8,7 @@
 #include <iostream>
 #include <string>
 #include <typeinfo>
+#include "exception_messages.h"
 
 class SdlException : public std::exception {
  private:

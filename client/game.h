@@ -11,6 +11,7 @@
 #include "texture.h"
 #include "texture_manager.h"
 #include "types.h"
+#include "sound_effect.h"
 
 #define MAP_SIZE 3200
 

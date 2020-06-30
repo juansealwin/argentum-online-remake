@@ -17,8 +17,8 @@ find_package(Threads)
 INCLUDE(FindPkgConfig) 
 PKG_SEARCH_MODULE(SDL2 REQUIRED sdl2)
 PKG_SEARCH_MODULE(SDL2IMAGE REQUIRED SDL2_image>=2.0.0)
-#PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
-#PKG_SEARCH_MODULE(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
+PKG_SEARCH_MODULE(SDL2TTF REQUIRED SDL2_ttf>=2.0.0)
+PKG_SEARCH_MODULE(SDL2MIXER REQUIRED SDL2_mixer>=2.0.0)
 
 
 include_directories(${PROJECT_SOURCE_DIR})
@@ -62,13 +62,17 @@ add_executable(client
 		${protocol_header_files}
 		${net_source_files}
 		${net_header_files}
-    ${util_source_files}
+    		${util_source_files}
 		${util_header_files}
 		)
 
 #target_link_libraries(client Qt5::Widgets Qt5::DBus)
-target_link_libraries(client ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
+target_link_libraries(client ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2TTF_LIBRARIES} ${SDL2MIXER_LIBRARIES})
 
 #Install the images
 install(DIRECTORY assets/ DESTINATION ${CMAKE_BINARY_DIR}/client)
+
+#Install the sound and music
+install(DIRECTORY sound/ DESTINATION ${CMAKE_BINARY_DIR}/client)
+
 

@@ -3,6 +3,7 @@
 
 #include "character.h"
 #include "item.h"
+#include "sound_effect.h"
 
 class PlayableCharacter : public Character {
  protected:
@@ -14,9 +15,9 @@ class PlayableCharacter : public Character {
   id_texture_t armor;
   id_texture_t shield;
   id_texture_t weapon;
+  SoundEffect walk;
 
  public:
-  PlayableCharacter();
   PlayableCharacter(character_t, int, int);
   PlayableCharacter(const PlayableCharacter&);
   PlayableCharacter& operator=(const PlayableCharacter&);
