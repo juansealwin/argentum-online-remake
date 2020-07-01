@@ -1,19 +1,16 @@
 #include "playable_character.h"
 
-
-
 PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
     : half_screen_w(new_x), half_screen_h(new_y) {
   x = new_x*TILE_SIZE;
   y = new_y*TILE_SIZE;
-  set_character_dimensions(id_char);
+  set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
   helmet = ID_NULL;
   armor = ID_NULL;
   weapon = ID_NULL;
   shield = ID_NULL;
-  walk.set_sound("caminar.wav");
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -57,7 +54,6 @@ PlayableCharacter::~PlayableCharacter() {}
 // A los jugables hay que actualizarles el perfil
 void PlayableCharacter::move(move_t move_type) {
   body_rect = animation_move.get_next_clip(move_type);
-  walk.play_sound(0);
   update_face_profile(move_type);
 }
 

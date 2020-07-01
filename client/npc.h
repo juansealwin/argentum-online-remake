@@ -5,11 +5,11 @@
 
 class Npc : public Character {
  public:
-  Npc();
   Npc(character_t, int, int);
   Npc(const Npc&);
   ~Npc();
   Npc& operator=(const Npc&);
+  virtual void sound_walk() override;
 };
 
 #endif

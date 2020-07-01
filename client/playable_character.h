@@ -15,7 +15,6 @@ class PlayableCharacter : public Character {
   id_texture_t armor;
   id_texture_t shield;
   id_texture_t weapon;
-  SoundEffect walk;
 
  public:
   PlayableCharacter(character_t, int, int);
