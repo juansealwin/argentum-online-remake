@@ -86,27 +86,12 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       col = 0;
     }
   }
-  // Entity *e = new Monster(99, 99, 133, 'g', 133, 133, 133, map);
-  // map->ocupy_cell(0, 99);
-  // entities.emplace(entities_ids, e);
-  // entities_ids++;
-  //add_new_hero("human", "warrior", "test_name1");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  std::cout << "moving player!" << std::endl;
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(entities.at(entity_id));
-  std::cout << "Preivos position is (" << character->x_position << ", "
-            << character->y_position << ")" << std::endl;
   character->move(character->x_position + x, character->y_position + y);
-  std::cout << "After position is (" << character->x_position << ", "
-            << character->y_position << ")" << std::endl;
-
-  // int current_x = entity->x_position;
-  // int current_y = entity->y_position;
-  // map->ocupy_cell(x, y);
-  // map->empty_cell(entity->x_position, entity->y_position);
 }
 
 unsigned int ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,

@@ -26,8 +26,7 @@ void Client::play() {
 
   GameUpdater updater(protected_map, socket, is_running);
   GameRenderer renderer(800, 600, protected_map, event_queue);
-  EventHandler event_handler(player_id, commands_to_send, event_queue,
-                             is_running);
+  EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al
   // server
   sender.start();
@@ -37,7 +36,7 @@ void Client::play() {
 
   while (is_running) {
   }
-  
+
   // Una vez que se cierra el juego se hace join de los subprocesos
   renderer.join();
   updater.join();

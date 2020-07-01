@@ -28,18 +28,16 @@ QuitCommandDTO* receive_quit(const Socket& socket) {
 }
 
 MoveCommandDTO* receive_move(const Socket& socket) {
-  uint16_t player_id;
   uint8_t movement_type;
-  socket.recv(&player_id, 2);
   socket.recv(&movement_type, 1);
-  player_id = ntohs(player_id);
-  return new MoveCommandDTO(player_id, movement_t(movement_type));
+  return new MoveCommandDTO(movement_t(movement_type));
 }
 
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
   if (bytes_rcv <= 0) return nullptr;  // cerro conexion
+  std::cout << "Command id recibido: " << (int)command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);
@@ -66,10 +64,8 @@ void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
 
 void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
   uint8_t command_id = MOVE_COMMAND;
-  uint16_t player_id = ntohs(move_command->player_id);
   uint8_t move_type = move_command->movement_type;
   socket.send(&command_id, ID_LENGTH);
-  socket.send(&player_id, 2);
   socket.send(&move_type, 1);
 }
 
