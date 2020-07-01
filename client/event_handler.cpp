@@ -58,7 +58,6 @@ void EventHandler::get_events() {
           }
           if (event.key.keysym.sym == SDLK_m) {
             background_music.stop_music();
-            
           }
         }
       }
