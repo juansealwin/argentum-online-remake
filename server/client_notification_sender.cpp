@@ -9,7 +9,8 @@ ClientNotificationSender::ClientNotificationSender(
     BlockingThreadSafeQueue<Notification*>* notifications_queue)
     : game(game),
       peer_socket(peer_socket),
-      notifications_queue(notifications_queue) {}
+      notifications_queue(notifications_queue),
+      alive(true) {}
 
 ClientNotificationSender::~ClientNotificationSender() {
   join();
