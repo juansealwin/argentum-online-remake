@@ -114,7 +114,7 @@ int Character::set_character_features(character_t id) {
 
     case BANKER:
       width = 25;
-      height = 33;
+      height = 46;
       type_character = ID_BANKER;
       break;
   }

@@ -60,8 +60,6 @@ void SoundEffect::play_sound(int loops) {
 
 void SoundEffect::stop_sound() { Mix_HaltChannel(channel); }
 
-void SoundEffect::stop_music() { Mix_HaltMusic(); }
-
 void SoundEffect::play_music(int loops) {
   if (!Mix_PlayingMusic()) {
     playing_music = false;
@@ -72,6 +70,8 @@ void SoundEffect::play_music(int loops) {
   }
   if (Mix_PausedMusic()) Mix_ResumeMusic();
 }
+
+void SoundEffect::stop_music() { Mix_HaltMusic(); }
 
 void SoundEffect::increase_music_volume(int inc) {
   music_volume = Mix_VolumeMusic(-1);
