@@ -1,7 +1,8 @@
-#include "entity.h"
-#include "stdint.h"
+
 #ifndef PRIEST_H
 #define PRIEST_H
+#include "entity.h"
+#include "stdint.h"
 class Priest : public Entity {
  public:
   Priest(int x, int y, int type, char repr);

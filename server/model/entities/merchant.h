@@ -1,7 +1,7 @@
-#include "entity.h"
-#include "stdint.h"
 #ifndef MERCHANT_H
 #define MERCHANT_H
+#include "entity.h"
+#include "stdint.h"
 class Merchant : public Entity {
  public:
   Merchant(int x, int y, int type, char repr);
