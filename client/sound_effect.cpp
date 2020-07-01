@@ -1,5 +1,4 @@
 #include "sound_effect.h"
-#include <limits.h>
 
 int CHANNEL_COUNTER = 1;
 
@@ -8,9 +7,8 @@ SoundEffect::SoundEffect() {
   music = nullptr;
   playing_music = false;
   playing_sound = false;
-  if (CHANNEL_COUNTER == INT_MAX) 
-    CHANNEL_COUNTER = 1;
-  
+  if (CHANNEL_COUNTER == INT_MAX) CHANNEL_COUNTER = 1;
+
   channel = CHANNEL_COUNTER++;
   Mix_AllocateChannels(Mix_AllocateChannels(-1) + 1);
 }
@@ -40,15 +38,13 @@ void SoundEffect::free_music() {
 void SoundEffect::set_sound(std::string path) {
   free_sound();
   sound = Mix_LoadWAV(path.c_str());
-  if (!sound) 
-    throw SdlException(MSG_ERROR_LOAD_SOUND, Mix_GetError());
+  if (!sound) throw SdlException(MSG_ERROR_LOAD_SOUND, Mix_GetError());
 }
 
 void SoundEffect::set_music(std::string path) {
   free_music();
   music = Mix_LoadMUS(path.c_str());
-  if (!music) 
-    throw SdlException(MSG_ERROR_LOAD_MUSIC, Mix_GetError());
+  if (!music) throw SdlException(MSG_ERROR_LOAD_MUSIC, Mix_GetError());
 }
 
 void SoundEffect::play_sound(int loops) {
@@ -64,6 +60,8 @@ void SoundEffect::play_sound(int loops) {
 
 void SoundEffect::stop_sound() { Mix_HaltChannel(channel); }
 
+void SoundEffect::stop_music() { Mix_HaltMusic(); }
+
 void SoundEffect::play_music(int loops) {
   if (!Mix_PlayingMusic()) {
     playing_music = false;
@@ -72,9 +70,7 @@ void SoundEffect::play_music(int loops) {
       playing_music = true;
     }
   }
-
-  if (Mix_PausedMusic())
-    Mix_ResumeMusic();
+  if (Mix_PausedMusic()) Mix_ResumeMusic();
 }
 
 void SoundEffect::increase_music_volume(int inc) {

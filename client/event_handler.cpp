@@ -29,7 +29,6 @@ void EventHandler::get_events() {
         }
         // User presses a key
         else if (event.type == SDL_KEYDOWN) {
-
           // Select surfaces based on key press
           if (event.key.keysym.sym == SDLK_UP) {
             MoveCommandDTO* move_command =
@@ -56,6 +55,9 @@ void EventHandler::get_events() {
           }
           if (event.key.keysym.sym == SDLK_MINUS) {
             background_music.decrease_music_volume();
+          }
+          if (event.key.keysym.sym == SDLK_m) {
+            background_music.stop_music();
           }
         }
       }

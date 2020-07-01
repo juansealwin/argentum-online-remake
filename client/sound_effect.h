@@ -3,6 +3,7 @@
 
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
+#include <limits.h>
 
 #include <string>
 
@@ -53,6 +54,9 @@ class SoundEffect {
 
   // Para el sonido
   void stop_sound();
+
+  // Para la música
+  void stop_music();
 
   // Checkea si esta playing
   bool is_playing();
