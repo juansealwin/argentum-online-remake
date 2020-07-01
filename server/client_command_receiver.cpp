@@ -6,8 +6,12 @@
 
 ClientCommandReceiver::ClientCommandReceiver(
     Socket& peer_socket, ArgentumGame* game,
-    ThreadSafeQueue<Command*>* commands_queue)
-    : game(game), peer_socket(peer_socket), commands_queue(commands_queue) {}
+    ThreadSafeQueue<Command*>* commands_queue, unsigned int hero_id)
+    : game(game),
+      peer_socket(peer_socket),
+      commands_queue(commands_queue),
+      hero_id(hero_id),
+      alive(true) {}
 
 ClientCommandReceiver::~ClientCommandReceiver() { join(); }
 
@@ -21,9 +25,9 @@ void ClientCommandReceiver::run() {
       std::cout << "Received a new command!" << std::endl;
       delete command_dto;
       commands_queue->push(command);
-    }
-    else {
-      std::cerr << "Received unknown command or client stopped connection!" << std::endl;
+    } else {
+      std::cerr << "Received unknown command or client stopped connection!"
+                << std::endl;
       alive = false;
     }
   }

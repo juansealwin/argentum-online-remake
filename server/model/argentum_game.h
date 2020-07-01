@@ -42,7 +42,7 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
   //devuelve el id auto-generado
-  int add_new_hero(std::string hero_race, std::string hero_class, std::string hero_name);
+  unsigned int add_new_hero(std::string hero_race, std::string hero_class, std::string hero_name);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
   //remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();

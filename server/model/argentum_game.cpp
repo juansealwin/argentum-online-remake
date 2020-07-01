@@ -90,7 +90,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   // map->ocupy_cell(0, 99);
   // entities.emplace(entities_ids, e);
   // entities_ids++;
-  add_new_hero("human", "warrior", "test_name1");
+  //add_new_hero("human", "warrior", "test_name1");
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
@@ -109,7 +109,7 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   // map->empty_cell(entity->x_position, entity->y_position);
 }
 
-int ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
+unsigned int ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
                                 std::string hero_name) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];

@@ -61,9 +61,11 @@ void ClientListener::run() {
     // haber race conditions
     games[login_command->room_number]->add_notification_queue(
         notifications_queue);
+    unsigned int hero_id = games[login_command->room_number]->add_new_hero("human", "warrior", "test_name1");
+
     ClientHandler *client = new ClientHandler(
         std::move(clientSkt), games[login_command->room_number],
-        queues_commands[login_command->room_number], notifications_queue);
+        queues_commands[login_command->room_number], notifications_queue, hero_id);
     clients.push_back(client);
     // client->start();
     garbage_collector();

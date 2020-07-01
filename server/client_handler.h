@@ -18,7 +18,8 @@ class ClientHandler {  //: public Thread {
   // a el juego ArgentumGame recibido por parametro (Es la sala)
   ClientHandler(Socket socket, ArgentumGame *game,
                 ThreadSafeQueue<Command *> *commands_queue,
-                BlockingThreadSafeQueue<Notification *> *notifications_queue);
+                BlockingThreadSafeQueue<Notification *> *notifications_queue,
+                unsigned int hero_id);
   ~ClientHandler();
   // void run() override;
   // Devuelve True mientras el juego siga en curso
