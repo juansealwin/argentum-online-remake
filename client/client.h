@@ -1,6 +1,7 @@
 #ifndef CLIENT_H
 #define CLIENT_H
 
+#include <iostream>
 #include <string>
 #include <vector>
 
@@ -14,6 +15,7 @@
 #include "game.h"
 #include "game_renderer.h"
 #include "game_updater.h"
+#include "login_command_dto.h"
 #include "protocol.h"
 #include "texture.h"
 

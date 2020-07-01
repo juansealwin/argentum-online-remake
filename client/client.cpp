@@ -1,9 +1,5 @@
 #include "client.h"
 
-#include <iostream>
-
-#include "login_command_dto.h"
-
 template <typename T>
 T extract(const std::vector<unsigned char>& v, int pos) {
   T value;

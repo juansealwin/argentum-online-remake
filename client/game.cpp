@@ -34,9 +34,22 @@ Game& Game::operator=(const Game& other_game) {
 Game::~Game() { characters.clear(); }
 
 void Game::update_character(int id, int new_x, int new_y) {
+  // Necesitamos traducir las posiciones de tiles a pixeles
+  int x_render_scale = new_x * TILE_SIZE;
+  int y_render_scale = new_y * TILE_SIZE;
+
   if (id == id_hero)
-    update_map((new_x * TILE_SIZE) - (characters[id]->get_x()),
-               (new_y * TILE_SIZE) - (characters[id]->get_y()));
+    update_map(x_render_scale - characters[id]->get_x(),
+               y_render_scale - characters[id]->get_y());
+
+  // Si el personaje se mueve dentro del viewport emite sonido
+  if ((map_piece.x < x_render_scale) &&
+      (x_render_scale < map_piece.x + screen_width))
+    if ((map_piece.y < y_render_scale) &&
+        (y_render_scale < map_piece.y + screen_width))
+      characters[id]->sound_walk();
+
+  // Actualizamos la posición
   characters[id]->update_position(new_x, new_y);
 }
 

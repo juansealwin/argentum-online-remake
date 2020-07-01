@@ -7,6 +7,7 @@ GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map,
       protected_map(prot_map),
       events_queue(queue) {
   window_init();
+  is_running = true;
 }
 
 void GameRenderer::window_init() {
@@ -15,19 +16,28 @@ void GameRenderer::window_init() {
                             screen_height, SDL_WINDOW_SHOWN);
 
   if (!window) {
-    throw SdlException("Error en la inicialización de la ventana",
-                       SDL_GetError());
+    throw SdlException(MSG_ERROR_SDL_INIT_WINDOW, SDL_GetError());
   } else {
     renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
     if (!renderer) {
-      throw SdlException("Error en la inicialización del render",
-                         SDL_GetError());
+      throw SdlException(MSG_ERROR_SDL_INIT_RENDERER, SDL_GetError());
     } else {
       // Fondo negro
       SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-    }
 
-    is_running = true;
+      // Initialize PNG loading
+      int imgFlags = IMG_INIT_PNG;
+      if (!(IMG_Init(imgFlags) & imgFlags))
+        throw SdlException(MSG_ERROR_SDL_IMG_INIT, IMG_GetError());
+
+      // Inicializamos el mixer de audio
+      if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
+        throw SdlException(MSG_ERROR_SDL_MIXER_INIT, Mix_GetError());
+
+      // Inicializamos TTF
+      if (TTF_Init() == -1)
+        throw SdlException(MSG_ERROR_SDL_TTF_INIT, TTF_GetError());
+    }
   }
 }
 
@@ -42,6 +52,8 @@ GameRenderer::~GameRenderer() {
   }
   IMG_Quit();
   SDL_Quit();
+  Mix_Quit();
+  TTF_Quit();
 }
 
 void GameRenderer::run() {

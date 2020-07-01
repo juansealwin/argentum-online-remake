@@ -2,10 +2,10 @@
 #define GAME_RENDERER_H
 
 #include <SDL2/SDL.h>
-
+#include <SDL2/SDL_mixer.h>
+#include <SDL2/SDL_ttf.h>
 #include <vector>
 #include "protected_map.h"
-#include "exception_messages.h"
 #include "game.h"
 #include "playable_character.h"
 #include "sdl_exception.h"
@@ -13,6 +13,7 @@
 #include "thread.h"
 #include "texture_manager.h"
 #include "events_queue.h"
+#include "sound_effect.h"
 #define FRAME_DELAY 100/6
 
 class GameRenderer : public Thread {
@@ -24,6 +25,7 @@ class GameRenderer : public Thread {
   int screen_height;
   ProtectedMap& protected_map;
   EventsQueue& events_queue;
+  SoundEffect background_music;
 
  public:
   GameRenderer(int, int, ProtectedMap&, EventsQueue&);
