@@ -116,15 +116,15 @@ void Protocol::receive_notification(const Socket& socket,
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
   // std::vector<unsigned char> vector = std::vector<unsigned char>(buffer,
   // buffer + notification_size);
-  int j = 1;
-  while (j < vector.size()) {
-    uint16_t id = ntohs(extract<uint16_t>(vector, j));
-    j += 2;
-    int entity_type = (int)vector.at(j);
-    j++;
-    int x = (int)vector.at(j);
-    j++;
-    int y = (int)vector.at(j);
-    j++;
-  }
+  // int j = 1;
+  // while (j < vector.size()) {
+  //   uint16_t id = ntohs(extract<uint16_t>(vector, j));
+  //   j += 2;
+  //   int entity_type = (int)vector.at(j);
+  //   j++;
+  //   int x = (int)vector.at(j);
+  //   j++;
+  //   int y = (int)vector.at(j);
+  //   j++;
+  // }
 }
