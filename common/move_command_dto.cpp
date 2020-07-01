@@ -5,6 +5,4 @@ MoveCommandDTO::MoveCommandDTO(const movement_t movement_type)
 
 MoveCommandDTO::~MoveCommandDTO() {}
 
-bool MoveCommandDTO::stops_run() { return false; }
-
-int MoveCommandDTO::getId() { return MOVE_COMMAND; }
+int MoveCommandDTO::get_id() { return MOVE_COMMAND; }

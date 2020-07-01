@@ -6,6 +6,7 @@
 #include "drawable.h"
 #include "animation.h"
 #include "sound_effect.h"
+#include "spell.h"
 
 class Character : public Drawable {
  protected:
@@ -13,6 +14,7 @@ class Character : public Drawable {
   Animation animation_move;
   SDL_Rect body_rect;
   SoundEffect walk;
+  Spell spellbound;
 
  public:
   virtual ~Character();

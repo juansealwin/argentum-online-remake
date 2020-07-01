@@ -7,7 +7,7 @@ TextureManager& TextureManager::get_instance() {
 
 TextureManager::TextureManager() {
   std::map<id_texture_t, Texture*>::iterator it;
-  for (it = map.begin() ; it != map.end(); it++) {
+  for (it = map.begin(); it != map.end(); it++) {
     it->second->~Texture();
     delete it->second;
   }
@@ -90,8 +90,83 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_TURTLE_SHIELD] = new Texture("escudo_tortuga.png", renderer);
   map[ID_TURTLE_SHIELD_EQUIPPED] =
       new Texture("escudo_tortuga_equipado.png", renderer);
+
+  /* SPELLS TEXTURES */
+  map[ID_EXPLOSION] = new Texture("explosion1.png", renderer);
+  map[ID_EXPLOSION_1] = new Texture("explosion2.png", renderer);
+  map[ID_EXPLOSION_2] = new Texture("explosion3.png", renderer);
+  map[ID_EXPLOSION_3] = new Texture("explosion4.png", renderer);
+  map[ID_EXPLOSION_4] = new Texture("explosion5.png", renderer);
+  map[ID_EXPLOSION_5] = new Texture("explosion6.png", renderer);
+  map[ID_EXPLOSION_6] = new Texture("explosion7.png", renderer);
+  map[ID_EXPLOSION_7] = new Texture("explosion8.png", renderer);
+  map[ID_EXPLOSION_8] = new Texture("explosion9.png", renderer);
+  map[ID_EXPLOSION_9] = new Texture("explosion10.png", renderer);
+  map[ID_EXPLOSION_10] = new Texture("explosion11.png", renderer);
+  map[ID_EXPLOSION_11] = new Texture("explosion12.png", renderer);
+  map[ID_EXPLOSION_12] = new Texture("explosion13.png", renderer);
+  map[ID_EXPLOSION_13] = new Texture("explosion14.png", renderer);
+  map[ID_EXPLOSION_14] = new Texture("explosion15.png", renderer);
+  map[ID_EXPLOSION_15] = new Texture("explosion16.png", renderer);
+  map[ID_EXPLOSION_16] = new Texture("explosion17.png", renderer);
+  map[ID_EXPLOSION_17] = new Texture("explosion18.png", renderer);
+  map[ID_EXPLOSION_18] = new Texture("explosion19.png", renderer);
+  map[ID_EXPLOSION_19] = new Texture("explosion20.png", renderer);
+  map[ID_EXPLOSION_20] = new Texture("explosion21.png", renderer);
 }
 
 TextureManager::~TextureManager() {}
 
 Texture& TextureManager::get_texture(id_texture_t id) { return *map[id]; }
+
+Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
+  id_texture_t id_frame;
+
+  switch (id) {
+    case ID_EXPLOSION:
+      if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 20)
+        id_frame = ID_EXPLOSION;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 19)
+        id_frame = ID_EXPLOSION_1;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 18)
+        id_frame = ID_EXPLOSION_2;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 17)
+        id_frame = ID_EXPLOSION_3;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 16)
+        id_frame = ID_EXPLOSION_4;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 15)
+        id_frame = ID_EXPLOSION_5;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 14)
+        id_frame = ID_EXPLOSION_6;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 13)
+        id_frame = ID_EXPLOSION_7;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 12)
+        id_frame = ID_EXPLOSION_8;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 11)
+        id_frame = ID_EXPLOSION_9;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 10)
+        id_frame = ID_EXPLOSION_10;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 9)
+        id_frame = ID_EXPLOSION_11;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 8)
+        id_frame = ID_EXPLOSION_12;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 7)
+        id_frame = ID_EXPLOSION_13;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 6)
+        id_frame = ID_EXPLOSION_14;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 5)
+        id_frame = ID_EXPLOSION_15;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 4)
+        id_frame = ID_EXPLOSION_16;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 3)
+        id_frame = ID_EXPLOSION_17;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 2)
+        id_frame = ID_EXPLOSION_18;
+      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION)
+        id_frame = ID_EXPLOSION_19;
+      else
+        id_frame = ID_EXPLOSION_20;
+      break;
+  }
+  return *map[id_frame];
+}

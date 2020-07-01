@@ -1,9 +1,9 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
-    : half_screen_w(new_x), half_screen_h(new_y) {
-  x = new_x*TILE_SIZE;
-  y = new_y*TILE_SIZE;
+PlayableCharacter::PlayableCharacter(character_t id_char, int new_x,
+                                     int new_y) {
+  x = new_x * TILE_SIZE;
+  y = new_y * TILE_SIZE;
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
@@ -14,38 +14,52 @@ PlayableCharacter::PlayableCharacter(character_t id_char, int new_x, int new_y)
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
-  half_screen_w = other_pc.half_screen_w;
-  half_screen_h = other_pc.half_screen_h;
+  /** Copiamos la parte de Drawable **/
   x = other_pc.x;
   y = other_pc.y;
-  type_character = other_pc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_pc.width;
   height = other_pc.height;
+
+  /** Copiamos la parte de Character **/
+  type_character = other_pc.type_character;
+  animation_move = other_pc.animation_move;
   body_rect = other_pc.body_rect;
+  walk = other_pc.walk;
+
+  /** Copiamos la parte de PlayableCharacter **/
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
-
-  animation_move = other_pc.animation_move;
+  helmet = other_pc.helmet;
+  armor = other_pc.armor;
+  shield = other_pc.shield;
+  weapon = other_pc.weapon;
 }
 
 PlayableCharacter& PlayableCharacter::operator=(
     const PlayableCharacter& other_pc) {
-  half_screen_w = other_pc.half_screen_w;
-  half_screen_h = other_pc.half_screen_h;
+  /** Copiamos la parte de Drawable **/
   x = other_pc.x;
   y = other_pc.y;
-  type_character = other_pc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_pc.width;
   height = other_pc.height;
+
+  /** Copiamos la parte de Character **/
+  type_character = other_pc.type_character;
+  animation_move = other_pc.animation_move;
   body_rect = other_pc.body_rect;
+  walk = other_pc.walk;
+
+  /** Copiamos la parte de PlayableCharacter **/
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
-
-  animation_move = other_pc.animation_move;
+  helmet = other_pc.helmet;
+  armor = other_pc.armor;
+  shield = other_pc.shield;
+  weapon = other_pc.weapon;
   return *this;
 }
 
@@ -61,6 +75,7 @@ void PlayableCharacter::update_face_profile(move_t move_type) {
   head_rect.x = move_type * head_rect.w;
 }
 
+/*
 // Creo que esta funcion se va a poder borrar
 void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
   texture_manager.get_texture(type_character)
@@ -69,18 +84,16 @@ void PlayableCharacter::render_as_hero(SDL_Renderer* renderer) {
   texture_manager.get_texture(type_head).render(
       renderer, &head_rect, half_screen_w - head_rect.w / 2,
       half_screen_h - height / 2 - head_rect.h / 2);
-}
+}*/
 
 void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
   if (armor) {
-    texture_manager.get_texture(armor)
-        .render(renderer, &body_rect, x - x_rel,
-                y - height / 2 - y_rel);
+    texture_manager.get_texture(armor).render(renderer, &body_rect, x - x_rel,
+                                              y - height / 2 - y_rel);
   } else {
     texture_manager.get_texture(type_character)
-        .render(renderer, &body_rect, x - x_rel,
-                y - height / 2 - y_rel);
+        .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
   }
   // Renderizamos cabeza
   texture_manager.get_texture(type_head).render(
@@ -89,16 +102,15 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
   // Si tiene el casco equipado lo renderizamos
   if (helmet) {
-    texture_manager.get_texture(helmet)
-        .render(renderer, &head_rect, x + head_rect.w / 4 - x_rel,
-                y - height / 2 - head_rect.h / 2 - y_rel);
+    texture_manager.get_texture(helmet).render(
+        renderer, &head_rect, x + head_rect.w / 4 - x_rel,
+        y - height / 2 - head_rect.h / 2 - y_rel);
   }
 
   // Si tiene el arma equipada la renderizamos
   if (weapon) {
-    texture_manager.get_texture(weapon)
-        .render(renderer, &body_rect, x - width / 2 - x_rel,
-                y - height / 2 - y_rel);
+    texture_manager.get_texture(weapon).render(
+        renderer, &body_rect, x - width / 2 - x_rel, y - height / 2 - y_rel);
   }
 }
 

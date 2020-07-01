@@ -6,6 +6,8 @@
 #include "texture_manager.h"
 #include "types.h"
 
+#define TILE_SIZE 32
+
 class Drawable {
  protected:
   // En que lugar de la imagen nos ubicamos

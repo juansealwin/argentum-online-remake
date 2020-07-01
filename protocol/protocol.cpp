@@ -10,6 +10,7 @@
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
+#include "attack_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -70,7 +71,7 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
-  switch (commandDTO->getId()) {
+  switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
       break;
@@ -80,7 +81,8 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case MOVE_COMMAND:
       send_move(socket, static_cast<MoveCommandDTO*>(commandDTO));
       break;
-    default:
+    case ATTACK_COMMAND:
+      send_move(socket, static_cast<AttackCommandDTO*>(commandDTO));
       break;
   }
 }

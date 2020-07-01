@@ -10,7 +10,6 @@
 #define CLIP_UP 'U'
 #define CLIP_LEFT 'L'
 #define CLIP_RIGHT 'R'
-#define TILE_SIZE 32
 
 class Animation {
  private:

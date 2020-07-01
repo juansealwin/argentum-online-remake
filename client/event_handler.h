@@ -4,6 +4,7 @@
 
 #include <vector>
 
+#include "attack_command_dto.h"
 #include "character.h"
 #include "commands_blocking_queue.h"
 #include "events_queue.h"
@@ -17,15 +18,12 @@
 
 class EventHandler {
  private:
-  // const int player_id;
   CommandsBlockingQueue& commands_queue;
   EventsQueue& events_queue;
   bool& is_running;
   SoundEffect background_music;
 
  public:
-  // EventHandler(const int player_id, CommandsBlockingQueue& commands_queue,
-  //              EventsQueue&, bool&);
   EventHandler(CommandsBlockingQueue& commands_queue, EventsQueue&, bool&);
   ~EventHandler();
   bool is_up();

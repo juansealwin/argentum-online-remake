@@ -5,6 +5,4 @@ LoginCommandDTO::LoginCommandDTO(const int room_number)
 
 LoginCommandDTO::~LoginCommandDTO() {}
 
-bool LoginCommandDTO::stops_run() { return false; }
-
-int LoginCommandDTO::getId() { return LOGIN_COMMAND; }
+int LoginCommandDTO::get_id() { return LOGIN_COMMAND; }
