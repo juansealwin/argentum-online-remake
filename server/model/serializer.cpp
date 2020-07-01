@@ -55,6 +55,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
 std::vector<unsigned char> Serializer::serialize_game_status_v2(
     ArgentumGame *game) {
   std::vector<unsigned char> serialization;
+  //mover a la clase
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
   for (auto &entity : game->entities) {
