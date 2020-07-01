@@ -25,7 +25,7 @@ class ClientNotificationSender : public Thread {
   ArgentumGame *game;
   Socket &peer_socket;
   BlockingThreadSafeQueue<Notification *> *notifications_queue;
-  bool alive = true;
+  bool alive;
 };
 
 #endif  // CLIENT_NOTIFICATION_SENDER_H

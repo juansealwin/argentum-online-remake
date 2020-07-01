@@ -7,12 +7,11 @@ typedef enum { move_down, move_up, move_left, move_right } movement_t;
 
 class MoveCommandDTO : public CommandDTO {
  public:
-  MoveCommandDTO(const int player_id, const movement_t movement_type);
+  MoveCommandDTO(const movement_t movement_type);
   MoveCommandDTO(const MoveCommandDTO &) = delete;
   ~MoveCommandDTO();
   bool stops_run();
   int getId();
-  const int player_id;
   const movement_t movement_type;
 };
 

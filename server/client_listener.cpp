@@ -41,17 +41,30 @@ void ClientListener::stop_listening() {
   }
   server_socket.close();
 }
+
+//agregar mapa en el que este jugando
+StartingInfoNotification *ClientListener::create_start_notification(unsigned int hero_id) {
+  std::vector<unsigned char> notification;
+  //mover a la clase
+  uint8_t notification_id = 2;
+  hero_id = htons(hero_id);
+  notification.push_back(notification_id);
+  notification.resize(notification.size() + sizeof(uint16_t));
+  memcpy(notification.data() + 1, &hero_id, sizeof(uint16_t));
+  return new StartingInfoNotification(notification);
+}
+
 void ClientListener::run() {
   while (true) {
-    Socket clientSkt;
+    Socket client_socket;
     try {
-      clientSkt = this->server_socket.accept();
+      client_socket = this->server_socket.accept();
     } catch (std::invalid_argument) {
       break;
     }
     std::cout << "trying to get rno" << std::endl;
     LoginCommandDTO *login_command =
-        static_cast<LoginCommandDTO *>(Protocol::receive_command(clientSkt));
+        static_cast<LoginCommandDTO *>(Protocol::receive_command(client_socket));
     std::cout << "room number received: " << login_command->room_number
               << std::endl;
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
@@ -61,9 +74,14 @@ void ClientListener::run() {
     // haber race conditions
     games[login_command->room_number]->add_notification_queue(
         notifications_queue);
+    unsigned int hero_id = games[login_command->room_number]->add_new_hero("human", "warrior", "test_name1");
+    StartingInfoNotification *starting_info = create_start_notification(hero_id);
+    Protocol::send_notification(client_socket, starting_info);
+    delete starting_info;
+    //Protocol::send_notification();
     ClientHandler *client = new ClientHandler(
-        std::move(clientSkt), games[login_command->room_number],
-        queues_commands[login_command->room_number], notifications_queue);
+        std::move(client_socket), games[login_command->room_number],
+        queues_commands[login_command->room_number], notifications_queue, hero_id);
     clients.push_back(client);
     // client->start();
     garbage_collector();
