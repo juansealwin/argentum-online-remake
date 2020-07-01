@@ -1,14 +1,14 @@
 #include "command_factory.h"
 #include <iostream>
-Command* CommandFactory::create_command(CommandDTO* command_dto) {
+Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int player_id) {
   int command_id = command_dto->getId();
   switch (command_id) {
     case MOVE_COMMAND:
-      return move_command(dynamic_cast<MoveCommandDTO*>(command_dto));
+      return move_command(dynamic_cast<MoveCommandDTO*>(command_dto), player_id);
   }
 }
 
-MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto) {
+MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto, unsigned int player_id) {
   int x_move = 0;
   int y_move = 0;
   switch (command_dto->movement_type) {
@@ -25,5 +25,5 @@ MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto) {
       y_move = 1;
       break;
   }
-  return new MoveCommand(command_dto->player_id, x_move, y_move);
+  return new MoveCommand(player_id, x_move, y_move);
 }

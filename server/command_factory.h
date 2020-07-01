@@ -5,8 +5,8 @@
 #include "move_command.h"
 #include "move_command_dto.h"
 namespace CommandFactory {
-Command* create_command(CommandDTO* command_dto);
+Command* create_command(CommandDTO* command_dto, unsigned int player_id);
 
-MoveCommand* move_command(MoveCommandDTO* command_dto);
+MoveCommand* move_command(MoveCommandDTO* command_dto, unsigned int player_id);
 }  // namespace CommandFactory
 #endif
