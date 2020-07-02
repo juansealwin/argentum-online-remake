@@ -9,6 +9,8 @@ class Monster : public BaseCharacter {
   Monster(unsigned int unique_id, int x, int y, int id, char repr, int hp,
           int level, int dps, Map *map);
   Monster(const Monster &) = delete;
+  // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
+  // Atacar si hay enemigo cercano (crear proyectil)
   void update() override;
   virtual ~Monster();
   virtual unsigned int receive_damage(unsigned int damage,

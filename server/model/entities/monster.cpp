@@ -16,27 +16,18 @@ Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
 
 void Monster::update() {
   if (!alive) return;
-  // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
-  // Atacar si hay enemigo cercano (danando con dps)
+
   //-------- Movimiento -----------//
-  int x_step = std::get<0>(moves.at(current_move));
-  int y_step = std::get<1>(moves.at(current_move));
-  current_move++;
+  // int x_step = std::get<0>(moves.at(current_move));
+  // int y_step = std::get<1>(moves.at(current_move));
+  // current_move++;
 
-  int next_x_pos = x_position + x_step;
-  int next_y_pos = y_position + y_step;
-  if (!map->tile_is_safe(next_x_pos, next_y_pos)) {
-    move(next_x_pos, next_y_pos);
-  }
-  // if (map->can_ocupy_cell(next_x_pos, next_y_pos) &&
-  //     !map->tile_is_safe(next_x_pos, next_y_pos)) {
-  //   map->ocupy_cell(next_x_pos, next_y_pos);
-  //   map->empty_cell(x_position, y_position);
-  //   x_position = next_x_pos;
-  //   y_position = next_y_pos;
+  // int next_x_pos = x_position + x_step;
+  // int next_y_pos = y_position + y_step;
+  // if (!map->tile_is_safe(next_x_pos, next_y_pos)) {
+  //   move(next_x_pos, next_y_pos);
   // }
-
-  if (current_move >= moves.size()) current_move = 0;
+  // if (current_move >= moves.size()) current_move = 0;
 }
 
 unsigned int Monster::damage(BaseCharacter *other) {
@@ -46,10 +37,14 @@ unsigned int Monster::damage(BaseCharacter *other) {
 }
 
 unsigned int Monster::receive_damage(unsigned int damage, bool critical) {
+  std::cout << "Monster received damage!!" << std::endl;
   if (!alive) throw ModelException("Monster is already death!", "6");
-  unsigned int last_hp = current_hp;
-  current_hp = std::max(current_hp - damage, (unsigned int)0);
+  int last_hp = current_hp;
+  current_hp = std::max(current_hp - (int)damage, 0);
   if (current_hp == 0) alive = false;
+  std::cout << "Monster is alive?? " << alive << std::endl;
+  std::cout << "Returning" << last_hp - current_hp << std::endl;
+  std::cout << "last hp: " << last_hp << " current_hp " << current_hp << std::endl;
   return last_hp - current_hp;
 }
 
@@ -57,6 +52,6 @@ void Monster::notify_damage_done(BaseCharacter *other, unsigned int damage_done)
   //subirlo de nivel?
 }
 
-bool Monster::is_death() { return alive; }
+bool Monster::is_death() { return !alive; }
 
 Monster::~Monster() {}

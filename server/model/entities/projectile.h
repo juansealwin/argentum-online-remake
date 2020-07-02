@@ -12,7 +12,7 @@ class Projectile : public Entity {
   Projectile(const Projectile &) = delete;
   // Mover proyectil, chequear colision
   void update() override;
-  void move();
+  void impact_at_position(int x, int y);
   bool collided;
   int get_collided_entity();
   unsigned int get_damage();

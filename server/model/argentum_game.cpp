@@ -162,6 +162,7 @@ void ArgentumGame::update(bool one_second_update) {
           BaseCharacter *attacked_entity =
               dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
           if (!attacked_entity->is_death()) {
+            std::cout << "Proyectil aplicando dano.." << std::endl;
             unsigned int damage_done = attacked_entity->receive_damage(
                 projectile->get_damage(), projectile->is_critical());
             unsigned int attacker_player_id = projectile->get_attacker_id();
@@ -169,14 +170,17 @@ void ArgentumGame::update(bool one_second_update) {
                 dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
             attacker->notify_damage_done(attacked_entity, damage_done);
           }
+          else { std::cout << "Esta meurto?? " << std::endl;}
           if (projectile->unique_id < 18) throw_projectile(15);
         }
+        else { std::cout << " No casteo, su id es : " << attacked_player_id; }
         // if (stop_projectile) projectile->kill();
         projectile->kill();
       }
       if (it->second->alive == false) {
         it = projectiles.erase(it++);
       } else {
+        std::cout << "Proyectil sigue vivo" << std::endl;
         ++it;
       }
     }
@@ -207,8 +211,7 @@ void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
   bool one_second_passed;
 
-  place_hero("human", "warrior", "test_name1", 0, 16);
-  place_hero("human", "warrior", "test_name1", 5, 16);
+  place_hero("human", "warrior", "test_name1", 10, 23);
 
   throw_projectile(15);
   while (alive) {
@@ -302,6 +305,13 @@ void ArgentumGame::clean_notifications_queues() {
 /* private methods */
 
 void ArgentumGame::remove_death_entities() {
+  for (auto it = monsters.cbegin(); it != monsters.cend();) {
+    if (it->second->alive == false) {
+      it = monsters.erase(it++);
+    } else {
+      ++it;
+    }
+  }
   for (auto it = entities.cbegin(); it != entities.cend();) {
     if (it->second->alive == false) {
       // aca antes de borrar al bicho llamar a algun metodo polimorfico que
@@ -315,6 +325,8 @@ void ArgentumGame::remove_death_entities() {
       ++it;
     }
   }
+
+
 }
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
@@ -363,7 +375,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(90, 7, 7));
   hero->equip_shield(90);
-  hero->add_item(new Weapon(24, 25, 40, 50));
+  hero->add_item(new Weapon(24, 25, 10, 15));
   hero->equip_weapon(24);
 
   map->ocupy_cell(x, y, entities_ids);
