@@ -16,7 +16,7 @@ BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y, unsigned int 
 
 void BaseCharacter::move(int next_x, int next_y) {
   if (map->can_ocupy_cell(next_x, next_y)) {
-    map->ocupy_cell(next_x, next_y);
+    map->ocupy_cell(next_x, next_y, unique_id);
     map->empty_cell(x_position, y_position);
     change_orientation(x_position, y_position, next_x, next_y);
     x_position = next_x;

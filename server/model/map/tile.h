@@ -7,7 +7,7 @@ class Tile {
   ~Tile();
   Tile(const Tile &) = delete;
   char char_representation();
-  void fill_cell();
+  void fill_cell(unsigned int uid);
   void empty_cell();
   int entity_id;
 

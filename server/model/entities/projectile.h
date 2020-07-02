@@ -12,6 +12,7 @@ class Projectile : public Entity {
   Projectile(const Projectile &) = delete;
   // Mover proyectil, chequear colision
   void update() override;
+  bool collided;
 
  private:
   unsigned int damage;
@@ -21,6 +22,10 @@ class Projectile : public Entity {
   unsigned int range;
   orientation_t orientation;
   Map *map;
+  int collided_player;
+  int get_next_x();
+  int get_next_y();
+  
 };
 
 #endif  // PROJECTILE_H

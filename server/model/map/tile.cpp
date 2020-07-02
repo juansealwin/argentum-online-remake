@@ -17,6 +17,12 @@ char Tile::char_representation() {
     return 'o';
 }
 
-void Tile::empty_cell() { free = true; }
+void Tile::empty_cell() {
+  entity_id = -1;
+  free = true;
+}
 
-void Tile::fill_cell() { free = false; }
+void Tile::fill_cell(unsigned int uid) {
+  entity_id = uid;
+  free = false;
+}

@@ -34,10 +34,11 @@ class Map {
   actualizar el x,y de la entidad. La celda en x1,y1 quedara como liberada,
   x2,y2 ocupada. Se debe llamar a empty_cell con el lugar anterior.
     */
-  bool ocupy_cell(int x, int y);
+  bool ocupy_cell(int x, int y, unsigned int entity_id);
   Map(const Map &) = delete;
   bool tile_is_safe(int x, int y);
   std::tuple<int, int> get_random_free_space();
+  int get_uid(int x, int y);
  private:
   int rows;
   int cols;
