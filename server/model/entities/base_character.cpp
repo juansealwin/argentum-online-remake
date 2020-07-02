@@ -1,18 +1,18 @@
 #include "base_character.h"
 
 #include <iostream>
-BaseCharacter::BaseCharacter(int x, int y, unsigned int type, char repr,
+BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr,
                              unsigned int max_hp, unsigned int level, Map *map)
-    : Entity(x, y, type, repr),
+    : Entity(unique_id, x, y, type, repr),
       current_hp(max_hp),
       max_hp(max_hp),
       level(level),
 
       map(map) {}
 
-BaseCharacter::BaseCharacter(int x, int y, unsigned int type, char repr,
+BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr,
                              unsigned int level, Map *map)
-    : Entity(x, y, type, repr), level(level), map(map) {}
+    : Entity(unique_id, x, y, type, repr), level(level), map(map) {}
 
 void BaseCharacter::move(int next_x, int next_y) {
   if (map->can_ocupy_cell(next_x, next_y)) {

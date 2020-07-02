@@ -17,9 +17,9 @@ class Item;
 class Hero : public BaseCharacter {
  public:
   // constructor para heroes nuevos
-  Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
-       unsigned int strength, unsigned int intelligence, unsigned int agility,
-       unsigned int constitution, unsigned int f_class_hp,
+  Hero(unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
+       unsigned int level, unsigned int strength, unsigned int intelligence,
+       unsigned int agility, unsigned int constitution, unsigned int f_class_hp,
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
@@ -27,7 +27,7 @@ class Hero : public BaseCharacter {
   // devuelve el dano causado
   void update() override;
   virtual unsigned int damage(BaseCharacter *other) override;
-  //devuelve (dano, critico, item id)
+  // devuelve (dano, critico, item id)
   std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
   // unsigned int damage(Hero *other);
   // unsigned int damage(Monster *m);

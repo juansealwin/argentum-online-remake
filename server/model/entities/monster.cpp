@@ -1,9 +1,9 @@
 #include "monster.h"
 
 #include <iostream>
-Monster::Monster(int x, int y, int id, char repr, int hp, int level, int dps,
-                 Map *map)
-    : BaseCharacter(x, y, id, repr, hp, level, map), dps(dps) {
+Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
+                 int hp, int level, int dps, Map *map)
+    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map), dps(dps) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
   std::tuple<int, int> third_move = std::tuple<int, int>(0, -1);

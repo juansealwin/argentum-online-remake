@@ -1,19 +1,28 @@
 #ifndef ENTITY_H
 #define ENTITY_H
+
+typedef enum {
+  orientation_up,
+  orientation_right,
+  orientation_down,
+  orientation_left
+} orientation_t;
+
 #include "model_exceptions.h"
 class Entity {
  public:
-  Entity(int x, int y, int type, char repr);
+  Entity(unsigned int unique_id, int x, int y, int type, char repr);
   Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
   virtual void update() = 0;
+  unsigned int unique_id;
   int x_position;
   int y_position;
   int type;
   bool alive;
   //toma valores de 0 a 3
-  uint8_t orientation;
+  orientation_t orientation;
 
  private:
 

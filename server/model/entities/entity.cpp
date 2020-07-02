@@ -1,12 +1,13 @@
 #include "entity.h"
 
-Entity::Entity(int x, int y, int type, char repr)
-    : x_position(x),
+Entity::Entity(unsigned int unique_id, int x, int y, int type, char repr)
+    : unique_id(unique_id),
+      x_position(x),
       y_position(y),
       type(type),
       representation(repr),
       alive(true),
-      orientation(0) {}
+      orientation(orientation_down) {}
 
 Entity::~Entity() {}
 

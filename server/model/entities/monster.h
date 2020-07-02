@@ -6,8 +6,8 @@
 #include "stdint.h"
 class Monster : public BaseCharacter {
  public:
-  Monster(int x, int y, int id, char repr, int hp, int level, int dps,
-          Map *map);
+  Monster(unsigned int unique_id, int x, int y, int id, char repr, int hp,
+          int level, int dps, Map *map);
   Monster(const Monster &) = delete;
   void update() override;
   virtual ~Monster();

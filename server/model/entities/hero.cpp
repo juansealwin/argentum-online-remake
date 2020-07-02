@@ -4,14 +4,15 @@
 #include "staff.h"
 #include "weapon.h"
 
-Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
-           unsigned int strength, unsigned int intelligence,
-           unsigned int agility, unsigned int constitution,
-           unsigned int f_class_hp, unsigned int f_race_hp,
-           unsigned int f_race_recovery, unsigned int f_race_mana,
-           unsigned int f_class_mana, unsigned int f_class_meditation,
-           unsigned int gold, unsigned int class_id, Map *map, std::string name)
-    : BaseCharacter(x, y, race_id, repr, level, map),
+Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
+           char repr, unsigned int level, unsigned int strength,
+           unsigned int intelligence, unsigned int agility,
+           unsigned int constitution, unsigned int f_class_hp,
+           unsigned int f_race_hp, unsigned int f_race_recovery,
+           unsigned int f_race_mana, unsigned int f_class_mana,
+           unsigned int f_class_meditation, unsigned int gold,
+           unsigned int class_id, Map *map, std::string name)
+    : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
       agility(agility),

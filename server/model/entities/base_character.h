@@ -5,22 +5,15 @@
 #include "map.h"
 #include "stdint.h"
 
-typedef enum {
-  orientation_up,
-  orientation_right,
-  orientation_down,
-  orientation_left
-} orientation_t;
-
 class Map;
 class BaseCharacter : public Entity {
  public:
   // Este primer constructor lo usa la clase hija Monster
-  BaseCharacter(int x, int y, unsigned int type, char repr, unsigned int max_hp,
+  BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr, unsigned int max_hp,
                 unsigned int level, Map *map);
   // Este segundo constructor lo usa el heroe ya que max_hp en ese caso es
   // calculado
-  BaseCharacter(int x, int y, unsigned int type, char repr, unsigned int level,
+  BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr, unsigned int level,
                 Map *map);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;

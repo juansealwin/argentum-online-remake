@@ -30,11 +30,11 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
     // en el futuro podria simplificarse, el caracter lo recibo para debug
 
     if (type == PRIEST) {
-      e = new Priest(row, col, type, 'p');
+      e = new Priest(entities_ids, row, col, type, 'p');
     } else if (type == MERCHANT) {
-      e = new Merchant(row, col, type, 'm');
+      e = new Merchant(entities_ids, row, col, type, 'm');
     } else if (type == BANKER) {
-      e = new Banker(row, col, type, 'b');
+      e = new Banker(entities_ids, row, col, type, 'b');
     }
     if (e) {
       // map->place_entity(row, col, e);
@@ -69,7 +69,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     }
     if (type == GOBLIN || type == ZOMBIE || type == SPIDER ||
         type == SKELETON) {
-      e = new Monster(row, col, entity["id"].asInt(), 'g',
+      e = new Monster(entities_ids, row, col, entity["id"].asInt(), 'g',
                       entity["maxHp"].asInt(), entity["level"].asInt(),
                       entity["dps"].asInt(), map);
     }
@@ -110,7 +110,8 @@ void ArgentumGame::throw_projectile(int attacker_id) {
   unsigned int x = std::get<0>(projectile_position);
   unsigned int y = std::get<1>(projectile_position);
   Projectile *projectile =
-      new Projectile(x, y, item_id, 'p', dmg, critical, attacker_id, range);
+      new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
+                     attacker_id, range, hero->orientation, map);
   projectiles.emplace(entities_ids, projectile);
   entities.emplace(entities_ids++, projectile);
 }
@@ -126,7 +127,8 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   Hero *hero = new Hero(
-      x, y, race_stats["id"].asUInt(), 'h', class_stats["level"].asUInt(),
+      entities_ids, x, y, race_stats["id"].asUInt(), 'h',
+      class_stats["level"].asUInt(),
       race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
       race_stats["intelligence"].asUInt() +
           class_stats["intelligence"].asUInt(),
@@ -162,11 +164,11 @@ void ArgentumGame::update(bool one_second_update) {
     delete cmd;
   }
   if (one_second_update) {
-    //auto_move_monsters();
+    // auto_move_monsters();
     // for (auto &entity : entities) {
     //   entity.second->update();
     // }
-    //crear managers que hagan esto
+    // crear managers que hagan esto
     for (auto &monster : monsters) {
       monster.second->update();
     }
