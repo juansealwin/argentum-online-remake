@@ -28,7 +28,6 @@ class BaseCharacter : public Entity {
   unsigned int level;
 
  protected:
-  unsigned int type;
   char representation;
   Map *map;
 

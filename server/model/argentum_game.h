@@ -75,7 +75,8 @@ class ArgentumGame : public Thread {
   void place_initial_npcs(Json::Value map_cfg);
   void remove_death_entities();
   // entities se usa para serializar el mapa (quitar mas adelante)
-  std::map<unsigned int, Entity *> entities;
+  //std::map<unsigned int, Entity *> entities;
+  std::map<unsigned int, Entity *> npcs;
   std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;

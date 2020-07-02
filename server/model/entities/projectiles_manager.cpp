@@ -14,19 +14,20 @@ void ProjectileManager::update(
   auto time_difference = actual_time - last_update_time;
   // 4 movimientos por segundo para los proyectiles
   if (time_difference.count() >= 250000000) {
-    for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
+    //for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
+    for (auto &projectile : projectiles) {
       std::cout << "iterating projectiles" << std::endl;
-      Projectile *projectile = it->second;
-      projectile->update();
-      if (projectile->collided) {
-        manage_collision(projectile, heroes, monsters);
+      Projectile *p = projectile.second;
+      p->update();
+      if (p->collided) {
+        manage_collision(p, heroes, monsters);
       }
       // esto hacerlo despues, que la clase game se ocupe de eliminarlo
-      if (it->second->alive == false) {
-        it = projectiles.erase(it++);
-      } else {
-        ++it;
-      }
+      // if (it->second->alive == false) {
+      //   it = projectiles.erase(it++);
+      // } else {
+      //   ++it;
+      // }
     }
   }
 }
