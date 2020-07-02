@@ -1,15 +1,38 @@
 #include "spell.h"
 
-Spell::Spell() { alive = false; }
+Spell::Spell() { life_time = 0; }
 
-Spell::Spell(id_texture_t type, int new_x, int new_y) {
-  x = new_x * TILE_SIZE;
-  y = new_y * TILE_SIZE;
+Spell::Spell(id_texture_t type, int time_left) {
   set_life_time(type);
-  alive = true;
+  life_time = time_left;
+}
+
+Spell::Spell(const Spell& other_spell) {
+  width = other_spell.width;
+  height = other_spell.height;
+  life_time = other_spell.life_time;
+  spell_type = other_spell.spell_type;
+  one_texture_animation = other_spell.one_texture_animation;
+  if (!one_texture_animation) {
+    animation_cast = other_spell.animation_cast;
+    animation_frame = other_spell.animation_frame;
+  }
 }
 
 Spell::~Spell() {}
+
+Spell& Spell::operator=(const Spell& other_spell) {
+  width = other_spell.width;
+  height = other_spell.height;
+  life_time = other_spell.life_time;
+  spell_type = other_spell.spell_type;
+  one_texture_animation = other_spell.one_texture_animation;
+  if (!one_texture_animation) {
+    animation_cast = other_spell.animation_cast;
+    animation_frame = other_spell.animation_frame;
+  }
+  return *this;
+}
 
 void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   if (one_texture_animation)
@@ -18,12 +41,7 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
   else
     texture_manager.get_texture(spell_type, life_time)
-        .render(renderer, NULL, NULL);
-
-  life_time--;
-  // Borrame
-  if (!life_time) life_time = FRAMES_PER_TEXT_EXPLOSION * FRAMES_EXPLOSION;
-  // alive = false;
+        .render(renderer, NULL, x_rel, y_rel);
 }
 
 void Spell::set_life_time(id_texture_t type) {
@@ -32,6 +50,9 @@ void Spell::set_life_time(id_texture_t type) {
       break;
 
     case ID_ELECTRIC_SHOCK:
+      width = 128;
+      height = 128;
+      one_texture_animation = false;
       break;
 
     case ID_HEAL:
@@ -40,11 +61,10 @@ void Spell::set_life_time(id_texture_t type) {
     case ID_EXPLOSION:
       width = 150;
       height = 150;
-      life_time = FRAMES_PER_TEXT_EXPLOSION * FRAMES_EXPLOSION;
       one_texture_animation = false;
       break;
   }
   spell_type = type;
 }
 
-bool Spell::spell_alive() { return alive; }
+int Spell::spell_alive() { return life_time; }

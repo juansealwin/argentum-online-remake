@@ -108,6 +108,10 @@ void Game::update_map(int new_x, int new_y) {
   }
 }
 
+void Game::update_spellbound(int id, id_texture_t spell_type, int lifetime) {
+  characters[id]->set_spell(spell_type, lifetime);
+}
+
 void Game::render(SDL_Renderer* renderer) {
   // Renderizamos el fondo estático
   texture_manager.get_texture(background)

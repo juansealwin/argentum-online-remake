@@ -7,8 +7,6 @@ Npc::Npc(character_t id_npc, int new_x, int new_y) {
   animation_move = Animation(width, height, type_character);
 }
 
-// Npc::Npc(int, int, id_texture_t)
-
 Npc::Npc(const Npc& other_npc) {
   /** Copiamos la parte de Drawable **/
   x = other_npc.x;

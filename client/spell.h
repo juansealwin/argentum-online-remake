@@ -12,16 +12,17 @@ class Spell : public Drawable {
   int life_time;
   Animation animation_cast;
   SDL_Rect animation_frame;
-  bool alive;
   bool one_texture_animation;
 
  public:
   Spell();
-  Spell(id_texture_t, int, int);
+  Spell(const Spell&);
+  Spell(id_texture_t, int);
   ~Spell();
+  Spell& operator=(const Spell&);
   virtual void render(SDL_Renderer*, int, int) override;
   void set_life_time(id_texture_t);
-  bool spell_alive();
+  int spell_alive();
 };
 
 #endif

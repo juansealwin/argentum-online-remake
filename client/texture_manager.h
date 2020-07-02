@@ -9,7 +9,7 @@
 #include "texture.h"
 #include "types.h"
 
-#define FRAMES_PER_TEXT_EXPLOSION 7
+
 
 class TextureManager {
  private:

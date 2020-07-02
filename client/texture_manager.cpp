@@ -92,6 +92,32 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
       new Texture("escudo_tortuga_equipado.png", renderer);
 
   /* SPELLS TEXTURES */
+  map[ID_BLEEDING] = new Texture("sangrado1.png", renderer);
+  map[ID_BLEEDING_1] = new Texture("sangrado2.png", renderer);
+  map[ID_BLEEDING_2] = new Texture("sangrado3.png", renderer);
+  map[ID_BLEEDING_3] = new Texture("sangrado4png", renderer);
+  map[ID_BLEEDING_4] = new Texture("sangrado5.png", renderer);
+
+  map[ID_MAGIC_ARROW] = new Texture("flecha_magica.png", renderer);
+
+  map[ID_HEAL] = new Texture("curar.png", renderer);
+
+  map[ID_ELECTRIC_SHOCK] = new Texture("descarga_electrica1.png", renderer);
+  map[ID_ELECTRIC_SHOCK_1] = new Texture("descarga_electrica2.png", renderer);
+  map[ID_ELECTRIC_SHOCK_2] = new Texture("descarga_electrica3.png", renderer);
+  map[ID_ELECTRIC_SHOCK_3] = new Texture("descarga_electrica4.png", renderer);
+  map[ID_ELECTRIC_SHOCK_4] = new Texture("descarga_electrica5.png", renderer);
+  map[ID_ELECTRIC_SHOCK_5] = new Texture("descarga_electrica6.png", renderer);
+  map[ID_ELECTRIC_SHOCK_6] = new Texture("descarga_electrica7.png", renderer);
+  map[ID_ELECTRIC_SHOCK_7] = new Texture("descarga_electrica8.png", renderer);
+  map[ID_ELECTRIC_SHOCK_8] = new Texture("descarga_electrica9.png", renderer);
+  map[ID_ELECTRIC_SHOCK_9] = new Texture("descarga_electrica10.png", renderer);
+  map[ID_ELECTRIC_SHOCK_10] = new Texture("descarga_electrica11.png", renderer);
+  map[ID_ELECTRIC_SHOCK_11] = new Texture("descarga_electrica12.png", renderer);
+  map[ID_ELECTRIC_SHOCK_12] = new Texture("descarga_electrica13.png", renderer);
+  map[ID_ELECTRIC_SHOCK_13] = new Texture("descarga_electrica14.png", renderer);
+  map[ID_ELECTRIC_SHOCK_14] = new Texture("descarga_electrica15.png", renderer);
+
   map[ID_EXPLOSION] = new Texture("explosion1.png", renderer);
   map[ID_EXPLOSION_1] = new Texture("explosion2.png", renderer);
   map[ID_EXPLOSION_2] = new Texture("explosion3.png", renderer);
@@ -124,49 +150,50 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
 
   switch (id) {
     case ID_EXPLOSION:
-      if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 20)
-        id_frame = ID_EXPLOSION;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 19)
-        id_frame = ID_EXPLOSION_1;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 18)
-        id_frame = ID_EXPLOSION_2;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 17)
-        id_frame = ID_EXPLOSION_3;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 16)
-        id_frame = ID_EXPLOSION_4;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 15)
-        id_frame = ID_EXPLOSION_5;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 14)
-        id_frame = ID_EXPLOSION_6;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 13)
-        id_frame = ID_EXPLOSION_7;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 12)
-        id_frame = ID_EXPLOSION_8;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 11)
-        id_frame = ID_EXPLOSION_9;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 10)
-        id_frame = ID_EXPLOSION_10;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 9)
-        id_frame = ID_EXPLOSION_11;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 8)
-        id_frame = ID_EXPLOSION_12;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 7)
-        id_frame = ID_EXPLOSION_13;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 6)
-        id_frame = ID_EXPLOSION_14;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 5)
-        id_frame = ID_EXPLOSION_15;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 4)
-        id_frame = ID_EXPLOSION_16;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 3)
-        id_frame = ID_EXPLOSION_17;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION * 2)
-        id_frame = ID_EXPLOSION_18;
-      else if (lifetime > FRAMES_PER_TEXT_EXPLOSION)
-        id_frame = ID_EXPLOSION_19;
+      if (lifetime > FRAMES_PER_TEXTURE * 20)
+        id_frame = id;
+      else if (lifetime > FRAMES_PER_TEXTURE * 19)
+        id_frame = (id_texture_t)(id + 1);
+      else if (lifetime > FRAMES_PER_TEXTURE * 18)
+        id_frame = (id_texture_t)(id + 2);
+      else if (lifetime > FRAMES_PER_TEXTURE * 17)
+        id_frame = (id_texture_t)(id + 3);
+      else if (lifetime > FRAMES_PER_TEXTURE * 16)
+        id_frame = (id_texture_t)(id + 4);
+      else if (lifetime > FRAMES_PER_TEXTURE * 15)
+        id_frame = (id_texture_t)(id + 5);
+      else if (lifetime > FRAMES_PER_TEXTURE * 14)
+        id_frame = (id_texture_t)(id + 6);
+      else if (lifetime > FRAMES_PER_TEXTURE * 13)
+        id_frame = (id_texture_t)(id + 7);
+      else if (lifetime > FRAMES_PER_TEXTURE * 12)
+        id_frame = (id_texture_t)(id + 8);
+      else if (lifetime > FRAMES_PER_TEXTURE * 11)
+        id_frame = (id_texture_t)(id + 9);
+      else if (lifetime > FRAMES_PER_TEXTURE * 10)
+        id_frame = (id_texture_t)(id + 10);
+      else if (lifetime > FRAMES_PER_TEXTURE * 9)
+        id_frame = (id_texture_t)(id + 11);
+      else if (lifetime > FRAMES_PER_TEXTURE * 8)
+        id_frame = (id_texture_t)(id + 12);
+      else if (lifetime > FRAMES_PER_TEXTURE * 7)
+        id_frame = (id_texture_t)(id + 13);
+      else if (lifetime > FRAMES_PER_TEXTURE * 6)
+        id_frame = (id_texture_t)(id + 14);
+      else if (lifetime > FRAMES_PER_TEXTURE * 5)
+        id_frame = (id_texture_t)(id + 15);
+      else if (lifetime > FRAMES_PER_TEXTURE * 4)
+        id_frame = (id_texture_t)(id + 16);
+      else if (lifetime > FRAMES_PER_TEXTURE * 3)
+        id_frame = (id_texture_t)(id + 17);
+      else if (lifetime > FRAMES_PER_TEXTURE * 2)
+        id_frame = (id_texture_t)(id + 18);
+      else if (lifetime > FRAMES_PER_TEXTURE)
+        id_frame = (id_texture_t)(id + 19);
       else
-        id_frame = ID_EXPLOSION_20;
+        id_frame = (id_texture_t)(id + 20);
       break;
   }
+
   return *map[id_frame];
 }

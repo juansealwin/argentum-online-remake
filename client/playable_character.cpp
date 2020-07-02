@@ -11,7 +11,6 @@ PlayableCharacter::PlayableCharacter(character_t id_char, int new_x,
   armor = ID_NULL;
   weapon = ID_NULL;
   shield = ID_NULL;
-  //set_spell(ID_EXPLOSION);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -106,8 +105,8 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   }
 
   // Si esta afectado por algún hechizo lo renderizamos
-  /*if (spellbound.spell_alive())
-    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);*/
+  if (spellbound.spell_alive())
+    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
 }
 
 int PlayableCharacter::set_head_dimensions(character_t id) {

@@ -38,6 +38,7 @@ class Game {
   void render(SDL_Renderer*);
   void update_map(int, int);
   void update_character(int, int, int);
+  void update_spellbound(int, id_texture_t, int);
   void change_map(int);
   void load_character(int, character_t, int, int);
   void render_characters(SDL_Renderer*);
