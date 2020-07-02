@@ -22,9 +22,11 @@ void ClientCommandReceiver::run() {
   while (alive) {
     CommandDTO* command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
-      Command* command = CommandFactory::create_command(command_dto, hero_id);
+      if (command_blocker.can_process(command_dto)) {
+        Command* command = CommandFactory::create_command(command_dto, hero_id);
+        commands_queue->push(command);
+      }
       delete command_dto;
-      commands_queue->push(command);
     } else {
       std::cerr << "Received unknown command or client stopped connection!"
                 << std::endl;

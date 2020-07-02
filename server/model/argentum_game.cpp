@@ -63,9 +63,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
       e = new Banker(entities_ids, row, col, type, 'b');
     }
     if (e) {
-      // map->place_entity(row, col, e);
       map->ocupy_cell(row, col, entities_ids);
-      // entities.emplace(entities_ids++, e);
       npcs.emplace(entities_ids++, e);
     }
     col++;
@@ -101,11 +99,8 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
                       entity["dps"].asInt(), map);
     }
     if (e) {
-      // map->place_entity(row, col, e);
       map->ocupy_cell(row, col, entities_ids);
       monsters.emplace(entities_ids++, e);
-      // entities.emplace(entities_ids++, e);
-      // entities_ids++;
     }
     col++;
     if (col == map_cols) {
@@ -120,7 +115,6 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(heroes.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
-  throw_projectile(entity_id);
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
@@ -143,7 +137,7 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
                        attacker_id, range, hero->orientation, map);
     projectiles.emplace(entities_ids++, projectile);
-    // entities.emplace(entities_ids++, projectile);
+    
   } 
 }
 
@@ -213,9 +207,6 @@ void ArgentumGame::print_debug_map() {
 
 ArgentumGame::~ArgentumGame() {
   std::unique_lock<std::mutex> lock(mutex);
-  // for (auto &entity : entities) {
-  //   delete entity.second;
-  // }
   for (auto &monster : monsters) {
     delete monster.second;
   }
@@ -334,10 +325,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->equip_shield(90);
   hero->add_item(new Weapon(24, 25, 10, 15));
   hero->equip_weapon(24);
-  std::cout << "---------placing hero with id-----------: " << entities_ids
-            << std::endl;
   map->ocupy_cell(x, y, entities_ids);
-  // entities.emplace(entities_ids, hero);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
 }
@@ -348,8 +336,6 @@ void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
                            entity["maxHp"].asInt(), entity["level"].asInt(),
                            entity["dps"].asInt(), map);
   map->ocupy_cell(x, y, entities_ids);
-  std::cout << "Placing monster with id" << entities_ids << std::endl;
 
   monsters.emplace(entities_ids++, e);
-  // entities.emplace(entities_ids++, e);
 }
