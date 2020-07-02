@@ -37,7 +37,7 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
   if (bytes_rcv <= 0) return nullptr;  // cerro conexion
-  std::cout << "Command id recibido: " << (int)command_id << std::endl;
+  //std::cout << "Command id recibido: " << (int)command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);

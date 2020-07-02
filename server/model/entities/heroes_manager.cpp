@@ -15,4 +15,19 @@ void HeroesManager::update(std::map<unsigned int, Hero *> &heroes) {
       hero.second->update();
     }
   }
+  last_update_time = actual_time;
+}
+
+void HeroesManager::remove_death_heroes(std::map<unsigned int, Hero *> &heroes, Map *map) {
+  for (auto it = heroes.cbegin(); it != heroes.cend();) {
+    if (it->second->alive == false) {
+      int x_pos = it->second->x_position;
+      int y_pos = it->second->y_position;
+      map->empty_cell(x_pos, y_pos);
+      delete it->second;
+      it = heroes.erase(it++);
+    } else {
+      ++it;
+    }
+  }
 }

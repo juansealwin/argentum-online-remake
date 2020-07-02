@@ -23,27 +23,27 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
 }
 
 void ArgentumGame::tests_proyectiles() {
-  std::cout << "Running tests" << std::endl;
-  place_hero("human", "warrior", "test_name1", 10, 23);
-  throw_projectile(15);
-  place_hero("human", "warrior", "test_name1", 0, 0);
-  place_hero("human", "warrior", "test_name1", 1, 0);
-  place_monster(2, 0);
-  throw_projectile(17);
-  throw_projectile(18);
-  place_hero("human", "warrior", "test_name1", 0, 3);
-  place_hero("human", "warrior", "test_name1", 5, 3);
-  throw_projectile(22);
-  throw_projectile(23);
-  place_monster(10, 3);
-  unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
-  unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
-  throw_projectile(hero1);
-  throw_projectile(hero2);
-  unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
-  unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
-  throw_projectile(hero3);
-  throw_projectile(hero4);
+  // std::cout << "Running tests" << std::endl;
+  // place_hero("human", "warrior", "test_name1", 10, 23);
+  // throw_projectile(15);
+  // place_hero("human", "warrior", "test_name1", 0, 0);
+  // place_hero("human", "warrior", "test_name1", 1, 0);
+  // place_monster(2, 0);
+  // throw_projectile(17);
+  // throw_projectile(18);
+  // place_hero("human", "warrior", "test_name1", 0, 3);
+  // place_hero("human", "warrior", "test_name1", 5, 3);
+  // throw_projectile(22);
+  // throw_projectile(23);
+  // place_monster(10, 3);
+  // unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
+  // unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
+  // throw_projectile(hero1);
+  // throw_projectile(hero2);
+  // unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
+  // unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
+  // throw_projectile(hero3);
+  // throw_projectile(hero4);
 }
 
 void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
@@ -65,9 +65,8 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
     if (e) {
       // map->place_entity(row, col, e);
       map->ocupy_cell(row, col, entities_ids);
-      //entities.emplace(entities_ids++, e);
+      // entities.emplace(entities_ids++, e);
       npcs.emplace(entities_ids++, e);
-
     }
     col++;
     if (col == map_cols) {
@@ -105,7 +104,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
       // map->place_entity(row, col, e);
       map->ocupy_cell(row, col, entities_ids);
       monsters.emplace(entities_ids++, e);
-      //entities.emplace(entities_ids++, e);
+      // entities.emplace(entities_ids++, e);
       // entities_ids++;
     }
     col++;
@@ -121,6 +120,7 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(heroes.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
+  throw_projectile(entity_id);
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
@@ -143,13 +143,8 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
                        attacker_id, range, hero->orientation, map);
     projectiles.emplace(entities_ids++, projectile);
-    //entities.emplace(entities_ids++, projectile);
-  } else {
-    std::cout
-        << "@@@@@@@@@@@@attemp to throw proyectile not being hero@@@@@@@@@"
-        << std::endl;
-    std::cout << "attacker id: " << attacker_id << std::endl;
-  }
+    // entities.emplace(entities_ids++, projectile);
+  } 
 }
 
 /*********************** Fin acciones personajes *********************/
@@ -160,7 +155,8 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
   std::tuple<int, int> free_tile = map->get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
-  return place_hero(hero_race, hero_class, hero_name, x, y);
+  unsigned int new_player_id = place_hero(hero_race, hero_class, hero_name, x, y);
+  return new_player_id;
 }
 
 void ArgentumGame::update() {
@@ -171,17 +167,18 @@ void ArgentumGame::update() {
     cmd->execute(this);
     delete cmd;
   }
-
+  // TO DO:
+  // - Que los managers devuelvan un listado de drops
+  // Desconexion de clientes: Podria ser un command a ejecutar
   heroes_manager.update(std::ref(heroes));
+  heroes_manager.remove_death_heroes(std::ref(heroes), map);
+
   monsters_manager.update(std::ref(monsters));
+  monsters_manager.remove_death_monsters(std::ref(monsters), map);
+
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles));
-
-  remove_death_entities();
-  // TO DO:
-  // - Chequear si monstruos murieron para eliminarlos del mapa y poner sus
-  // drops
-  // Desconexion de clientes: Podria ser un command a ejecutar
+  projectile_manager.remove_death_projectiles(std::ref(projectiles), map);
 }
 
 void ArgentumGame::kill() {
@@ -191,7 +188,7 @@ void ArgentumGame::kill() {
 
 void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
-  
+
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
@@ -256,6 +253,7 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status(this);
+  // Serializer::serialize_game_status_v2(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -287,68 +285,6 @@ void ArgentumGame::clean_notifications_queues() {
 }
 
 /* private methods */
-
-void ArgentumGame::remove_death_entities() {
-  // for (auto it = monsters.cbegin(); it != monsters.cend();) {
-  //   if (it->second->alive == false) {
-  //     it = monsters.erase(it++);
-  //   } else {
-  //     ++it;
-  //   }
-  // }
-  for (auto it = monsters.cbegin(); it != monsters.cend();) {
-    if (it->second->alive == false) {
-      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
-      // devuelva un drop (o no) para poner en el mapa
-      int x_pos = it->second->x_position;
-      int y_pos = it->second->y_position;
-      map->empty_cell(x_pos, y_pos);
-      delete it->second;
-      it = monsters.erase(it++);
-    } else {
-      ++it;
-    }
-  }
-  for (auto it = heroes.cbegin(); it != heroes.cend();) {
-    if (it->second->alive == false) {
-      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
-      // devuelva un drop (o no) para poner en el mapa
-      int x_pos = it->second->x_position;
-      int y_pos = it->second->y_position;
-      map->empty_cell(x_pos, y_pos);
-      delete it->second;
-      it = heroes.erase(it++);
-    } else {
-      ++it;
-    }
-  }
-  for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
-    if (it->second->alive == false) {
-      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
-      // devuelva un drop (o no) para poner en el mapa
-      int x_pos = it->second->x_position;
-      int y_pos = it->second->y_position;
-      map->empty_cell(x_pos, y_pos);
-      delete it->second;
-      it = projectiles.erase(it++);
-    } else {
-      ++it;
-    }
-  }
-  for (auto it = npcs.cbegin(); it != npcs.cend();) {
-    if (it->second->alive == false) {
-      // aca antes de borrar al bicho llamar a algun metodo polimorfico que
-      // devuelva un drop (o no) para poner en el mapa
-      int x_pos = it->second->x_position;
-      int y_pos = it->second->y_position;
-      map->empty_cell(x_pos, y_pos);
-      delete it->second;
-      it = npcs.erase(it++);
-    } else {
-      ++it;
-    }
-  }
-}
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
     BaseCharacter *character) {
@@ -401,7 +337,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   std::cout << "---------placing hero with id-----------: " << entities_ids
             << std::endl;
   map->ocupy_cell(x, y, entities_ids);
-  //entities.emplace(entities_ids, hero);
+  // entities.emplace(entities_ids, hero);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
 }
@@ -415,5 +351,5 @@ void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
   std::cout << "Placing monster with id" << entities_ids << std::endl;
 
   monsters.emplace(entities_ids++, e);
-  //entities.emplace(entities_ids++, e);
+  // entities.emplace(entities_ids++, e);
 }

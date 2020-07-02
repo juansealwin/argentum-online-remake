@@ -85,7 +85,6 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
   // mover a la clase
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
-
   for (auto &entity : game->npcs) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                             entity.second);
@@ -241,8 +240,7 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       int ghost_mode = extract<uint8_t>(serialization, j);
       int items_equiped = extract<uint8_t>(serialization, j);
       // std::cout << "@@@Hero stats@@@" << std::endl
-      //           << "max_hp: " << max_hp << " max_mana " << mana_max << " gold
-      //           "
+      //           << "max_hp: " << max_hp << " max_mana " << mana_max << " gold"
       //           << gold << " ghost mode " << ghost_mode << " items equiped "
       //           << items_equiped << "name size" << name_size << std::endl;
       // std::cout << "@@Deserializing items equiped@@" << std::endl;

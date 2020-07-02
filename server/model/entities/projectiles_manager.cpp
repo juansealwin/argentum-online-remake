@@ -13,22 +13,15 @@ void ProjectileManager::update(
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
   // 4 movimientos por segundo para los proyectiles
-  if (time_difference.count() >= 250000000) {
-    //for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
+  if (time_difference.count() >= 93750000) {
     for (auto &projectile : projectiles) {
-      std::cout << "iterating projectiles" << std::endl;
       Projectile *p = projectile.second;
       p->update();
       if (p->collided) {
         manage_collision(p, heroes, monsters);
       }
-      // esto hacerlo despues, que la clase game se ocupe de eliminarlo
-      // if (it->second->alive == false) {
-      //   it = projectiles.erase(it++);
-      // } else {
-      //   ++it;
-      // }
     }
+    last_update_time = actual_time;
   }
 }
 
@@ -62,4 +55,19 @@ BaseCharacter *ProjectileManager::get_hero_or_monster(
     c = dynamic_cast<BaseCharacter *>(monsters.at(uid));
   }
   return c;
+}
+
+void ProjectileManager::remove_death_projectiles(
+    std::map<unsigned int, Projectile *> &projectiles, Map *map) {
+  for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
+    if (it->second->alive == false) {
+      int x_pos = it->second->x_position;
+      int y_pos = it->second->y_position;
+      map->empty_cell(x_pos, y_pos);
+      delete it->second;
+      it = projectiles.erase(it++);
+    } else {
+      ++it;
+    }
+  }
 }
