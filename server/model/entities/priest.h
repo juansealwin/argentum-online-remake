@@ -8,8 +8,7 @@ class Priest : public Entity {
   Priest(unsigned int unique_id, int x, int y, int type, char repr);
   virtual ~Priest();
   Priest(const Priest &) = delete;
-  // En este update() se podria hacer algo como renovar el stock del priest
-  void update() override;
+  
 };
 
 #endif  // PRIEST_H

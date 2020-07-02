@@ -12,7 +12,7 @@ void HeroesManager::update(std::map<unsigned int, Hero *> &heroes) {
   // 4 actrualizaciones por segundo para los heroes (vida-mana regen)
   if (time_difference.count() >= 250000000) {
     for (auto &hero : heroes) {
-      hero.second->update();
+      hero.second->regenerate();
     }
   }
   last_update_time = actual_time;

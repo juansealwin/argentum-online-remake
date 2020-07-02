@@ -11,7 +11,7 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters) {
   auto time_difference = actual_time - last_update_time;
   if (time_difference.count() >= 1000000000) {  // paso un segundo (mover a cfg)
     for (auto &monster : monsters) {
-      monster.second->update();
+      monster.second->auto_move();
       last_update_time = actual_time;
     }
   }

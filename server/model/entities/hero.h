@@ -25,12 +25,9 @@ class Hero : public BaseCharacter {
        unsigned int f_class_meditation, unsigned int gold,
        unsigned int class_id, Map *map, std::string name);
   // devuelve el dano causado
-  void update() override;
-  virtual unsigned int damage(BaseCharacter *other) override;
+  void regenerate();
   // devuelve (dano, critico, item id)
   std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
-  // unsigned int damage(Hero *other);
-  // unsigned int damage(Monster *m);
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage,
                                       bool critical) override;

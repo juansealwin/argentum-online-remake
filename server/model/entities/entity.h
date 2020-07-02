@@ -15,7 +15,6 @@ class Entity {
   Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();
-  virtual void update() = 0;
   unsigned int unique_id;
   int x_position;
   int y_position;

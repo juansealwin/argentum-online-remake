@@ -1,5 +1,4 @@
 #include "hero.h"
-
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
@@ -34,7 +33,7 @@ Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
   inventory = new Inventory(INVENTORY_SIZE);
 }
 
-void Hero::update() {
+void Hero::regenerate() {
   if (ghost_mode) return;
   current_hp = std::min(current_hp + f_race_recovery, max_hp);
   if (!meditating)
@@ -128,24 +127,6 @@ void Hero::add_item(Item *item) {
     throw ModelException("Ghosts can't add items to inventory!", "4");
   meditating = false;
   inventory->add_item(item);
-}
-
-unsigned int Hero::damage(BaseCharacter *other) {
-  if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
-  if (!equipment->can_use_primary_weapon(this))
-    throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
-  meditating = false;
-  // mover a json!
-  const float critical_damage_probability = 0.125;
-  bool critical = false;
-  unsigned int dmg = calculate_damage();
-  float p = rand() / double(RAND_MAX);
-  if (p < critical_damage_probability) critical = true;
-  // actualizar experiencia
-  unsigned int dmg_done = other->receive_damage(dmg, critical);
-  update_experience(dmg_done, other);
-  return dmg;
 }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {

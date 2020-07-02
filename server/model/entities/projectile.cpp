@@ -18,7 +18,7 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
   impact_at_position(x, y);
 }
 
-void Projectile::update() {
+void Projectile::auto_move() {
   if (collided) return;
   if (range == 0) ModelException("Projectile cant move any more!", "11");
   int next_x = x_position + get_next_x();

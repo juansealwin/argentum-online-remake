@@ -7,8 +7,6 @@ class Banker : public Entity {
   Banker(unsigned int unique_id, int x, int y, int type, char repr);
   virtual ~Banker();
   Banker(const Banker &) = delete;
-  // En este update() pensar si se hace algo
-  void update() override;
 };
 
 #endif  // BANKER_H

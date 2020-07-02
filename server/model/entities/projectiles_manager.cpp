@@ -16,7 +16,7 @@ void ProjectileManager::update(
   if (time_difference.count() >= 93750000) {
     for (auto &projectile : projectiles) {
       Projectile *p = projectile.second;
-      p->update();
+      p->auto_move();
       if (p->collided) {
         manage_collision(p, heroes, monsters);
       }

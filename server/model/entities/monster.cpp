@@ -14,7 +14,7 @@ Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
   moves.push_back(fourth_move);
 }
 
-void Monster::update() {
+void Monster::auto_move() {
   if (!alive) return;
 
   //-------- Movimiento -----------//
@@ -28,12 +28,6 @@ void Monster::update() {
     move(next_x_pos, next_y_pos);
   }
   if (current_move >= moves.size()) current_move = 0;
-}
-
-unsigned int Monster::damage(BaseCharacter *other) {
-  if (!alive) throw ModelException("Death monsters can't attack!", "6");
-  unsigned int damage = other->receive_damage(dps, false);
-  return damage;
 }
 
 unsigned int Monster::receive_damage(unsigned int damage, bool critical) {

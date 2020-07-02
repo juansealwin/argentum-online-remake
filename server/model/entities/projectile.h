@@ -11,7 +11,7 @@ class Projectile : public Entity {
   virtual ~Projectile();
   Projectile(const Projectile &) = delete;
   // Mover proyectil, chequear colision
-  void update() override;
+  void auto_move();
   void impact_at_position(int x, int y);
   bool collided;
   int get_collided_entity();
