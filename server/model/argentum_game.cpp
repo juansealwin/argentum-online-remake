@@ -3,7 +3,7 @@
 #include <iostream>
 
 #include "defensive_item.h"
-
+#include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            std::ifstream &map_config,
@@ -39,8 +39,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
     if (e) {
       // map->place_entity(row, col, e);
       map->ocupy_cell(row, col);
-      entities.emplace(entities_ids, e);
-      entities_ids++;
+      entities.emplace(entities_ids++, e);
     }
     col++;
     if (col == map_cols) {
@@ -56,7 +55,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   int col = 0;
   int map_cols = map_cfg["width"].asInt();
   for (const auto &jv : map_cfg["layers"][2]["data"]) {
-    Entity *e = nullptr;
+    Monster *e = nullptr;
     int type = jv.asInt();
     Json::Value entity = Json::arrayValue;
     if (type == GOBLIN) {
@@ -77,8 +76,9 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     if (e) {
       // map->place_entity(row, col, e);
       map->ocupy_cell(row, col);
-      entities.emplace(entities_ids, e);
-      entities_ids++;
+      monsters.emplace(entities_ids, e);
+      entities.emplace(entities_ids++, e);
+      // entities_ids++;
     }
     col++;
     if (col == map_cols) {
@@ -88,14 +88,38 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
   }
 }
 
+/*********************** Acciones personajes *************************/
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(entities.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
 }
 
-unsigned int ArgentumGame::add_new_hero(std::string hero_race, std::string hero_class,
-                                std::string hero_name) {
+void ArgentumGame::throw_projectile(int attacker_id) {
+  Hero *hero = dynamic_cast<Hero *>(entities.at(attacker_id));
+  // manejar errores despues
+  // errores del heroe, y de posicion contigua inaccesible
+  std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
+      hero->attack();
+  unsigned int dmg = std::get<0>(attack);
+  bool critical = std::get<1>(attack);
+  unsigned int item_id = std::get<2>(attack);
+  unsigned int range = std::get<3>(attack);
+  std::tuple<unsigned int, unsigned int> projectile_position =
+      get_contiguous_position(hero);
+  unsigned int x = std::get<0>(projectile_position);
+  unsigned int y = std::get<1>(projectile_position);
+  Projectile *projectile =
+      new Projectile(x, y, item_id, 'p', dmg, critical, attacker_id, range);
+  projectiles.emplace(entities_ids, projectile);
+  entities.emplace(entities_ids++, projectile);
+}
+
+/*********************** Fin acciones personajes *********************/
+
+unsigned int ArgentumGame::add_new_hero(std::string hero_race,
+                                        std::string hero_class,
+                                        std::string hero_name) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   std::tuple<int, int> free_tile = map->get_random_free_space();
@@ -120,9 +144,12 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race, std::string hero_
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(90, 7, 7));
   hero->equip_shield(90);
+  hero->add_item(new Weapon(24, 25, 40, 8));
+  hero->equip_weapon(24);
 
   map->ocupy_cell(x, y);
   entities.emplace(entities_ids, hero);
+  heroes.emplace(entities_ids, hero);
   return entities_ids++;
 }
 
@@ -135,9 +162,19 @@ void ArgentumGame::update(bool one_second_update) {
     delete cmd;
   }
   if (one_second_update) {
-    // auto_move_monsters();
-    for (auto &entity : entities) {
-      entity.second->update();
+    //auto_move_monsters();
+    // for (auto &entity : entities) {
+    //   entity.second->update();
+    // }
+    //crear managers que hagan esto
+    for (auto &monster : monsters) {
+      monster.second->update();
+    }
+    for (auto &hero : heroes) {
+      hero.second->update();
+    }
+    for (auto &projectile : projectiles) {
+      projectile.second->update();
     }
   }
   remove_death_entities();
@@ -163,27 +200,28 @@ static unsigned long long MSTimeStamp() {
 }
 
 void ArgentumGame::run() {
-    auto start = std::chrono::high_resolution_clock::now();
-    bool one_second_passed;
-    while (alive) {
-        one_second_passed = false;
-        auto initial = std::chrono::high_resolution_clock::now();
-        auto time_difference = initial - start;
-        if (time_difference.count() >= 1000000000) {
-          one_second_passed = true;
-          start = initial;
-        }
-        update(one_second_passed);
-        send_game_status();
-        //print_debug_map();
-        long time_step = 1000/60.f; //60fps
-        auto final = std::chrono::high_resolution_clock::now();
-        auto loop_duration = std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
-        long sleep_time = time_step - loop_duration.count();
-        if (sleep_time > 0) {
-            std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
-        }
+  auto start = std::chrono::high_resolution_clock::now();
+  bool one_second_passed;
+  while (alive) {
+    one_second_passed = false;
+    auto initial = std::chrono::high_resolution_clock::now();
+    auto time_difference = initial - start;
+    if (time_difference.count() >= 1000000000) {
+      one_second_passed = true;
+      start = initial;
     }
+    update(one_second_passed);
+    send_game_status();
+    // print_debug_map();
+    long time_step = 1000 / 60.f;  // 60fps
+    auto final = std::chrono::high_resolution_clock::now();
+    auto loop_duration =
+        std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
+    long sleep_time = time_step - loop_duration.count();
+    if (sleep_time > 0) {
+      std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
+    }
+  }
 }
 
 void ArgentumGame::print_debug_map() {
@@ -269,4 +307,25 @@ void ArgentumGame::remove_death_entities() {
       ++it;
     }
   }
+}
+
+std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
+    BaseCharacter *character) {
+  unsigned int x_pos = character->x_position;
+  unsigned int y_pos = character->y_position;
+  switch (character->orientation) {
+    case (orientation_left):
+      y_pos--;
+      break;
+    case (orientation_right):
+      y_pos++;
+      break;
+    case (orientation_down):
+      x_pos++;
+      break;
+    case (orientation_up):
+      x_pos--;
+      break;
+  }
+  return std::tuple<unsigned int, unsigned int>(x_pos, y_pos);
 }

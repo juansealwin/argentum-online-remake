@@ -27,6 +27,8 @@ class Hero : public BaseCharacter {
   // devuelve el dano causado
   void update() override;
   virtual unsigned int damage(BaseCharacter *other) override;
+  //devuelve (dano, critico, item id)
+  std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
   // unsigned int damage(Hero *other);
   // unsigned int damage(Monster *m);
   // devuelve el dano que efectivamente recibi

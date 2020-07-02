@@ -2,13 +2,21 @@
 #define PROJECTILE_H
 #include "entity.h"
 #include "model_exceptions.h"
-class Projectile : Entity {
+class Projectile : public Entity {
  public:
-  Projectile(int x, int y, int type, char repr);
+  Projectile(int x, int y, int type, char repr, const unsigned int damage,
+             const bool critical, const unsigned int attacker_id, const unsigned int range);
   virtual ~Projectile();
   Projectile(const Projectile &) = delete;
   // Mover proyectil, chequear colision
   void update() override;
+
+ private:
+  unsigned int damage;
+  bool critical;
+  // para notificar, actualizar xp, etc
+  unsigned int attacker_id;
+  unsigned int range;
 };
 
 #endif  // PROJECTILE_H

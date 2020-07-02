@@ -18,6 +18,7 @@ ClientCommandReceiver::~ClientCommandReceiver() { join(); }
 void ClientCommandReceiver::stop() { this->alive = false; }
 
 void ClientCommandReceiver::run() {
+  std::cout <<  "Starting command receiver, hero id: " << hero_id << std::endl;
   while (alive) {
     CommandDTO* command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {

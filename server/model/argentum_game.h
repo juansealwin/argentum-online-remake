@@ -21,6 +21,7 @@
 #include "priest.h"
 #include "game_status_notification.h"
 #include "serializer.h"
+#include "projectile.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -41,6 +42,7 @@ class ArgentumGame : public Thread {
   void kill();
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
+  void throw_projectile(int attacker_id);
   //devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class, std::string hero_name);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
@@ -66,11 +68,17 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
   void remove_death_entities();
-  std::map<int, Entity *> entities;
+  //entities se usa para serializar el mapa (quitar mas adelante)
+  std::map<unsigned int, Entity *> entities;
+  std::map<unsigned int, Hero *> heroes;
+  std::map<unsigned int, Monster *> monsters;
+  std::map<unsigned int, Projectile *> projectiles;
+
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
   std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
+  std::tuple<unsigned int, unsigned int> get_contiguous_position(BaseCharacter *character);
 };
 
 #endif  // ARGENTUMGAME_H

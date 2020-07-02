@@ -4,6 +4,14 @@
 #include "entity.h"
 #include "map.h"
 #include "stdint.h"
+
+typedef enum {
+  orientation_up,
+  orientation_right,
+  orientation_down,
+  orientation_left
+} orientation_t;
+
 class Map;
 class BaseCharacter : public Entity {
  public:
@@ -30,11 +38,11 @@ class BaseCharacter : public Entity {
   Map *map;
 
  private:
-  //settea orientacion segun el movimiento del personaje:
-  //0: mirando hacia arriba
-  //1: hacia la derecha
-  //2: hacia abajo
-  //3: hacia la izquierda
+  // settea orientacion segun el movimiento del personaje:
+  // 0: mirando hacia arriba
+  // 1: hacia la derecha
+  // 2: hacia abajo
+  // 3: hacia la izquierda
   void change_orientation(int old_x, int old_y, int new_x, int new_y);
 };
 

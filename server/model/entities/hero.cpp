@@ -147,6 +147,26 @@ unsigned int Hero::damage(BaseCharacter *other) {
   return dmg;
 }
 
+std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
+  if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
+  // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
+  if (!equipment->can_use_primary_weapon(this))
+    throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
+  meditating = false;
+  // mover a json!
+  const float critical_damage_probability = 0.125;
+  bool critical = false;
+  unsigned int dmg = calculate_damage();
+  float p = rand() / double(RAND_MAX);
+  if (p < critical_damage_probability) critical = true;
+  // actualizar experiencia
+  // unsigned int dmg_done = other->receive_damage(dmg, critical);
+  // update_experience(dmg_done, other);
+  // return dmg;
+  return std::tuple<unsigned int, bool, unsigned int, unsigned int>(
+      dmg, critical, equipment->primary_weapon_id(), equipment->range());
+}
+
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
