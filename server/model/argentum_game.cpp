@@ -176,8 +176,6 @@ void ArgentumGame::update(bool one_second_update) {
     for (auto &hero : heroes) {
       hero.second->update();
     }
-    std::cout << "por iterar projectiles" << std::endl;
-    std::cout << "projectiles size: " << projectiles.size() << std::endl;
     for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
       std::cout << "iterating projectiles" << std::endl;
       Projectile *projectile = it->second;
@@ -199,42 +197,13 @@ void ArgentumGame::update(bool one_second_update) {
       if (!projectile->alive) {
         // hacer algo?
         std::cout << "proj no colisiono" << std::endl;
-        projectiles.erase(projectile->unique_id);
       }
       if (it->second->alive == false) {
-        // aca antes de borrar al bicho llamar a algun metodo polimorfico que
-        // devuelva un drop (o no) para poner en el mapa
         it = projectiles.erase(it++);
       } else {
         ++it;
       }
     }
-    // for (auto &projectile : projectiles) {
-    //   std::cout << "iterating projectiles" << std::endl;
-    //   projectile.second->update();
-    //   if (projectile.second->collided) {
-    //     std::cout << "proj colisiono" << std::endl;
-    //     unsigned int attacked_player_id =
-    //     projectile.second->get_collided_player(); BaseCharacter
-    //     *attacked_entity =
-    //         dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
-    //     unsigned int damage_done = attacked_entity->receive_damage(
-    //         projectile.second->get_damage(),
-    //         projectile.second->is_critical());
-    //     unsigned int attacker_player_id =
-    //     projectile.second->get_attacker_id(); BaseCharacter *attacker =
-    //     dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
-    //     attacker->notify_damage_done(attacked_entity, damage_done);
-    //     projectile.second->kill();
-    //     projectiles.erase(projectile.second->unique_id);
-    //   }
-    //   if (!projectile.second->alive) {
-    //     // hacer algo?
-    //     std::cout << "proj no colisiono" << std::endl;
-    //     projectiles.erase(projectile.second->unique_id);
-
-    //   }
-    // }
   }
   remove_death_entities();
 
