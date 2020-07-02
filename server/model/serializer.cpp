@@ -65,37 +65,48 @@ void Serializer::serialize_common_fields(
   serialization.push_back(y);
 }
 
-// std::vector<unsigned char> Serializer::serialize_game_status_v2(
-//     ArgentumGame *game) {
-//   std::vector<unsigned char> serialization;
-//   //mover a la clase
-//   uint8_t notification_id = 1;
-//   serialization.push_back(notification_id);
-//   for (auto &entity : game->entities) {
-//     uint16_t entity_id = htons(entity.first);
-//     insert(serialization, entity_id);
-//     uint8_t entity_type = entity.second->type;
-//     uint8_t x = entity.second->x_position;
-//     uint8_t y = entity.second->y_position;
-//     uint8_t orientation = entity.second->orientation;
-//     serialization.push_back(entity_type);
-//     serialization.push_back(x);
-//     serialization.push_back(y);
-//     serialization.push_back(orientation);
+void Serializer::serialize_common_fields_v2(
+    std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity) {
+  uint16_t entity_id = htons(uid);
+  insert(serialization, entity_id);
+  uint8_t entity_type = entity->type;
+  uint8_t x = entity->x_position;
+  uint8_t y = entity->y_position;
+  uint8_t orientation = entity->orientation;
+  serialization.push_back(entity_type);
+  serialization.push_back(x);
+  serialization.push_back(y);
+  serialization.push_back(orientation);
+}
 
-//     if (dynamic_cast<Monster *>(entity.second) != nullptr) {
-//       serialize_monster(serialization, dynamic_cast<Monster
-//       *>(entity.second));
-//     } else if (dynamic_cast<Hero *>(entity.second) != nullptr) {
-//       serialize_hero(serialization, dynamic_cast<Hero *>(entity.second));
-//     } else {
-//       // es un NPC o algun error hubo.
-//     }
-//   }
+std::vector<unsigned char> Serializer::serialize_game_status_v2(
+    ArgentumGame *game) {
+  std::vector<unsigned char> serialization;
+  // mover a la clase
+  uint8_t notification_id = 1;
+  serialization.push_back(notification_id);
 
-//   // debug_deserialize(serialization);
-//   return serialization;
-// }
+  for (auto &entity : game->npcs) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                            entity.second);
+  }
+  for (auto &entity : game->monsters) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                            entity.second);
+    serialize_monster(std::ref(serialization), entity.second);
+  }
+  for (auto &entity : game->heroes) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                            entity.second);
+    serialize_hero(std::ref(serialization), entity.second);
+  }
+  for (auto &entity : game->projectiles) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                            entity.second);
+  }
+  // debug_deserialize(serialization);
+  return serialization;
+}
 
 void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
                                    Monster *m) {
