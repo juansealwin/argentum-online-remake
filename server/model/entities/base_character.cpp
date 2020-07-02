@@ -1,18 +1,23 @@
 #include "base_character.h"
 
 #include <iostream>
-BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr,
-                             unsigned int max_hp, unsigned int level, Map *map)
+BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
+                             unsigned int type, char repr, unsigned int max_hp,
+                             unsigned int level, Map *map)
     : Entity(unique_id, x, y, type, repr),
       current_hp(max_hp),
       max_hp(max_hp),
       level(level),
-
+      affected_by(0),
       map(map) {}
 
-BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type, char repr,
-                             unsigned int level, Map *map)
-    : Entity(unique_id, x, y, type, repr), level(level), map(map) {}
+BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
+                             unsigned int type, char repr, unsigned int level,
+                             Map *map)
+    : Entity(unique_id, x, y, type, repr),
+      level(level),
+      affected_by(0),
+      map(map) {}
 
 void BaseCharacter::move(int next_x, int next_y) {
   if (map->can_ocupy_cell(next_x, next_y)) {
@@ -36,6 +41,14 @@ void BaseCharacter::change_orientation(int old_x, int old_y, int new_x,
     orientation = orientation_right;  // derecha
   else if (y_diff < 0)
     orientation = orientation_left;
+}
+
+void BaseCharacter::clear_effects() {
+  if (affected_by != 0) {
+    std::cout << "cleared effect!" << std::endl;
+  }
+  affected_by = 0;
+  
 }
 
 BaseCharacter::~BaseCharacter() {}

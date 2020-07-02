@@ -30,20 +30,25 @@ void Monster::auto_move() {
   if (current_move >= moves.size()) current_move = 0;
 }
 
-unsigned int Monster::receive_damage(unsigned int damage, bool critical) {
-  std::cout << "Monster received damage!!" << std::endl;
+unsigned int Monster::receive_damage(unsigned int damage, bool critical,
+                                     unsigned int weapon_origin) {
+  // std::cout << "Monster received damage!!" << std::endl;
   if (!alive) throw ModelException("Monster is already death!", "6");
   int last_hp = current_hp;
   current_hp = std::max(current_hp - (int)damage, 0);
   if (current_hp == 0) alive = false;
-  std::cout << "Monster is alive?? " << alive << std::endl;
-  std::cout << "Returning" << last_hp - current_hp << std::endl;
-  std::cout << "last hp: " << last_hp << " current_hp " << current_hp << std::endl;
+  // std::cout << "Monster is alive? " << alive << std::endl;
+  // std::cout << "Returning" << last_hp - current_hp << std::endl;
+  // std::cout << "last hp: " << last_hp << " current_hp " << current_hp
+  //           << std::endl;
+  std::cout << "Monster got affected by weapon!. is alive? " << alive;
+  affected_by = weapon_origin;
   return last_hp - current_hp;
 }
 
-void Monster::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
-  //subirlo de nivel?
+void Monster::notify_damage_done(BaseCharacter *other,
+                                 unsigned int damage_done) {
+  // subirlo de nivel?
 }
 
 bool Monster::is_death() { return !alive; }

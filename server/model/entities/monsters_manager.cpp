@@ -9,15 +9,18 @@ MonstersManager::~MonstersManager() {}
 void MonstersManager::update(std::map<unsigned int, Monster *> &monsters) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
-  if (time_difference.count() >= 1000000000) {  // paso un segundo (mover a cfg)
-    for (auto &monster : monsters) {
+
+  for (auto &monster : monsters) {
+    if (time_difference.count() >= 1000000000) {
       monster.second->auto_move();
       last_update_time = actual_time;
     }
+    monster.second->clear_effects();
   }
 }
 
-void MonstersManager::remove_death_monsters(std::map<unsigned int, Monster *> &monsters, Map *map) {
+void MonstersManager::remove_death_monsters(
+    std::map<unsigned int, Monster *> &monsters, Map *map) {
   for (auto it = monsters.cbegin(); it != monsters.cend();) {
     if (it->second->alive == false) {
       int x_pos = it->second->x_position;

@@ -34,7 +34,7 @@ void ProjectileManager::manage_collision(
   if (attacked_entity) {
     if (!attacked_entity->is_death()) {
       unsigned int damage_done = attacked_entity->receive_damage(
-          projectile->get_damage(), projectile->is_critical());
+          projectile->get_damage(), projectile->is_critical(), projectile->type);
       int attacker_player_id = projectile->get_attacker_id();
       BaseCharacter *attacker =
           get_hero_or_monster(attacker_player_id, heroes, monsters);
