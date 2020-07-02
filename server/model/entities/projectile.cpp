@@ -14,9 +14,10 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
       orientation(orientation),
       map(map),
       collided(false),
-      collided_player(-1) {}
+      collided_entity(-1) {}
 
 void Projectile::update() {
+  std::cout << "projectile x: " << x_position << " y: " << y_position << std::endl;
   if (range == 0) ModelException("Projectile cant move any more!", "11");
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
@@ -28,16 +29,17 @@ void Projectile::update() {
     range--;
   }
   else if (map->tile_is_valid(next_x, next_y)) {
-    collided_player = map->get_uid(next_x, next_y);
+    collided_entity = map->get_uid(next_x, next_y);
     collided = true;
+    std::cout << "collided with id" << collided_entity << std::endl;
   }
   if (range == 0) {
     alive = false;
   }
 }
 
-int Projectile::get_collided_player() {
-  return collided_player;
+int Projectile::get_collided_entity() {
+  return collided_entity;
 }
 
 int Projectile::get_next_x() {
@@ -74,7 +76,7 @@ unsigned int Projectile::get_attacker_id() {
 }
 
 void Projectile::kill() {
-  //alive = false;
+  alive = false;
 }
 
 Projectile::~Projectile() {}

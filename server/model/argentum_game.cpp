@@ -122,38 +122,10 @@ void ArgentumGame::throw_projectile(int attacker_id) {
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
                                         std::string hero_class,
                                         std::string hero_name) {
-  Json::Value race_stats = entities_cfg["races"][hero_race];
-  Json::Value class_stats = entities_cfg["classes"][hero_class];
   std::tuple<int, int> free_tile = map->get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
-  Hero *hero = new Hero(
-      entities_ids, x, y, race_stats["id"].asUInt(), 'h',
-      class_stats["level"].asUInt(),
-      race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
-      race_stats["intelligence"].asUInt() +
-          class_stats["intelligence"].asUInt(),
-      race_stats["agility"].asUInt() + class_stats["agility"].asUInt(),
-      race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
-      race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
-      race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
-      class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
-      class_stats["id"].asUInt(), map, hero_name);
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(2, 8, 10));
-  hero->equip_armour(6);
-  hero->equip_helmet(2);
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(90, 7, 7));
-  hero->equip_shield(90);
-  hero->add_item(new Weapon(24, 25, 40, 8));
-  hero->equip_weapon(24);
-
-  map->ocupy_cell(x, y, entities_ids);
-  entities.emplace(entities_ids, hero);
-  heroes.emplace(entities_ids, hero);
-  return entities_ids++;
+  return place_hero(hero_race, hero_class, hero_name, x, y);
 }
 
 void ArgentumGame::update(bool one_second_update) {
@@ -181,22 +153,28 @@ void ArgentumGame::update(bool one_second_update) {
       Projectile *projectile = it->second;
       projectile->update();
       if (projectile->collided) {
+        bool stop_projectile = true;
         std::cout << "proj colisiono" << std::endl;
-        unsigned int attacked_player_id = projectile->get_collided_player();
-        BaseCharacter *attacked_entity =
-            dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
-        unsigned int damage_done = attacked_entity->receive_damage(
-            projectile->get_damage(), projectile->is_critical());
-        unsigned int attacker_player_id = projectile->get_attacker_id();
-        BaseCharacter *attacker =
-            dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
-        attacker->notify_damage_done(attacked_entity, damage_done);
-        projectile->kill();
-        projectiles.erase(projectile->unique_id);
-      }
-      if (!projectile->alive) {
-        // hacer algo?
-        std::cout << "proj no colisiono" << std::endl;
+        unsigned int attacked_player_id = projectile->get_collided_entity();
+        if (attacked_player_id != -1) {
+          BaseCharacter *attacked_entity =
+              dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
+          if (!attacked_entity->is_death()) {
+            unsigned int damage_done = attacked_entity->receive_damage(
+                projectile->get_damage(), projectile->is_critical());
+            unsigned int attacker_player_id = projectile->get_attacker_id();
+            BaseCharacter *attacker =
+                dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
+            attacker->notify_damage_done(attacked_entity, damage_done);
+          }
+          else {
+            std::cout << "Traspaso al fantasma! " <<std::endl;
+            stop_projectile = false;
+          }
+          throw_projectile(15);
+        }
+        if (stop_projectile) projectile->kill();
+        
       }
       if (it->second->alive == false) {
         it = projectiles.erase(it++);
@@ -231,7 +209,9 @@ void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
   bool one_second_passed;
 
-  add_new_hero("human", "warrior", "test_name1");
+  place_hero("human", "warrior", "test_name1", 0, 16);
+  place_hero("human", "warrior", "test_name1", 5, 16);
+
   throw_projectile(15);
   while (alive) {
     one_second_passed = false;
@@ -358,4 +338,38 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
       break;
   }
   return std::tuple<unsigned int, unsigned int>(x_pos, y_pos);
+}
+unsigned int ArgentumGame::place_hero(std::string hero_race,
+                                      std::string hero_class,
+                                      std::string hero_name, unsigned int x,
+                                      unsigned int y) {
+  Json::Value race_stats = entities_cfg["races"][hero_race];
+  Json::Value class_stats = entities_cfg["classes"][hero_class];
+  Hero *hero = new Hero(
+      entities_ids, x, y, race_stats["id"].asUInt(), 'h',
+      class_stats["level"].asUInt(),
+      race_stats["strength"].asUInt() + class_stats["strength"].asUInt(),
+      race_stats["intelligence"].asUInt() +
+          class_stats["intelligence"].asUInt(),
+      race_stats["agility"].asUInt() + class_stats["agility"].asUInt(),
+      race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
+      race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
+      race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
+      class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
+      class_stats["id"].asUInt(), map, hero_name);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(2, 8, 10));
+  hero->equip_armour(6);
+  hero->equip_helmet(2);
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(6, 7, 7));
+  hero->add_item(new DefensiveItem(90, 7, 7));
+  hero->equip_shield(90);
+  hero->add_item(new Weapon(24, 25, 40, 50));
+  hero->equip_weapon(24);
+
+  map->ocupy_cell(x, y, entities_ids);
+  entities.emplace(entities_ids, hero);
+  heroes.emplace(entities_ids, hero);
+  return entities_ids++;
 }

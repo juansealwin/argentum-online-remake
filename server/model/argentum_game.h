@@ -10,18 +10,18 @@
 #include "../util/json/json.h"
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
+#include "banker.h"
 #include "base_character.h"
-#include "hero.h"
 #include "command.h"  //<- guarda con esto y dependencias circulares
+#include "game_status_notification.h"
+#include "hero.h"
 #include "map.h"
+#include "merchant.h"
 #include "monster.h"
 #include "move_command.h"
-#include "banker.h"
-#include "merchant.h"
 #include "priest.h"
-#include "game_status_notification.h"
-#include "serializer.h"
 #include "projectile.h"
+#include "serializer.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -43,12 +43,14 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
-  //devuelve el id auto-generado
-  unsigned int add_new_hero(std::string hero_race, std::string hero_class, std::string hero_name);
+  // devuelve el id auto-generado
+  unsigned int add_new_hero(std::string hero_race, std::string hero_class,
+                            std::string hero_name);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
-  //remueve colas de notificaciones para no notificar a clientes meurtos
+  // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
   friend class Serializer;
+
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -68,7 +70,7 @@ class ArgentumGame : public Thread {
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
   void remove_death_entities();
-  //entities se usa para serializar el mapa (quitar mas adelante)
+  // entities se usa para serializar el mapa (quitar mas adelante)
   std::map<unsigned int, Entity *> entities;
   std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
@@ -78,7 +80,12 @@ class ArgentumGame : public Thread {
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
   std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
-  std::tuple<unsigned int, unsigned int> get_contiguous_position(BaseCharacter *character);
+  std::tuple<unsigned int, unsigned int> get_contiguous_position(
+      BaseCharacter *character);
+  // agrega heroe en posicion x,y (los ejes estan invertidos)
+  unsigned int place_hero(std::string hero_race, std::string hero_class,
+                          std::string hero_name, unsigned int x,
+                          unsigned int y);
 };
 
 #endif  // ARGENTUMGAME_H

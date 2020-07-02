@@ -149,7 +149,10 @@ unsigned int Hero::damage(BaseCharacter *other) {
 }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
+  std::cout << "My spell hit an enemy!!!" << std::endl;
   update_experience(damage_done, other);
+  std::cout << "Updated experience!!: " << experience << " out of " << next_level_xp_limit << std::endl;
+  std::cout << " My level is : " << level << std::endl;
 }
 
 std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
@@ -173,6 +176,7 @@ std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
 }
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
+  std::cout << "Received damage!! " << damage << " is critical? " << critical << std::endl;
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
@@ -189,6 +193,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
   }  // Hacer chequeos si esta vivo etc?
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
+  std::cout << "Updated status!! HP: " << current_hp << "im a ghost?? " << ghost_mode << std::endl;
   return actual_damage;
 }
 

@@ -23,7 +23,7 @@ class BaseCharacter : public Entity {
   virtual bool is_death() = 0;
   virtual void notify_damage_done(BaseCharacter *other,
                                   unsigned int damage_done) = 0;
-  unsigned int current_hp;
+  int current_hp;
   unsigned int max_hp;
   unsigned int level;
 
