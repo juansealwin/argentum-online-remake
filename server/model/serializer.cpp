@@ -30,64 +30,39 @@ std::vector<unsigned char> Serializer::serialize_game_status(
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
   for (auto &entity : game->npcs) {
-    uint16_t entity_id = htons(entity.first);
-    unsigned int current_pos = serialization.size();
-    serialization.resize(serialization.size() + sizeof(entity_id));
-    std::memcpy(serialization.data() + current_pos, &entity_id,
-                sizeof(entity_id));
-    uint8_t entity_type = entity.second->type;
-    uint8_t x = entity.second->x_position;
-    uint8_t y = entity.second->y_position;
-    serialization.push_back(entity_type);
-    serialization.push_back(x);
-    serialization.push_back(y);
+    serialize_common_fields(std::ref(serialization), entity.first,
+                            entity.second);
   }
   for (auto &entity : game->monsters) {
-    uint16_t entity_id = htons(entity.first);
-    unsigned int current_pos = serialization.size();
-    serialization.resize(serialization.size() + sizeof(entity_id));
-    std::memcpy(serialization.data() + current_pos, &entity_id,
-                sizeof(entity_id));
-    uint8_t entity_type = entity.second->type;
-    uint8_t x = entity.second->x_position;
-    uint8_t y = entity.second->y_position;
-    serialization.push_back(entity_type);
-    serialization.push_back(x);
-    serialization.push_back(y);
+    serialize_common_fields(std::ref(serialization), entity.first,
+                            entity.second);
   }
   for (auto &entity : game->heroes) {
-    uint16_t entity_id = htons(entity.first);
-    unsigned int current_pos = serialization.size();
-    serialization.resize(serialization.size() + sizeof(entity_id));
-    std::memcpy(serialization.data() + current_pos, &entity_id,
-                sizeof(entity_id));
-    uint8_t entity_type = entity.second->type;
-    uint8_t x = entity.second->x_position;
-    uint8_t y = entity.second->y_position;
-    serialization.push_back(entity_type);
-    serialization.push_back(x);
-    serialization.push_back(y);
+    serialize_common_fields(std::ref(serialization), entity.first,
+                            entity.second);
   }
   for (auto &entity : game->projectiles) {
-    uint16_t entity_id = htons(entity.first);
-    unsigned int current_pos = serialization.size();
-    serialization.resize(serialization.size() + sizeof(entity_id));
-    std::memcpy(serialization.data() + current_pos, &entity_id,
-                sizeof(entity_id));
-    uint8_t entity_type = entity.second->type;
-    uint8_t x = entity.second->x_position;
-    uint8_t y = entity.second->y_position;
-    serialization.push_back(entity_type);
-    serialization.push_back(x);
-    serialization.push_back(y);
+    serialize_common_fields(std::ref(serialization), entity.first,
+                            entity.second);
   }
 
   // debug_deserialize(serialization);
   return serialization;
 }
 
-void Serializer::serialize_common_fields(std::vector<unsigned char> &serialization, Entity *entity) {
-
+void Serializer::serialize_common_fields(
+    std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity) {
+  uint16_t entity_id = htons(uid);
+  unsigned int current_pos = serialization.size();
+  serialization.resize(serialization.size() + sizeof(entity_id));
+  std::memcpy(serialization.data() + current_pos, &entity_id,
+              sizeof(entity_id));
+  uint8_t entity_type = entity->type;
+  uint8_t x = entity->x_position;
+  uint8_t y = entity->y_position;
+  serialization.push_back(entity_type);
+  serialization.push_back(x);
+  serialization.push_back(y);
 }
 
 // std::vector<unsigned char> Serializer::serialize_game_status_v2(
@@ -109,7 +84,8 @@ void Serializer::serialize_common_fields(std::vector<unsigned char> &serializati
 //     serialization.push_back(orientation);
 
 //     if (dynamic_cast<Monster *>(entity.second) != nullptr) {
-//       serialize_monster(serialization, dynamic_cast<Monster *>(entity.second));
+//       serialize_monster(serialization, dynamic_cast<Monster
+//       *>(entity.second));
 //     } else if (dynamic_cast<Hero *>(entity.second) != nullptr) {
 //       serialize_hero(serialization, dynamic_cast<Hero *>(entity.second));
 //     } else {
