@@ -25,24 +25,6 @@ void Projectile::update() {
   int next_y = y_position + get_next_y();
   impact_at_position(next_x, next_y);
   range--;
-  // std::cout << "trying ocupy cell..." << std::endl;
-  // if (map->can_ocupy_cell(next_x, next_y)) {
-  //   std::cout << "can ocupy cell..." << std::endl;
-  //   std::cout << "Calling ocupy cell" << std::endl;
-  //   map->ocupy_cell(next_x, next_y, unique_id);
-  //   std::cout << "Calling empty cell" << std::endl;
-  //   map->empty_cell(x_position, y_position);
-  //   x_position = next_x;
-  //   y_position = next_y;
-  //   range--;
-  //   std::cout << "out of update fun" << std::endl;
-  // }
-  // else if (map->tile_is_valid(next_x, next_y)) {
-  //   std::cout << "cell is valid..." << std::endl;
-  //   collided_entity = map->get_uid(next_x, next_y);
-  //   collided = true;
-  //   std::cout << "collided with id" << collided_entity << std::endl;
-  // }
   if (range == 0) {
     alive = false;
   }
