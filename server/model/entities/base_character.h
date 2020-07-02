@@ -5,6 +5,14 @@
 #include "map.h"
 #include "stdint.h"
 
+struct Attack {
+	unsigned int damage;
+	bool critical;
+	unsigned int attacker_weapon_id;
+	unsigned int attacker_weapon_range;
+};
+
+
 class Map;
 class BaseCharacter : public Entity {
  public:

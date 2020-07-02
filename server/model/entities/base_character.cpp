@@ -1,6 +1,6 @@
 #include "base_character.h"
-
 #include <iostream>
+
 BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
                              unsigned int type, char repr, unsigned int max_hp,
                              unsigned int level, Map *map)
@@ -44,11 +44,7 @@ void BaseCharacter::change_orientation(int old_x, int old_y, int new_x,
 }
 
 void BaseCharacter::clear_effects() {
-  if (affected_by != 0) {
-    std::cout << "cleared effect!" << std::endl;
-  }
   affected_by = 0;
-  
 }
 
 BaseCharacter::~BaseCharacter() {}

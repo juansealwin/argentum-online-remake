@@ -47,7 +47,6 @@ void ProjectileManager::manage_collision(
 BaseCharacter *ProjectileManager::get_hero_or_monster(
     int uid, std::map<unsigned int, Hero *> &heroes,
     std::map<unsigned int, Monster *> &monsters) {
-  std::cout << "getting hero or monster.." << std::endl;
   BaseCharacter *c = nullptr;
   if (heroes.count(uid) > 0) {
     c = dynamic_cast<BaseCharacter *>(heroes.at(uid));

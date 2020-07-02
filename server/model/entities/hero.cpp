@@ -136,7 +136,7 @@ void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   std::cout << " My level is : " << level << std::endl;
 }
 
-std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
+const Attack Hero::attack() {
   if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
   // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
   if (!equipment->can_use_primary_weapon(this))
@@ -148,12 +148,8 @@ std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
   unsigned int dmg = calculate_damage();
   float p = rand() / double(RAND_MAX);
   if (p < critical_damage_probability) critical = true;
-  // actualizar experiencia
-  // unsigned int dmg_done = other->receive_damage(dmg, critical);
-  // update_experience(dmg_done, other);
-  // return dmg;
-  return std::tuple<unsigned int, bool, unsigned int, unsigned int>(
-      dmg, critical, equipment->primary_weapon_id(), equipment->range());
+  Attack attack = {dmg, critical, equipment->primary_weapon_id(), equipment->range()};
+  return std::move(attack);
 }
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical, unsigned int weapon_origin) {

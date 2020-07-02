@@ -118,24 +118,25 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
-  std::cout << "throwing projectile " << std::endl;
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
   if (hero) {
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
-    std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
-        hero->attack();
-    unsigned int dmg = std::get<0>(attack);
-    bool critical = std::get<1>(attack);
-    unsigned int item_id = std::get<2>(attack);
-    unsigned int range = std::get<3>(attack);
+    // std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
+    //     hero->attack();
+    Attack attack_info = hero->attack();
+    // unsigned int dmg = std::get<0>(attack);
+    // bool critical = std::get<1>(attack);
+    // unsigned int item_id = std::get<2>(attack);
+    // unsigned int range = std::get<3>(attack);
     std::tuple<unsigned int, unsigned int> projectile_position =
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
-    Projectile *projectile =
-        new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
-                       attacker_id, range, hero->orientation, map);
+    Projectile *projectile = new Projectile(
+        entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
+        attack_info.damage, attack_info.critical, attacker_id,
+        attack_info.attacker_weapon_range, hero->orientation, map);
     projectiles.emplace(entities_ids++, projectile);
   }
 }
@@ -242,7 +243,6 @@ ArgentumGame::~ArgentumGame() {
 unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::send_game_status() {
-  std::cout << "Serializing game status" << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status(this);
@@ -325,8 +325,9 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(90, 7, 7));
   hero->equip_shield(90);
-  hero->add_item(new Weapon(24, 25, 10, 15));
-  hero->equip_weapon(24);
+  // hero->add_item(new Weapon(24, 25, 10, 15));
+  hero->add_item(new Weapon(17, 4, 8, 5));
+  hero->equip_weapon(17);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;

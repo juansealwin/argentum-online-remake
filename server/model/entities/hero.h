@@ -27,7 +27,8 @@ class Hero : public BaseCharacter {
   // devuelve el dano causado
   void regenerate();
   // devuelve (dano, critico, item id)
-  std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
+  //std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
+  const Attack attack();
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
                                       unsigned int weapon_origin) override;

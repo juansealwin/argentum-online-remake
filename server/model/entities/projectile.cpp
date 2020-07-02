@@ -72,7 +72,6 @@ bool Projectile::is_critical() { return critical; }
 unsigned int Projectile::get_attacker_id() { return attacker_id; }
 
 void Projectile::kill() {
-  std::cout << "killing projectile" << std::endl;
   map->empty_cell(x_position, y_position);
   alive = false;
 }
