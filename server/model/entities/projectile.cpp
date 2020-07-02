@@ -17,7 +17,7 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
       collided_entity(-1) {}
 
 void Projectile::update() {
-  std::cout << "projectile x: " << x_position << " y: " << y_position << std::endl;
+  std::cout << "projectile of id: " << unique_id << " x: " << x_position << " y: " << y_position << std::endl;
   if (range == 0) ModelException("Projectile cant move any more!", "11");
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
@@ -36,6 +36,10 @@ void Projectile::update() {
   if (range == 0) {
     alive = false;
   }
+}
+
+void Projectile::move() {
+  
 }
 
 int Projectile::get_collided_entity() {

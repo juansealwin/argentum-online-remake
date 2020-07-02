@@ -153,10 +153,12 @@ void ArgentumGame::update(bool one_second_update) {
       Projectile *projectile = it->second;
       projectile->update();
       if (projectile->collided) {
-        bool stop_projectile = true;
+        // bool stop_projectile = true;
         std::cout << "proj colisiono" << std::endl;
         unsigned int attacked_player_id = projectile->get_collided_entity();
-        if (attacked_player_id != -1) {
+        if (attacked_player_id != -1 &&
+            dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id)) !=
+                nullptr) {
           BaseCharacter *attacked_entity =
               dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
           if (!attacked_entity->is_death()) {
@@ -167,14 +169,10 @@ void ArgentumGame::update(bool one_second_update) {
                 dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
             attacker->notify_damage_done(attacked_entity, damage_done);
           }
-          else {
-            std::cout << "Traspaso al fantasma! " <<std::endl;
-            stop_projectile = false;
-          }
-          throw_projectile(15);
+          if (projectile->unique_id < 18) throw_projectile(15);
         }
-        if (stop_projectile) projectile->kill();
-        
+        // if (stop_projectile) projectile->kill();
+        projectile->kill();
       }
       if (it->second->alive == false) {
         it = projectiles.erase(it++);
