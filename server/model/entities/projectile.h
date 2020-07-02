@@ -13,7 +13,11 @@ class Projectile : public Entity {
   // Mover proyectil, chequear colision
   void update() override;
   bool collided;
-
+  int get_collided_player();
+  unsigned int get_damage();
+  unsigned int get_attacker_id();
+  bool is_critical();
+  void kill();
  private:
   unsigned int damage;
   bool critical;

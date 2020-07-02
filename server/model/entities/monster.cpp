@@ -53,6 +53,10 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical) {
   return last_hp - current_hp;
 }
 
+void Monster::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
+  //subirlo de nivel?
+}
+
 bool Monster::is_death() { return alive; }
 
 Monster::~Monster() {}

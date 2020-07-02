@@ -39,6 +39,7 @@ class Map {
   bool tile_is_safe(int x, int y);
   std::tuple<int, int> get_random_free_space();
   int get_uid(int x, int y);
+  bool tile_is_valid(int x, int y);
  private:
   int rows;
   int cols;

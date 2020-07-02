@@ -148,6 +148,10 @@ unsigned int Hero::damage(BaseCharacter *other) {
   return dmg;
 }
 
+void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
+  update_experience(damage_done, other);
+}
+
 std::tuple<unsigned int, bool, unsigned int, unsigned int> Hero::attack() {
   if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
   // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");

@@ -15,6 +15,8 @@ class Monster : public BaseCharacter {
                                       bool critical) override;
   virtual unsigned int damage(BaseCharacter *other) override;
   virtual bool is_death() override;
+  virtual void notify_damage_done(BaseCharacter *other,
+                                  unsigned int damage_done) override;
 
  private:
   int dps;

@@ -17,7 +17,7 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
       collided_player(-1) {}
 
 void Projectile::update() {
-  if (range == 0) ModelException("Projectile cant move any more!", "11");
+  //if (range == 0) ModelException("Projectile cant move any more!", "11");
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
   if (map->can_ocupy_cell(next_x, next_y)) {
@@ -27,14 +27,17 @@ void Projectile::update() {
     y_position = next_y;
     range--;
   }
-  else {
+  else if (map->tile_is_valid(next_x, next_y)) {
     collided_player = map->get_uid(next_x, next_y);
     collided = true;
   }
   if (range == 0) {
-    alive = false;
+    //alive = false;
   }
+}
 
+int Projectile::get_collided_player() {
+  return collided_player;
 }
 
 int Projectile::get_next_x() {
@@ -58,4 +61,20 @@ int Projectile::get_next_y() {
       return 0;
   }
 }
+
+unsigned int Projectile::get_damage() {
+  return damage;
+}
+bool Projectile::is_critical() {
+  return critical;
+}
+
+unsigned int Projectile::get_attacker_id() {
+  return attacker_id;
+}
+
+void Projectile::kill() {
+  //alive = false;
+}
+
 Projectile::~Projectile() {}

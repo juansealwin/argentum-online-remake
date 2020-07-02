@@ -34,8 +34,12 @@ class Hero : public BaseCharacter {
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage,
                                       bool critical) override;
+  //recibe al jugador que hizo dano su ataque y el dano hecho
+  virtual void notify_damage_done(BaseCharacter *other,
+                                  unsigned int damage_done) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
+
   void equip_weapon(unsigned int weapon_id);
   void equip_staff(unsigned int staff_id);
   void equip_shield(unsigned int shield_id);

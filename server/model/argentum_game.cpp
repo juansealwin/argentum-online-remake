@@ -38,7 +38,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
     }
     if (e) {
       // map->place_entity(row, col, e);
-      map->ocupy_cell(row, col);
+      map->ocupy_cell(row, col, entities_ids);
       entities.emplace(entities_ids++, e);
     }
     col++;
@@ -75,7 +75,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
     }
     if (e) {
       // map->place_entity(row, col, e);
-      map->ocupy_cell(row, col);
+      map->ocupy_cell(row, col, entities_ids);
       monsters.emplace(entities_ids, e);
       entities.emplace(entities_ids++, e);
       // entities_ids++;
@@ -96,6 +96,7 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
+  std::cout << "throwing projectile " << std::endl;
   Hero *hero = dynamic_cast<Hero *>(entities.at(attacker_id));
   // manejar errores despues
   // errores del heroe, y de posicion contigua inaccesible
@@ -149,7 +150,7 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
   hero->add_item(new Weapon(24, 25, 40, 8));
   hero->equip_weapon(24);
 
-  map->ocupy_cell(x, y);
+  map->ocupy_cell(x, y, entities_ids);
   entities.emplace(entities_ids, hero);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
@@ -175,9 +176,65 @@ void ArgentumGame::update(bool one_second_update) {
     for (auto &hero : heroes) {
       hero.second->update();
     }
-    for (auto &projectile : projectiles) {
-      projectile.second->update();
+    std::cout << "por iterar projectiles" << std::endl;
+    std::cout << "projectiles size: " << projectiles.size() << std::endl;
+    for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
+      std::cout << "iterating projectiles" << std::endl;
+      Projectile *projectile = it->second;
+      projectile->update();
+      if (projectile->collided) {
+        std::cout << "proj colisiono" << std::endl;
+        unsigned int attacked_player_id = projectile->get_collided_player();
+        BaseCharacter *attacked_entity =
+            dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
+        unsigned int damage_done = attacked_entity->receive_damage(
+            projectile->get_damage(), projectile->is_critical());
+        unsigned int attacker_player_id = projectile->get_attacker_id();
+        BaseCharacter *attacker =
+            dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
+        attacker->notify_damage_done(attacked_entity, damage_done);
+        projectile->kill();
+        projectiles.erase(projectile->unique_id);
+      }
+      if (!projectile->alive) {
+        // hacer algo?
+        std::cout << "proj no colisiono" << std::endl;
+        projectiles.erase(projectile->unique_id);
+      }
+      if (it->second->alive == false) {
+        // aca antes de borrar al bicho llamar a algun metodo polimorfico que
+        // devuelva un drop (o no) para poner en el mapa
+        it = projectiles.erase(it++);
+      } else {
+        ++it;
+      }
     }
+    // for (auto &projectile : projectiles) {
+    //   std::cout << "iterating projectiles" << std::endl;
+    //   projectile.second->update();
+    //   if (projectile.second->collided) {
+    //     std::cout << "proj colisiono" << std::endl;
+    //     unsigned int attacked_player_id =
+    //     projectile.second->get_collided_player(); BaseCharacter
+    //     *attacked_entity =
+    //         dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
+    //     unsigned int damage_done = attacked_entity->receive_damage(
+    //         projectile.second->get_damage(),
+    //         projectile.second->is_critical());
+    //     unsigned int attacker_player_id =
+    //     projectile.second->get_attacker_id(); BaseCharacter *attacker =
+    //     dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
+    //     attacker->notify_damage_done(attacked_entity, damage_done);
+    //     projectile.second->kill();
+    //     projectiles.erase(projectile.second->unique_id);
+    //   }
+    //   if (!projectile.second->alive) {
+    //     // hacer algo?
+    //     std::cout << "proj no colisiono" << std::endl;
+    //     projectiles.erase(projectile.second->unique_id);
+
+    //   }
+    // }
   }
   remove_death_entities();
 
@@ -204,6 +261,9 @@ static unsigned long long MSTimeStamp() {
 void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
   bool one_second_passed;
+
+  add_new_hero("human", "warrior", "test_name1");
+  throw_projectile(15);
   while (alive) {
     one_second_passed = false;
     auto initial = std::chrono::high_resolution_clock::now();
@@ -295,8 +355,7 @@ void ArgentumGame::clean_notifications_queues() {
 /* private methods */
 
 void ArgentumGame::remove_death_entities() {
-  for (auto it = entities.cbegin(); it != entities.cend() /* not hoisted */;
-       /* no increment */) {
+  for (auto it = entities.cbegin(); it != entities.cend();) {
     if (it->second->alive == false) {
       // aca antes de borrar al bicho llamar a algun metodo polimorfico que
       // devuelva un drop (o no) para poner en el mapa

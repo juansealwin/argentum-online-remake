@@ -65,6 +65,11 @@ std::tuple<int, int> Map::get_random_free_space() {
   }
 }
 
+bool Map::tile_is_valid(int x, int y) { 
+  if (x >= rows || y >= cols || x < 0 || y < 0) return false;
+  return true;
+}
+
 void Map::empty_cell(int x, int y) {
   if (x >= rows || y >= cols || x < 0 || y < 0) return;
   matrix[x][y]->empty_cell();
@@ -97,5 +102,6 @@ void Map::debug_print() {
 }
 
 int Map::get_uid(int x, int y) {
+  
   return matrix[x][y]->entity_id;
 }
