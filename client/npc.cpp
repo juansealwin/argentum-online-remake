@@ -22,6 +22,7 @@ Npc::Npc(const Npc& other_npc) {
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
   walk = other_npc.walk;
+  spellbound = other_npc.spellbound;
 }
 
 Npc& Npc::operator=(const Npc& other_npc) {
@@ -37,6 +38,7 @@ Npc& Npc::operator=(const Npc& other_npc) {
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
   walk = other_npc.walk;
+  spellbound = other_npc.spellbound;
   return *this;
 }
 

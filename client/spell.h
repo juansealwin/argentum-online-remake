@@ -1,8 +1,8 @@
 #ifndef SPELL_H
 #define SPELL_H
 
-#include "drawable.h"
 #include "animation.h"
+#include "drawable.h"
 
 #define FRAMES_EXPLOSION 21
 
@@ -10,10 +10,10 @@ class Spell : public Drawable {
  private:
   id_texture_t spell_type;
   int life_time;
-  bool one_texture_animation;
   Animation animation_cast;
   SDL_Rect animation_frame;
-
+  bool alive;
+  bool one_texture_animation;
 
  public:
   Spell();
@@ -21,6 +21,7 @@ class Spell : public Drawable {
   ~Spell();
   virtual void render(SDL_Renderer*, int, int) override;
   void set_life_time(id_texture_t);
+  bool spell_alive();
 };
 
 #endif

@@ -1,11 +1,12 @@
 #include "spell.h"
 
-Spell::Spell() {}
+Spell::Spell() { alive = false; }
 
 Spell::Spell(id_texture_t type, int new_x, int new_y) {
   x = new_x * TILE_SIZE;
   y = new_y * TILE_SIZE;
   set_life_time(type);
+  alive = true;
 }
 
 Spell::~Spell() {}
@@ -22,6 +23,7 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   life_time--;
   // Borrame
   if (!life_time) life_time = FRAMES_PER_TEXT_EXPLOSION * FRAMES_EXPLOSION;
+  // alive = false;
 }
 
 void Spell::set_life_time(id_texture_t type) {
@@ -44,3 +46,5 @@ void Spell::set_life_time(id_texture_t type) {
   }
   spell_type = type;
 }
+
+bool Spell::spell_alive() { return alive; }

@@ -58,7 +58,6 @@ GameRenderer::~GameRenderer() {
 
 void GameRenderer::run() {
   try {
-    Spell exp(ID_EXPLOSION, 25, 25);
     // Cargamos todas las texturas del juego
     texture_manager.load_textures(renderer);
     int frame_start;
@@ -86,7 +85,6 @@ void GameRenderer::run() {
       SDL_RenderClear(renderer);
       // Renderizamos con los datos actuales
       current_game.render(renderer);
-      exp.render(renderer, 0, 0);
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.
