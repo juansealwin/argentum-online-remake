@@ -23,6 +23,8 @@
 #include "projectile.h"
 #include "serializer.h"
 #include "projectiles_manager.h"
+#include "heroes_manager.h"
+#include "monsters_manager.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -65,7 +67,8 @@ class ArgentumGame : public Thread {
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
-  void update(bool one_second_update);
+  //void update(bool one_second_update);
+  void update();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);
@@ -90,6 +93,8 @@ class ArgentumGame : public Thread {
   void tests_proyectiles();
   void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
+  HeroesManager heroes_manager;
+  MonstersManager monsters_manager;
 };
 
 #endif  // ARGENTUMGAME_H

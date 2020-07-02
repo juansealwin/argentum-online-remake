@@ -18,16 +18,16 @@ void Monster::update() {
   if (!alive) return;
 
   //-------- Movimiento -----------//
-  // int x_step = std::get<0>(moves.at(current_move));
-  // int y_step = std::get<1>(moves.at(current_move));
-  // current_move++;
+  int x_step = std::get<0>(moves.at(current_move));
+  int y_step = std::get<1>(moves.at(current_move));
+  current_move++;
 
-  // int next_x_pos = x_position + x_step;
-  // int next_y_pos = y_position + y_step;
-  // if (!map->tile_is_safe(next_x_pos, next_y_pos)) {
-  //   move(next_x_pos, next_y_pos);
-  // }
-  // if (current_move >= moves.size()) current_move = 0;
+  int next_x_pos = x_position + x_step;
+  int next_y_pos = y_position + y_step;
+  if (!map->tile_is_safe(next_x_pos, next_y_pos)) {
+    move(next_x_pos, next_y_pos);
+  }
+  if (current_move >= moves.size()) current_move = 0;
 }
 
 unsigned int Monster::damage(BaseCharacter *other) {

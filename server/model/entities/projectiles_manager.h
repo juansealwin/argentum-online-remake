@@ -4,9 +4,7 @@
 #include "projectile.h"
 #include "monster.h"
 #include "hero.h"
-class Hero;
-class Monster;
-class Projectile;
+#include <chrono>
 class ProjectileManager {
  public:
   ProjectileManager();
@@ -21,6 +19,8 @@ class ProjectileManager {
               std::map<unsigned int, Monster *> &monsters);
   BaseCharacter *get_hero_or_monster(int uid, std::map<unsigned int, Hero *> &heroes,
     std::map<unsigned int, Monster *> &monsters);
+ private:
+  std::chrono::time_point<std::chrono::high_resolution_clock> last_update_time;
 };
 
 #endif  // PROJECTILE_MANAGER_H

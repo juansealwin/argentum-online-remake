@@ -161,7 +161,7 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
   return place_hero(hero_race, hero_class, hero_name, x, y);
 }
 
-void ArgentumGame::update(bool one_second_update) {
+void ArgentumGame::update() {
   std::unique_lock<std::mutex> lock(mutex);
   // pensar bien que hacer primero, ejecutar los comandos o updatear el mundo?
   while (!commands_queue->is_empty()) {
@@ -169,22 +169,13 @@ void ArgentumGame::update(bool one_second_update) {
     cmd->execute(this);
     delete cmd;
   }
-  if (one_second_update) {
-    // auto_move_monsters();
-    // for (auto &entity : entities) {
-    //   entity.second->update();
-    // }
-    // crear managers que hagan esto
-    for (auto &monster : monsters) {
-      monster.second->update();
-    }
-    for (auto &hero : heroes) {
-      hero.second->update();
-    }
-    projectile_manager.update(heroes, monsters, projectiles);
-  }
-  remove_death_entities();
 
+  heroes_manager.update(std::ref(heroes));
+  monsters_manager.update(std::ref(monsters));
+  projectile_manager.update(std::ref(heroes), std::ref(monsters),
+                            std::ref(projectiles));
+
+  remove_death_entities();
   // TO DO:
   // - Chequear si monstruos murieron para eliminarlos del mapa y poner sus
   // drops
@@ -196,28 +187,20 @@ void ArgentumGame::kill() {
   alive = false;
 }
 
-static unsigned long long MSTimeStamp() {
-  typedef std::chrono::steady_clock sc;
-  unsigned long long ms_since_epoch =
-      std::chrono::duration_cast<std::chrono::milliseconds>(
-          sc::now().time_since_epoch())
-          .count();
-  return ms_since_epoch;
-}
-
 void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
-  bool one_second_passed;
+  // bool one_second_passed;
 
   while (alive) {
-    one_second_passed = false;
+    // one_second_passed = false;
     auto initial = std::chrono::high_resolution_clock::now();
-    auto time_difference = initial - start;
-    if (time_difference.count() >= 1000000000) {
-      one_second_passed = true;
-      start = initial;
-    }
-    update(one_second_passed);
+    // auto time_difference = initial - start;
+    // if (time_difference.count() >= 1000000000) {
+    //   one_second_passed = true;
+    //   start = initial;
+    // }
+    // update(one_second_passed);
+    update();
     send_game_status();
     // print_debug_map();
     long time_step = 1000 / 60.f;  // 60fps
