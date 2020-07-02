@@ -181,51 +181,7 @@ void ArgentumGame::update(bool one_second_update) {
     for (auto &hero : heroes) {
       hero.second->update();
     }
-    for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
-      Projectile *projectile = it->second;
-      projectile->update();
-      if (projectile->collided) {
-        int attacked_player_id = projectile->get_collided_entity();
-        BaseCharacter *attacked_entity = nullptr;
-        std::cout << "Attacked player id: " << attacked_player_id << std::endl;
-        if (heroes.count(attacked_player_id) > 0) {
-          attacked_entity =
-              dynamic_cast<BaseCharacter *>(heroes.at(attacked_player_id));
-        }
-        else if (monsters.count(attacked_player_id) > 0) {
-          attacked_entity =
-              dynamic_cast<BaseCharacter *>(monsters.at(attacked_player_id));
-        }
-        if (attacked_entity) {
-          if (!attacked_entity->is_death()) {
-            unsigned int damage_done = attacked_entity->receive_damage(
-                projectile->get_damage(), projectile->is_critical());
-            int attacker_player_id = projectile->get_attacker_id();
-            BaseCharacter *attacker = nullptr;
-            std::cout << "Attacker player id: " << attacker_player_id << std::endl;
-            if (heroes.count(attacker_player_id) > 0) {
-              attacker =
-                  dynamic_cast<BaseCharacter *>(heroes.at(attacker_player_id));
-              
-            }
-            else if (monsters.count(attacker_player_id) > 0) {
-              std::cout << "trying to obtain monster" << std::endl;
-
-              attacker =
-                  dynamic_cast<BaseCharacter *>(monsters.at(attacker_player_id));
-            }
-            if (attacker) attacker->notify_damage_done(attacked_entity, damage_done);
-          }
-        }
-        projectile->kill();
-      }
-      if (it->second->alive == false) {
-        it = projectiles.erase(it++);
-      } else {
-        std::cout << "Proyectil sigue vivo: " << " x: " << it->second->x_position << " y: " << it->second->y_position << "Collided?" << it->second->collided << std::endl;
-        ++it;
-      }
-    }
+    projectile_manager.update(heroes, monsters, projectiles);
   }
   remove_death_entities();
 

@@ -22,6 +22,7 @@
 #include "priest.h"
 #include "projectile.h"
 #include "serializer.h"
+#include "projectiles_manager.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -88,6 +89,7 @@ class ArgentumGame : public Thread {
                           unsigned int y);
   void tests_proyectiles();
   void place_monster(unsigned int x, unsigned int y);
+  ProjectileManager projectile_manager;
 };
 
 #endif  // ARGENTUMGAME_H

@@ -39,7 +39,6 @@ void Projectile::impact_at_position(int x, int y) {
   } else if (map->tile_is_valid(x, y)) {
     collided_entity = map->get_uid(x, y);
     collided = true;
-    std::cout << "collided with id" << collided_entity << std::endl;
   }
 }
 
