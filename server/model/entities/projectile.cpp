@@ -15,8 +15,8 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
       map(map),
       collided(false),
       collided_entity(-1) {
-        impact_at_position(x,y);
-      }
+  impact_at_position(x, y);
+}
 
 void Projectile::update() {
   if (collided) return;
@@ -24,6 +24,7 @@ void Projectile::update() {
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
   impact_at_position(next_x, next_y);
+  range--;
   // std::cout << "trying ocupy cell..." << std::endl;
   // if (map->can_ocupy_cell(next_x, next_y)) {
   //   std::cout << "can ocupy cell..." << std::endl;
@@ -48,23 +49,19 @@ void Projectile::update() {
 }
 
 void Projectile::impact_at_position(int x, int y) {
-if (map->can_ocupy_cell(x, y)) {
+  if (map->can_ocupy_cell(x, y)) {
     map->ocupy_cell(x, y, unique_id);
     map->empty_cell(x_position, y_position);
     x_position = x;
     y_position = y;
-    range--;
-  }
-  else if (map->tile_is_valid(x, y)) {
+  } else if (map->tile_is_valid(x, y)) {
     collided_entity = map->get_uid(x, y);
     collided = true;
     std::cout << "collided with id" << collided_entity << std::endl;
   }
 }
 
-int Projectile::get_collided_entity() {
-  return collided_entity;
-}
+int Projectile::get_collided_entity() { return collided_entity; }
 
 int Projectile::get_next_x() {
   switch (orientation) {
@@ -88,16 +85,10 @@ int Projectile::get_next_y() {
   }
 }
 
-unsigned int Projectile::get_damage() {
-  return damage;
-}
-bool Projectile::is_critical() {
-  return critical;
-}
+unsigned int Projectile::get_damage() { return damage; }
+bool Projectile::is_critical() { return critical; }
 
-unsigned int Projectile::get_attacker_id() {
-  return attacker_id;
-}
+unsigned int Projectile::get_attacker_id() { return attacker_id; }
 
 void Projectile::kill() {
   std::cout << "killing projectile" << std::endl;

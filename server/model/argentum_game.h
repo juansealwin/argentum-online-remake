@@ -86,6 +86,8 @@ class ArgentumGame : public Thread {
   unsigned int place_hero(std::string hero_race, std::string hero_class,
                           std::string hero_name, unsigned int x,
                           unsigned int y);
+  void tests_proyectiles();
+  void place_monster(unsigned int x, unsigned int y);
 };
 
 #endif  // ARGENTUMGAME_H

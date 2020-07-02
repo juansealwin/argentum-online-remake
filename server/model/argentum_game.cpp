@@ -18,6 +18,32 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
+
+  tests_proyectiles();
+}
+
+void ArgentumGame::tests_proyectiles() {
+  std::cout << "Running tests" << std::endl;
+  place_hero("human", "warrior", "test_name1", 10, 23);
+  throw_projectile(15);
+  place_hero("human", "warrior", "test_name1", 0, 0);
+  place_hero("human", "warrior", "test_name1", 1, 0);
+  place_monster(2, 0);
+  throw_projectile(17);
+  throw_projectile(18);
+  place_hero("human", "warrior", "test_name1", 0, 3);
+  place_hero("human", "warrior", "test_name1", 5, 3);
+  throw_projectile(22);
+  throw_projectile(23);
+  place_monster(10, 3);
+  unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
+  unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
+  throw_projectile(hero1);
+  throw_projectile(hero2);
+  unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
+  unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
+  throw_projectile(hero3);
+  throw_projectile(hero4);
 }
 
 void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
@@ -98,23 +124,30 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 void ArgentumGame::throw_projectile(int attacker_id) {
   std::cout << "throwing projectile " << std::endl;
   Hero *hero = dynamic_cast<Hero *>(entities.at(attacker_id));
-  // manejar errores despues
-  // errores del heroe, y de posicion contigua inaccesible
-  std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
-      hero->attack();
-  unsigned int dmg = std::get<0>(attack);
-  bool critical = std::get<1>(attack);
-  unsigned int item_id = std::get<2>(attack);
-  unsigned int range = std::get<3>(attack);
-  std::tuple<unsigned int, unsigned int> projectile_position =
-      get_contiguous_position(hero);
-  unsigned int x = std::get<0>(projectile_position);
-  unsigned int y = std::get<1>(projectile_position);
-  Projectile *projectile =
-      new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
-                     attacker_id, range, hero->orientation, map);
-  projectiles.emplace(entities_ids, projectile);
-  entities.emplace(entities_ids++, projectile);
+  if (hero) {
+    // manejar errores despues
+    // errores del heroe, y de posicion contigua inaccesible
+    std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
+        hero->attack();
+    unsigned int dmg = std::get<0>(attack);
+    bool critical = std::get<1>(attack);
+    unsigned int item_id = std::get<2>(attack);
+    unsigned int range = std::get<3>(attack);
+    std::tuple<unsigned int, unsigned int> projectile_position =
+        get_contiguous_position(hero);
+    unsigned int x = std::get<0>(projectile_position);
+    unsigned int y = std::get<1>(projectile_position);
+    Projectile *projectile =
+        new Projectile(entities_ids, x, y, item_id, 'p', dmg, critical,
+                       attacker_id, range, hero->orientation, map);
+    projectiles.emplace(entities_ids, projectile);
+    entities.emplace(entities_ids++, projectile);
+  } else {
+    std::cout
+        << "@@@@@@@@@@@@attemp to throw proyectile not being hero@@@@@@@@@"
+        << std::endl;
+    std::cout << "attacker id: " << attacker_id << std::endl;
+  }
 }
 
 /*********************** Fin acciones personajes *********************/
@@ -149,20 +182,14 @@ void ArgentumGame::update(bool one_second_update) {
       hero.second->update();
     }
     for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
-      std::cout << "iterating projectiles" << std::endl;
       Projectile *projectile = it->second;
       projectile->update();
       if (projectile->collided) {
-        // bool stop_projectile = true;
-        std::cout << "proj colisiono" << std::endl;
         unsigned int attacked_player_id = projectile->get_collided_entity();
-        if (attacked_player_id != -1 &&
-            dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id)) !=
-                nullptr) {
+        if ((heroes.count(attacked_player_id) > 0) || (monsters.count(attacked_player_id) > 0)) {
           BaseCharacter *attacked_entity =
               dynamic_cast<BaseCharacter *>(entities.at(attacked_player_id));
           if (!attacked_entity->is_death()) {
-            std::cout << "Proyectil aplicando dano.." << std::endl;
             unsigned int damage_done = attacked_entity->receive_damage(
                 projectile->get_damage(), projectile->is_critical());
             unsigned int attacker_player_id = projectile->get_attacker_id();
@@ -170,17 +197,13 @@ void ArgentumGame::update(bool one_second_update) {
                 dynamic_cast<BaseCharacter *>(entities.at(attacker_player_id));
             attacker->notify_damage_done(attacked_entity, damage_done);
           }
-          else { std::cout << "Esta meurto?? " << std::endl;}
-          if (projectile->unique_id < 18) throw_projectile(15);
         }
-        else { std::cout << " No casteo, su id es : " << attacked_player_id; }
-        // if (stop_projectile) projectile->kill();
         projectile->kill();
       }
       if (it->second->alive == false) {
         it = projectiles.erase(it++);
       } else {
-        std::cout << "Proyectil sigue vivo" << std::endl;
+        std::cout << "Proyectil sigue vivo: " << " x: " << it->second->x_position << " y: " << it->second->y_position << "Collided?" << it->second->collided << std::endl;
         ++it;
       }
     }
@@ -211,9 +234,6 @@ void ArgentumGame::run() {
   auto start = std::chrono::high_resolution_clock::now();
   bool one_second_passed;
 
-  place_hero("human", "warrior", "test_name1", 10, 23);
-
-  throw_projectile(15);
   while (alive) {
     one_second_passed = false;
     auto initial = std::chrono::high_resolution_clock::now();
@@ -325,8 +345,6 @@ void ArgentumGame::remove_death_entities() {
       ++it;
     }
   }
-
-
 }
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
@@ -377,9 +395,21 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->equip_shield(90);
   hero->add_item(new Weapon(24, 25, 10, 15));
   hero->equip_weapon(24);
-
+  std::cout << "---------placing hero with id-----------: " << entities_ids
+            << std::endl;
   map->ocupy_cell(x, y, entities_ids);
   entities.emplace(entities_ids, hero);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
+}
+
+void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
+  Json::Value entity = entities_cfg["npcs"]["goblin"];
+  Monster *e = new Monster(entities_ids, x, y, entity["id"].asInt(), 'g',
+                           entity["maxHp"].asInt(), entity["level"].asInt(),
+                           entity["dps"].asInt(), map);
+  map->ocupy_cell(x, y, entities_ids);
+  monsters.emplace(entities_ids, e);
+  std::cout << "Placing monster with id" << entities_ids << std::endl;
+  entities.emplace(entities_ids++, e);
 }
