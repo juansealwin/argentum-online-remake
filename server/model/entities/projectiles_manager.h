@@ -19,6 +19,8 @@ class ProjectileManager {
   private:
   void manage_collision(Projectile *projectile, std::map<unsigned int, Hero *> &heroes,
               std::map<unsigned int, Monster *> &monsters);
+  BaseCharacter *get_hero_or_monster(int uid, std::map<unsigned int, Hero *> &heroes,
+    std::map<unsigned int, Monster *> &monsters);
 };
 
 #endif  // PROJECTILE_MANAGER_H
