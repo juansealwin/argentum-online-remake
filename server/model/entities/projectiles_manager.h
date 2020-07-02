@@ -16,6 +16,9 @@ class ProjectileManager {
   void update(std::map<unsigned int, Hero *> &heroes,
               std::map<unsigned int, Monster *> &monsters,
               std::map<unsigned int, Projectile *> &projectiles);
+  private:
+  void manage_collision(Projectile *projectile, std::map<unsigned int, Hero *> &heroes,
+              std::map<unsigned int, Monster *> &monsters);
 };
 
 #endif  // PROJECTILE_MANAGER_H
