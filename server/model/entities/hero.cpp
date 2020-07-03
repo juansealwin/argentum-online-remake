@@ -10,7 +10,7 @@ Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
            unsigned int f_race_hp, unsigned int f_race_recovery,
            unsigned int f_race_mana, unsigned int f_class_mana,
            unsigned int f_class_meditation, unsigned int gold,
-           unsigned int class_id, Map *map, std::string name)
+           unsigned int class_id, Map &map, std::string name)
     : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),

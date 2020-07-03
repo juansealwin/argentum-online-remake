@@ -23,7 +23,7 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map *map, std::string name);
+       unsigned int class_id, Map &map, std::string name);
   // devuelve el dano causado
   void regenerate();
   const Attack attack();

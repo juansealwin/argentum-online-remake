@@ -5,7 +5,7 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
                        char repr, const unsigned int damage,
                        const bool critical, const unsigned int attacker_id,
                        const unsigned int range,
-                       const orientation_t orientation, Map *map)
+                       const orientation_t orientation, Map &map)
     : Entity(unique_id, x, y, type, repr),
       collided(false),
       damage(damage),
@@ -31,13 +31,13 @@ void Projectile::auto_move() {
 }
 
 void Projectile::impact_at_position(int x, int y) {
-  if (map->can_ocupy_cell(x, y)) {
-    map->ocupy_cell(x, y, unique_id);
-    map->empty_cell(x_position, y_position);
+  if (map.can_ocupy_cell(x, y)) {
+    map.ocupy_cell(x, y, unique_id);
+    map.empty_cell(x_position, y_position);
     x_position = x;
     y_position = y;
-  } else if (map->tile_is_valid(x, y)) {
-    collided_entity = map->get_uid(x, y);
+  } else if (map.tile_is_valid(x, y)) {
+    collided_entity = map.get_uid(x, y);
     collided = true;
   }
 }
@@ -72,7 +72,7 @@ bool Projectile::is_critical() { return critical; }
 unsigned int Projectile::get_attacker_id() { return attacker_id; }
 
 void Projectile::kill() {
-  map->empty_cell(x_position, y_position);
+  map.empty_cell(x_position, y_position);
   alive = false;
 }
 
