@@ -45,7 +45,7 @@ class Map {
   int cols;
   // Procesa la primera capa del mapa de tiled en el json
   void load_terrain(Json::Value &map_json);
-  std::vector<std::vector<Tile *> > matrix;
+  std::vector<std::vector<Tile> > matrix;
   
 };
 

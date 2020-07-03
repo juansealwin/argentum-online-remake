@@ -14,7 +14,7 @@ void Map::load_terrain(Json::Value &map_json) {
   for (auto &it : matrix) {
     it.reserve(cols);
     for (int curr_col = 0; curr_col < cols; ++curr_col) {
-      Tile *tile = nullptr;
+      //Tile *tile = nullptr;
       bool fixed = false;
       bool safe = false;
       int type = map_json["layers"][0]["data"][i].asInt();
@@ -37,9 +37,9 @@ void Map::load_terrain(Json::Value &map_json) {
         repr = 'f';
       } else {
       }
-      tile = new Tile(type, repr, safe, fixed);
-
-      it.push_back(tile);
+      //tile = new Tile(type, repr, safe, fixed);
+      Tile tile(type, repr, safe, fixed);
+      it.push_back(std::ref(tile));
       i++;
     }
     curr_row++;
@@ -47,19 +47,20 @@ void Map::load_terrain(Json::Value &map_json) {
 }
 
 Map::~Map() {
-  for (auto &it : matrix) {
-    for (auto p : it) {
-      delete p;
-    }
-    it.clear();
-  }
+  // for (auto &it : matrix) {
+  //   for (auto p : it) {
+  //     delete p;
+  //   }
+  //   it.clear();
+  // }
 }
 
 std::tuple<int, int> Map::get_random_free_space() {
   while (true) {
     int x = rand() % 100;
     int y = rand() % 100;
-    if (matrix[x][y]->free && !matrix[x][y]->fixed) {
+    // if (matrix[x][y]->free && !matrix[x][y]->fixed) {
+    if (matrix[x][y].free && !matrix[x][y].fixed) {
       return std::tuple<int, int>(x, y);
     }
   }
@@ -72,30 +73,30 @@ bool Map::tile_is_valid(int x, int y) {
 
 void Map::empty_cell(int x, int y) {
   if (x >= rows || y >= cols || x < 0 || y < 0) return;
-  matrix[x][y]->empty_cell();
+  matrix[x][y].empty_cell();
 }
 
 bool Map::tile_is_safe(int x, int y) {
   if (x >= rows || y >= cols || x < 0 || y < 0) return false;
-  return matrix[x][y]->safe;
+  return matrix[x][y].safe;
 }
 
 bool Map::can_ocupy_cell(int x, int y) {
   if (x >= rows || y >= cols || x < 0 || y < 0) return false;
-  if (matrix[x][y]->fixed || !matrix[x][y]->free) return false;
+  if (matrix[x][y].fixed || !matrix[x][y].free) return false;
   return true;
 }
 
 bool Map::ocupy_cell(int x, int y, unsigned int entity_id) {
   if (!can_ocupy_cell(x, y)) return false;
-  matrix[x][y]->fill_cell(entity_id);
+  matrix[x][y].fill_cell(entity_id);
   return true;
 }
 
 void Map::debug_print() {
   for (auto &row : matrix) {
     for (auto &col : row) {
-      std::cout << col->char_representation();
+      std::cout << col.char_representation();
     }
     std::cout << std::endl;
   }
@@ -103,5 +104,5 @@ void Map::debug_print() {
 
 int Map::get_uid(int x, int y) {
   
-  return matrix[x][y]->entity_id;
+  return matrix[x][y].entity_id;
 }
