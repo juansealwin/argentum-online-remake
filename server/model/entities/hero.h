@@ -17,21 +17,22 @@ class Item;
 class Hero : public BaseCharacter {
  public:
   // constructor para heroes nuevos
-  Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
-       unsigned int strength, unsigned int intelligence, unsigned int agility,
-       unsigned int constitution, unsigned int f_class_hp,
+  Hero(unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
+       unsigned int level, unsigned int strength, unsigned int intelligence,
+       unsigned int agility, unsigned int constitution, unsigned int f_class_hp,
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
        unsigned int class_id, Map *map, std::string name);
   // devuelve el dano causado
-  void update() override;
-  virtual unsigned int damage(BaseCharacter *other) override;
-  // unsigned int damage(Hero *other);
-  // unsigned int damage(Monster *m);
+  void regenerate();
+  const Attack attack();
   // devuelve el dano que efectivamente recibi
-  virtual unsigned int receive_damage(unsigned int damage,
-                                      bool critical) override;
+  virtual unsigned int receive_damage(unsigned int damage, bool critical,
+                                      unsigned int weapon_origin) override;
+  // recibe al jugador que hizo dano su ataque y el dano hecho
+  virtual void notify_damage_done(BaseCharacter *other,
+                                  unsigned int damage_done) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
   void equip_weapon(unsigned int weapon_id);

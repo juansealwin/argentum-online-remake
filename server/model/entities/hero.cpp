@@ -1,17 +1,17 @@
 #include "hero.h"
-
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
 
-Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
-           unsigned int strength, unsigned int intelligence,
-           unsigned int agility, unsigned int constitution,
-           unsigned int f_class_hp, unsigned int f_race_hp,
-           unsigned int f_race_recovery, unsigned int f_race_mana,
-           unsigned int f_class_mana, unsigned int f_class_meditation,
-           unsigned int gold, unsigned int class_id, Map *map, std::string name)
-    : BaseCharacter(x, y, race_id, repr, level, map),
+Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
+           char repr, unsigned int level, unsigned int strength,
+           unsigned int intelligence, unsigned int agility,
+           unsigned int constitution, unsigned int f_class_hp,
+           unsigned int f_race_hp, unsigned int f_race_recovery,
+           unsigned int f_race_mana, unsigned int f_class_mana,
+           unsigned int f_class_meditation, unsigned int gold,
+           unsigned int class_id, Map *map, std::string name)
+    : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
       agility(agility),
@@ -33,7 +33,7 @@ Hero::Hero(int x, int y, unsigned int race_id, char repr, unsigned int level,
   inventory = new Inventory(INVENTORY_SIZE);
 }
 
-void Hero::update() {
+void Hero::regenerate() {
   if (ghost_mode) return;
   current_hp = std::min(current_hp + f_race_recovery, max_hp);
   if (!meditating)
@@ -129,9 +129,16 @@ void Hero::add_item(Item *item) {
   inventory->add_item(item);
 }
 
-unsigned int Hero::damage(BaseCharacter *other) {
+void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
+  std::cout << "My spell hit an enemy!!!" << std::endl;
+  update_experience(damage_done, other);
+  std::cout << "Updated experience!!: " << experience << " out of " << next_level_xp_limit << std::endl;
+  std::cout << " My level is : " << level << std::endl;
+}
+
+const Attack Hero::attack() {
   if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
-  if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
+  // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
   if (!equipment->can_use_primary_weapon(this))
     throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
   meditating = false;
@@ -141,13 +148,12 @@ unsigned int Hero::damage(BaseCharacter *other) {
   unsigned int dmg = calculate_damage();
   float p = rand() / double(RAND_MAX);
   if (p < critical_damage_probability) critical = true;
-  // actualizar experiencia
-  unsigned int dmg_done = other->receive_damage(dmg, critical);
-  update_experience(dmg_done, other);
-  return dmg;
+  Attack attack = {dmg, critical, equipment->primary_weapon_id(), equipment->range()};
+  return std::move(attack);
 }
 
-unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
+unsigned int Hero::receive_damage(unsigned int damage, bool critical, unsigned int weapon_origin) {
+  std::cout << "Received damage!! " << damage << " is critical? " << critical << std::endl;
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
@@ -162,8 +168,10 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical) {
     actual_damage =
         std::max(damage - equipment->get_defense_bonus(), (unsigned int)0);
   }  // Hacer chequeos si esta vivo etc?
+  if (actual_damage > 0) affected_by = weapon_origin;
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
+  std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode << std::endl;
   return actual_damage;
 }
 
