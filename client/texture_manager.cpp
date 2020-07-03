@@ -14,7 +14,7 @@ TextureManager::TextureManager() {
 }
 
 void TextureManager::load_textures(SDL_Renderer* renderer) {
-  /* PLAYABLE CHARACTER TEXTURES */
+  /* PLAYABLE CHARACTER TEXTURES */ borrame.set_sound("explosion.wav");
   map[ID_HUMAN] = new Texture("humano.png", renderer);
   map[ID_HUMAN_HEAD] = new Texture("cabeza_humano.png", renderer);
   map[ID_ELF] = new Texture("elfo.png", renderer);
@@ -95,7 +95,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_BLEEDING] = new Texture("sangrado1.png", renderer);
   map[ID_BLEEDING_1] = new Texture("sangrado2.png", renderer);
   map[ID_BLEEDING_2] = new Texture("sangrado3.png", renderer);
-  map[ID_BLEEDING_3] = new Texture("sangrado4png", renderer);
+  map[ID_BLEEDING_3] = new Texture("sangrado4.png", renderer);
   map[ID_BLEEDING_4] = new Texture("sangrado5.png", renderer);
 
   map[ID_MAGIC_ARROW] = new Texture("flecha_magica.png", renderer);
@@ -149,6 +149,52 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
   id_texture_t id_frame;
 
   switch (id) {
+    case ID_BLEEDING:
+      if (lifetime > FRAMES_PER_TEXTURE * 4)
+        id_frame = id;
+      else if (lifetime > FRAMES_PER_TEXTURE * 3)
+        id_frame = (id_texture_t)(id + 1);
+      else if (lifetime > FRAMES_PER_TEXTURE * 2)
+        id_frame = (id_texture_t)(id + 2);
+      else if (lifetime > FRAMES_PER_TEXTURE)
+        id_frame = (id_texture_t)(id + 3);
+      else
+        id_frame = (id_texture_t)(id + 4);
+      break;
+
+    case ID_ELECTRIC_SHOCK:
+      if (lifetime > FRAMES_PER_TEXTURE * 14)
+        id_frame = id;
+      else if (lifetime > FRAMES_PER_TEXTURE * 13)
+        id_frame = (id_texture_t)(id + 1);
+      else if (lifetime > FRAMES_PER_TEXTURE * 12)
+        id_frame = (id_texture_t)(id + 2);
+      else if (lifetime > FRAMES_PER_TEXTURE * 11)
+        id_frame = (id_texture_t)(id + 3);
+      else if (lifetime > FRAMES_PER_TEXTURE * 10)
+        id_frame = (id_texture_t)(id + 4);
+      else if (lifetime > FRAMES_PER_TEXTURE * 9)
+        id_frame = (id_texture_t)(id + 5);
+      else if (lifetime > FRAMES_PER_TEXTURE * 8)
+        id_frame = (id_texture_t)(id + 6);
+      else if (lifetime > FRAMES_PER_TEXTURE * 7)
+        id_frame = (id_texture_t)(id + 7);
+      else if (lifetime > FRAMES_PER_TEXTURE * 6)
+        id_frame = (id_texture_t)(id + 8);
+      else if (lifetime > FRAMES_PER_TEXTURE * 5)
+        id_frame = (id_texture_t)(id + 9);
+      else if (lifetime > FRAMES_PER_TEXTURE * 4)
+        id_frame = (id_texture_t)(id + 10);
+      else if (lifetime > FRAMES_PER_TEXTURE * 3)
+        id_frame = (id_texture_t)(id + 11);
+      else if (lifetime > FRAMES_PER_TEXTURE * 2)
+        id_frame = (id_texture_t)(id + 12);
+      else if (lifetime > FRAMES_PER_TEXTURE)
+        id_frame = (id_texture_t)(id + 13);
+      else
+        id_frame = (id_texture_t)(id + 14);
+      break;
+
     case ID_EXPLOSION:
       if (lifetime > FRAMES_PER_TEXTURE * 20)
         id_frame = id;

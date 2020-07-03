@@ -58,7 +58,7 @@ CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y, int spell)
 
     case 1:
       spellbound = ID_BLEEDING;
-      lifetime = FRAMES_PER_TEXTURE * FRAMES_BLEDDING;
+      lifetime = FRAMES_PER_TEXTURE * FRAMES_BLEEDING;
       break;
 
     case 2:
@@ -92,7 +92,7 @@ CharacterStatus& CharacterStatus::operator=(
   y = other_status.y;
   is_alive = other_status.is_alive;
   spellbound = other_status.spellbound;
-  lifetime = lifetime;
+  lifetime = other_status.lifetime;
 }
 
 bool CharacterStatus::is_equal(CharacterStatus other_status) {

@@ -26,7 +26,7 @@ PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
   animation_move = other_pc.animation_move;
   body_rect = other_pc.body_rect;
   walk = other_pc.walk;
-  spellbound = spellbound;
+  spellbound = other_pc.spellbound;
 
   /** Copiamos la parte de PlayableCharacter **/
   // Colocamos las dimensiones de su cabeza
@@ -52,7 +52,7 @@ PlayableCharacter& PlayableCharacter::operator=(
   animation_move = other_pc.animation_move;
   body_rect = other_pc.body_rect;
   walk = other_pc.walk;
-  spellbound = spellbound;
+  spellbound = other_pc.spellbound;
 
   /** Copiamos la parte de PlayableCharacter **/
   // Colocamos las dimensiones de su cabeza
@@ -106,7 +106,7 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
   // Si esta afectado por algún hechizo lo renderizamos
   if (spellbound.spell_alive())
-    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
+    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);    
 }
 
 int PlayableCharacter::set_head_dimensions(character_t id) {

@@ -63,7 +63,7 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
 
     // Mofificamos/creamos el status para la proxima pasada
     current_status[it->first] = it->second;
-  }
+  } 
 
   // Comprobamos si hay entidades que no están más en el mapa
   for (it = current_status.begin(); it != current_status.end(); it++) {
@@ -71,7 +71,6 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
 
     // Si no están más, las borramos del current status, del mapa y de afectados
     if (it2 == next_status.end()) {
-      //
       current_status.erase(it->first);
       write_map->clean_character(it->first);
 

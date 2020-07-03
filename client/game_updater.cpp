@@ -20,7 +20,8 @@ void GameUpdater::run() {
 
       // Deserializamos la información recibida
       deserialize_status();
-
+    //std::cout << "GET LIFETIME updater: " << next_status[id].get_life_time()
+             // << std::endl
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status);
 

@@ -42,6 +42,25 @@ SDL_Rect Animation::get_next_clip(move_t move_type) {
   }
 }
 
+SDL_Rect Animation::get_next_clip(int lifetime, int max_lifetime) {
+  int total_clips = clips_up_down * clips_up_down;
+  int j = 0;
+  int k = 0;
+
+  for (size_t i = 1; i <= total_clips + 1; i++) {
+    if (lifetime > (max_lifetime - FRAMES_PER_TEXTURE * i))
+      break;
+    else
+      j++;
+    if (j == clips_up_down - 1) {
+      j = 0;
+      k++;
+    }
+  }
+  return SDL_Rect{character_width * j, character_height * k, character_width,
+                  character_height};
+}
+
 SDL_Rect Animation::next_clip_move_up() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_UP],
                         character_height + offset_y, character_width,
@@ -152,6 +171,20 @@ int Animation::set_total_clips(id_texture_t id) {
     case ID_HAMMER_EQUIPPED:
       clips_up_down = 5;
       clips_left_right = 4;
+      break;
+
+    case ID_MAGIC_ARROW:
+      // Columnas de clips
+      clips_up_down = 8;
+      // Filas de clips
+      clips_left_right = 1;
+      break;
+
+    case ID_HEAL:
+      // Columnas de clips
+      clips_up_down = 5;
+      // Filas de clips
+      clips_left_right = 6;
       break;
   }
 }
