@@ -261,7 +261,7 @@ void ArgentumGame::add_notification_queue(
 }
 
 void ArgentumGame::clean_notifications_queues() {
-  std::unique_lock<std::mutex> lock(mutex);
+  //std::unique_lock<std::mutex> lock(mutex);
   std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
     if ((*it)->is_closed()) {
@@ -275,6 +275,11 @@ void ArgentumGame::clean_notifications_queues() {
     } else
       ++it;
   }
+}
+
+void ArgentumGame::kill_player(unsigned int player_id) {
+  Hero *hero = heroes.at(player_id);
+  hero->alive = false;
 }
 
 /* private methods */

@@ -19,7 +19,8 @@ bool CommandBlocker::can_process(CommandDTO* command_dto) {
 bool CommandBlocker::can_process_move() {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_move_time;
-  if (time_difference.count() >= 62500000) {
+  const long long nanoseconds = 60000000;
+  if (time_difference.count() >= nanoseconds) {//62500000) {
     last_move_time = actual_time;
     return true;
   }

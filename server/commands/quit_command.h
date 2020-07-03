@@ -2,12 +2,12 @@
 #define QUIT_COMMAND_H
 
 #include "command.h"
-class ArgentumGame;
+#include "argentum_game.h"
 // class Command; forward declaration x si llego a necesitar
 
 class QuitCommand : public Command {
  public:
-  QuitCommand();
+  QuitCommand(const unsigned int player_id);
   QuitCommand(const QuitCommand &) = delete;
   ~QuitCommand();
   // Ejecuta cambios en el juego segun

@@ -55,6 +55,8 @@ class ArgentumGame : public Thread {
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
   // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
+  //Settea a un jugador como muerto para que sea removido durante el update()
+  void kill_player(unsigned int player_id);
   friend class Serializer;
 
  private:

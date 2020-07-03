@@ -6,7 +6,7 @@ Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int pl
     case MOVE_COMMAND:
       return move_command(dynamic_cast<MoveCommandDTO*>(command_dto), player_id);
     case QUIT_COMMAND:
-      return new QuitCommand();
+      return new QuitCommand(player_id);
     default:
       return nullptr;
   }
