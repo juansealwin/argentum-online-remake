@@ -7,6 +7,7 @@
 #include <vector>
 
 #include "../server/notifications/notification.h"
+#include "attack_command_dto.h"
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
@@ -67,17 +68,29 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
   socket.send(&move_type, 1);
 }
 
+void send_attack(const Socket& socket, const AttackCommandDTO* attack_command) {
+  uint8_t command_id = ATTACK_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
-  switch (commandDTO->getId()) {
+  switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
       send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
       break;
+
     case QUIT_COMMAND:
       send_quit(socket, static_cast<QuitCommandDTO*>(commandDTO));
       break;
+
     case MOVE_COMMAND:
       send_move(socket, static_cast<MoveCommandDTO*>(commandDTO));
       break;
+
+    case ATTACK_COMMAND:
+      send_attack(socket, static_cast<AttackCommandDTO*>(commandDTO));
+      break;
+
     default:
       break;
   }

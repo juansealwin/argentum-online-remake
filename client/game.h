@@ -8,10 +8,10 @@
 #include "character.h"
 #include "npc.h"
 #include "playable_character.h"
+#include "sound_effect.h"
 #include "texture.h"
 #include "texture_manager.h"
 #include "types.h"
-#include "sound_effect.h"
 
 #define MAP_SIZE 3200
 
@@ -27,6 +27,8 @@ class Game {
   int screen_width;
   int screen_height;
   std::map<int, Character*> characters;
+  std::map<int, Npc*> npcs;
+  std::map<int, PlayableCharacter*> pcs;
 
  public:
   Game(int, int, int);
@@ -36,6 +38,7 @@ class Game {
   void render(SDL_Renderer*);
   void update_map(int, int);
   void update_character(int, int, int);
+  void update_spellbound(int, id_texture_t, int);
   void change_map(int);
   void load_character(int, character_t, int, int);
   void render_characters(SDL_Renderer*);

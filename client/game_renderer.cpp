@@ -81,14 +81,10 @@ void GameRenderer::run() {
 
       // Leemos las actualizaciones mandadas desde el server
       current_game = protected_map.map_reader();
-
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
-
       // Renderizamos con los datos actuales
       current_game.render(renderer);
-      // creo que no va a hacer falta
-      // player.render_as_hero(renderer);
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.

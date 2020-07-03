@@ -8,8 +8,8 @@ class QuitCommandDTO : public CommandDTO {
   QuitCommandDTO();
   QuitCommandDTO(const QuitCommandDTO &) = delete;
   ~QuitCommandDTO();
-  bool stops_run();
-  int getId();
+  bool stops_run() override;
+  int get_id();
 };
 
 #endif

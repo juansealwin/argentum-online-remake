@@ -10,7 +10,6 @@
 #define CLIP_UP 'U'
 #define CLIP_LEFT 'L'
 #define CLIP_RIGHT 'R'
-#define TILE_SIZE 32
 
 class Animation {
  private:
@@ -28,6 +27,7 @@ class Animation {
   ~Animation();
   void set_offset_y(int);
   SDL_Rect get_next_clip(move_t);
+  SDL_Rect get_next_clip(int, int);
   SDL_Rect next_clip_move_up();
   SDL_Rect next_clip_move_down();
   SDL_Rect next_clip_move_left();

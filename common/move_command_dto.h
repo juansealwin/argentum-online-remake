@@ -10,8 +10,7 @@ class MoveCommandDTO : public CommandDTO {
   MoveCommandDTO(const movement_t movement_type);
   MoveCommandDTO(const MoveCommandDTO &) = delete;
   ~MoveCommandDTO();
-  bool stops_run();
-  int getId();
+  int get_id();
   const movement_t movement_type;
 };
 

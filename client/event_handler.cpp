@@ -2,12 +2,9 @@
 
 EventHandler::~EventHandler() {}
 
-EventHandler::EventHandler(  // const int player_id,
-    CommandsBlockingQueue& commands_queue, EventsQueue& queue, bool& run)
-    :  // player_id(player_id),
-      commands_queue(commands_queue),
-      events_queue(queue),
-      is_running(run) {}
+EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
+                           EventsQueue& queue, bool& run)
+    : commands_queue(commands_queue), events_queue(queue), is_running(run) {}
 
 void EventHandler::get_events() {
   try {
@@ -17,18 +14,22 @@ void EventHandler::get_events() {
     SDL_Event event;
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {
-        // User requests quit
+
+        // El usuario cierra la ventana
         if (event.type == SDL_QUIT) {
           is_running = false;
           QuitCommandDTO* quit_command = new QuitCommandDTO();
           commands_queue.push(quit_command);
+
           // Aviso al renderer que hay que cerrar
           events_queue.push(EVENT_QUIT);
           break;
         }
-        // User presses a key
+
+        // El usuario presiona una tecla
         else if (event.type == SDL_KEYDOWN) {
-          // Select surfaces based on key press
+
+          // Dependiendo que tecla presiona cambia el evento que sucede
           if (event.key.keysym.sym == SDLK_UP) {
             MoveCommandDTO* move_command = new MoveCommandDTO(move_up);
             commands_queue.push(move_command);
@@ -57,11 +58,15 @@ void EventHandler::get_events() {
           if (event.key.keysym.sym == SDLK_p) {
             background_music.play_music();
           }
+          if (event.key.keysym.sym == SDLK_a) {
+            AttackCommandDTO* attack_command = new AttackCommandDTO();
+            commands_queue.push(attack_command);
+          }
         }
       }
     }
   } catch (const std::exception& e) {
-    std::cerr << e.what() << '\n';
+    std::cerr << e.what() << std::endl;
   }
 }
 

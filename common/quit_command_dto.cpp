@@ -6,4 +6,4 @@ QuitCommandDTO::~QuitCommandDTO() {}
 
 bool QuitCommandDTO::stops_run() { return true; }
 
-int QuitCommandDTO::getId() { return QUIT_COMMAND; }
+int QuitCommandDTO::get_id() { return QUIT_COMMAND; }
