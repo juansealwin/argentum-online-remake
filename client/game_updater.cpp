@@ -20,9 +20,7 @@ void GameUpdater::run() {
 
       // Deserializamos la información recibida
       deserialize_status();
-      // std::cout << "GET LIFETIME updater: " <<
-      // next_status[id].get_life_time()
-      // << std::endl
+
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status);
 
@@ -44,10 +42,12 @@ void GameUpdater::deserialize_status() {
     int y = (int)status_serialized.at(j);
     j++;
     int x = (int)status_serialized.at(j);
-    /*if (id == 15)
+    /*
       std::cout << "Entity id: " << (int)id << ", type: " << entity_type
                 << ", x_pos: " << x << ", y_pos: " << y << std::endl;*/
-    next_status[(int)id] = CharacterStatus(entity_type, x, y, 0);
+    int k = 0;
+        
+    next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
     j++;
   }
 }

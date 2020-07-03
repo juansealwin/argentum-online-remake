@@ -53,8 +53,8 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     texture_manager.get_texture(spell_type, life_time)
         .render(renderer, NULL, x_rel - width / 2, y_rel - height);
   }
-  /*if (life_time = max_life_time)
-    cast_sound.play_sound(0);*/
+  if (life_time = max_life_time)
+    cast_sound.play_sound(0);
 }
 
 void Spell::set_features(id_texture_t type) {
