@@ -16,7 +16,17 @@ Game::Game(const Game& other_game) {
   static_objects = other_game.static_objects;
   map_piece = other_game.map_piece;
   viewport = other_game.viewport;
-  characters = other_game.characters;
+
+  std::map<int, Character*>::const_iterator it;
+  for (it = other_game.characters.begin(); it != other_game.characters.end();
+       it++) {
+    Npc* npc = dynamic_cast<Npc*>(it->second);
+    PlayableCharacter* pc = dynamic_cast<PlayableCharacter*>(it->second);
+    if (npc != nullptr)
+      characters[it->first] = new Npc(*npc);
+    else
+      characters[it->first] = new PlayableCharacter(*pc);
+  }
 }
 
 Game& Game::operator=(const Game& other_game) {
@@ -27,7 +37,17 @@ Game& Game::operator=(const Game& other_game) {
   static_objects = other_game.static_objects;
   map_piece = other_game.map_piece;
   viewport = other_game.viewport;
-  characters = other_game.characters;
+
+  std::map<int, Character*>::const_iterator it;
+  for (it = other_game.characters.begin(); it != other_game.characters.end();
+       it++) {
+    Npc* npc = dynamic_cast<Npc*>(it->second);
+    PlayableCharacter* pc = dynamic_cast<PlayableCharacter*>(it->second);
+    if (npc != nullptr)
+      characters[it->first] = new Npc(*npc);
+    else
+      characters[it->first] = new PlayableCharacter(*pc);
+  }
   return *this;
 }
 
@@ -38,6 +58,7 @@ void Game::update_character(int id, int new_x, int new_y) {
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
 
+  // Si se actualiza el heroe la camara lo tiene que seguir
   if (id == id_hero)
     update_map(x_render_scale - characters[id]->get_x(),
                y_render_scale - characters[id]->get_y());
@@ -85,6 +106,10 @@ void Game::update_map(int new_x, int new_y) {
     viewport.y = 0;
     map_piece.h = screen_height;
   }
+}
+
+void Game::update_spellbound(int id, id_texture_t spell_type, int lifetime) {
+  characters[id]->set_spell(spell_type, lifetime);
 }
 
 void Game::render(SDL_Renderer* renderer) {

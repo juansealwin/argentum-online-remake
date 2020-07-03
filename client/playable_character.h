@@ -4,17 +4,17 @@
 #include "character.h"
 #include "item.h"
 #include "sound_effect.h"
+#include "spell.h"
 
 class PlayableCharacter : public Character {
  protected:
   id_texture_t type_head;
   SDL_Rect head_rect;
-  int half_screen_w;
-  int half_screen_h;
   id_texture_t helmet;
   id_texture_t armor;
   id_texture_t shield;
   id_texture_t weapon;
+  
 
  public:
   PlayableCharacter(character_t, int, int);

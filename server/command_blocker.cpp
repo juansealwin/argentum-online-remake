@@ -7,7 +7,7 @@ CommandBlocker::CommandBlocker() {
 CommandBlocker::~CommandBlocker() {}
 
 bool CommandBlocker::can_process(CommandDTO* command_dto) {
-  int command_id = command_dto->getId();
+  int command_id = command_dto->get_id();
   switch (command_id) {
     case MOVE_COMMAND:
       return can_process_move();

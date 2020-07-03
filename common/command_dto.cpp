@@ -3,3 +3,5 @@
 CommandDTO::CommandDTO() {}
 
 CommandDTO::~CommandDTO() {}
+
+bool CommandDTO::stops_run() { return false; }

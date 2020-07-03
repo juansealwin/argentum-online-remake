@@ -4,17 +4,20 @@
 #include <SDL2/SDL.h>
 #include <SDL2/SDL_mixer.h>
 #include <SDL2/SDL_ttf.h>
+
 #include <vector>
-#include "protected_map.h"
+
+#include "events_queue.h"
 #include "game.h"
 #include "playable_character.h"
+#include "protected_map.h"
 #include "sdl_exception.h"
-#include "texture.h"
-#include "thread.h"
-#include "texture_manager.h"
-#include "events_queue.h"
 #include "sound_effect.h"
-#define FRAME_DELAY 100/6
+#include "spell.h"
+#include "texture.h"
+#include "texture_manager.h"
+#include "thread.h"
+#define FRAME_DELAY 100 / 6
 
 class GameRenderer : public Thread {
  private:

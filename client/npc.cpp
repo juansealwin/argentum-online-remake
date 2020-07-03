@@ -8,32 +8,40 @@ Npc::Npc(character_t id_npc, int new_x, int new_y) {
 }
 
 Npc::Npc(const Npc& other_npc) {
+  /** Copiamos la parte de Drawable **/
   x = other_npc.x;
   y = other_npc.y;
-  type_character = other_npc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_npc.width;
   height = other_npc.height;
-  body_rect = other_npc.body_rect;
+
+  /** Copiamos la parte de Character **/
+  type_character = other_npc.type_character;
   animation_move = other_npc.animation_move;
+  body_rect = other_npc.body_rect;
+  walk = other_npc.walk;
+  spellbound = other_npc.spellbound;
 }
 
 Npc& Npc::operator=(const Npc& other_npc) {
+  /** Copiamos la parte de Drawable **/
   x = other_npc.x;
   y = other_npc.y;
-  type_character = other_npc.type_character;
   // Colocamos las dimensiones del personaje
   width = other_npc.width;
   height = other_npc.height;
-  body_rect = other_npc.body_rect;
+
+  /** Copiamos la parte de Character **/
+  type_character = other_npc.type_character;
   animation_move = other_npc.animation_move;
+  body_rect = other_npc.body_rect;
+  walk = other_npc.walk;
+  spellbound = other_npc.spellbound;
   return *this;
 }
 
 Npc::~Npc() {}
 
 void Npc::sound_walk() {
-  if((rand() % 100) < 20)
-    walk.play_sound(0);
+  if ((rand() % 100) < 20) walk.play_sound(0);
 }
-

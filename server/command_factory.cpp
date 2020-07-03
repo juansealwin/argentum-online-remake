@@ -1,7 +1,7 @@
 #include "command_factory.h"
 #include <iostream>
 Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int player_id) {
-  int command_id = command_dto->getId();
+  int command_id = command_dto->get_id();
   switch (command_id) {
     case MOVE_COMMAND:
       return move_command(dynamic_cast<MoveCommandDTO*>(command_dto), player_id);

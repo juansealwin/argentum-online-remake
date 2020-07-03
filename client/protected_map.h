@@ -3,15 +3,23 @@
 
 #include <condition_variable>
 #include <mutex>
-#include "game.h"
+
 #include "character_status.h"
+#include "game.h"
 #include "types.h"
+
+// Por defecto cuando se agrega un personaje no esta afectado por un hechizo
+typedef struct {
+  id_texture_t type_spell = ID_NULL;
+  int lifetime = 0;
+} spellbound_t;
 
 class ProtectedMap {
  private:
   Game* read_map;
   Game* write_map;
   std::map<int, CharacterStatus> current_status;
+  std::map<int, spellbound_t> characters_afected;
   std::mutex block_maps;
   std::condition_variable cv;
 
