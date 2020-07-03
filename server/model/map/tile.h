@@ -7,8 +7,9 @@ class Tile {
   ~Tile();
   Tile(const Tile &) = delete;
   char char_representation();
-  void fill_cell();
+  void fill_cell(unsigned int uid);
   void empty_cell();
+  int entity_id;
 
  private:
   int representation_id;
@@ -16,6 +17,7 @@ class Tile {
   bool safe;
   bool fixed;
   bool free;
+  //id de la entidad que esta ocupando la celda (o -1 si no tiene)
   friend class Map;
 };
 

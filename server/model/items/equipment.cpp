@@ -51,7 +51,7 @@ unsigned int Equipment::get_defense_bonus() {
 }
 
 unsigned int Equipment::range() {
-  unsigned int range = 0;
+  unsigned int range = 1;
   if (weapon)
     range = weapon->range;
   else if (staff)
@@ -122,7 +122,14 @@ DefensiveItem *Equipment::unequip_armour() {
   return a;
 }
 
-uint8_t Equipment::count() { 
+unsigned int Equipment::primary_weapon_id() {
+  unsigned int id = 0;
+  if (weapon) id = weapon->id;
+  else if (staff) id = staff->id;
+  return id;
+}
+
+uint8_t Equipment::count() {
   uint8_t count = 0;
   if (weapon) count++;
   if (staff) count++;
