@@ -23,27 +23,27 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
 }
 
 void ArgentumGame::tests_proyectiles() {
-  std::cout << "Running tests" << std::endl;
-  place_hero("human", "warrior", "test_name1", 10, 23);
-  throw_projectile(15);
-  place_hero("human", "warrior", "test_name1", 0, 0);
-  place_hero("human", "warrior", "test_name1", 1, 0);
-  place_monster(2, 0);
-  throw_projectile(17);
-  throw_projectile(18);
-  place_hero("human", "warrior", "test_name1", 0, 3);
-  place_hero("human", "warrior", "test_name1", 5, 3);
-  throw_projectile(22);
-  throw_projectile(23);
-  place_monster(10, 3);
-  unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
-  unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
-  throw_projectile(hero1);
-  throw_projectile(hero2);
-  unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
-  unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
-  throw_projectile(hero3);
-  throw_projectile(hero4);
+  // std::cout << "Running tests" << std::endl;
+  // place_hero("human", "warrior", "test_name1", 10, 23);
+  // throw_projectile(15);
+  // place_hero("human", "warrior", "test_name1", 0, 0);
+  // place_hero("human", "warrior", "test_name1", 1, 0);
+  // place_monster(2, 0);
+  // throw_projectile(17);
+  // throw_projectile(18);
+  // place_hero("human", "warrior", "test_name1", 0, 3);
+  // place_hero("human", "warrior", "test_name1", 5, 3);
+  // throw_projectile(22);
+  // throw_projectile(23);
+  // place_monster(10, 3);
+  // unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
+  // unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
+  // throw_projectile(hero1);
+  // throw_projectile(hero2);
+  // unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
+  // unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
+  // throw_projectile(hero3);
+  // throw_projectile(hero4);
 }
 
 void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
@@ -183,7 +183,6 @@ void ArgentumGame::kill() {
 }
 
 void ArgentumGame::run() {
-  auto start = std::chrono::high_resolution_clock::now();
 
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();

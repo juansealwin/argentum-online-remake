@@ -13,12 +13,14 @@ class Projectile : public Entity {
   // Mover proyectil, chequear colision
   void auto_move();
   void impact_at_position(int x, int y);
-  bool collided;
+  
   int get_collided_entity();
   unsigned int get_damage();
   unsigned int get_attacker_id();
   bool is_critical();
   void kill();
+  
+  bool collided;
  private:
   unsigned int damage;
   bool critical;

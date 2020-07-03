@@ -5,7 +5,7 @@
 template <typename T>
 // debe llamarse a este metodo si se necesita extraer del vector elementos de
 // mas de 1 byte
-T extract(const std::vector<unsigned char> &v, int &pos) {
+T extract(const std::vector<unsigned char> &v, unsigned int &pos) {
   T value;
   memcpy(&value, &v[pos], sizeof(T));
   pos += sizeof(T);
@@ -203,7 +203,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 
 void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
   // std::cout << "vector size is " << serialization.size() << std::endl;
-  int j = 1;
+  unsigned int j = 1;
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
     int entity_type = extract<uint8_t>(serialization, j);

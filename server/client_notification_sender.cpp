@@ -23,7 +23,6 @@ void ClientNotificationSender::stop() { this->alive = false; }
 void ClientNotificationSender::run() {
   std::cout << "receiver, game room :" << game->get_room() << std::endl;
 
-  int loops = 0;
   while (alive) {
 
     //bloquea mientras no haya notificaciones

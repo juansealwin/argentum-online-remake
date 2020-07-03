@@ -111,20 +111,8 @@ void Protocol::receive_notification(const Socket& socket,
   uint16_t notification_size = 0;
   socket.recv(&notification_size, 2);
   notification_size = ntohs(notification_size);
-  unsigned char buffer[notification_size];
+  unsigned char *buffer = new unsigned char[notification_size];
   socket.recv(buffer, notification_size);
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
-  // std::vector<unsigned char> vector = std::vector<unsigned char>(buffer,
-  // buffer + notification_size);
-  // int j = 1;
-  // while (j < vector.size()) {
-  //   uint16_t id = ntohs(extract<uint16_t>(vector, j));
-  //   j += 2;
-  //   int entity_type = (int)vector.at(j);
-  //   j++;
-  //   int x = (int)vector.at(j);
-  //   j++;
-  //   int y = (int)vector.at(j);
-  //   j++;
-  // }
+  delete buffer;
 }

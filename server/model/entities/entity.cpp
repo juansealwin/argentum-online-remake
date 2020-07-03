@@ -5,9 +5,9 @@ Entity::Entity(unsigned int unique_id, int x, int y, int type, char repr)
       x_position(x),
       y_position(y),
       type(type),
-      representation(repr),
       alive(true),
-      orientation(orientation_down) {}
+      orientation(orientation_down),
+      representation(repr) {}
 
 Entity::~Entity() {}
 
