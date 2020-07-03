@@ -8,6 +8,8 @@ Spell::Spell(id_texture_t type, int time_left) {
 }
 
 Spell::Spell(const Spell& other_spell) {
+  x = other_spell.x;
+  y = other_spell.y;
   width = other_spell.width;
   height = other_spell.height;
   life_time = other_spell.life_time;
@@ -24,6 +26,8 @@ Spell::Spell(const Spell& other_spell) {
 Spell::~Spell() {}
 
 Spell& Spell::operator=(const Spell& other_spell) {
+  x = other_spell.x;
+  y = other_spell.y;
   width = other_spell.width;
   height = other_spell.height;
   life_time = other_spell.life_time;
@@ -43,7 +47,8 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     animation_cast = Animation(width, height, spell_type);
     animation_frame = animation_cast.get_next_clip(life_time, max_life_time);
     texture_manager.get_texture(spell_type)
-        .render(renderer, &animation_frame,  x_rel - width / 2, y_rel - height);
+        .render(renderer, &animation_frame, x + x_rel - width / 4,
+                y + y_rel - height / 2);
   } else {
     texture_manager.get_texture(spell_type, life_time)
         .render(renderer, NULL, x_rel - width / 2, y_rel - height);
@@ -54,6 +59,8 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
 void Spell::set_features(id_texture_t type) {
   spell_type = type;
+  x = 0;
+  y = 0;
   switch (type) {
       // No son las dimensiones exactas ya que en la imagen hay sobrantes
     case ID_BLEEDING:
@@ -65,19 +72,21 @@ void Spell::set_features(id_texture_t type) {
       break;
 
     case ID_MAGIC_ARROW:
-      width = 10;
-      height = 0;
+      x = 10;
+      y = 15;
+      width = 15;
+      height = 15;
       one_texture_animation = true;
       cast_sound.set_sound("sangrado.mp3");
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
     case ID_HEAL:
-      width = 78;
-      height = 78;
+      width = 80;
+      height = 85;
       one_texture_animation = true;
       cast_sound.set_sound("sangrado.mp3");
-      max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
+      max_life_time = FRAMES_HEAL * FRAMES_PER_TEXTURE;
       break;
 
     case ID_ELECTRIC_SHOCK:

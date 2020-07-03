@@ -52,7 +52,7 @@ SDL_Rect Animation::get_next_clip(int lifetime, int max_lifetime) {
       break;
     else
       j++;
-    if (j == clips_up_down - 1) {
+    if (j == clips_up_down) {
       j = 0;
       k++;
     }
@@ -184,7 +184,7 @@ int Animation::set_total_clips(id_texture_t id) {
       // Columnas de clips
       clips_up_down = 5;
       // Filas de clips
-      clips_left_right = 6;
+      clips_left_right = 2;
       break;
   }
 }
