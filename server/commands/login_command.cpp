@@ -2,7 +2,7 @@
 
 #include <iostream>
 
-LoginCommand::LoginCommand(const int room_number) : room_number(room_number) {}
+LoginCommand::LoginCommand(const unsigned int room_number) : room_number(room_number) {}
 
 LoginCommand::~LoginCommand() {}
 

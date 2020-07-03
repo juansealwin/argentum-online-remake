@@ -4,7 +4,7 @@
 
 #include "argentum_game.h"
 
-MoveCommand::MoveCommand(const int uid, const int x_move, const int y_move)
+MoveCommand::MoveCommand(const unsigned int uid, const int x_move, const int y_move)
     : Command(uid), x_move(x_move), y_move(y_move) {}
 
 MoveCommand::~MoveCommand() {}

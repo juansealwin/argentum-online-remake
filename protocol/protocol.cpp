@@ -32,6 +32,10 @@ MoveCommandDTO* receive_move(const Socket& socket) {
   return new MoveCommandDTO(movement_t(movement_type));
 }
 
+AttackCommandDTO* receive_attack(const Socket& socket) {
+  return new AttackCommandDTO();
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -44,6 +48,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_quit(socket);
     case MOVE_COMMAND:
       return receive_move(socket);
+    case ATTACK_COMMAND:
+      return receive_attack(socket);
     default:
       return nullptr;
   }

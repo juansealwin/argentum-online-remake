@@ -7,7 +7,7 @@ class ArgentumGame;
 
 class MoveCommand : public Command {
  public:
-  MoveCommand(const int uid, const int x_move, const int y_move);
+  MoveCommand(const unsigned int uid, const int x_move, const int y_move);
   MoveCommand(const MoveCommand &) = delete;
   ~MoveCommand();
   // Ejecuta cambios en el juego segun

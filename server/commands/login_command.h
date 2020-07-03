@@ -8,7 +8,7 @@ class ArgentumGame;
 
 class LoginCommand : public Command {
  public:
-  LoginCommand(const int room_number);
+  LoginCommand(const unsigned int room_number);
   LoginCommand(const LoginCommand &) = delete;
   ~LoginCommand();
   // Ejecuta cambios en el juego segun
