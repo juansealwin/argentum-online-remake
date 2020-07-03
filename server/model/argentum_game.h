@@ -10,17 +10,21 @@
 #include "../util/json/json.h"
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
+#include "banker.h"
 #include "base_character.h"
-#include "hero.h"
 #include "command.h"  //<- guarda con esto y dependencias circulares
+#include "game_status_notification.h"
+#include "hero.h"
 #include "map.h"
+#include "merchant.h"
 #include "monster.h"
 #include "move_command.h"
-#include "banker.h"
-#include "merchant.h"
 #include "priest.h"
-#include "game_status_notification.h"
+#include "projectile.h"
 #include "serializer.h"
+#include "projectiles_manager.h"
+#include "heroes_manager.h"
+#include "monsters_manager.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -41,12 +45,15 @@ class ArgentumGame : public Thread {
   void kill();
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
-  //devuelve el id auto-generado
-  unsigned int add_new_hero(std::string hero_race, std::string hero_class, std::string hero_name);
+  void throw_projectile(int attacker_id);
+  // devuelve el id auto-generado
+  unsigned int add_new_hero(std::string hero_race, std::string hero_class,
+                            std::string hero_name);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
-  //remueve colas de notificaciones para no notificar a clientes meurtos
+  // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
   friend class Serializer;
+
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -60,17 +67,35 @@ class ArgentumGame : public Thread {
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
-  void update(bool one_second_update);
+  //void update(bool one_second_update);
+  void update();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_monsters(Json::Value map_cfg);
   void place_initial_npcs(Json::Value map_cfg);
-  void remove_death_entities();
-  std::map<int, Entity *> entities;
+  //void remove_death_entities();
+  // entities se usa para serializar el mapa (quitar mas adelante)
+  //std::map<unsigned int, Entity *> entities;
+  std::map<unsigned int, Entity *> npcs;
+  std::map<unsigned int, Hero *> heroes;
+  std::map<unsigned int, Monster *> monsters;
+  std::map<unsigned int, Projectile *> projectiles;
+
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
   unsigned int entities_ids = 0;
   std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
+  std::tuple<unsigned int, unsigned int> get_contiguous_position(
+      BaseCharacter *character);
+  // agrega heroe en posicion x,y (los ejes estan invertidos)
+  unsigned int place_hero(std::string hero_race, std::string hero_class,
+                          std::string hero_name, unsigned int x,
+                          unsigned int y);
+  void tests_proyectiles();
+  void place_monster(unsigned int x, unsigned int y);
+  ProjectileManager projectile_manager;
+  HeroesManager heroes_manager;
+  MonstersManager monsters_manager;
 };
 
 #endif  // ARGENTUMGAME_H

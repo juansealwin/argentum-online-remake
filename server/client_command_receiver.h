@@ -10,6 +10,7 @@
 #include "common_socket.h"
 #include "protocol.h"
 #include "thread.h"
+#include "command_blocker.h"
 
 class ClientCommandReceiver : public Thread {
  public:
@@ -28,6 +29,7 @@ class ClientCommandReceiver : public Thread {
   ThreadSafeQueue<Command *> *commands_queue;
   unsigned int hero_id;
   bool alive;
+  CommandBlocker command_blocker;
 };
 
 #endif  // CLIENT_COMMAND_RECEIVER_H

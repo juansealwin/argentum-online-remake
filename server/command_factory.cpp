@@ -5,6 +5,8 @@ Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int pl
   switch (command_id) {
     case MOVE_COMMAND:
       return move_command(dynamic_cast<MoveCommandDTO*>(command_dto), player_id);
+    default:
+      return nullptr;
   }
 }
 

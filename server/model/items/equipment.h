@@ -31,6 +31,7 @@ class Equipment {
   DefensiveItem *unequip_armour();
   unsigned int get_attack_bonus();
   unsigned int get_defense_bonus();
+  unsigned int primary_weapon_id();
   //devuelve cantidad de items equipados
   uint8_t count();
   Weapon *weapon = nullptr;

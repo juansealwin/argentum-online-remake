@@ -13,6 +13,9 @@ class Serializer {
 
  private:
   //  //deben coincidir con los config del json
+  static void serialize_common_fields(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
+  static void serialize_common_fields_v2(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
+  
   static bool is_hero(uint8_t t);
   // static bool is_npc(uint8_t t);
   static bool is_monster(uint8_t t);
