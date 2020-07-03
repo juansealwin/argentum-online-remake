@@ -87,23 +87,23 @@ std::vector<unsigned char> Serializer::serialize_game_status_v2(
   serialization.push_back(notification_id);
   for (auto &entity : game->npcs) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
-                            entity.second);
+                               entity.second);
   }
   for (auto &entity : game->monsters) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
-                            entity.second);
+                               entity.second);
     serialize_monster(std::ref(serialization), entity.second);
   }
   for (auto &entity : game->heroes) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
-                            entity.second);
+                               entity.second);
     serialize_hero(std::ref(serialization), entity.second);
   }
   for (auto &entity : game->projectiles) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
-                            entity.second);
+                               entity.second);
   }
-  // debug_deserialize(serialization);
+  debug_deserialize(serialization);
   return serialization;
 }
 
@@ -112,9 +112,11 @@ void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
   uint16_t max_hp = htons(m->max_hp);
   uint16_t current_hp = htons(m->current_hp);
   uint16_t level = htons(m->level);
+  uint8_t affected_by_item = m->affected_by;
   insert(serialization, max_hp);
   insert(serialization, current_hp);
   insert(serialization, level);
+  insert(serialization, affected_by_item);
 }
 
 void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
@@ -123,6 +125,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   uint16_t max_hp = htons(h->max_hp);
   uint16_t current_hp = htons(h->current_hp);
   uint16_t level = htons(h->level);
+  uint8_t affected_by_item = h->affected_by;
   // aca meter el nombre
   uint8_t name_size = h->name.size();
   uint8_t class_id = h->class_id;
@@ -141,6 +144,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   insert(serialization, max_hp);
   insert(serialization, current_hp);
   insert(serialization, level);
+  insert(serialization, affected_by_item);
   serialization.push_back(name_size);
   for (int x = 0; x < name_size; x++) {
     serialization.push_back(h->name.at(x));
@@ -213,12 +217,14 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
+      uint8_t affected_by = extract<uint8_t>(serialization, j);
       // std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
       //           << "current_hp" << current_hp << std::endl;
     } else if (is_hero(entity_type)) {
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
+      uint8_t affected_by = extract<uint8_t>(serialization, j);
       int name_size = extract<uint8_t>(serialization, j);
       std::string name;
       for (int x = 0; x < name_size; x++) {
@@ -240,7 +246,8 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       int ghost_mode = extract<uint8_t>(serialization, j);
       int items_equiped = extract<uint8_t>(serialization, j);
       // std::cout << "@@@Hero stats@@@" << std::endl
-      //           << "max_hp: " << max_hp << " max_mana " << mana_max << " gold"
+      //           << "max_hp: " << max_hp << " max_mana " << mana_max << "
+      //           gold"
       //           << gold << " ghost mode " << ghost_mode << " items equiped "
       //           << items_equiped << "name size" << name_size << std::endl;
       // std::cout << "@@Deserializing items equiped@@" << std::endl;

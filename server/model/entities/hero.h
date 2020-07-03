@@ -26,8 +26,6 @@ class Hero : public BaseCharacter {
        unsigned int class_id, Map *map, std::string name);
   // devuelve el dano causado
   void regenerate();
-  // devuelve (dano, critico, item id)
-  //std::tuple<unsigned int, bool, unsigned int, unsigned int> attack();
   const Attack attack();
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
@@ -37,7 +35,6 @@ class Hero : public BaseCharacter {
                                   unsigned int damage_done) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
-
   void equip_weapon(unsigned int weapon_id);
   void equip_staff(unsigned int staff_id);
   void equip_shield(unsigned int shield_id);
