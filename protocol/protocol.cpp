@@ -22,9 +22,7 @@ LoginCommandDTO* receive_login(const Socket& socket) {
 }
 
 QuitCommandDTO* receive_quit(const Socket& socket) {
-  // deshabilito temporalmente
-  // return new QuitCommandDTO();
-  return nullptr;
+  return new QuitCommandDTO();
 }
 
 MoveCommandDTO* receive_move(const Socket& socket) {
