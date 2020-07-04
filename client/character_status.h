@@ -15,7 +15,7 @@ class CharacterStatus {
 
  public:
   CharacterStatus();
-  CharacterStatus(int, int, int/*, int*/);
+  CharacterStatus(int, int, int, int);
   ~CharacterStatus();
   CharacterStatus& operator=(const CharacterStatus&);
   bool is_equal(CharacterStatus);
