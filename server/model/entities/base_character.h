@@ -12,7 +12,6 @@ struct Attack {
 	unsigned int attacker_weapon_range;
 };
 
-
 class Map;
 class BaseCharacter : public Entity {
  public:

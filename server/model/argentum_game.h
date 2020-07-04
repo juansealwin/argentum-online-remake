@@ -25,6 +25,7 @@
 #include "projectiles_manager.h"
 #include "heroes_manager.h"
 #include "monsters_manager.h"
+#include "drops_manager.h"
 #include "drop.h"
 #define PRIEST 33
 #define MERCHANT 34
@@ -86,6 +87,8 @@ class ArgentumGame : public Thread {
   std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;
+  std::map<std::tuple<unsigned int, unsigned int>, Drop*> drops;
+
 
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
@@ -103,6 +106,7 @@ class ArgentumGame : public Thread {
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;
+  DropsManager drops_manager;
 };
 
 #endif  // ARGENTUMGAME_H
