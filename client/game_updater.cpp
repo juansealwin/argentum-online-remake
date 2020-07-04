@@ -73,7 +73,7 @@ bool is_monster(uint8_t t) {
 }
 
 void GameUpdater::deserialize_status() {
-  std::cout << "vector size is " << status_serialized.size() << std::endl;
+  //std::cout << "vector size is " << status_serialized.size() << std::endl;
   unsigned int j = 1;
   while (j < status_serialized.size()) {
     uint16_t id = ntohs(extract<uint16_t>(status_serialized, j));

@@ -16,6 +16,7 @@ class Inventory {
   bool has_item(unsigned int id);
   Item* remove_item(unsigned int id);
   friend class Serializer;
+  friend class Drop;
   private:
   std::vector<Item*> items;
 

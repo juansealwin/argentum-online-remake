@@ -25,6 +25,7 @@
 #include "projectiles_manager.h"
 #include "heroes_manager.h"
 #include "monsters_manager.h"
+#include "drop.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -97,6 +98,7 @@ class ArgentumGame : public Thread {
                           std::string hero_name, unsigned int x,
                           unsigned int y);
   void tests_proyectiles();
+  void tests_drops();
   void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;

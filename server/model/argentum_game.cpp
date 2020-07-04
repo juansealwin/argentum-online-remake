@@ -19,9 +19,29 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 
-  tests_proyectiles();
+  tests_drops();
 }
-
+void ArgentumGame::tests_drops() {
+  // std::cout << "testing drops" << std::endl;
+  // Inventory *inventory = new Inventory(20);
+  // inventory->add_item(new Item(8));
+  // inventory->add_item(new Weapon(17, 4, 8, 5));
+  // std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  // Drop *drop = new Drop(inventory);
+  // std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
+  // std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  // std::cout << "picking up first item" << std::endl;
+  // Item *item17 = drop->take_item(drop->size());
+  // std::cout << "picking up second item" << std::endl;
+  // Item *item8 = drop->take_item(drop->size());
+  // std::cout << "picked up items " << item17->id << ", " << item8->id << std::endl; 
+  // delete inventory;
+  // delete drop;
+  // delete item17;
+  // delete item8;
+}
 void ArgentumGame::tests_proyectiles() {
   // std::cout << "Running tests" << std::endl;
   // place_hero("human", "warrior", "test_name1", 10, 23);
