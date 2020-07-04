@@ -30,11 +30,11 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
   for (it = next_status.begin(); it != next_status.end(); it++) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna
     // animación en curso de otro hechizo
-    if ((it->second.is_afected()) &&
+    /*if ((it->second.is_afected()) &&
         (characters_afected[it->first].lifetime == 0)) {
       characters_afected[it->first].type_spell = it->second.is_afected();
       characters_afected[it->first].lifetime = it->second.get_life_time();
-    }
+    }*/
 
     // Chequeamos si dicho personaje ya existia dentro del mapa
     it2 = current_status.find(it->first);
@@ -54,12 +54,12 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
 
     // Si todavía queda resto de alguna animación de hechizo, lo actualizamos
     // y restamos al lifetime de lo que queda de dicha animación
-    if (characters_afected[it->first].lifetime > 0) {
+    /*if (characters_afected[it->first].lifetime > 0) {
       write_map->update_spellbound(it->first,
                                    characters_afected[it->first].type_spell,
                                    characters_afected[it->first].lifetime);
       characters_afected[it->first].lifetime--;
-    }
+    }*/
 
     // Mofificamos/creamos el status para la proxima pasada
     current_status[it->first] = it->second;
@@ -73,7 +73,7 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
       current_status.erase(it->first);
       write_map->clean_character(it->first);
 
-      characters_afected.erase(it->first);
+      //characters_afected.erase(it->first);
     }
   }
 }

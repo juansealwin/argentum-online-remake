@@ -48,9 +48,9 @@ void GameUpdater::deserialize_status() {
     /*
       std::cout << "Entity id: " << (int)id << ", type: " << entity_type
                 << ", x_pos: " << x << ", y_pos: " << y << std::endl;*/
-    int k = 0;
+    //int k = 0;
         
-    next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
+    next_status[(int)id] = CharacterStatus(entity_type, x, y/*, k*/);
     j++;
   }
 }

@@ -2,7 +2,7 @@
 
 CharacterStatus::CharacterStatus() {}
 
-CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y, int spell)
+CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y/*, int spell*/)
     : x(new_x), y(new_y) {
   // poner los id que usa el server
   switch (type_char) {
@@ -50,7 +50,7 @@ CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y, int spell)
       type_character = BANKER;
       break;
   }
-  switch (spell) {
+  /*switch (spell) {
     case 0:
       spellbound = ID_NULL;
       lifetime = 0;
@@ -80,7 +80,7 @@ CharacterStatus::CharacterStatus(int type_char, int new_x, int new_y, int spell)
       spellbound = ID_EXPLOSION;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_EXPLOSION;
       break;
-  }
+  }*/
 }
 
 CharacterStatus::~CharacterStatus() {}
@@ -91,8 +91,8 @@ CharacterStatus& CharacterStatus::operator=(
   x = other_status.x;
   y = other_status.y;
   is_alive = other_status.is_alive;
-  spellbound = other_status.spellbound;
-  lifetime = other_status.lifetime;
+  //spellbound = other_status.spellbound;
+  //lifetime = other_status.lifetime;
 }
 
 bool CharacterStatus::is_equal(CharacterStatus other_status) {
