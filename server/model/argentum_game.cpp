@@ -185,7 +185,7 @@ void ArgentumGame::run() {
     update();
     send_game_status();
     // print_debug_map();
-    long time_step = 1000 / 60.f;  // 60fps
+    long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
@@ -240,8 +240,8 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status(this);
-  Serializer::serialize_game_status_v2(this);
+      Serializer::serialize_game_status_v2(this);
+  
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }

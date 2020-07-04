@@ -10,6 +10,7 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
   Socket server_socket;
   server_socket.bind_and_listen(port);
   this->server_socket = std::move(server_socket);
+  //cfg!
   const int rooms = 1;
   for (int i = 0; i < rooms; i++) {
     std::ifstream map_file(map_cfg_file);

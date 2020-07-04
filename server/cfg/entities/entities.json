@@ -251,5 +251,6 @@
   "evasionProbability" : 0.001,
   "maxSafeGoldMultiplier" : 400,
   "levelUpLimitPower" : 1.8,
-  "startingXpCap" : 1000
+  "startingXpCap" : 1000,
+  "ups" : 60.0
 }
