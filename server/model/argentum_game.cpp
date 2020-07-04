@@ -128,7 +128,7 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
-    
+
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -316,7 +316,14 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
-      class_stats["id"].asUInt(), std::ref(map), hero_name);
+      class_stats["id"].asUInt(), std::ref(map), hero_name,
+      entities_cfg["critialDamageMiltiplier"].asFloat(),
+      entities_cfg["inventorySize"].asInt(),
+      entities_cfg["criticalDamageProbability"].asFloat(),
+      entities_cfg["evasionProbability"].asFloat(),
+      entities_cfg["maxSafeGoldMultiplier"].asFloat(),
+      entities_cfg["levelUpLimitPower"].asFloat(),
+      entities_cfg["startingXpCap"].asFloat());
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(2, 8, 10));
   hero->equip_armour(6);
