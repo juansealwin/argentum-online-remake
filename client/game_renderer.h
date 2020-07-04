@@ -17,7 +17,7 @@
 #include "texture.h"
 #include "texture_manager.h"
 #include "thread.h"
-#define FRAME_DELAY 100 / 6
+#define FRAME_DELAY 100
 
 class GameRenderer : public Thread {
  private:

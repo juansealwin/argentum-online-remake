@@ -15,7 +15,7 @@ ClientNotificationSender::ClientNotificationSender(
 ClientNotificationSender::~ClientNotificationSender() {
   join();
   notifications_queue->close();
-  game->clean_notifications_queues();
+  
 }
 
 void ClientNotificationSender::stop() { this->alive = false; }

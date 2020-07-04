@@ -17,6 +17,8 @@ Game::Game(const Game& other_game) {
   map_piece = other_game.map_piece;
   viewport = other_game.viewport;
 
+  if (!characters.empty()) characters.clear();
+
   std::map<int, Character*>::const_iterator it;
   for (it = other_game.characters.begin(); it != other_game.characters.end();
        it++) {
@@ -38,6 +40,10 @@ Game& Game::operator=(const Game& other_game) {
   map_piece = other_game.map_piece;
   viewport = other_game.viewport;
 
+  if (!characters.empty()) {
+    characters.clear();
+  }
+
   std::map<int, Character*>::const_iterator it;
   for (it = other_game.characters.begin(); it != other_game.characters.end();
        it++) {
@@ -51,7 +57,9 @@ Game& Game::operator=(const Game& other_game) {
   return *this;
 }
 
-Game::~Game() { characters.clear(); }
+Game::~Game() {
+  if (!characters.empty()) characters.clear();
+}
 
 void Game::update_character(int id, int new_x, int new_y) {
   // Necesitamos traducir las posiciones de tiles a pixeles
@@ -154,4 +162,12 @@ void Game::render_characters(SDL_Renderer* renderer) {
 void Game::clean_character(int i) {
   delete characters[i];
   characters.erase(i);
+}
+
+void Game::clean_all_characters() {
+  std::map<int, Character*>::iterator it;
+  for (it = characters.begin(); it != characters.end(); it++) {
+    delete characters[it->first];
+    characters.erase(it->first);
+  }
 }

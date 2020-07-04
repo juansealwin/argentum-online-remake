@@ -6,14 +6,14 @@
 #include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           std::ifstream &map_config,
-                           std::ifstream &entities_config)
-    : room(room_number), commands_queue(commands_queue), mutex() {
+                           Json::Value &map_cfg, std::ifstream &entities_config)
+    : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg) {
   std::unique_lock<std::mutex> lock(mutex);
-  Json::Value map_cfg;
-  map_config >> map_cfg;
+  // Json::Value map_cfg;
+  // map_config >> map_cfg;
   entities_config >> entities_cfg;
-  map = new Map(map_cfg);
+  // map = new Map(map_cfg);
+  this->map = Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
@@ -46,7 +46,7 @@ void ArgentumGame::tests_proyectiles() {
   // throw_projectile(hero4);
 }
 
-void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
+void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
   int row = 0;
   int col = 0;
   int map_cols = map_cfg["width"].asInt();
@@ -63,7 +63,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
       e = new Banker(entities_ids, row, col, type, 'b');
     }
     if (e) {
-      map->ocupy_cell(row, col, entities_ids);
+      map.ocupy_cell(row, col, entities_ids);
       npcs.emplace(entities_ids++, e);
     }
     col++;
@@ -74,7 +74,7 @@ void ArgentumGame::place_initial_npcs(Json::Value map_cfg) {
   }
 }
 
-void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
+void ArgentumGame::place_initial_monsters(Json::Value &map_cfg) {
   // std::unique_lock<std::mutex> lock(mutex);
   int row = 0;
   int col = 0;
@@ -99,7 +99,7 @@ void ArgentumGame::place_initial_monsters(Json::Value map_cfg) {
                       entity["dps"].asInt(), map);
     }
     if (e) {
-      map->ocupy_cell(row, col, entities_ids);
+      map.ocupy_cell(row, col, entities_ids);
       monsters.emplace(entities_ids++, e);
     }
     col++;
@@ -120,23 +120,19 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
   if (hero) {
+    if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
-    // std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
-    //     hero->attack();
     Attack attack_info = hero->attack();
-    // unsigned int dmg = std::get<0>(attack);
-    // bool critical = std::get<1>(attack);
-    // unsigned int item_id = std::get<2>(attack);
-    // unsigned int range = std::get<3>(attack);
     std::tuple<unsigned int, unsigned int> projectile_position =
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
+
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
-        attack_info.attacker_weapon_range, hero->orientation, map);
+        attack_info.attacker_weapon_range, hero->orientation, std::ref(map));
     projectiles.emplace(entities_ids++, projectile);
   }
 }
@@ -146,7 +142,7 @@ void ArgentumGame::throw_projectile(int attacker_id) {
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
                                         std::string hero_class,
                                         std::string hero_name) {
-  std::tuple<int, int> free_tile = map->get_random_free_space();
+  std::tuple<int, int> free_tile = map.get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   unsigned int new_player_id =
@@ -166,15 +162,16 @@ void ArgentumGame::update() {
   // - Que los managers devuelvan un listado de drops
   // Desconexion de clientes: Podria ser un command a ejecutar
   heroes_manager.update(std::ref(heroes));
-  heroes_manager.remove_death_heroes(std::ref(heroes), map);
+  heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
 
   monsters_manager.update(std::ref(monsters));
-  monsters_manager.remove_death_monsters(std::ref(monsters), map);
+  monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
   // actualizar siempre al final los proyectiles ya que tambien afectan el
   // estado de heroes/monstruos
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles));
-  projectile_manager.remove_death_projectiles(std::ref(projectiles), map);
+  projectile_manager.remove_death_projectiles(std::ref(projectiles),
+                                              std::ref(map));
 }
 
 void ArgentumGame::kill() {
@@ -183,13 +180,12 @@ void ArgentumGame::kill() {
 }
 
 void ArgentumGame::run() {
-
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
     send_game_status();
     // print_debug_map();
-    long time_step = 1000 / 60.f;  // 60fps
+    long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
@@ -202,7 +198,7 @@ void ArgentumGame::run() {
 
 void ArgentumGame::print_debug_map() {
   std::unique_lock<std::mutex> lock(mutex);
-  map->debug_print();
+  map.debug_print();
   std::cout << "\x1B[2J\x1B[H";
 }
 
@@ -220,7 +216,7 @@ ArgentumGame::~ArgentumGame() {
   for (auto &npc : npcs) {
     delete npc.second;
   }
-  delete map;
+  // delete map;
   // Cierro cola y elimino comandos que no se podran procesar
   commands_queue->close();
   while (!commands_queue->is_empty()) {
@@ -244,8 +240,8 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status(this);
-   Serializer::serialize_game_status_v2(this);
+      Serializer::serialize_game_status_v2(this);
+  
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -260,7 +256,7 @@ void ArgentumGame::add_notification_queue(
 }
 
 void ArgentumGame::clean_notifications_queues() {
-  std::unique_lock<std::mutex> lock(mutex);
+  // std::unique_lock<std::mutex> lock(mutex);
   std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
     if ((*it)->is_closed()) {
@@ -276,6 +272,11 @@ void ArgentumGame::clean_notifications_queues() {
   }
 }
 
+void ArgentumGame::kill_player(unsigned int player_id) {
+  Hero *hero = heroes.at(player_id);
+  hero->alive = false;
+}
+
 /* private methods */
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
@@ -283,17 +284,17 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
   unsigned int x_pos = character->x_position;
   unsigned int y_pos = character->y_position;
   switch (character->orientation) {
-    case (orientation_left):
-      y_pos--;
-      break;
     case (orientation_right):
       y_pos++;
       break;
-    case (orientation_down):
-      x_pos++;
+    case (orientation_left):
+      y_pos--;
       break;
     case (orientation_up):
       x_pos--;
+      break;
+    case (orientation_down):
+      x_pos++;
       break;
   }
   return std::tuple<unsigned int, unsigned int>(x_pos, y_pos);
@@ -315,7 +316,14 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
-      class_stats["id"].asUInt(), map, hero_name);
+      class_stats["id"].asUInt(), std::ref(map), hero_name,
+      entities_cfg["critialDamageMiltiplier"].asFloat(),
+      entities_cfg["inventorySize"].asInt(),
+      entities_cfg["criticalDamageProbability"].asFloat(),
+      entities_cfg["evasionProbability"].asFloat(),
+      entities_cfg["maxSafeGoldMultiplier"].asFloat(),
+      entities_cfg["levelUpLimitPower"].asFloat(),
+      entities_cfg["startingXpCap"].asFloat());
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(2, 8, 10));
   hero->equip_armour(6);
@@ -327,7 +335,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   // hero->add_item(new Weapon(24, 25, 10, 15));
   hero->add_item(new Weapon(17, 4, 8, 5));
   hero->equip_weapon(17);
-  map->ocupy_cell(x, y, entities_ids);
+  map.ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
 }
@@ -336,8 +344,8 @@ void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
   Json::Value entity = entities_cfg["npcs"]["goblin"];
   Monster *e = new Monster(entities_ids, x, y, entity["id"].asInt(), 'g',
                            entity["maxHp"].asInt(), entity["level"].asInt(),
-                           entity["dps"].asInt(), map);
-  map->ocupy_cell(x, y, entities_ids);
+                           entity["dps"].asInt(), std::ref(map));
+  map.ocupy_cell(x, y, entities_ids);
 
   monsters.emplace(entities_ids++, e);
 }

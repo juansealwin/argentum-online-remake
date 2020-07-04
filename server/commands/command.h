@@ -7,9 +7,13 @@ class ArgentumGame;  // por dependencia circular
 class Command {
  public:
   Command();
+  //uid es el identificador unico del jugador
+  Command(const unsigned int uid);
   virtual ~Command();
   Command(const Command &) = delete;
   // Ejecuta cambios en el juego
   virtual void execute(ArgentumGame *game) = 0;
+ protected:
+  unsigned int uid;
 };
 #endif

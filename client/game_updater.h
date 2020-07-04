@@ -13,6 +13,8 @@
 #include "thread.h"
 #include "common_socket.h"
 #include "protocol.h"
+//para el desserializar
+#include "algorithm"
 
 class GameUpdater : public Thread {
  private:

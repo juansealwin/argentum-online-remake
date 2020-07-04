@@ -10,8 +10,6 @@
 #include "monster.h"
 #include "stdint.h"
 // meter en el json!
-#define CRITICAL_DAMAGE_MULTIPLIER 2
-#define INVENTORY_SIZE 20
 class Inventory;
 class Item;
 class Hero : public BaseCharacter {
@@ -23,7 +21,12 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map *map, std::string name);
+       unsigned int class_id, Map &map, std::string name,
+       const float critical_damage_multiplier,
+       const unsigned int inventory_size,
+       const float critical_damage_probability, const float evasion_probability,
+       const float max_safe_gold_multiplier, const float level_up_limit_power,
+       const float starting_xp_cap);
   // devuelve el dano causado
   void regenerate();
   const Attack attack();
@@ -67,31 +70,25 @@ class Hero : public BaseCharacter {
 
  private:
   // inicializados en member initialization list
-  unsigned int strength;
-  unsigned int intelligence;
-  unsigned int agility;
-  unsigned int constitution;
-  unsigned int f_class_hp;
-  unsigned int f_race_hp;
-  unsigned int f_race_recovery;
-  unsigned int f_race_mana;
-  unsigned int f_class_mana;
-  unsigned int f_class_meditation;
-  unsigned int gold;
-  unsigned int class_id;
-  unsigned int experience;
-  bool meditating;
-  bool ghost_mode;
+  unsigned int strength, intelligence, agility, constitution, f_class_hp,
+      f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
+      gold, class_id, experience;
+
+  bool meditating, ghost_mode;
+
   std::string name;
+  // config
+  unsigned int inventory_size;
+  float critical_damage_multiplier, critical_damage_probability,
+      evasion_probability, max_safe_gold_multiplier, level_up_limit_power,
+      starting_xp_cap;
   // calculados
-  unsigned int next_level_xp_limit;
-  unsigned int max_safe_gold;
+  unsigned int next_level_xp_limit, max_safe_gold;
   Equipment *equipment;
   Inventory *inventory;
 
   // metodos privados
   unsigned int calculate_damage();
-  bool close_enough(BaseCharacter *other);
   // actualiza la experiencia, sube niveles
   void update_experience(unsigned int dmg_done, BaseCharacter *other);
   void level_up();

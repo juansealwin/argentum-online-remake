@@ -2,7 +2,7 @@
 
 #include <iostream>
 Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
-                 int hp, int level, int dps, Map *map)
+                 int hp, int level, int dps, Map &map)
     : BaseCharacter(unique_id, x, y, id, repr, hp, level, map), dps(dps) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
@@ -24,7 +24,7 @@ void Monster::auto_move() {
 
   int next_x_pos = x_position + x_step;
   int next_y_pos = y_position + y_step;
-  if (!map->tile_is_safe(next_x_pos, next_y_pos)) {
+  if (!map.tile_is_safe(next_x_pos, next_y_pos)) {
     move(next_x_pos, next_y_pos);
   }
   if (current_move >= moves.size()) current_move = 0;

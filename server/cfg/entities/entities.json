@@ -244,5 +244,13 @@
       "gold": 200,
       "id" : 28
     }
-  }
+  },
+  "critialDamageMiltiplier" : 2,
+  "inventorySize" : 20,
+  "criticalDamageProbability" : 0.125,
+  "evasionProbability" : 0.001,
+  "maxSafeGoldMultiplier" : 400,
+  "levelUpLimitPower" : 1.8,
+  "startingXpCap" : 1000,
+  "ups" : 60.0
 }

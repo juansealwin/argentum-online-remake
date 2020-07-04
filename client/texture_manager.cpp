@@ -14,7 +14,7 @@ TextureManager::TextureManager() {
 }
 
 void TextureManager::load_textures(SDL_Renderer* renderer) {
-  /* PLAYABLE CHARACTER TEXTURES */ borrame.set_sound("explosion.wav");
+  /* PLAYABLE CHARACTER TEXTURES */ 
   map[ID_HUMAN] = new Texture("humano.png", renderer);
   map[ID_HUMAN_HEAD] = new Texture("cabeza_humano.png", renderer);
   map[ID_ELF] = new Texture("elfo.png", renderer);

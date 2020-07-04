@@ -5,12 +5,16 @@ Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int pl
   switch (command_id) {
     case MOVE_COMMAND:
       return move_command(dynamic_cast<MoveCommandDTO*>(command_dto), player_id);
+    case QUIT_COMMAND:
+      return new QuitCommand(player_id);
+    case ATTACK_COMMAND:
+      return new AttackCommand(player_id);
     default:
       return nullptr;
   }
 }
 
-MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto, unsigned int player_id) {
+Command* CommandFactory::move_command(MoveCommandDTO* command_dto, unsigned int player_id) {
   int x_move = 0;
   int y_move = 0;
   switch (command_dto->movement_type) {

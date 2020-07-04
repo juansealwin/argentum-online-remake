@@ -1,16 +1,21 @@
 #include "hero.h"
+
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
 
-Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
-           char repr, unsigned int level, unsigned int strength,
-           unsigned int intelligence, unsigned int agility,
-           unsigned int constitution, unsigned int f_class_hp,
-           unsigned int f_race_hp, unsigned int f_race_recovery,
-           unsigned int f_race_mana, unsigned int f_class_mana,
-           unsigned int f_class_meditation, unsigned int gold,
-           unsigned int class_id, Map *map, std::string name)
+Hero::Hero(
+    unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
+    unsigned int level, unsigned int strength, unsigned int intelligence,
+    unsigned int agility, unsigned int constitution, unsigned int f_class_hp,
+    unsigned int f_race_hp, unsigned int f_race_recovery,
+    unsigned int f_race_mana, unsigned int f_class_mana,
+    unsigned int f_class_meditation, unsigned int gold, unsigned int class_id,
+    Map &map, std::string name, const float critical_damage_multiplier,
+    const unsigned int inventory_size, const float critical_damage_probability,
+    const float evasion_probability, const float max_safe_gold_multiplier,
+    const float level_up_limit_power,
+    const float starting_xp_cap)
     : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
@@ -27,10 +32,17 @@ Hero::Hero(unsigned int unique_id, int x, int y, unsigned int race_id,
       experience(0),
       meditating(false),
       ghost_mode(false),
-      name(name) {
+      name(name),
+      critical_damage_multiplier(critical_damage_multiplier),
+      inventory_size(inventory_size),
+      critical_damage_probability(critical_damage_probability),
+      evasion_probability(evasion_probability),
+      max_safe_gold_multiplier(max_safe_gold_multiplier),
+      level_up_limit_power(level_up_limit_power),
+      starting_xp_cap(starting_xp_cap) {
   level_up();
   equipment = new Equipment();
-  inventory = new Inventory(INVENTORY_SIZE);
+  inventory = new Inventory(inventory_size);
 }
 
 void Hero::regenerate() {
@@ -132,7 +144,8 @@ void Hero::add_item(Item *item) {
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   std::cout << "My spell hit an enemy!!!" << std::endl;
   update_experience(damage_done, other);
-  std::cout << "Updated experience!!: " << experience << " out of " << next_level_xp_limit << std::endl;
+  std::cout << "Updated experience!!: " << experience << " out of "
+            << next_level_xp_limit << std::endl;
   std::cout << " My level is : " << level << std::endl;
 }
 
@@ -143,26 +156,27 @@ const Attack Hero::attack() {
     throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
   meditating = false;
   // mover a json!
-  const float critical_damage_probability = 0.125;
   bool critical = false;
   unsigned int dmg = calculate_damage();
   float p = rand() / double(RAND_MAX);
   if (p < critical_damage_probability) critical = true;
-  Attack attack = {dmg, critical, equipment->primary_weapon_id(), equipment->range()};
+  Attack attack = {dmg, critical, equipment->primary_weapon_id(),
+                   equipment->range()};
   return std::move(attack);
 }
 
-unsigned int Hero::receive_damage(unsigned int damage, bool critical, unsigned int weapon_origin) {
-  std::cout << "Received damage!! " << damage << " is critical? " << critical << std::endl;
+unsigned int Hero::receive_damage(unsigned int damage, bool critical,
+                                  unsigned int weapon_origin) {
+  std::cout << "Received damage!! " << damage << " is critical? " << critical
+            << std::endl;
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
-  const float evasion = 0.001;
   int actual_damage = damage;
   float p = pow(rand() / double(RAND_MAX), agility);
   if (critical)
-    actual_damage *= CRITICAL_DAMAGE_MULTIPLIER;
-  else if (p < evasion) {
+    actual_damage *= critical_damage_multiplier;
+  else if (p < evasion_probability) {
     actual_damage = 0;
   } else {
     actual_damage =
@@ -171,7 +185,8 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical, unsigned i
   if (actual_damage > 0) affected_by = weapon_origin;
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
-  std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode << std::endl;
+  std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode
+            << std::endl;
   return actual_damage;
 }
 
@@ -202,12 +217,6 @@ unsigned int Hero::calculate_damage() {
   return strength * equipment->get_attack_bonus();
 }
 
-bool Hero::close_enough(BaseCharacter *other) {
-  unsigned int distance = floor(sqrt(pow(x_position - other->x_position, 2) +
-                                     pow(y_position - other->y_position, 2)));
-  return (((int)equipment->range() - (int)distance) >= 0);
-}
-
 void Hero::update_experience(unsigned int dmg_done, BaseCharacter *other) {
   experience += floor(
       dmg_done * std::max((other->level - this->level) + 10, (unsigned int)0));
@@ -227,8 +236,6 @@ void Hero::level_up() {
   level++;
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
-  // meter en json!
-  const float levelup_limit_pow = 1.8;
-  next_level_xp_limit = 1000 * floor(pow(level, levelup_limit_pow));
-  max_safe_gold = 400 * level;
+  next_level_xp_limit = starting_xp_cap * floor(pow(level, level_up_limit_power));
+  max_safe_gold = max_safe_gold_multiplier * level;
 }

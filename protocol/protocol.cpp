@@ -23,15 +23,17 @@ LoginCommandDTO* receive_login(const Socket& socket) {
 }
 
 QuitCommandDTO* receive_quit(const Socket& socket) {
-  // deshabilito temporalmente
-  // return new QuitCommandDTO();
-  return nullptr;
+  return new QuitCommandDTO();
 }
 
 MoveCommandDTO* receive_move(const Socket& socket) {
   uint8_t movement_type;
   socket.recv(&movement_type, 1);
   return new MoveCommandDTO(movement_t(movement_type));
+}
+
+AttackCommandDTO* receive_attack(const Socket& socket) {
+  return new AttackCommandDTO();
 }
 
 CommandDTO* Protocol::receive_command(const Socket& socket) {
@@ -46,6 +48,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_quit(socket);
     case MOVE_COMMAND:
       return receive_move(socket);
+    case ATTACK_COMMAND:
+      return receive_attack(socket);
     default:
       return nullptr;
   }
