@@ -43,6 +43,7 @@ class Game {
   void load_character(int, character_t, int, int);
   void render_characters(SDL_Renderer*);
   void clean_character(int i);
+  void clean_all_characters();
 };
 
 #endif

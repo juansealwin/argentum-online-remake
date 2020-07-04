@@ -26,6 +26,9 @@ void GameUpdater::run() {
 
       // Copiamos todo el update en el mapa de lectura
       protected_map.copy_buffer();
+
+      // Limpiamos el mapa para la proxima pasada
+      next_status.clear();
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;

@@ -16,7 +16,6 @@ class TextureManager {
   TextureManager();
 
  public:
-  SoundEffect borrame;
   ~TextureManager();
   void load_textures(SDL_Renderer*);
   Texture& get_texture(id_texture_t);
