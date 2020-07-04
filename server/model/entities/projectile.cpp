@@ -31,7 +31,10 @@ void Projectile::auto_move() {
 }
 
 void Projectile::impact_at_position(int x, int y) {
-  if (map.can_ocupy_cell(x, y)) {
+  if (map.tile_is_safe(x, y)) {
+    kill();
+    return;
+  } else if (map.can_ocupy_cell(x, y)) {
     map.ocupy_cell(x, y, unique_id);
     map.empty_cell(x_position, y_position);
     x_position = x;

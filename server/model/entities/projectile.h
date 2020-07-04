@@ -19,8 +19,8 @@ class Projectile : public Entity {
   unsigned int get_attacker_id();
   bool is_critical();
   void kill();
-
   bool collided;
+  
  private:
   unsigned int damage;
   bool critical;

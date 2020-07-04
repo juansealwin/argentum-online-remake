@@ -6,14 +6,13 @@
 #include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           Json::Value &map_cfg,
-                           std::ifstream &entities_config)
+                           Json::Value &map_cfg, std::ifstream &entities_config)
     : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg) {
   std::unique_lock<std::mutex> lock(mutex);
-  //Json::Value map_cfg;
-  //map_config >> map_cfg;
+  // Json::Value map_cfg;
+  // map_config >> map_cfg;
   entities_config >> entities_cfg;
-  //map = new Map(map_cfg);
+  // map = new Map(map_cfg);
   this->map = Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
@@ -121,19 +120,15 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
   if (hero) {
+    if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
-    // std::tuple<unsigned int, bool, unsigned int, unsigned int> attack =
-    //     hero->attack();
     Attack attack_info = hero->attack();
-    // unsigned int dmg = std::get<0>(attack);
-    // bool critical = std::get<1>(attack);
-    // unsigned int item_id = std::get<2>(attack);
-    // unsigned int range = std::get<3>(attack);
     std::tuple<unsigned int, unsigned int> projectile_position =
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
+    
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -175,7 +170,8 @@ void ArgentumGame::update() {
   // estado de heroes/monstruos
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles));
-  projectile_manager.remove_death_projectiles(std::ref(projectiles), std::ref(map));
+  projectile_manager.remove_death_projectiles(std::ref(projectiles),
+                                              std::ref(map));
 }
 
 void ArgentumGame::kill() {
@@ -184,7 +180,6 @@ void ArgentumGame::kill() {
 }
 
 void ArgentumGame::run() {
-
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
@@ -221,7 +216,7 @@ ArgentumGame::~ArgentumGame() {
   for (auto &npc : npcs) {
     delete npc.second;
   }
-  //delete map;
+  // delete map;
   // Cierro cola y elimino comandos que no se podran procesar
   commands_queue->close();
   while (!commands_queue->is_empty()) {
@@ -246,7 +241,7 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status(this);
-   Serializer::serialize_game_status_v2(this);
+  Serializer::serialize_game_status_v2(this);
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -261,7 +256,7 @@ void ArgentumGame::add_notification_queue(
 }
 
 void ArgentumGame::clean_notifications_queues() {
-  //std::unique_lock<std::mutex> lock(mutex);
+  // std::unique_lock<std::mutex> lock(mutex);
   std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
     if ((*it)->is_closed()) {
@@ -289,17 +284,17 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
   unsigned int x_pos = character->x_position;
   unsigned int y_pos = character->y_position;
   switch (character->orientation) {
-    case (orientation_left):
-      y_pos--;
-      break;
     case (orientation_right):
       y_pos++;
       break;
-    case (orientation_down):
-      x_pos++;
+    case (orientation_left):
+      y_pos--;
       break;
     case (orientation_up):
       x_pos--;
+      break;
+    case (orientation_down):
+      x_pos++;
       break;
   }
   return std::tuple<unsigned int, unsigned int>(x_pos, y_pos);

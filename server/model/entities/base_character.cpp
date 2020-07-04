@@ -34,13 +34,13 @@ void BaseCharacter::change_orientation(int old_x, int old_y, int new_x,
   int x_diff = old_x - new_x;
   int y_diff = old_y - new_y;
   if (x_diff > 0)
-    orientation = orientation_down;  // se movio hacia abajo
+    orientation = orientation_up;  // se movio hacia abajo
   else if (x_diff < 0)
-    orientation = orientation_up;  // hacia arriba
+    orientation = orientation_down;  // hacia arriba
   else if (y_diff > 0)
-    orientation = orientation_right;  // derecha
+    orientation = orientation_left;  // derecha
   else if (y_diff < 0)
-    orientation = orientation_left;
+    orientation = orientation_right;
 }
 
 void BaseCharacter::clear_effects() {
