@@ -6,6 +6,7 @@
 #include "move_command_dto.h"
 #include "quit_command.h"
 #include "attack_command.h"
+#include "pick_up_drop_command.h"
 namespace CommandFactory {
 Command* create_command(CommandDTO* command_dto, unsigned int player_id);
 

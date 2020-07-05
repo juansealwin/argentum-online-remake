@@ -10,6 +10,7 @@
 #include "events_queue.h"
 #include "exception_messages.h"
 #include "move_command_dto.h"
+#include "pick_up_command_dto.h"
 #include "npc.h"
 #include "playable_character.h"
 #include "quit_command_dto.h"

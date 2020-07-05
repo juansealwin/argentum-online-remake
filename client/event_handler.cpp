@@ -58,10 +58,15 @@ void EventHandler::get_events() {
           if (event.key.keysym.sym == SDLK_p) {
             background_music.play_music();
           }
-          if (event.key.keysym.sym == SDLK_a) {
+          if (event.key.keysym.sym == SDLK_SPACE) {
             AttackCommandDTO* attack_command = new AttackCommandDTO();
             commands_queue.push(attack_command);
           }
+          if (event.key.keysym.sym == SDLK_a) {
+            PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
+            commands_queue.push(pick_up_item_command);
+          }
+
         }
       }
     }

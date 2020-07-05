@@ -53,8 +53,14 @@ class Hero : public BaseCharacter {
   Item *remove_item(unsigned int item_id);
   // Agrega un item al inventario, lanza excepcion si este esta lleno
   void add_item(Item *item);
+  void add_gold(unsigned int gold);
   // Empieza a meditar. Se termina de meditar una vez que se hace cualquier otra
   // cosa (llamado a cualquier otro metodo)
+  bool has_free_space();
+  //devuelve true 
+  bool can_hold_more_gold();
+  //devuelve cuantas mas monedas puede guardar el heroe
+  unsigned int gold_space_remaining();
   void meditate();
   virtual ~Hero();
   Hero(const Hero &) = delete;
@@ -63,8 +69,10 @@ class Hero : public BaseCharacter {
   // para el caso del staff que cura podria hacerse algo parecido
   void consume(unsigned int item_id);
   void revive();
+  unsigned int remove_surplus_coins();
   friend class Staff;
   friend class Serializer;
+  friend class DropsManager;
   unsigned int current_mana;
   unsigned int max_mana;
 
