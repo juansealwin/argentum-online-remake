@@ -20,8 +20,15 @@ void DropsManager::add_monster_drops(
   std::map<unsigned int, Monster *>::iterator it = monsters.begin();
   while (it != monsters.end()) {
     if (it->second->is_death()) {
-      std::cout << "monster is dead, adding drop" << std::endl;
-      ItemFactory::create_random_item(items_config);
+      // crear funcion create random drop que contemple la probabilidad de 0.8
+      // de dropear nada
+      std::tuple<unsigned int, unsigned int> drop_coordinates =
+          std::tuple<unsigned int, unsigned int>(it->second->x_position,
+                                                 it->second->y_position);
+      Item *item = ItemFactory::create_random_item(items_config);
+      Drop *drop = new Drop(item);
+      drops.emplace(drop_coordinates, drop);
+      std::cout << "Created drop from monster!!" << std::endl;
     }
     it++;
   }
@@ -48,8 +55,6 @@ void DropsManager::remove_old_and_empty_drops(
   while (it != drops.end()) {
     if (it->second->is_empty()) {
       std::cout << "drop is empty, deleting it" << std::endl;
-    } else {
-      std::cout << "drop is recent, not deleting!" << std::endl;
     }
     it++;
   }

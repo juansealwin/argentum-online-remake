@@ -5,6 +5,7 @@
 class Drop {
  public:
   Drop(Inventory *inventory);
+  Drop(Item *item);
   ~Drop();
   Drop(const Drop &) = delete;
   //si esta vacio, se deberia eliminar
