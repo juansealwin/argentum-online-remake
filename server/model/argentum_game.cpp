@@ -19,9 +19,37 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 
-  tests_proyectiles();
+  tests_drops();
 }
-
+void ArgentumGame::tests_drops() {
+  std::cout << "testing drops" << std::endl;
+  Inventory *inventory = new Inventory(20);
+  inventory->add_item(new Item(8));
+  inventory->add_item(new Weapon(17, 4, 8, 5));
+  std::cout << "Inventory has item 17? " << inventory->has_item(17)
+            << std::endl;
+  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  Drop *drop = new Drop(inventory, 0);
+  std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
+  std::cout << "Inventory has item 17? " << inventory->has_item(17)
+            << std::endl;
+  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  std::cout << "picking up first item" << std::endl;
+  Item *item17 = drop->take_item(drop->size());
+  std::cout << "picking up second item" << std::endl;
+  Item *item8 = drop->take_item(drop->size());
+  std::cout << "picked up items " << item17->id << ", " << item8->id
+            << std::endl;
+  Inventory *inventory2 = new Inventory(25);
+  Drop *drop2 = new Drop(inventory2, 0);
+  std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
+  delete drop2;
+  delete inventory2;
+  delete inventory;
+  delete drop;
+  delete item17;
+  delete item8;
+}
 void ArgentumGame::tests_proyectiles() {
   // std::cout << "Running tests" << std::endl;
   // place_hero("human", "warrior", "test_name1", 10, 23);
@@ -137,6 +165,33 @@ void ArgentumGame::throw_projectile(int attacker_id) {
   }
 }
 
+void ArgentumGame::pick_up_drop(unsigned int player_id) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(player_id));
+  if (hero) {
+    std::tuple<unsigned int, unsigned int> pos =
+        std::tuple<unsigned int, unsigned int>(hero->x_position,
+                                               hero->y_position);
+    if (drops.count(pos) > 0) {
+      Drop *drop = drops.at(pos);
+      if ((drop->size() > 0) && (hero->has_free_space())) {
+        // siempre tomo el ultimo item en el drop
+        Item *item = drop->take_item(drop->size());
+        hero->add_item(item);
+      }
+      if ((drop->ammount_of_gold() > 0) && hero->can_hold_more_gold()) {
+        unsigned int hero_gold_space = hero->gold_space_remaining();
+        unsigned int taken_gold = drop->take_gold(hero_gold_space);
+        hero->add_gold(taken_gold);
+      }
+    }
+  }
+}
+
+void ArgentumGame::kill_player(unsigned int player_id) {
+  Hero *hero = heroes.at(player_id);
+  hero->alive = false;
+}
+
 /*********************** Fin acciones personajes *********************/
 
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
@@ -150,17 +205,22 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
   return new_player_id;
 }
 
+void ArgentumGame::kill() {
+  std::unique_lock<std::mutex> lock(mutex);
+  alive = false;
+}
+
 void ArgentumGame::update() {
   std::unique_lock<std::mutex> lock(mutex);
-  // pensar bien que hacer primero, ejecutar los comandos o updatear el mundo?
   while (!commands_queue->is_empty()) {
     Command *cmd = commands_queue->pop();
     cmd->execute(this);
     delete cmd;
   }
-  // TO DO:
-  // - Que los managers devuelvan un listado de drops
-  // Desconexion de clientes: Podria ser un command a ejecutar
+  drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
+                             std::ref(drops), entities_cfg["items"]);
+  drops_manager.remove_old_and_empty_drops(std::ref(drops));
+
   heroes_manager.update(std::ref(heroes));
   heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
 
@@ -174,17 +234,11 @@ void ArgentumGame::update() {
                                               std::ref(map));
 }
 
-void ArgentumGame::kill() {
-  std::unique_lock<std::mutex> lock(mutex);
-  alive = false;
-}
-
 void ArgentumGame::run() {
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
     send_game_status();
-    // print_debug_map();
     long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
@@ -196,52 +250,13 @@ void ArgentumGame::run() {
   }
 }
 
-void ArgentumGame::print_debug_map() {
-  std::unique_lock<std::mutex> lock(mutex);
-  map.debug_print();
-  std::cout << "\x1B[2J\x1B[H";
-}
-
-ArgentumGame::~ArgentumGame() {
-  std::unique_lock<std::mutex> lock(mutex);
-  for (auto &monster : monsters) {
-    delete monster.second;
-  }
-  for (auto &hero : heroes) {
-    delete hero.second;
-  }
-  for (auto &projectile : projectiles) {
-    delete projectile.second;
-  }
-  for (auto &npc : npcs) {
-    delete npc.second;
-  }
-  // delete map;
-  // Cierro cola y elimino comandos que no se podran procesar
-  commands_queue->close();
-  while (!commands_queue->is_empty()) {
-    Command *cmd = commands_queue->pop();
-    delete cmd;
-  }
-  // cierro y elimino las colas de notificaciones
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->close();
-    Notification *n;
-    while (!q->is_empty()) {
-      n = q->pop();
-      delete n;
-    }
-    delete q;
-  }
-}
-
 unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v2(this);
-  
+
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -272,12 +287,7 @@ void ArgentumGame::clean_notifications_queues() {
   }
 }
 
-void ArgentumGame::kill_player(unsigned int player_id) {
-  Hero *hero = heroes.at(player_id);
-  hero->alive = false;
-}
-
-/* private methods */
+/********************* metodos privados *****************************/
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
     BaseCharacter *character) {
@@ -348,4 +358,46 @@ void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
   map.ocupy_cell(x, y, entities_ids);
 
   monsters.emplace(entities_ids++, e);
+}
+
+void ArgentumGame::print_debug_map() {
+  std::unique_lock<std::mutex> lock(mutex);
+  map.debug_print();
+  std::cout << "\x1B[2J\x1B[H";
+}
+
+ArgentumGame::~ArgentumGame() {
+  std::unique_lock<std::mutex> lock(mutex);
+  for (auto &monster : monsters) {
+    delete monster.second;
+  }
+  for (auto &hero : heroes) {
+    delete hero.second;
+  }
+  for (auto &projectile : projectiles) {
+    delete projectile.second;
+  }
+  for (auto &npc : npcs) {
+    delete npc.second;
+  }
+  for (auto &drop : drops) {
+    delete drop.second;
+  }
+  // delete map;
+  // Cierro cola y elimino comandos que no se podran procesar
+  commands_queue->close();
+  while (!commands_queue->is_empty()) {
+    Command *cmd = commands_queue->pop();
+    delete cmd;
+  }
+  // cierro y elimino las colas de notificaciones
+  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+    q->close();
+    Notification *n;
+    while (!q->is_empty()) {
+      n = q->pop();
+      delete n;
+    }
+    delete q;
+  }
 }

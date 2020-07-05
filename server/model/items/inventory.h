@@ -14,8 +14,10 @@ class Inventory {
   Inventory(const Inventory &) = delete;
   void add_item(Item *item);
   bool has_item(unsigned int id);
+  bool is_full();
   Item* remove_item(unsigned int id);
   friend class Serializer;
+  friend class Drop;
   private:
   std::vector<Item*> items;
 

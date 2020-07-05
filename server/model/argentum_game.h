@@ -25,6 +25,8 @@
 #include "projectiles_manager.h"
 #include "heroes_manager.h"
 #include "monsters_manager.h"
+#include "drops_manager.h"
+#include "drop.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -49,14 +51,16 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
+  void pick_up_drop(unsigned int player_id);
+    //Settea a un jugador como muerto para que sea removido durante el update()
+  void kill_player(unsigned int player_id);
   // devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class,
                             std::string hero_name);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
   // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
-  //Settea a un jugador como muerto para que sea removido durante el update()
-  void kill_player(unsigned int player_id);
+
   friend class Serializer;
 
  private:
@@ -85,6 +89,8 @@ class ArgentumGame : public Thread {
   std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;
+  std::map<std::tuple<unsigned int, unsigned int>, Drop*> drops;
+
 
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
@@ -97,10 +103,12 @@ class ArgentumGame : public Thread {
                           std::string hero_name, unsigned int x,
                           unsigned int y);
   void tests_proyectiles();
+  void tests_drops();
   void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;
+  DropsManager drops_manager;
 };
 
 #endif  // ARGENTUMGAME_H
