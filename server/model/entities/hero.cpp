@@ -14,8 +14,7 @@ Hero::Hero(
     Map &map, std::string name, const float critical_damage_multiplier,
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
-    const float level_up_limit_power,
-    const float starting_xp_cap)
+    const float level_up_limit_power, const float starting_xp_cap)
     : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
       strength(strength),
       intelligence(intelligence),
@@ -236,6 +235,22 @@ void Hero::level_up() {
   level++;
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
-  next_level_xp_limit = starting_xp_cap * floor(pow(level, level_up_limit_power));
+  next_level_xp_limit =
+      starting_xp_cap * floor(pow(level, level_up_limit_power));
   max_safe_gold = max_safe_gold_multiplier * level;
+}
+
+unsigned int Hero::remove_surplus_coins() {
+  unsigned int surplus_coins = 0;
+
+  if (gold > max_safe_gold) {
+    std::cout << " gold: " << gold << " is higher than mxsfg " << max_safe_gold << std::endl;
+    surplus_coins = gold - max_safe_gold;
+    gold = max_safe_gold;
+  }
+  
+  if (surplus_coins > 0) { 
+    std::cout << "surplus coins are " << surplus_coins << std::endl; 
+  };
+  return surplus_coins;
 }

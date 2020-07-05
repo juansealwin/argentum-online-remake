@@ -19,7 +19,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   place_initial_npcs(map_cfg);
   place_initial_monsters(map_cfg);
 
-  //tests_drops();
+  tests_drops();
 }
 void ArgentumGame::tests_drops() {
   std::cout << "testing drops" << std::endl;
@@ -28,7 +28,7 @@ void ArgentumGame::tests_drops() {
   inventory->add_item(new Weapon(17, 4, 8, 5));
   std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
   std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  Drop *drop = new Drop(inventory);
+  Drop *drop = new Drop(inventory, 0);
   std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
   std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
   std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
@@ -38,7 +38,7 @@ void ArgentumGame::tests_drops() {
   Item *item8 = drop->take_item(drop->size());
   std::cout << "picked up items " << item17->id << ", " << item8->id << std::endl; 
   Inventory *inventory2 = new Inventory(25);
-  Drop *drop2 = new Drop(inventory2);
+  Drop *drop2 = new Drop(inventory2, 0);
   std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
   delete drop2;
   delete inventory2;
@@ -346,7 +346,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       race_stats["constitution"].asUInt(), class_stats["fClassHp"].asUInt(),
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
-      class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
+      class_stats["fClassMeditation"].asUInt(), 800,//race_stats["gold"].asUInt(),
       class_stats["id"].asUInt(), std::ref(map), hero_name,
       entities_cfg["critialDamageMiltiplier"].asFloat(),
       entities_cfg["inventorySize"].asInt(),

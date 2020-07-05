@@ -63,6 +63,7 @@ class Hero : public BaseCharacter {
   // para el caso del staff que cura podria hacerse algo parecido
   void consume(unsigned int item_id);
   void revive();
+  unsigned int remove_surplus_coins();
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;
