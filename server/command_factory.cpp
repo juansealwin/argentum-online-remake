@@ -9,6 +9,8 @@ Command* CommandFactory::create_command(CommandDTO* command_dto, unsigned int pl
       return new QuitCommand(player_id);
     case ATTACK_COMMAND:
       return new AttackCommand(player_id);
+    case PICK_UP_ITEM_COMMAND:
+      return new PickUpDropCommand(player_id);
     default:
       return nullptr;
   }

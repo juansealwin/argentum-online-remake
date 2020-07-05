@@ -11,6 +11,7 @@
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "quit_command_dto.h"
+#include "pick_up_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -22,18 +23,10 @@ LoginCommandDTO* receive_login(const Socket& socket) {
   return new LoginCommandDTO(room_number);
 }
 
-QuitCommandDTO* receive_quit(const Socket& socket) {
-  return new QuitCommandDTO();
-}
-
 MoveCommandDTO* receive_move(const Socket& socket) {
   uint8_t movement_type;
   socket.recv(&movement_type, 1);
   return new MoveCommandDTO(movement_t(movement_type));
-}
-
-AttackCommandDTO* receive_attack(const Socket& socket) {
-  return new AttackCommandDTO();
 }
 
 CommandDTO* Protocol::receive_command(const Socket& socket) {
@@ -45,11 +38,13 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
     case LOGIN_COMMAND:
       return receive_login(socket);
     case QUIT_COMMAND:
-      return receive_quit(socket);
+      return new QuitCommandDTO();
     case MOVE_COMMAND:
       return receive_move(socket);
     case ATTACK_COMMAND:
-      return receive_attack(socket);
+      return new AttackCommandDTO();
+    case PICK_UP_ITEM_COMMAND:
+      return new PickUpCommandDTO();
     default:
       return nullptr;
   }
@@ -79,6 +74,11 @@ void send_attack(const Socket& socket, const AttackCommandDTO* attack_command) {
   socket.send(&command_id, ID_LENGTH);
 }
 
+void send_pick_up_item(const Socket& socket, const PickUpCommandDTO* attack_command) {
+  uint8_t command_id = PICK_UP_ITEM_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
@@ -96,7 +96,9 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case ATTACK_COMMAND:
       send_attack(socket, static_cast<AttackCommandDTO*>(commandDTO));
       break;
-
+    case PICK_UP_ITEM_COMMAND:
+      send_pick_up_item(socket, static_cast<PickUpCommandDTO*>(commandDTO));
+      break;
     default:
       break;
   }
@@ -109,16 +111,6 @@ void Protocol::send_notification(const Socket& socket, Notification* n) {
   uint16_t size = htons(serialization.size());
   socket.send(&size, 2);
   socket.send(serialization.data(), serialization.size());
-}
-
-// para mostrar lo que se recibe, descomentar este template y todo lo comentado
-// en receive_notifation
-
-template <typename T>
-T extract(const std::vector<unsigned char>& v, int pos) {
-  T value;
-  memcpy(&value, &v[pos], sizeof(T));
-  return value;
 }
 
 // Definir que devuelve la clase (Puede moverse la notificacion que tengo en el

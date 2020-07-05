@@ -26,7 +26,7 @@ class DropsManager {
 
  private:
   // Agrega un drop con 80% de probabilidad
-  void randomly_add_Drop(
+  void randomly_add_drop(
       Monster *dead_monster,
       std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
       Json::Value items_config);

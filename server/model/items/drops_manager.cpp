@@ -20,7 +20,7 @@ void DropsManager::add_monster_drops(
   std::map<unsigned int, Monster *>::iterator it = monsters.begin();
   while (it != monsters.end()) {
     if (it->second->is_death()) {
-      randomly_add_Drop(it->second, drops, items_config);
+      randomly_add_drop(it->second, drops, items_config);
     }
     it++;
   }
@@ -53,16 +53,14 @@ void DropsManager::remove_old_and_empty_drops(
   }
 }
 
-void DropsManager::randomly_add_Drop(
+void DropsManager::randomly_add_drop(
     Monster *dead_monster,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
     Json::Value items_config) {
-      std::cout << "trying to create random drop" << std::endl;
+
   int rand_int = HelperFunctions::random_int(0, 9);
   Drop *drop = nullptr;
   if (rand_int < 8) {
-      std::cout << "creating random drop" << std::endl;
-
     std::tuple<unsigned int, unsigned int> drop_coordinates =
         std::tuple<unsigned int, unsigned int>(dead_monster->x_position,
                                                dead_monster->y_position);
