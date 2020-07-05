@@ -1,12 +1,7 @@
 #include "item_factory.h"
 
 Item *ItemFactory::create_random_item(Json::Value items_config) {
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
-  const int first_item_id = 1;
-  const int last_item_id = 19;
-  std::uniform_int_distribution<int> distribution(first_item_id, last_item_id);
-  int random_id = distribution(generator);
+  int random_id = HelperFunctions::random_int(first_item_id, last_item_id);
   switch (random_id) {
     case turtle_shield:
       return create_turtle_shield(items_config);

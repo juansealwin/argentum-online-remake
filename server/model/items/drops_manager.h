@@ -2,6 +2,7 @@
 #define DROPS_MANAGER_H
 #include "drop.h"
 #include "item_factory.h"
+#include "helper_functions.h"
 class DropsManager {
  public:
   DropsManager();
@@ -24,8 +25,8 @@ class DropsManager {
       std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops);
 
  private:
-  // Crea un drop con 80% de probabilidad
-  void create_random_drop(
+  // Agrega un drop con 80% de probabilidad
+  void randomly_add_Drop(
       Monster *dead_monster,
       std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
       Json::Value items_config);

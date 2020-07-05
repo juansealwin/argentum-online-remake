@@ -5,8 +5,9 @@
 #include "weapon.h"
 #include "staff.h"
 #include "consumable.h"
-#include <random>
-#include <chrono>
+#include "helper_functions.h"
+// #include <random>
+// #include <chrono>
 
 typedef enum {
   turtle_shield = 1,
@@ -27,7 +28,10 @@ typedef enum {
   ash_stick,
   gnarled_staff,
   crimp_staff,
-  elven_flute
+  elven_flute,
+  //Actualizar esto si se agregan mas items!
+  first_item_id = turtle_shield,
+  last_item_id = elven_flute
 } item_t;
 
 namespace ItemFactory {

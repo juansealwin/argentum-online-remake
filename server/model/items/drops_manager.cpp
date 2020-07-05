@@ -20,16 +20,7 @@ void DropsManager::add_monster_drops(
   std::map<unsigned int, Monster *>::iterator it = monsters.begin();
   while (it != monsters.end()) {
     if (it->second->is_death()) {
-      // crear funcion create random drop que contemple la probabilidad de 0.8
-      // de dropear nada
-      create_random_drop(it->second, drops, items_config);
-      // std::tuple<unsigned int, unsigned int> drop_coordinates =
-      //     std::tuple<unsigned int, unsigned int>(it->second->x_position,
-      //                                            it->second->y_position);
-      // Item *item = ItemFactory::create_random_item(items_config);
-      // Drop *drop = new Drop(item, 0);
-      // drops.emplace(drop_coordinates, drop);
-      // std::cout << "Created drop from monster!!" << std::endl;
+      randomly_add_Drop(it->second, drops, items_config);
     }
     it++;
   }
@@ -62,15 +53,12 @@ void DropsManager::remove_old_and_empty_drops(
   }
 }
 
-void DropsManager::create_random_drop(
+void DropsManager::randomly_add_Drop(
     Monster *dead_monster,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
     Json::Value items_config) {
       std::cout << "trying to create random drop" << std::endl;
-  unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
-  std::default_random_engine generator(seed);
-  std::uniform_int_distribution<int> distribution(0, 9);
-  int rand_int = distribution(generator);
+  int rand_int = HelperFunctions::random_int(0, 9);
   Drop *drop = nullptr;
   if (rand_int < 8) {
       std::cout << "creating random drop" << std::endl;
@@ -79,7 +67,7 @@ void DropsManager::create_random_drop(
         std::tuple<unsigned int, unsigned int>(dead_monster->x_position,
                                                dead_monster->y_position);
     Item *item = ItemFactory::create_random_item(items_config);
-    rand_int = distribution(generator);
+    rand_int = HelperFunctions::random_int(0, 9);
     unsigned int coins = 0;
     if (rand_int < 3) { //30% de probabilidades de agregar monedas al drop
       coins = rand_int * dead_monster->max_hp;
