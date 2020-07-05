@@ -140,6 +140,22 @@ void Hero::add_item(Item *item) {
   inventory->add_item(item);
 }
 
+bool Hero::has_free_space() { 
+  return (!inventory->is_full());
+}
+
+void Hero::add_gold(unsigned int gold) {
+  this->gold += gold;
+}
+
+bool Hero::can_hold_more_gold() {
+  return (gold < (max_safe_gold + max_safe_gold/2));
+}
+
+unsigned int Hero::gold_space_remaining() {
+  return ((max_safe_gold + max_safe_gold/2) - gold);
+}
+
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   std::cout << "My spell hit an enemy!!!" << std::endl;
   update_experience(damage_done, other);

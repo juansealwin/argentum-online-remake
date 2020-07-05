@@ -4,8 +4,8 @@
 
 class Drop {
  public:
-  Drop(Inventory *inventory, unsigned int coins);
-  Drop(Item *item, unsigned int coins);
+  Drop(Inventory *inventory, unsigned int gold);
+  Drop(Item *item, unsigned int gold);
   ~Drop();
   Drop(const Drop &) = delete;
   // si esta vacio, se deberia eliminar
@@ -13,13 +13,13 @@ class Drop {
   void add_item(Item *item);
   Item *take_item(unsigned int position);
   std::size_t size();
-  unsigned int take_coins(unsigned int ammount);
-  unsigned int ammount_of_coins();
+  unsigned int take_gold(unsigned int ammount);
+  unsigned int ammount_of_gold();
 
  private:
   // id es el type que se le manda al cliente (siempre el mismo
   // para todos los drops)
-  unsigned int id, coins;
+  unsigned int id, gold;
   
   std::vector<Item *> items;
 };

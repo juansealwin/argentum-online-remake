@@ -45,11 +45,13 @@ void DropsManager::remove_old_and_empty_drops(
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops) {
   std::map<std::tuple<unsigned int, unsigned int>, Drop *>::iterator it =
       drops.begin();
-  while (it != drops.end()) {
+  for (auto it = drops.cbegin(); it != drops.cend();) {
     if (it->second->is_empty()) {
-      std::cout << "drop is empty, deleting it" << std::endl;
+      delete it->second;
+      it = drops.erase(it++);
+    } else {
+      ++it;
     }
-    it++;
   }
 }
 

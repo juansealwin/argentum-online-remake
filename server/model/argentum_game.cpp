@@ -26,17 +26,20 @@ void ArgentumGame::tests_drops() {
   Inventory *inventory = new Inventory(20);
   inventory->add_item(new Item(8));
   inventory->add_item(new Weapon(17, 4, 8, 5));
-  std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
+  std::cout << "Inventory has item 17? " << inventory->has_item(17)
+            << std::endl;
   std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
   Drop *drop = new Drop(inventory, 0);
   std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
-  std::cout << "Inventory has item 17? " << inventory->has_item(17) << std::endl;
+  std::cout << "Inventory has item 17? " << inventory->has_item(17)
+            << std::endl;
   std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
   std::cout << "picking up first item" << std::endl;
   Item *item17 = drop->take_item(drop->size());
   std::cout << "picking up second item" << std::endl;
   Item *item8 = drop->take_item(drop->size());
-  std::cout << "picked up items " << item17->id << ", " << item8->id << std::endl; 
+  std::cout << "picked up items " << item17->id << ", " << item8->id
+            << std::endl;
   Inventory *inventory2 = new Inventory(25);
   Drop *drop2 = new Drop(inventory2, 0);
   std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
@@ -165,11 +168,22 @@ void ArgentumGame::throw_projectile(int attacker_id) {
 void ArgentumGame::pick_up_drop(unsigned int player_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(player_id));
   if (hero) {
-    std::tuple<unsigned int, unsigned int> pos = std::tuple<unsigned int, unsigned int>(hero->x_position, hero->y_position);
+    std::tuple<unsigned int, unsigned int> pos =
+        std::tuple<unsigned int, unsigned int>(hero->x_position,
+                                               hero->y_position);
     if (drops.count(pos) > 0) {
-      std::cout << "found a drop!! " << std::endl;
+      Drop *drop = drops.at(pos);
+      if ((drop->size() > 0) && (hero->has_free_space())) {
+        // siempre tomo el ultimo item en el drop
+        Item *item = drop->take_item(drop->size());
+        hero->add_item(item);
+      }
+      if ((drop->ammount_of_gold() > 0) && hero->can_hold_more_gold()) {
+        unsigned int hero_gold_space = hero->gold_space_remaining();
+        unsigned int taken_gold = drop->take_gold(hero_gold_space);
+        hero->add_gold(taken_gold);
+      }
     }
-    else std::cout << "No drop!! " << std::endl;
   }
 }
 
@@ -203,7 +217,8 @@ void ArgentumGame::update() {
     cmd->execute(this);
     delete cmd;
   }
-  drops_manager.create_drops(std::ref(heroes), std::ref(monsters), std::ref(drops), entities_cfg["items"]);
+  drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
+                             std::ref(drops), entities_cfg["items"]);
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 
   heroes_manager.update(std::ref(heroes));
@@ -235,14 +250,13 @@ void ArgentumGame::run() {
   }
 }
 
-
 unsigned int ArgentumGame::get_room() { return room; }
 
 std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v2(this);
-  
+
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
   }
@@ -272,7 +286,6 @@ void ArgentumGame::clean_notifications_queues() {
       ++it;
   }
 }
-
 
 /********************* metodos privados *****************************/
 
@@ -346,7 +359,6 @@ void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
 
   monsters.emplace(entities_ids++, e);
 }
-
 
 void ArgentumGame::print_debug_map() {
   std::unique_lock<std::mutex> lock(mutex);
