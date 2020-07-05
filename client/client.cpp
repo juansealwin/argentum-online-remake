@@ -34,7 +34,7 @@ void Client::play() {
   ProtectedMap protected_map(player_id, 800, 600);
   EventsQueue event_queue;
 
-  GameUpdater updater(protected_map, socket, is_running);
+  GameUpdater updater(player_id, protected_map, socket, is_running);
   GameRenderer renderer(800, 600, protected_map, event_queue);
   EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al

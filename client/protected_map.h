@@ -7,6 +7,7 @@
 #include "character_status.h"
 #include "game.h"
 #include "types.h"
+#include "ui_status.h"
 
 // Por defecto cuando se agrega un personaje no esta afectado por un hechizo
 typedef struct {
@@ -20,14 +21,15 @@ class ProtectedMap {
   Game* write_map;
   std::map<int, CharacterStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
+  UIStatus current_ui_status;
   std::mutex block_maps;
   std::condition_variable cv;
 
  public:
   ProtectedMap(int, int, int);
   ~ProtectedMap();
-  Game map_reader();
-  void copy_buffer();
+  Game map_reader(UIStatus&);
+  void copy_buffer(UIStatus&);
   void map_writer(std::map<int, CharacterStatus>&);
 };
 

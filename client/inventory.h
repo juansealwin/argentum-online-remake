@@ -18,8 +18,11 @@ class Inventory {
 
  public:
   Inventory();
+  Inventory(int);
   ~Inventory();
-  void add_item(id_texture_t);
+  Inventory& operator=(const Inventory&);
+  void add_item(id_texture_t); 
+  void add_item(id_texture_t, int);
   id_texture_t drop_item(int);
   void change_gold(int);
   void render(SDL_Renderer*);

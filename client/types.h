@@ -28,6 +28,8 @@ typedef enum {
   ID_BANKER,
   ID_MAP_GRASS_BACKGROUND,
   ID_MAP_GRASS_OBJECTS,
+  ID_HP_POTION,
+  ID_MANA_POTION,
   ID_SWORD,
   ID_SWORD_EQUIPPED,
   ID_AXE,
@@ -130,6 +132,29 @@ typedef enum {
 
 typedef enum { EVENT_NONE = 0, EVENT_QUIT } event_t;
 
-typedef enum { HELMET, ARMOR, WEAPON, SHIELD } item_t;
+typedef enum {
+  DUMMY_ITEM,
+  TURTLE_SHIELD,
+  IRON_SHIELD,
+  HOOD,
+  IRON_HELMET,
+  MAGIC_HAT,
+  LEATHER_ARMOR,
+  PLATE_ARMOR,
+  BLUE_TUNIC,
+  HP_POTION,
+  MANA_POTION,
+  SWORD,
+  AXE,
+  HAMMER,
+  SIMPLE_BOW,
+  COMPUND_BOW,
+  ASH_STICK,
+  GNARLED_STAFF,
+  CRIMP_STAFF,
+  ELVEN_FLUTE
+} item_t;
+
+typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
 
 #endif

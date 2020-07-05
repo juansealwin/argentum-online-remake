@@ -29,8 +29,6 @@ class Game {
   int screen_width;
   int screen_height;
   std::map<int, Character*> characters;
-  std::map<int, Npc*> npcs;
-  std::map<int, PlayableCharacter*> pcs;
 
  public:
   Game(int, int, int);

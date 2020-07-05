@@ -17,7 +17,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   /* UI */
   map[ID_UI] = new Texture("ui.png", renderer);
 
-  /* PLAYABLE CHARACTER TEXTURES */ 
+  /* PLAYABLE CHARACTER TEXTURES */
   map[ID_HUMAN] = new Texture("humano.png", renderer);
   map[ID_HUMAN_HEAD] = new Texture("cabeza_humano.png", renderer);
   map[ID_ELF] = new Texture("elfo.png", renderer);
@@ -93,6 +93,10 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_TURTLE_SHIELD] = new Texture("escudo_tortuga.png", renderer);
   map[ID_TURTLE_SHIELD_EQUIPPED] =
       new Texture("escudo_tortuga_equipado.png", renderer);
+
+  /* OTHER ITEMS */
+  map[ID_HP_POTION] = new Texture("pocion_vida.png", renderer);
+  map[ID_MANA_POTION] = new Texture("pocion_mana.png", renderer);
 
   /* SPELLS TEXTURES */
   map[ID_BLEEDING] = new Texture("sangrado1.png", renderer);
