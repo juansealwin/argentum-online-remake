@@ -186,7 +186,7 @@ void ArgentumGame::update() {
   // TO DO:
   // - Que los managers devuelvan un listado de drops
   // Desconexion de clientes: Podria ser un command a ejecutar
-  drops_manager.create_drops(std::ref(heroes), std::ref(monsters), std::ref(drops));
+  drops_manager.create_drops(std::ref(heroes), std::ref(monsters), std::ref(drops), entities_cfg["items"]);
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 
   heroes_manager.update(std::ref(heroes));

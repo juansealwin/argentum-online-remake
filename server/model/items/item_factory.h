@@ -4,6 +4,6 @@
 #include <random>
 #include <chrono>
 namespace ItemFactory {
-  Item *create_random_item();
+  Item *create_random_item(Json::Value items_config);
 }
 #endif  // ITEM_FACTORY_H
