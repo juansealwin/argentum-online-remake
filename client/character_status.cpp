@@ -112,3 +112,4 @@ int CharacterStatus::get_y() const { return y; }
 id_texture_t CharacterStatus::is_afected() const { return spellbound; }
 
 int CharacterStatus::get_life_time() const { return lifetime; }
+

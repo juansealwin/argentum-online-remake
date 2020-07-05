@@ -1,8 +1,9 @@
 #ifndef CHARACTER_STATUS_H
 #define CHARACTER_STATUS_H
 
-#include "types.h"
 #include "character.h"
+#include "inventory.h"
+#include "types.h"
 
 class CharacterStatus {
  private:

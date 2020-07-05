@@ -26,6 +26,7 @@ class GameRenderer : public Thread {
   bool is_running;
   int screen_width;
   int screen_height;
+  UIStatus ui;
   ProtectedMap& protected_map;
   EventsQueue& events_queue;
   SoundEffect background_music;

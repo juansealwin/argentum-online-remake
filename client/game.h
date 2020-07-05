@@ -14,6 +14,8 @@
 #include "types.h"
 
 #define MAP_SIZE 3200
+#define WIDTH_UI 180
+#define HEIGHT_UI 135
 
 class Game {
  private:
@@ -27,8 +29,6 @@ class Game {
   int screen_width;
   int screen_height;
   std::map<int, Character*> characters;
-  std::map<int, Npc*> npcs;
-  std::map<int, PlayableCharacter*> pcs;
 
  public:
   Game(int, int, int);

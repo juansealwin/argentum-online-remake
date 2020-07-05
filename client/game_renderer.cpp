@@ -63,7 +63,7 @@ void GameRenderer::run() {
     int frame_start;
     int frame_time;
     // Leemos la primera instancia que nos manda el server
-    Game current_game = protected_map.map_reader();
+    Game current_game = protected_map.map_reader(ui);
     event_t local_event;
 
     while (is_running) {
@@ -80,11 +80,17 @@ void GameRenderer::run() {
       }
 
       // Leemos las actualizaciones mandadas desde el server
-      current_game = protected_map.map_reader();
+      current_game = protected_map.map_reader(ui);
+      
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
-      // Renderizamos con los datos actuales
+      
+      // Renderizamos el mapa en su estado actual
       current_game.render(renderer);
+      
+      // Renderizamos la UI con sus valores actualizados
+      ui.render(renderer);
+
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.

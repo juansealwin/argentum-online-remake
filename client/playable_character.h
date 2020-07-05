@@ -26,7 +26,7 @@ class PlayableCharacter : public Character {
   void update_face_profile(move_t);
   void render_as_hero(SDL_Renderer*);
   void equip_item(item_t, id_texture_t);
-  void unequip_item(item_t);
+  void unequip_item(equipped_t);
   int set_head_dimensions(character_t);
   int get_head_w() const;
   int get_head_h() const;

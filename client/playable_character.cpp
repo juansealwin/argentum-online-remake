@@ -133,7 +133,7 @@ int PlayableCharacter::set_head_dimensions(character_t id) {
   }
 }
 
-void PlayableCharacter::unequip_item(item_t id) {
+void PlayableCharacter::unequip_item(equipped_t id) {
   // Reinicializamos el item para que no tenga valores dentro
   switch (id) {
     case HELMET:

@@ -11,13 +11,15 @@ ProtectedMap::~ProtectedMap() {
   delete write_map;
 }
 
-Game ProtectedMap::map_reader() {
+Game ProtectedMap::map_reader(UIStatus& renderer_ui) {
   std::unique_lock<std::mutex> lock(block_maps);
+  renderer_ui = current_ui_status;
   return *read_map;
 }
 
-void ProtectedMap::copy_buffer() {
+void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
   std::unique_lock<std::mutex> lock(block_maps);
+  current_ui_status = next_ui_status;
   *read_map = *write_map;
 }
 
