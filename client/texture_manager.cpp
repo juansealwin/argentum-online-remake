@@ -41,12 +41,14 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_MAP_GRASS_OBJECTS] = new Texture("mapa_hierba_objetos.png", renderer);
 
   /* HELMETS AND HATS TEXTURES*/
-  map[ID_MAGIC_HAT] = new Texture("araña.png", renderer);
-  map[ID_MAGIC_HAT_EQUIPPED] = new Texture("esqueleto.png", renderer);
-  map[ID_HOOD] = new Texture("goblin.png", renderer);
-  map[ID_HOOD_EQUIPPED] = new Texture("zombie.png", renderer);
-  map[ID_IRON_HELMET] = new Texture("sacerdote.png", renderer);
-  map[ID_IRON_HELMET_EQUIPPED] = new Texture("comerciante.png", renderer);
+  map[ID_MAGIC_HAT] = new Texture("sombrero_magico.png", renderer);
+  map[ID_MAGIC_HAT_EQUIPPED] =
+      new Texture("sombrero_magico_equipado.png", renderer);
+  map[ID_HOOD] = new Texture("capucha.png", renderer);
+  map[ID_HOOD_EQUIPPED] = new Texture("capucha_equipada.png", renderer);
+  map[ID_IRON_HELMET] = new Texture("casco_hierro.png", renderer);
+  map[ID_IRON_HELMET_EQUIPPED] =
+      new Texture("casco_hierro_equipado.png", renderer);
 
   /* ARMOR TEXTURES */
   map[ID_LEATHER_ARMOR] = new Texture("armadura_cuero.png", renderer);

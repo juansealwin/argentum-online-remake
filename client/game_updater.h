@@ -13,7 +13,7 @@
 #include "protocol.h"
 #include "sdl_exception.h"
 #include "thread.h"
-// para el desserializar
+// Para el desserializar
 #include "algorithm"
 
 class GameUpdater : public Thread {

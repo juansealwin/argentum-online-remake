@@ -108,6 +108,7 @@ void GameUpdater::deserialize_status() {
       if (id == id_hero)
         next_ui_status = UIStatus(name, level, max_hp, current_hp, mana_max,
                                   curr_mana, xp_limit, current_xp, gold);
+
       items_equiped = extract<uint8_t>(status_serialized, j);
       // std::cout << "@@@Hero stats@@@" << std::endl
       //           << "max_hp: " << max_hp << " max_mana " << mana_max << "
@@ -118,23 +119,19 @@ void GameUpdater::deserialize_status() {
       for (int x = items_equiped; x > 0; x--) {
         current_item_slot = extract<uint8_t>(status_serialized, j);
         current_item_id = extract<uint8_t>(status_serialized, j);
-
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
           next_ui_status.add_item(current_item_id, current_item_slot);
-        // std::cout << "equiped " << current_item_id << " at "
-        //           << current_item_slot << std::endl;
       }
 
       items_inventory = extract<uint8_t>(status_serialized, j);
+
       // std::cout << "items in inventory: " << items_inventory << std::endl;
       // std::cout << "@@Deserializing items in invetory@@" << std::endl;
       for (int x = items_inventory; x > 0; x--) {
         current_item_id = extract<uint8_t>(status_serialized, j);
-
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero) next_ui_status.add_item(current_item_id);
-        // std::cout << "item in inventory " << inventory_item_id << std::endl;
       }
     } else {
       // Deberia ser un NPC, no tiene mas atributos

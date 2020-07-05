@@ -56,8 +56,8 @@ void UIStatus::render(SDL_Renderer* renderer) {
 
 id_texture_t UIStatus::get_item(int new_item) {
   id_texture_t item;
-
-  switch (new_item) {
+  
+  switch ((item_t)new_item) {
     case DUMMY_ITEM:
       item = ID_NULL;
       break;

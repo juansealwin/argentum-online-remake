@@ -26,12 +26,10 @@ Inventory& Inventory::operator=(const Inventory& other_inv) {
 
 void Inventory::add_item(id_texture_t new_item) {
   int i = 0;
-  for (; i < MAX_ITEMS; i++) {
-    if (items[i] == ID_NULL) {
-      break;
-    }
-    items[i] = new_item;
+  while ( (items[i] != ID_NULL)) {
+    i++;
   }
+  items[i] = new_item;
 }
 
 void Inventory::add_item(id_texture_t new_item, int i) { items[i] = new_item; }
@@ -53,9 +51,9 @@ void Inventory::render(SDL_Renderer* renderer) {
   int k = Y_INVENTORY;
 
   for (int i = 0; i < MAX_ITEMS; i++) {
-    if (items[i] != ID_NULL) {
+    if (items[i] != ID_NULL) 
       texture_manager.get_texture(items[i]).render(renderer, NULL, j, k);
-    }
+    
     // Dejamos 2px de espacio horizontal entre items
     j += ITEM_SIZE + ESPACIO_HORIZONTAL;
     // Si ya se renderizaron 4 items se pasa a la siguiente fila
