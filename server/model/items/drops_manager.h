@@ -1,6 +1,7 @@
 #ifndef DROPS_MANAGER_H
 #define DROPS_MANAGER_H
 #include "drop.h"
+#include "item_factory.h"
 class DropsManager {
  public:
   DropsManager();

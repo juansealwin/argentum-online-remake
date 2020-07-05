@@ -65,6 +65,7 @@ class Hero : public BaseCharacter {
   void revive();
   friend class Staff;
   friend class Serializer;
+  friend class DropsManager;
   unsigned int current_mana;
   unsigned int max_mana;
 

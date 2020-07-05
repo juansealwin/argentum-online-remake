@@ -244,6 +244,9 @@ ArgentumGame::~ArgentumGame() {
   for (auto &npc : npcs) {
     delete npc.second;
   }
+  for (auto &drop : drops) {
+    delete drop.second;
+  }
   // delete map;
   // Cierro cola y elimino comandos que no se podran procesar
   commands_queue->close();

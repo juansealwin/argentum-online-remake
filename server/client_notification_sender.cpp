@@ -32,6 +32,7 @@ void ClientNotificationSender::run() {
     //notificaciones
     delete n;
   }
+  std::cout << "stopping notification sender" << std::endl;
 
 }
 

@@ -19,6 +19,7 @@ void DropsManager::add_monster_drops(
   while (it != monsters.end()) {
     if (it->second->is_death()) {
       std::cout << "monster is dead, adding drop" << std::endl;
+      ItemFactory::create_random_item();
     }
     it++;
   }
@@ -29,7 +30,11 @@ void DropsManager::add_heroes_drops(
   std::map<unsigned int, Hero *>::iterator it = heroes.begin();
   while (it != heroes.end()) {
     if (it->second->is_death()) {
-      std::cout << "hero is ghost, adding drop" << std::endl;
+      std::tuple<unsigned int, unsigned int> drop_coordinates =
+          std::tuple<unsigned int, unsigned int>(it->second->x_position,
+                                                 it->second->y_position);
+      Drop *drop = new Drop(it->second->inventory);
+      if (!drop->is_empty()) drops.emplace(drop_coordinates, drop);
     }
     it++;
   }
@@ -41,6 +46,8 @@ void DropsManager::remove_old_and_empty_drops(
   while (it != drops.end()) {
     if (it->second->is_empty()) {
       std::cout << "drop is empty, deleting it" << std::endl;
+    } else {
+      std::cout << "drop is recent, not deleting!" << std::endl;
     }
     it++;
   }

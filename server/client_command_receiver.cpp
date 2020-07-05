@@ -34,6 +34,7 @@ void ClientCommandReceiver::run() {
       alive = false;
     }
   }
+  std::cout << "stopping command receiver" << std::endl;
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }
