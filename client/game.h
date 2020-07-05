@@ -14,6 +14,8 @@
 #include "types.h"
 
 #define MAP_SIZE 3200
+#define WIDTH_UI 180
+#define HEIGHT_UI 135
 
 class Game {
  private:

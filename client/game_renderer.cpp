@@ -85,6 +85,8 @@ void GameRenderer::run() {
       SDL_RenderClear(renderer);
       // Renderizamos con los datos actuales
       current_game.render(renderer);
+      texture_manager.get_texture(ID_UI).render(renderer, NULL, 0, 0);
+      inventory.render(renderer);
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.

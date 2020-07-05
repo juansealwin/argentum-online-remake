@@ -10,6 +10,7 @@
 
 typedef enum {
   ID_NULL = 0,
+  ID_UI,
   ID_HUMAN,
   ID_HUMAN_HEAD,
   ID_ELF,

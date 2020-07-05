@@ -9,6 +9,7 @@
 
 #include "events_queue.h"
 #include "game.h"
+#include "inventory.h"
 #include "playable_character.h"
 #include "protected_map.h"
 #include "sdl_exception.h"
@@ -26,6 +27,7 @@ class GameRenderer : public Thread {
   bool is_running;
   int screen_width;
   int screen_height;
+  Inventory inventory;
   ProtectedMap& protected_map;
   EventsQueue& events_queue;
   SoundEffect background_music;

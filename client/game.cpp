@@ -1,11 +1,14 @@
 #include "game.h"
 
+// 620 ancho y 465 de alto el viewport
 Game::Game(int id_player, int scr_width, int scr_height)
-    : id_hero(id_player), screen_width(scr_width), screen_height(scr_height) {
+    : id_hero(id_player),
+      screen_width(scr_width - WIDTH_UI),
+      screen_height(scr_height - HEIGHT_UI) {
   background = ID_MAP_GRASS_BACKGROUND;
   static_objects = ID_MAP_GRASS_OBJECTS;
   map_piece = {0, 0, screen_width, screen_height};
-  viewport = {0, 0, screen_width, screen_height};
+  viewport = {0, HEIGHT_UI, screen_width, screen_height};
 }
 
 Game::Game(const Game& other_game) {
@@ -86,6 +89,7 @@ void Game::update_map(int new_x, int new_y) {
   map_piece.x += new_x;
   map_piece.y += new_y;
 
+  // Como renderizar cuando nos aceramos al borde derecho
   if (map_piece.x > MAP_SIZE - screen_width) {
     viewport.w = screen_width - (map_piece.x - (MAP_SIZE - screen_width));
     map_piece.w = screen_width - (map_piece.x - (MAP_SIZE - screen_width));
@@ -93,6 +97,7 @@ void Game::update_map(int new_x, int new_y) {
     viewport.w = screen_width;
     map_piece.w = screen_width;
   }
+  // Como renderizar cuando nos acercamos al borde inferior
   if (map_piece.y > MAP_SIZE - screen_height) {
     viewport.h = screen_height - (map_piece.y - (MAP_SIZE - screen_height));
     map_piece.h = screen_height - (map_piece.y - (MAP_SIZE - screen_height));
@@ -100,18 +105,22 @@ void Game::update_map(int new_x, int new_y) {
     viewport.h = screen_height;
     map_piece.h = screen_height;
   }
+  // Como renderizar cuando nos aceramos al borde izquierdo
+  // No entiendo como, pero la parte de map_piece.w funciona.
   if (map_piece.x < 0) {
     viewport.x = -map_piece.x;
-    map_piece.w = screen_width - map_piece.x;
+    viewport.w = screen_width + map_piece.x;
+    map_piece.w = screen_width;
   } else {
     viewport.x = 0;
     map_piece.w = screen_width;
   }
+  // Como renderizar cuando nos aceramos al borde superior
   if (map_piece.y < 0) {
-    viewport.y = -map_piece.y;
+    viewport.y = -map_piece.y + HEIGHT_UI;
     map_piece.h = screen_height - map_piece.y;
   } else {
-    viewport.y = 0;
+    viewport.y = HEIGHT_UI;
     map_piece.h = screen_height;
   }
 }
@@ -154,7 +163,8 @@ void Game::render_characters(SDL_Renderer* renderer) {
         (it->second->get_x() <= map_piece.x + screen_width))
       if ((map_piece.y <= it->second->get_y()) &&
           (it->second->get_y() <= map_piece.y + screen_height)) {
-        it->second->render(renderer, map_piece.x, map_piece.y);
+        it->second->render(renderer, map_piece.x,
+                           map_piece.y - HEIGHT_UI);
       }
   }
 }

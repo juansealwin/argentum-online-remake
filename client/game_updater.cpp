@@ -1,7 +1,7 @@
 #include "game_updater.h"
 
 template <typename T>
-T extract(const std::vector<unsigned char> &v, unsigned int &pos) {
+T extract(const std::vector<unsigned char>& v, unsigned int& pos) {
   T value;
   memcpy(&value, &v[pos], sizeof(T));
   pos += sizeof(T);
@@ -50,12 +50,11 @@ void GameUpdater::run() {
 //       std::cout << "Entity id: " << (int)id << ", type: " << entity_type
 //                 << ", x_pos: " << x << ", y_pos: " << y << std::endl;*/
 //     int k = 0;
-        
+
 //     next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
 //     j++;
 //   }
 // }
-
 
 bool vector_contains(std::vector<uint8_t> v, uint8_t x) {
   if (std::find(v.begin(), v.end(), x) != v.end()) return true;
@@ -73,7 +72,6 @@ bool is_monster(uint8_t t) {
 }
 
 void GameUpdater::deserialize_status() {
-  std::cout << "vector size is " << status_serialized.size() << std::endl;
   unsigned int j = 1;
   while (j < status_serialized.size()) {
     uint16_t id = ntohs(extract<uint16_t>(status_serialized, j));
