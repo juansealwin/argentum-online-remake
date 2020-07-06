@@ -4,7 +4,9 @@ EventHandler::~EventHandler() {}
 
 EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
-    : commands_queue(commands_queue), events_queue(queue), is_running(run) {}
+    : commands_queue(commands_queue), events_queue(queue), is_running(run) {
+  inventory = InteractiveBox(640, 168, 139, 183);
+}
 
 void EventHandler::get_events() {
   try {
@@ -14,7 +16,6 @@ void EventHandler::get_events() {
     SDL_Event event;
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {
-
         // El usuario cierra la ventana
         if (event.type == SDL_QUIT) {
           is_running = false;
@@ -26,9 +27,8 @@ void EventHandler::get_events() {
           break;
         }
 
-        // El usuario presiona una tecla
+        // Eventos de tecla presionada
         else if (event.type == SDL_KEYDOWN) {
-
           // Dependiendo que tecla presiona cambia el evento que sucede
           if (event.key.keysym.sym == SDLK_UP) {
             MoveCommandDTO* move_command = new MoveCommandDTO(move_up);
@@ -66,7 +66,18 @@ void EventHandler::get_events() {
             PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
             commands_queue.push(pick_up_item_command);
           }
-
+        }
+        // Eventos de mouse
+        else if (event.type == SDL_MOUSEBUTTONDOWN) {
+          int x, y;
+          SDL_GetMouseState(&x, &y);
+          if (inventory.mouse_click_in(x, y)) {
+            int item_slot = inventory.get_item_clicked(x, y);
+            events_queue.push(EVENT_SELECT_ITEM, item_slot);
+            UseItemCommandDTO* use_item_command =
+                new UseItemCommandDTO(item_slot);
+            commands_queue.push(use_item_command);
+          }
         }
       }
     }

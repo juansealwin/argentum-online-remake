@@ -16,6 +16,7 @@ TextureManager::TextureManager() {
 void TextureManager::load_textures(SDL_Renderer* renderer) {
   /* UI */
   map[ID_UI] = new Texture("ui.png", renderer);
+  map[ID_SELECTOR] = new Texture("selector_item.png", renderer);
 
   /* PLAYABLE CHARACTER TEXTURES */
   map[ID_HUMAN] = new Texture("humano.png", renderer);

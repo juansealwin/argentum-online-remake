@@ -65,16 +65,32 @@ void GameRenderer::run() {
     // Leemos la primera instancia que nos manda el server
     Game current_game = protected_map.map_reader(ui);
     event_t local_event;
+    int index;
+    bool is_selected = false;
+    int item_selected = 20;
 
     while (is_running) {
       frame_start = SDL_GetTicks();
 
       // Vemos si hay algun evento local
-      local_event = events_queue.pop();
+      local_event = events_queue.pop(index);
       if (local_event) {
         switch (local_event) {
           case EVENT_QUIT:
             is_running = false;
+            break;
+
+          case EVENT_SELECT_ITEM:
+            if(is_selected) {
+              if(index == item_selected) {
+                is_selected = false;
+              } else {
+                item_selected = index;
+              }
+            } else {
+              item_selected = index;
+              is_selected = true;
+            }
             break;
         }
       }
@@ -89,7 +105,7 @@ void GameRenderer::run() {
       current_game.render(renderer);
       
       // Renderizamos la UI con sus valores actualizados
-      ui.render(renderer);
+      ui.render(renderer, is_selected, item_selected);
 
       SDL_RenderPresent(renderer);
 
