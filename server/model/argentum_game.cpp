@@ -22,33 +22,33 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   tests_drops();
 }
 void ArgentumGame::tests_drops() {
-  std::cout << "testing drops" << std::endl;
-  Inventory *inventory = new Inventory(20);
-  inventory->add_item(new Item(8));
-  inventory->add_item(new Weapon(17, 4, 8, 5));
-  std::cout << "Inventory has item 17? " << inventory->has_item(17)
-            << std::endl;
-  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  Drop *drop = new Drop(inventory, 0);
-  std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
-  std::cout << "Inventory has item 17? " << inventory->has_item(17)
-            << std::endl;
-  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  std::cout << "picking up first item" << std::endl;
-  Item *item17 = drop->take_item(drop->size());
-  std::cout << "picking up second item" << std::endl;
-  Item *item8 = drop->take_item(drop->size());
-  std::cout << "picked up items " << item17->id << ", " << item8->id
-            << std::endl;
-  Inventory *inventory2 = new Inventory(25);
-  Drop *drop2 = new Drop(inventory2, 0);
-  std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
-  delete drop2;
-  delete inventory2;
-  delete inventory;
-  delete drop;
-  delete item17;
-  delete item8;
+  // std::cout << "testing drops" << std::endl;
+  // Inventory *inventory = new Inventory(20);
+  // inventory->add_item(new Item(8));
+  // inventory->add_item(new Weapon(17, 4, 8, 5));
+  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
+  //           << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  // Drop *drop = new Drop(34, inventory, 0);
+  // std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
+  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
+  //           << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
+  // std::cout << "picking up first item" << std::endl;
+  // Item *item17 = drop->take_item(drop->size());
+  // std::cout << "picking up second item" << std::endl;
+  // Item *item8 = drop->take_item(drop->size());
+  // std::cout << "picked up items " << item17->id << ", " << item8->id
+  //           << std::endl;
+  // Inventory *inventory2 = new Inventory(25);
+  // Drop *drop2 = new Drop(34, inventory2, 0);
+  // std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
+  // delete drop2;
+  // delete inventory2;
+  // delete inventory;
+  // delete drop;
+  // delete item17;
+  // delete item8;
 }
 void ArgentumGame::tests_proyectiles() {
   // std::cout << "Running tests" << std::endl;
@@ -218,7 +218,7 @@ void ArgentumGame::update() {
     delete cmd;
   }
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
-                             std::ref(drops), entities_cfg["items"]);
+                             std::ref(drops), entities_cfg["items"], std::ref(entities_ids));
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 
   heroes_manager.update(std::ref(heroes));

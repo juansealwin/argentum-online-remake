@@ -57,8 +57,10 @@ class Hero : public BaseCharacter {
   // Empieza a meditar. Se termina de meditar una vez que se hace cualquier otra
   // cosa (llamado a cualquier otro metodo)
   bool has_free_space();
+  bool has_items_in_inventory();
   //devuelve true 
   bool can_hold_more_gold();
+  bool has_excedent_coins();
   //devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
   void meditate();

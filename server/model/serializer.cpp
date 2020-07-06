@@ -79,6 +79,39 @@ void Serializer::serialize_common_fields_v2(
   serialization.push_back(orientation);
 }
 
+std::vector<unsigned char> Serializer::serialize_game_status_v3(
+    ArgentumGame *game) {
+  std::vector<unsigned char> serialization;
+  // mover a la clase
+  uint8_t notification_id = 1;
+  serialization.push_back(notification_id);
+  for (auto &entity : game->npcs) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                               entity.second);
+  }
+  for (auto &entity : game->monsters) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                               entity.second);
+    serialize_monster(std::ref(serialization), entity.second);
+  }
+  for (auto &entity : game->heroes) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                               entity.second);
+    serialize_hero(std::ref(serialization), entity.second);
+  }
+  for (auto &entity : game->projectiles) {
+    serialize_common_fields_v2(std::ref(serialization), entity.first,
+                               entity.second);
+  }
+  for (std::pair<std::tuple<unsigned int, unsigned int>, Drop*> element : game->drops) {
+        // Accessing KEY from element
+        std::tuple<unsigned int, unsigned int> coordinates = element.first;
+        Drop *drop = element.second;
+    }
+  //debug_deserialize(serialization);
+  return serialization;
+}
+
 std::vector<unsigned char> Serializer::serialize_game_status_v2(
     ArgentumGame *game) {
   std::vector<unsigned char> serialization;

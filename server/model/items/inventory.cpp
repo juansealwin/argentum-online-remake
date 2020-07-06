@@ -14,6 +14,10 @@ Inventory::~Inventory() {
   }
 }
 
+bool Inventory::is_empty() {
+  return (items.size() == 0);
+}
+
 void Inventory::add_item(Item* item) {
   std::cout << "adding new item, inventory size is " << items.size()
             << " capacitiy is " << items.capacity() << std::endl;

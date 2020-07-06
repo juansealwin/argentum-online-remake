@@ -9,6 +9,8 @@ class Serializer {
  public:
   static std::vector<unsigned char> serialize_game_status(ArgentumGame *game);
   static std::vector<unsigned char> serialize_game_status_v2(ArgentumGame *game);
+  static std::vector<unsigned char> serialize_game_status_v3(ArgentumGame *game);
+
   static void debug_deserialize(std::vector<unsigned char> serialization);
 
  private:

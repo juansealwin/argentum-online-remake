@@ -39,6 +39,7 @@ Hero::Hero(
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap) {
+        std::cout << "created hero with id " << unique_id << std::endl;
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size);
@@ -144,6 +145,10 @@ bool Hero::has_free_space() {
   return (!inventory->is_full());
 }
 
+bool Hero::has_items_in_inventory() {
+  return (!inventory->is_empty());
+}
+
 void Hero::add_gold(unsigned int gold) {
   this->gold += gold;
 }
@@ -154,6 +159,10 @@ bool Hero::can_hold_more_gold() {
 
 unsigned int Hero::gold_space_remaining() {
   return ((max_safe_gold + max_safe_gold/2) - gold);
+}
+
+bool Hero::has_excedent_coins() {
+  return (gold > max_safe_gold);
 }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {

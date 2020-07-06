@@ -4,25 +4,25 @@
       "maxHp": 100,
       "dps": 25,
       "level": 1,
-      "id" : 29
+      "id": 29
     },
     "spider": {
       "maxHp": 75,
       "dps": 15,
       "level": 1,
-      "id" : 30
+      "id": 30
     },
     "skeleton": {
       "maxHp": 125,
       "dps": 30,
       "level": 1,
-      "id" : 31
+      "id": 31
     },
     "zombie": {
       "maxHp": 150,
       "dps": 40,
       "level": 1,
-      "id" : 32
+      "id": 32
     }
   },
   "items": {
@@ -31,46 +31,46 @@
         "turtleShield": {
           "minDefense": 1,
           "maxDefense": 2,
-          "id" : 1
+          "id": 1
         },
         "ironShield": {
           "minDefense": 1,
           "maxDefense": 4,
-          "id" : 2
+          "id": 2
         }
       },
       "helmets": {
         "hood": {
           "minDefense": 1,
           "maxDefense": 4,
-          "id" : 3
+          "id": 3
         },
         "ironHelmet": {
           "minDefense": 4,
           "maxDefense": 8,
-          "id" : 4
+          "id": 4
         },
         "magicHat": {
           "minDefense": 4,
           "maxDefense": 12,
-          "id" : 5
+          "id": 5
         }
       },
       "armour": {
         "leatherArmour": {
           "minDefense": 2,
           "maxDefense": 16,
-          "id" : 6
+          "id": 6
         },
         "plateArmour": {
           "minDefense": 15,
           "maxDefense": 30,
-          "id" : 7
+          "id": 7
         },
         "blueTunic": {
           "minDefense": 6,
           "maxDefense": 10,
-          "id" : 8
+          "id": 8
         }
       }
     },
@@ -78,14 +78,14 @@
       "hpPotion": {
         "hpRegen": 50,
         "manaRegen": 0,
-        "id" : 9
+        "id": 9
       },
       "manaPotion": {
         "hpRegen": 0,
         "manaRegen": 50,
-        "id" : 10
+        "id": 10
       },
-      "coins" : {
+      "coins": {
         "id": 33
       }
     },
@@ -94,31 +94,31 @@
         "minDmg": 2,
         "maxDmg": 5,
         "range": 1,
-        "id" : 11
+        "id": 11
       },
       "axe": {
         "minDmg": 4,
         "maxDmg": 5,
         "range": 1,
-        "id" : 12
+        "id": 12
       },
       "hammer": {
         "minDmg": 1,
         "maxDmg": 9,
         "range": 1,
-        "id" : 13
+        "id": 13
       },
       "simpleBow": {
         "minDmg": 1,
         "maxDmg": 4,
         "range": 6,
-        "id" : 14
+        "id": 14
       },
       "compoundBow": {
         "minDmg": 4,
         "maxDmg": 16,
         "range": 6,
-        "id" : 15
+        "id": 15
       }
     },
     "staffs": {
@@ -129,7 +129,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 5,
-        "id" : 16
+        "id": 16
       },
       "gnarledStaff": {
         "spellName": "missile",
@@ -138,7 +138,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 15,
-        "id" : 17
+        "id": 17
       },
       "crimpStaff": {
         "spellName": "explosion",
@@ -147,7 +147,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 30,
-        "id" : 18
+        "id": 18
       },
       "elvenFlute": {
         "spellName": "heal",
@@ -156,8 +156,11 @@
         "hpRecovery": 120,
         "range": 0,
         "mana": 100,
-        "id" : 19
+        "id": 19
       }
+    },
+    "drop": {
+      "id": 34
     }
   },
   "classes": {
@@ -169,7 +172,7 @@
       "fClassMana": 3,
       "fClassMeditation": 10,
       "level": 0,
-      "id" : 20
+      "id": 20
     },
     "cleric": {
       "strength": 3,
@@ -179,7 +182,7 @@
       "fClassMana": 3,
       "fClassMeditation": 5,
       "level": 0,
-      "id" : 21
+      "id": 21
     },
     "paladin": {
       "strength": 10,
@@ -189,7 +192,7 @@
       "fClassMana": 2,
       "fClassMeditation": 2,
       "level": 0,
-      "id" : 23
+      "id": 23
     },
     "warrior": {
       "strength": 15,
@@ -199,7 +202,7 @@
       "fClassMana": 0,
       "fClassMeditation": 0,
       "level": 0,
-      "id" : 24
+      "id": 24
     }
   },
   "races": {
@@ -212,7 +215,7 @@
       "fRaceRecovery": 1,
       "fRaceMana": 2,
       "gold": 200,
-      "id" : 25
+      "id": 25
     },
     "elf": {
       "strength": 6,
@@ -223,7 +226,7 @@
       "fRaceRecovery": 1,
       "fRaceMana": 5,
       "gold": 200,
-      "id" : 26
+      "id": 26
     },
     "dwarf": {
       "strength": 15,
@@ -234,7 +237,7 @@
       "fRaceRecovery": 1,
       "fRaceMana": 1,
       "gold": 200,
-      "id" : 27
+      "id": 27
     },
     "gnome": {
       "strength": 3,
@@ -245,16 +248,16 @@
       "fRaceMana": 3,
       "fRaceRecovery": 1,
       "gold": 200,
-      "id" : 28
+      "id": 28
     }
   },
-  "critialDamageMiltiplier" : 2,
-  "inventorySize" : 5,
-  "criticalDamageProbability" : 0.125,
-  "evasionProbability" : 0.001,
-  "maxSafeGoldMultiplier" : 400,
-  "levelUpLimitPower" : 1.8,
-  "startingXpCap" : 1000,
-  "ups" : 60.0,
-  "lastId" : 33
+  "critialDamageMiltiplier": 2,
+  "inventorySize": 5,
+  "criticalDamageProbability": 0.125,
+  "evasionProbability": 0.001,
+  "maxSafeGoldMultiplier": 400,
+  "levelUpLimitPower": 1.8,
+  "startingXpCap": 1000,
+  "ups": 60.0,
+  "lastId": 34
 }
