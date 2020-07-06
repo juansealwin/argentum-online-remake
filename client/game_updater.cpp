@@ -51,6 +51,10 @@ bool is_monster(uint8_t t) {
   return vector_contains(monsters, t);
 }
 
+bool is_drop(uint8_t t) {
+  return (t == 37);
+}
+
 void GameUpdater::deserialize_status() {
   //std::cout << "vector size is " << status_serialized.size() << std::endl;
   unsigned int j = 1;
@@ -75,6 +79,17 @@ void GameUpdater::deserialize_status() {
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
     // Dejamos afuera a los npc de compra y venta
+    if (is_drop(entity_type)) {
+      int items_in_drop = extract<uint8_t>(status_serialized, j);
+      for (int x = items_in_drop; x > 0; x--) {
+        int current_item_id = extract<uint8_t>(status_serialized, j);
+        // std::cout << "dropped item " << current_item_id << std::endl;
+      }
+      int drop_has_coins = extract<uint8_t>(status_serialized, j);
+      if (drop_has_coins == 1) {
+        // std::cout << "Drop has coins!!" << std::endl;
+      }
+    }
     if (is_hero(entity_type) || is_monster(entity_type)) {
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
       current_hp = ntohs(extract<uint16_t>(status_serialized, j));

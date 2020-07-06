@@ -1,12 +1,20 @@
 #include "drop.h"
 
-Drop::Drop(Inventory *inventory, unsigned int gold) : gold(gold) {
+Drop::Drop(unsigned int id, unsigned int unique_id, Inventory *inventory,
+           unsigned int gold)
+    : id(id), unique_id(unique_id), gold(gold) {
+      std::cout << "created drop with id " << unique_id << std::endl;
   items.insert(items.end(), std::make_move_iterator(inventory->items.begin()),
                std::make_move_iterator(inventory->items.end()));
   inventory->items.erase(inventory->items.begin(), inventory->items.end());
 }
 
-Drop::Drop(Item *item, unsigned int gold) : gold(gold) { items.push_back(item); }
+Drop::Drop(unsigned int id, unsigned int unique_id, Item *item,
+           unsigned int gold)
+    : id(id), unique_id(unique_id), gold(gold) {
+      std::cout << "created drop with id " << unique_id << std::endl;
+  items.push_back(item);
+}
 
 Drop::~Drop() {
   std::vector<Item *>::iterator it = items.begin();
@@ -27,9 +35,7 @@ Item *Drop::take_item(unsigned int index) {
   return item;
 }
 
-unsigned int Drop::ammount_of_gold() {
-  return gold;
-}
+unsigned int Drop::ammount_of_gold() { return gold; }
 
 unsigned int Drop::take_gold(unsigned int ammount) {
   unsigned int ammount_to_take = std::min(gold, ammount);
