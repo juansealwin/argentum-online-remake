@@ -21,52 +21,9 @@ void insert(std::vector<unsigned char> &v, X value) {
   memcpy(v.data() + current_pos, &value, sizeof(X));
 }
 
-std::vector<unsigned char> Serializer::serialize_game_status(
-    ArgentumGame *game) {
-  // serializacion actual:
-  //<uint8_t>(notification id),<uint16_t>(id unico por entidad), <uint8_t>(id
-  // del tipo de entidad), <uint8_t>(pos x), <uint8_t>(pos y), ....
-  std::vector<unsigned char> serialization;
-  uint8_t notification_id = 1;
-  serialization.push_back(notification_id);
-  for (auto &entity : game->npcs) {
-    serialize_common_fields(std::ref(serialization), entity.first,
-                            entity.second);
-  }
-  for (auto &entity : game->monsters) {
-    serialize_common_fields(std::ref(serialization), entity.first,
-                            entity.second);
-  }
-  for (auto &entity : game->heroes) {
-    serialize_common_fields(std::ref(serialization), entity.first,
-                            entity.second);
-  }
-  for (auto &entity : game->projectiles) {
-    serialize_common_fields(std::ref(serialization), entity.first,
-                            entity.second);
-  }
-
-  // debug_deserialize(serialization);
-  return serialization;
-}
-
-void Serializer::serialize_common_fields(
-    std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity) {
-  uint16_t entity_id = htons(uid);
-  unsigned int current_pos = serialization.size();
-  serialization.resize(serialization.size() + sizeof(entity_id));
-  std::memcpy(serialization.data() + current_pos, &entity_id,
-              sizeof(entity_id));
-  uint8_t entity_type = entity->type;
-  uint8_t x = entity->x_position;
-  uint8_t y = entity->y_position;
-  serialization.push_back(entity_type);
-  serialization.push_back(x);
-  serialization.push_back(y);
-}
-
 void Serializer::serialize_common_fields_v2(
     std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity) {
+      // std::cout << "uid to serialize: " << uid << std::endl;
   uint16_t entity_id = htons(uid);
   insert(serialization, entity_id);
   uint8_t entity_type = entity->type;
@@ -83,26 +40,31 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
     ArgentumGame *game) {
   std::vector<unsigned char> serialization;
   // mover a la clase
+  unsigned int monsters_serialized = 0;
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
+  //std::cout << "@@@@@@@@@monsters size is@@@@@@@@@@ " << game->monsters.size() << std::endl;
   for (auto &entity : game->npcs) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
-  }
-  for (auto &entity : game->monsters) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-    serialize_monster(std::ref(serialization), entity.second);
   }
   for (auto &entity : game->heroes) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
     serialize_hero(std::ref(serialization), entity.second);
+    // std::cout << "serialized hero, his id is " << entity.second->unique_id << std::endl;
   }
-  for (auto &entity : game->projectiles) {
+  for (auto &entity : game->monsters) {
+    monsters_serialized++;
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
+    serialize_monster(std::ref(serialization), entity.second);
   }
+
+  // for (auto &entity : game->projectiles) {
+  //   serialize_common_fields_v2(std::ref(serialization), entity.first,
+  //                              entity.second);
+  // }
   for (std::pair<std::tuple<unsigned int, unsigned int>, Drop *> element :
        game->drops) {
     // Accessing KEY from element
@@ -114,33 +76,6 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
   return serialization;
 }
 
-std::vector<unsigned char> Serializer::serialize_game_status_v2(
-    ArgentumGame *game) {
-  std::vector<unsigned char> serialization;
-  // mover a la clase
-  uint8_t notification_id = 1;
-  serialization.push_back(notification_id);
-  for (auto &entity : game->npcs) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-  }
-  for (auto &entity : game->monsters) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-    serialize_monster(std::ref(serialization), entity.second);
-  }
-  for (auto &entity : game->heroes) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-    serialize_hero(std::ref(serialization), entity.second);
-  }
-  for (auto &entity : game->projectiles) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-  }
-  
-  return serialization;
-}
 
 void Serializer::serialize_drop(
     std::vector<unsigned char> &serialization, Drop *drop,
@@ -263,8 +198,12 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   }
 }
 
-void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
-  // std::cout << "vector size is " << serialization.size() << std::endl;
+void Serializer::debug_deserialize_v3(
+    std::vector<unsigned char> serialization) {
+  unsigned int monsters_detected = 0;
+  unsigned int heroes_detected = 0;
+  unsigned int npcs_or_others_detected = 0;
+  unsigned int drops_detected = 0;
   unsigned int j = 1;
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
@@ -275,7 +214,21 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
+    if (is_drop(entity_type)) {
+      drops_detected++;
+      int items_in_drop = extract<uint8_t>(serialization, j);
+      for (int x = items_in_drop; x > 0; x--) {
+        int current_item_id = extract<uint8_t>(serialization, j);
+        // std::cout << "dropped item " << current_item_id << std::endl;
+      }
+      int drop_has_coins = extract<uint8_t>(serialization, j);
+      if (drop_has_coins == 1) {
+        // std::cout << "Drop has coins!!" << std::endl;
+      }
+    }
     if (is_monster(entity_type)) {
+      monsters_detected++;
+      // std::cout << "deserialized a monster with id " << id << std::endl;
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
@@ -283,6 +236,8 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
       // std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
       //           << "current_hp" << current_hp << std::endl;
     } else if (is_hero(entity_type)) {
+      heroes_detected++;
+      // std::cout << "deserialized a hero with id " << id << std::endl;
       uint16_t max_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
@@ -293,7 +248,7 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
         name += serialization.at(j);
         j++;
       }
-      // std::cout << "Name of the hero: " << name << std::endl;
+      // std::cout << "Name of the hero: " << name << "id of the hero " << id<< std::endl;
       int class_id = extract<uint8_t>(serialization, j);
       uint16_t mana_max = ntohs(extract<uint16_t>(serialization, j));
       uint16_t curr_mana = ntohs(extract<uint16_t>(serialization, j));
@@ -328,9 +283,12 @@ void Serializer::debug_deserialize(std::vector<unsigned char> serialization) {
         // std::cout << "item in inventory " << inventory_item_id << std::endl;
       }
     } else {
+      npcs_or_others_detected++;
+      // std::cout << "deserialized a ???? with id " << id << std::endl;
       // Deberia ser un NPC, no tiene mas atributos
     }
   }
+  // std::cout << "monsters detecteD: " << monsters_detected << " heroes_detected " << heroes_detected << " npcs_or_others_detected " << npcs_or_others_detected << " drops detected " << drops_detected << std::endl;
 }
 
 void Serializer::debug_deserialize_v3(
@@ -421,11 +379,6 @@ bool Serializer::vector_contains(std::vector<uint8_t> v, uint8_t x) {
   if (std::find(v.begin(), v.end(), x) != v.end()) return true;
   return false;
 }
-
-// bool Serializer::is_npc(uint8_t t) {
-//   const std::vector<uint8_t> npcs = {33, 34, 35};
-//   return vector_contains(npcs, t);
-// }
 
 bool Serializer::is_hero(uint8_t t) {
   const std::vector<uint8_t> heroes = {25, 26, 27, 28};
