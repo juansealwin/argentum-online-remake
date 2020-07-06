@@ -52,7 +52,7 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
     serialize_hero(std::ref(serialization), entity.second);
-    std::cout << "serialized hero, his id is " << entity.second->unique_id << std::endl;
+    // std::cout << "serialized hero, his id is " << entity.second->unique_id << std::endl;
   }
   for (auto &entity : game->monsters) {
     monsters_serialized++;

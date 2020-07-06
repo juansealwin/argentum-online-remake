@@ -17,8 +17,6 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  place_initial_monsters(map_cfg);
-
   tests_drops();
 }
 void ArgentumGame::tests_drops() {
@@ -92,42 +90,6 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
     if (e) {
       map.ocupy_cell(row, col, entities_ids);
       npcs.emplace(entities_ids++, e);
-    }
-    col++;
-    if (col == map_cols) {
-      row++;
-      col = 0;
-    }
-  }
-}
-
-void ArgentumGame::place_initial_monsters(Json::Value &map_cfg) {
-  // std::unique_lock<std::mutex> lock(mutex);
-  int row = 0;
-  int col = 0;
-  int map_cols = map_cfg["width"].asInt();
-  for (const auto &jv : map_cfg["layers"][2]["data"]) {
-    Monster *e = nullptr;
-    int type = jv.asInt();
-    Json::Value entity = Json::arrayValue;
-    if (type == GOBLIN) {
-      entity = entities_cfg["npcs"]["goblin"];
-    } else if (type == ZOMBIE) {
-      entity = entities_cfg["npcs"]["zombie"];
-    } else if (type == SPIDER) {
-      entity = entities_cfg["npcs"]["spider"];
-    } else if (type == SKELETON) {
-      entity = entities_cfg["npcs"]["skeleton"];
-    }
-    if (type == GOBLIN || type == ZOMBIE || type == SPIDER ||
-        type == SKELETON) {
-      e = new Monster(entities_ids, row, col, entity["id"].asInt(), 'g',
-                      entity["maxHp"].asInt(), entity["level"].asInt(),
-                      entity["dps"].asInt(), map);
-    }
-    if (e) {
-      map.ocupy_cell(row, col, entities_ids);
-      monsters.emplace(entities_ids++, e);
     }
     col++;
     if (col == map_cols) {

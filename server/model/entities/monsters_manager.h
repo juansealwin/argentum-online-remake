@@ -3,7 +3,6 @@
 #include <chrono>
 #include "monsters_factory.h"
 #include "monster.h"
-
 class MonstersManager {
  public:
   MonstersManager();
@@ -15,7 +14,6 @@ class MonstersManager {
   void respawn_monsters(std::map<unsigned int, Monster *> &monsters, Map &map,
                         unsigned int total_monster_poblation,
                         Json::Value &monsters_cfg, unsigned int &entities_ids);
-
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> last_update_time;
 };
