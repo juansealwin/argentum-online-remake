@@ -8,22 +8,17 @@
 #include "drop.h"
 class Serializer {
  public:
-  static std::vector<unsigned char> serialize_game_status(ArgentumGame *game);
-  static std::vector<unsigned char> serialize_game_status_v2(ArgentumGame *game);
   static std::vector<unsigned char> serialize_game_status_v3(ArgentumGame *game);
 
-  static void debug_deserialize(std::vector<unsigned char> serialization);
   static void debug_deserialize_v3(std::vector<unsigned char> serialization);
 
 
  private:
   //  //deben coincidir con los config del json
-  static void serialize_common_fields(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
   static void serialize_common_fields_v2(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
   static void serialize_drop();
   static bool is_hero(uint8_t t);
   static bool is_drop(uint8_t t);
-  // static bool is_npc(uint8_t t);
   static bool is_monster(uint8_t t);
   static bool vector_contains(std::vector<uint8_t> v, uint8_t x);
   // //serializan atributos y los inserta al final del vector

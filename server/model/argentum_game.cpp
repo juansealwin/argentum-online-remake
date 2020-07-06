@@ -17,8 +17,6 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  place_initial_monsters(map_cfg);
-
   tests_drops();
 }
 void ArgentumGame::tests_drops() {
@@ -101,42 +99,6 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
   }
 }
 
-void ArgentumGame::place_initial_monsters(Json::Value &map_cfg) {
-  // std::unique_lock<std::mutex> lock(mutex);
-  int row = 0;
-  int col = 0;
-  int map_cols = map_cfg["width"].asInt();
-  for (const auto &jv : map_cfg["layers"][2]["data"]) {
-    Monster *e = nullptr;
-    int type = jv.asInt();
-    Json::Value entity = Json::arrayValue;
-    if (type == GOBLIN) {
-      entity = entities_cfg["npcs"]["goblin"];
-    } else if (type == ZOMBIE) {
-      entity = entities_cfg["npcs"]["zombie"];
-    } else if (type == SPIDER) {
-      entity = entities_cfg["npcs"]["spider"];
-    } else if (type == SKELETON) {
-      entity = entities_cfg["npcs"]["skeleton"];
-    }
-    if (type == GOBLIN || type == ZOMBIE || type == SPIDER ||
-        type == SKELETON) {
-      e = new Monster(entities_ids, row, col, entity["id"].asInt(), 'g',
-                      entity["maxHp"].asInt(), entity["level"].asInt(),
-                      entity["dps"].asInt(), map);
-    }
-    if (e) {
-      map.ocupy_cell(row, col, entities_ids);
-      monsters.emplace(entities_ids++, e);
-    }
-    col++;
-    if (col == map_cols) {
-      row++;
-      col = 0;
-    }
-  }
-}
-
 /*********************** Acciones personajes *************************/
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
@@ -146,7 +108,17 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
+  //   Monster *e = new Monster(entities_ids, 48, 48,
+  //                          entities_cfg["npcs"]["zombie"]["id"].asInt(), 'g',
+  //                          entities_cfg["npcs"]["zombie"]["maxHp"].asInt(),
+  //                          entities_cfg["npcs"]["zombie"]["level"].asInt(),
+  //                          entities_cfg["npcs"]["zombie"]["dps"].asInt(), map);
 
+  // std::cout << "placing monster with id: " << entities_ids << std::endl;
+  // map.ocupy_cell(48, 48, entities_ids);
+  // monsters.emplace(entities_ids++, e);
+  // std::cout << "value of entities ids after placing a monster: " << entities_ids << std::endl;
+  // std::cout << "value of hero id is " << hero->unique_id << std::endl;
   try {
     if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
@@ -226,6 +198,10 @@ void ArgentumGame::update() {
 
   monsters_manager.update(std::ref(monsters));
   monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
+  monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
+                                    std::ref(entities_cfg["npcs"]),
+                                    std::ref(entities_ids));
+
   // actualizar siempre al final los proyectiles ya que tambien afectan el
   // estado de heroes/monstruos
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
@@ -238,6 +214,7 @@ void ArgentumGame::run() {
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
+    //print_debug_map();
     send_game_status();
     long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
@@ -313,6 +290,10 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       std::string hero_class,
                                       std::string hero_name, unsigned int x,
                                       unsigned int y) {
+
+  std::cout << "placing hero at position (" << x << ", " << y << ")"
+            << std::endl;
+  std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(

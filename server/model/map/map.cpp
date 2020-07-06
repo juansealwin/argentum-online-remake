@@ -59,8 +59,17 @@ std::tuple<int, int> Map::get_random_free_space() {
   while (true) {
     int x = rand() % 100;
     int y = rand() % 100;
-    // if (matrix[x][y]->free && !matrix[x][y]->fixed) {
     if (matrix[x][y].free && !matrix[x][y].fixed) {
+      return std::tuple<int, int>(x, y);
+    }
+  }
+}
+
+std::tuple<int, int> Map::get_random_free_unsafe_space() {
+  while (true) {
+    int x = rand() % 100;
+    int y = rand() % 100;
+    if (matrix[x][y].free && !matrix[x][y].fixed && !matrix[x][y].safe) {
       return std::tuple<int, int>(x, y);
     }
   }

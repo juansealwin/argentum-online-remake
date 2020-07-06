@@ -30,10 +30,6 @@
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
-#define GOBLIN 29
-#define ZOMBIE 32
-#define SPIDER 30
-#define SKELETON 31
 
 class ArgentumGame : public Thread {
  public:
@@ -80,7 +76,6 @@ class ArgentumGame : public Thread {
   void update();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
-  void place_initial_monsters(Json::Value &map_cfg);
   void place_initial_npcs(Json::Value &map_cfg);
   //void remove_death_entities();
   // entities se usa para serializar el mapa (quitar mas adelante)
