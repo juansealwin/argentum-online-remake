@@ -1,6 +1,6 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(character_t id_char, int new_x,
+PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x,
                                      int new_y) {
   x = new_x * TILE_SIZE;
   y = new_y * TILE_SIZE;
@@ -109,7 +109,7 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);    
 }
 
-int PlayableCharacter::set_head_dimensions(character_t id) {
+int PlayableCharacter::set_head_dimensions(entity_t id) {
   switch (id) {
     case HUMAN:
       head_rect = {0, 0, 17, 16};

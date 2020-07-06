@@ -137,6 +137,9 @@ id_texture_t UIStatus::get_item(int new_item) {
     case ELVEN_FLUTE:
       item = ID_ELVEN_ELUDE;
       break;
+
+    case GOLD:
+      item = ID_GOLD;
   }
   return item;
 }

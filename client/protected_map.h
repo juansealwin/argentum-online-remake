@@ -4,7 +4,7 @@
 #include <condition_variable>
 #include <mutex>
 
-#include "character_status.h"
+#include "entity_status.h"
 #include "game.h"
 #include "types.h"
 #include "ui_status.h"
@@ -19,7 +19,7 @@ class ProtectedMap {
  private:
   Game* read_map;
   Game* write_map;
-  std::map<int, CharacterStatus> current_status;
+  std::map<int, EntityStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
   UIStatus current_ui_status;
   std::mutex block_maps;
@@ -30,7 +30,7 @@ class ProtectedMap {
   ~ProtectedMap();
   Game map_reader(UIStatus&);
   void copy_buffer(UIStatus&);
-  void map_writer(std::map<int, CharacterStatus>&);
+  void map_writer(std::map<int, EntityStatus>&);
 };
 
 #endif

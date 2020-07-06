@@ -30,6 +30,7 @@ typedef enum {
   ID_BANKER,
   ID_MAP_GRASS_BACKGROUND,
   ID_MAP_GRASS_OBJECTS,
+  ID_GOLD,
   ID_HP_POTION,
   ID_MANA_POTION,
   ID_SWORD,
@@ -124,8 +125,9 @@ typedef enum {
   SKELETON,
   MERCHANT,
   BANKER,
-  PRIEST
-} character_t;
+  PRIEST,
+  ITEM
+} entity_t;
 
 typedef enum {
   MOVE_DOWN = 0,
@@ -156,7 +158,8 @@ typedef enum {
   ASH_STICK,
   GNARLED_STAFF,
   CRIMP_STAFF,
-  ELVEN_FLUTE
+  ELVEN_FLUTE,
+  GOLD
 } item_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;

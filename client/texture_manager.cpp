@@ -102,6 +102,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
       new Texture("escudo_tortuga_equipado.png", renderer);
 
   /* OTHER ITEMS */
+  map[ID_GOLD] = new Texture("oro.png", renderer);
   map[ID_HP_POTION] = new Texture("pocion_vida.png", renderer);
   map[ID_MANA_POTION] = new Texture("pocion_mana.png", renderer);
 

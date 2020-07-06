@@ -23,9 +23,9 @@ void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
   *read_map = *write_map;
 }
 
-void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
-  std::map<int, CharacterStatus>::iterator it;
-  std::map<int, CharacterStatus>::iterator it2;
+void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
+  std::map<int, EntityStatus>::iterator it;
+  std::map<int, EntityStatus>::iterator it2;
   std::map<int, spellbound_t>::iterator it_afected;
 
   // Hacemos updates de las entidades que aun estan y creamos las nuevas
@@ -38,7 +38,7 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
       characters_afected[it->first].lifetime = it->second.get_life_time();
     }
 
-    // Chequeamos si dicho personaje ya existia dentro del mapa
+    // Chequeamos si dicha entidad ya existia dentro del mapa
     it2 = current_status.find(it->first);
 
     if (it2 != current_status.end()) {
@@ -49,9 +49,15 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
                                     it->second.get_y());
       }
     } else {
-      // Como no existe lo creamos
-      write_map->load_character(it->first, it->second.get_type_character(),
-                                it->second.get_x(), it->second.get_y());
+      // Como no existe la creamos
+
+      // Vemos si es un personaje o un item estático
+      if (it->second.get_type_entity() == ITEM)
+        write_map->load_item(it->first, it->second.get_item(),
+                                  it->second.get_x(), it->second.get_y());
+      else
+        write_map->load_character(it->first, it->second.get_type_entity(),
+                                  it->second.get_x(), it->second.get_y());
     }
 
     // Si todavía queda resto de alguna animación de hechizo, lo actualizamos
@@ -73,7 +79,7 @@ void ProtectedMap::map_writer(std::map<int, CharacterStatus>& next_status) {
     // Si no están más, las borramos del current status, del mapa y de afectados
     if (it2 == next_status.end()) {
       current_status.erase(it->first);
-      write_map->clean_character(it->first);
+      write_map->clean_entity(it->first, it->second.get_type_entity());
 
       characters_afected.erase(it->first);
     }
