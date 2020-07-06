@@ -61,10 +61,10 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
     serialize_monster(std::ref(serialization), entity.second);
   }
 
-  for (auto &entity : game->projectiles) {
-    serialize_common_fields_v2(std::ref(serialization), entity.first,
-                               entity.second);
-  }
+  // for (auto &entity : game->projectiles) {
+  //   serialize_common_fields_v2(std::ref(serialization), entity.first,
+  //                              entity.second);
+  // }
   for (std::pair<std::tuple<unsigned int, unsigned int>, Drop *> element :
        game->drops) {
     // Accessing KEY from element
