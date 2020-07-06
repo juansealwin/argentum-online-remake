@@ -23,7 +23,7 @@ class UIStatus {
   UIStatus(std::string, int, int, int, int, int, int, int, int);
   ~UIStatus();
   UIStatus& operator=(const UIStatus&);
-  void render(SDL_Renderer*);
+  void render(SDL_Renderer*, bool, int);
   void add_item(int);
   void add_item(int, int);
 };

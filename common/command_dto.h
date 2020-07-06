@@ -8,8 +8,9 @@
 #define MOVE_COMMAND 3
 #define ATTACK_COMMAND 4
 #define PICK_UP_ITEM_COMMAND 5
+#define USE_ITEM_COMMAND 6
 
-typedef enum { LOGIN, QUIT, MOVE, ATTACK, PICK_UP_ITEM } command_t;
+//typedef enum { LOGIN, QUIT, MOVE, ATTACK, PICK_UP_ITEM } command_t;
 
 class CommandDTO {
  public:

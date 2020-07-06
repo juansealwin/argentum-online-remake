@@ -49,9 +49,9 @@ void UIStatus::add_item(int new_item) {
   inventory.add_item(get_item(new_item));
 }
 
-void UIStatus::render(SDL_Renderer* renderer) {
+void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {
   texture_manager.get_texture(ID_UI).render(renderer, NULL, 0, 0);
-  inventory.render(renderer);
+  inventory.render(renderer, is_selected, index);
 }
 
 id_texture_t UIStatus::get_item(int new_item) {

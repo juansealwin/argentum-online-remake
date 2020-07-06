@@ -10,8 +10,9 @@
 #include "attack_command_dto.h"
 #include "login_command_dto.h"
 #include "move_command_dto.h"
-#include "quit_command_dto.h"
 #include "pick_up_command_dto.h"
+#include "quit_command_dto.h"
+#include "use_item_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -33,7 +34,7 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
   if (bytes_rcv <= 0) return nullptr;  // cerro conexion
-  //std::cout << "Command id recibido: " << (int)command_id << std::endl;
+  // std::cout << "Command id recibido: " << (int)command_id << std::endl;
   switch (command_id) {
     case LOGIN_COMMAND:
       return receive_login(socket);
@@ -74,9 +75,17 @@ void send_attack(const Socket& socket, const AttackCommandDTO* attack_command) {
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_pick_up_item(const Socket& socket, const PickUpCommandDTO* attack_command) {
+void send_pick_up_item(const Socket& socket,
+                       const PickUpCommandDTO* pick_up_command) {
   uint8_t command_id = PICK_UP_ITEM_COMMAND;
   socket.send(&command_id, ID_LENGTH);
+}
+
+void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
+  uint8_t command_id = USE_ITEM_COMMAND;
+  uint8_t item_slot = use_command->item_slot;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item_slot, ID_LENGTH);
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
@@ -99,6 +108,9 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case PICK_UP_ITEM_COMMAND:
       send_pick_up_item(socket, static_cast<PickUpCommandDTO*>(commandDTO));
       break;
+    case USE_ITEM_COMMAND:
+      send_use_item(socket, static_cast<UseItemCommandDTO*>(commandDTO));
+      break;
     default:
       break;
   }
@@ -120,7 +132,7 @@ void Protocol::receive_notification(const Socket& socket,
   uint16_t notification_size = 0;
   socket.recv(&notification_size, 2);
   notification_size = ntohs(notification_size);
-  unsigned char *buffer = new unsigned char[notification_size];
+  unsigned char* buffer = new unsigned char[notification_size];
   socket.recv(buffer, notification_size);
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
   delete buffer;

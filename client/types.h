@@ -11,6 +11,7 @@
 typedef enum {
   ID_NULL = 0,
   ID_UI,
+  ID_SELECTOR,
   ID_HUMAN,
   ID_HUMAN_HEAD,
   ID_ELF,
@@ -130,7 +131,7 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
-typedef enum { EVENT_NONE = 0, EVENT_QUIT } event_t;
+typedef enum { EVENT_NONE = 0, EVENT_QUIT , EVENT_SELECT_ITEM} event_t;
 
 typedef enum {
   DUMMY_ITEM,
