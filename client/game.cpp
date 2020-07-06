@@ -163,6 +163,7 @@ void Game::load_item(int id, item_t item, int new_x, int new_y) {
   items[id].y = new_y;
 }
 
+
 void Game::render_entities(SDL_Renderer* renderer) {
   std::map<int, Character*>::iterator it;
   std::map<int, dropped_t>::iterator it2;
