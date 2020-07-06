@@ -89,6 +89,9 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_CRIMPED_STAFF] = new Texture("baculo_engarzado.png", renderer);
   map[ID_CRIMPED_STAFF_EQUIPPED] =
       new Texture("baculo_engarzado_equipado.png", renderer);
+  map[ID_ELVEN_ELUDE] = new Texture("laud_elfico.png", renderer);
+  map[ID_ELVEN_ELUDE_EQUIPPED] =
+      new Texture("laud_elfico_equipado.png", renderer);
 
   /* SHIELD TEXTURES */
   map[ID_IRON_SHIELD] = new Texture("escudo_hierro.png", renderer);

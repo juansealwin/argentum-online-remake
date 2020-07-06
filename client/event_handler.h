@@ -33,6 +33,7 @@ class EventHandler {
   ~EventHandler();
   bool is_up();
   void get_events();
+  item_t get_item_t(id_texture_t);
 };
 
 #endif

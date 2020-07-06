@@ -1,7 +1,8 @@
 #include "use_item_command_dto.h"
 
-UseItemCommandDTO::UseItemCommandDTO(const int slot, const bool equip)
-    : item_slot(slot), equipped(equip) {}
+UseItemCommandDTO::UseItemCommandDTO(const int it, const int slot,
+                                     const bool equip)
+    : item(it), item_slot(slot), equipped(equip) {}
 
 UseItemCommandDTO::~UseItemCommandDTO() {}
 

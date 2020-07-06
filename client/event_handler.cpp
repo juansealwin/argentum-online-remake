@@ -78,10 +78,12 @@ void EventHandler::get_events() {
             // Chequeamos que parte del inventario se clickeo
             int item_slot = inventory.get_item_clicked(x, y);
             bool is_equipped = false;
+            id_texture_t item;
             // Chequeamos si hay item en el slot y si ademas esta equipado o no
-            if (events_queue.push(EVENT_SELECT_ITEM, item_slot, is_equipped)) {
+            if (events_queue.push(EVENT_SELECT_ITEM, item, item_slot,
+                                  is_equipped)) {
               UseItemCommandDTO* use_item_command =
-                  new UseItemCommandDTO(item_slot, is_equipped);
+                  new UseItemCommandDTO(item, item_slot, is_equipped);
               commands_queue.push(use_item_command);
             }
           }
@@ -103,3 +105,86 @@ void EventHandler::get_events() {
 }
 
 bool EventHandler::is_up() { return is_running; }
+
+item_t EventHandler::get_item_t(id_texture_t texture) {
+  item_t item;
+
+  switch (texture) {
+    case ID_TURTLE_SHIELD:
+      item = TURTLE_SHIELD;
+      break;
+
+    case ID_IRON_SHIELD:
+      item = IRON_SHIELD;
+      break;
+
+    case ID_HOOD:
+      item = HOOD;
+      break;
+
+    case ID_IRON_HELMET:
+      item = IRON_HELMET;
+      break;
+
+    case ID_MAGIC_HAT:
+      item = MAGIC_HAT;
+      break;
+
+    case ID_LEATHER_ARMOR:
+      item = LEATHER_ARMOR;
+      break;
+
+    case ID_PLATE_ARMOR:
+      item = PLATE_ARMOR;
+      break;
+
+    case ID_BLUE_TUNIC:
+      item = BLUE_TUNIC;
+      break;
+
+    case ID_HP_POTION:
+      item = HP_POTION;
+      break;
+
+    case ID_MANA_POTION:
+      item = MANA_POTION;
+      break;
+
+    case ID_SWORD:
+      item = SWORD;
+      break;
+
+    case ID_AXE:
+      item = AXE;
+      break;
+
+    case ID_HAMMER:
+      item = HAMMER;
+      break;
+
+    case ID_SIMPLE_BOW:
+      item = SIMPLE_BOW;
+      break;
+
+    case ID_COMPOUND_BOW:
+      item = COMPUND_BOW;
+      break;
+
+    case ID_ASH_STICK:
+      item = ASH_STICK;
+      break;
+
+    case ID_KNOTTY_STAFF:
+      item = GNARLED_STAFF;
+      break;
+
+    case ID_CRIMPED_STAFF:
+      item = CRIMP_STAFF;
+      break;
+
+    case ID_ELVEN_ELUDE:
+      item = ELVEN_FLUTE;
+      break;
+  }
+  return item;
+}

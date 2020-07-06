@@ -18,7 +18,7 @@ class EventsQueue {
   EventsQueue();
   ~EventsQueue();
   void push(event_t);
-  bool push(event_t, int, bool&);
+  bool push(event_t, id_texture_t&, int&, bool&);
   event_t pop(int&);
   void write_inventory(std::map<int, std::pair<id_texture_t, bool>>);
 };

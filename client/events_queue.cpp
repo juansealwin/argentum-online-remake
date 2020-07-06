@@ -9,15 +9,17 @@ void EventsQueue::push(event_t event) {
   queue.push_front(event);
 }
 
-bool EventsQueue::push(event_t event, int i, bool& is_equipped) {
+bool EventsQueue::push(event_t event, id_texture_t& item, int& i,
+                       bool& is_equipped) {
   std::unique_lock<std::mutex> lock(block_queue);
   // Si no hay items no hay nada que seleccionar
-  if(inventory_status[i].first != ID_NULL) {
+  if (inventory_status[i].first != ID_NULL) {
+    item = inventory_status[i].first;
     queue.push_front(event);
     index = i;
     // Para saber si el item esta equipado o no
     is_equipped = inventory_status[i].second;
-    return true;  
+    return true;
   }
   return false;
 }

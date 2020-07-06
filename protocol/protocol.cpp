@@ -83,9 +83,11 @@ void send_pick_up_item(const Socket& socket,
 
 void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
   uint8_t command_id = USE_ITEM_COMMAND;
+  uint8_t item = use_command->item;
   uint8_t item_slot = use_command->item_slot;
   uint8_t is_equipped = use_command->equipped;
   socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, ID_LENGTH);
   socket.send(&item_slot, ID_LENGTH);
   socket.send(&is_equipped, ID_LENGTH);
 }

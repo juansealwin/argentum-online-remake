@@ -135,7 +135,7 @@ id_texture_t UIStatus::get_item(int new_item) {
       break;
 
     case ELVEN_FLUTE:
-      item = ID_ASH_STICK;
+      item = ID_ELVEN_ELUDE;
       break;
   }
   return item;
