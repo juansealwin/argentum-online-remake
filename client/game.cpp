@@ -165,6 +165,8 @@ void Game::load_item(int id, item_t item, int new_x, int new_y) {
 
 void Game::render_entities(SDL_Renderer* renderer) {
   std::map<int, Character*>::iterator it;
+  std::map<int, dropped_t>::iterator it2;
+
   for (it = characters.begin(); it != characters.end(); it++) {
     // El personaje DEBE estar dentro del viewport
     if ((map_piece.x <= it->second->get_x()) &&
@@ -173,6 +175,15 @@ void Game::render_entities(SDL_Renderer* renderer) {
           (it->second->get_y() <= map_piece.y + screen_height)) {
         it->second->render(renderer, map_piece.x, map_piece.y - HEIGHT_UI);
       }
+  }
+  for (it2 = items.begin(); it2 != items.end(); it2++) {
+    // El item DEBE estar dentro del viewport
+    if ((map_piece.x <= it2->second.x) &&
+        (it2->second.x <= map_piece.x + screen_width))
+      if ((map_piece.y <= it2->second.y) &&
+          (it2->second.y <= map_piece.y + screen_height))
+        texture_manager.get_texture(it2->second.type_item)
+            .render(renderer, NULL, map_piece.x, map_piece.y - HEIGHT_UI);
   }
 }
 

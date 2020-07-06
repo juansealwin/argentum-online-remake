@@ -29,7 +29,7 @@ class Game {
   int id_hero;
   id_texture_t background;
   id_texture_t static_objects;
-  // La porción del Gamea que queremos renderizar
+  // La porción del mapa que queremos renderizar
   SDL_Rect map_piece;
   // La parte de la ventana que es renderizable
   SDL_Rect viewport;
