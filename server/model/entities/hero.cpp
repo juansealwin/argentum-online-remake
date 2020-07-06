@@ -3,6 +3,7 @@
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
+#include "drop.h"
 
 Hero::Hero(
     unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
@@ -39,6 +40,7 @@ Hero::Hero(
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap) {
+  std::cout << "created hero with id " << unique_id << std::endl;
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size);
@@ -140,21 +142,36 @@ void Hero::add_item(Item *item) {
   inventory->add_item(item);
 }
 
-bool Hero::has_free_space() { 
-  return (!inventory->is_full());
-}
+bool Hero::has_free_space() { return (!inventory->is_full()); }
 
-void Hero::add_gold(unsigned int gold) {
-  this->gold += gold;
+bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
+
+void Hero::add_gold(unsigned int gold) { this->gold += gold; }
+
+void Hero::pick_up_drop(Drop *drop) {
+  if (ghost_mode)
+    throw ModelException("Ghosts can't pick up drops!", "4");
+  if ((drop->size() > 0) && (this->has_free_space())) {
+    // siempre tomo el ultimo item en el drop
+    Item *item = drop->take_item(drop->size());
+    this->add_item(item);
+  }
+  if ((drop->ammount_of_gold() > 0) && this->can_hold_more_gold()) {
+    unsigned int hero_gold_space = this->gold_space_remaining();
+    unsigned int taken_gold = drop->take_gold(hero_gold_space);
+    this->add_gold(taken_gold);
+  }
 }
 
 bool Hero::can_hold_more_gold() {
-  return (gold < (max_safe_gold + max_safe_gold/2));
+  return (gold < (max_safe_gold + max_safe_gold / 2));
 }
 
 unsigned int Hero::gold_space_remaining() {
-  return ((max_safe_gold + max_safe_gold/2) - gold);
+  return ((max_safe_gold + max_safe_gold / 2) - gold);
 }
+
+bool Hero::has_excedent_coins() { return (gold > max_safe_gold); }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   std::cout << "My spell hit an enemy!!!" << std::endl;
@@ -260,13 +277,14 @@ unsigned int Hero::remove_surplus_coins() {
   unsigned int surplus_coins = 0;
 
   if (gold > max_safe_gold) {
-    std::cout << " gold: " << gold << " is higher than mxsfg " << max_safe_gold << std::endl;
+    std::cout << " gold: " << gold << " is higher than mxsfg " << max_safe_gold
+              << std::endl;
     surplus_coins = gold - max_safe_gold;
     gold = max_safe_gold;
   }
-  
-  if (surplus_coins > 0) { 
-    std::cout << "surplus coins are " << surplus_coins << std::endl; 
+
+  if (surplus_coins > 0) {
+    std::cout << "surplus coins are " << surplus_coins << std::endl;
   };
   return surplus_coins;
 }
