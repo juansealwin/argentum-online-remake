@@ -26,6 +26,7 @@ class UIStatus {
   void render(SDL_Renderer*, bool, int);
   void add_item(int);
   void add_item(int, int);
+  std::map<int, std::pair<id_texture_t, bool>> get_items();
 };
 
 #endif

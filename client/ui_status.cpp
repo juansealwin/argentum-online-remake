@@ -140,3 +140,7 @@ id_texture_t UIStatus::get_item(int new_item) {
   }
   return item;
 }
+
+std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_items() {
+  return inventory.get_items();
+}

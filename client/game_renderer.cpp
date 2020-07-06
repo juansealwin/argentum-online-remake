@@ -81,8 +81,8 @@ void GameRenderer::run() {
             break;
 
           case EVENT_SELECT_ITEM:
-            if(is_selected) {
-              if(index == item_selected) {
+            if (is_selected) {
+              if (index == item_selected) {
                 is_selected = false;
               } else {
                 item_selected = index;
@@ -97,13 +97,16 @@ void GameRenderer::run() {
 
       // Leemos las actualizaciones mandadas desde el server
       current_game = protected_map.map_reader(ui);
-      
+
+      // Actualizamos el estado del inventario para el EventHandler
+      events_queue.write_inventory(ui.get_items());
+
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
-      
+
       // Renderizamos el mapa en su estado actual
       current_game.render(renderer);
-      
+
       // Renderizamos la UI con sus valores actualizados
       ui.render(renderer, is_selected, item_selected);
 

@@ -6,6 +6,7 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
   inventory = InteractiveBox(640, 168, 139, 183);
+  text_box = InteractiveBox(640, 168, 139, 183);
 }
 
 void EventHandler::get_events() {
@@ -71,12 +72,27 @@ void EventHandler::get_events() {
         else if (event.type == SDL_MOUSEBUTTONDOWN) {
           int x, y;
           SDL_GetMouseState(&x, &y);
+
+          // Chequeamos si el mouse hizo click dentro del inventario
           if (inventory.mouse_click_in(x, y)) {
+            // Chequeamos que parte del inventario se clickeo
             int item_slot = inventory.get_item_clicked(x, y);
-            events_queue.push(EVENT_SELECT_ITEM, item_slot);
-            UseItemCommandDTO* use_item_command =
-                new UseItemCommandDTO(item_slot);
-            commands_queue.push(use_item_command);
+            bool is_equipped = false;
+            // Chequeamos si hay item en el slot y si ademas esta equipado o no
+            if (events_queue.push(EVENT_SELECT_ITEM, item_slot, is_equipped)) {
+              UseItemCommandDTO* use_item_command =
+                  new UseItemCommandDTO(item_slot, is_equipped);
+              commands_queue.push(use_item_command);
+            }
+          }
+        } else if (event.type == SDL_TEXTINPUT) {
+          // Para impedir el copiado y pegado
+          if (!(SDL_GetModState() & KMOD_CTRL &&
+                (event.text.text[0] == 'c' || event.text.text[0] == 'C' ||
+                 event.text.text[0] == 'v' || event.text.text[0] == 'V'))) {
+            // Append character
+            // inputText += e.text.text;
+            // renderText = true;
           }
         }
       }

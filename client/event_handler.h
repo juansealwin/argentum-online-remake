@@ -26,6 +26,7 @@ class EventHandler {
   bool& is_running;
   SoundEffect background_music;
   InteractiveBox inventory;
+  InteractiveBox text_box;
 
  public:
   EventHandler(CommandsBlockingQueue& commands_queue, EventsQueue&, bool&);
