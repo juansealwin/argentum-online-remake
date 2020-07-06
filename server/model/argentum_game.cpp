@@ -17,38 +17,35 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  place_initial_monsters(map_cfg);
-
   tests_drops();
 }
 void ArgentumGame::tests_drops() {
-  std::cout << "testing drops" << std::endl;
-  Inventory *inventory = new Inventory(20);
-  inventory->add_item(new Item(8));
-  inventory->add_item(new Weapon(17, 4, 8, 5));
-  std::cout << "Inventory has item 17? " << inventory->has_item(17)
-            << std::endl;
-  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  Drop *drop = new Drop(inventory, 0);
-  std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
-  std::cout << "Inventory has item 17? " << inventory->has_item(17)
-            << std::endl;
-  std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  std::cout << "picking up first item" << std::endl;
-  Item *item17 = drop->take_item(drop->size());
-  std::cout << "picking up second item" << std::endl;
-  Item *item8 = drop->take_item(drop->size());
-  std::cout << "picked up items " << item17->id << ", " << item8->id
-            << std::endl;
-  Inventory *inventory2 = new Inventory(25);
-  Drop *drop2 = new Drop(inventory2, 0);
-  std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
-  delete drop2;
-  delete inventory2;
-  delete inventory;
-  delete drop;
-  delete item17;
-  delete item8;
+  // std::cout << "testing drops" << std::endl;
+  // Inventory *inventory = new Inventory(20);
+  // inventory->add_item(new Item(8));
+  // inventory->add_item(new Weapon(17, 4, 8, 5));
+  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
+  //           << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
+  // std::endl; Drop *drop = new Drop(34, inventory, 0); std::cout << "Is drop
+  // empty?" << drop->is_empty() << std::endl; std::cout << "Inventory has item
+  // 17? " << inventory->has_item(17)
+  //           << std::endl;
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
+  // std::endl; std::cout << "picking up first item" << std::endl; Item *item17
+  // = drop->take_item(drop->size()); std::cout << "picking up second item" <<
+  // std::endl; Item *item8 = drop->take_item(drop->size()); std::cout <<
+  // "picked up items " << item17->id << ", " << item8->id
+  //           << std::endl;
+  // Inventory *inventory2 = new Inventory(25);
+  // Drop *drop2 = new Drop(34, inventory2, 0);
+  // std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
+  // delete drop2;
+  // delete inventory2;
+  // delete inventory;
+  // delete drop;
+  // delete item17;
+  // delete item8;
 }
 void ArgentumGame::tests_proyectiles() {
   // std::cout << "Running tests" << std::endl;
@@ -102,42 +99,6 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
   }
 }
 
-void ArgentumGame::place_initial_monsters(Json::Value &map_cfg) {
-  // std::unique_lock<std::mutex> lock(mutex);
-  int row = 0;
-  int col = 0;
-  int map_cols = map_cfg["width"].asInt();
-  for (const auto &jv : map_cfg["layers"][2]["data"]) {
-    Monster *e = nullptr;
-    int type = jv.asInt();
-    Json::Value entity = Json::arrayValue;
-    if (type == GOBLIN) {
-      entity = entities_cfg["npcs"]["goblin"];
-    } else if (type == ZOMBIE) {
-      entity = entities_cfg["npcs"]["zombie"];
-    } else if (type == SPIDER) {
-      entity = entities_cfg["npcs"]["spider"];
-    } else if (type == SKELETON) {
-      entity = entities_cfg["npcs"]["skeleton"];
-    }
-    if (type == GOBLIN || type == ZOMBIE || type == SPIDER ||
-        type == SKELETON) {
-      e = new Monster(entities_ids, row, col, entity["id"].asInt(), 'g',
-                      entity["maxHp"].asInt(), entity["level"].asInt(),
-                      entity["dps"].asInt(), map);
-    }
-    if (e) {
-      map.ocupy_cell(row, col, entities_ids);
-      monsters.emplace(entities_ids++, e);
-    }
-    col++;
-    if (col == map_cols) {
-      row++;
-      col = 0;
-    }
-  }
-}
-
 /*********************** Acciones personajes *************************/
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
@@ -147,7 +108,18 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
-  if (hero) {
+  //   Monster *e = new Monster(entities_ids, 48, 48,
+  //                          entities_cfg["npcs"]["zombie"]["id"].asInt(), 'g',
+  //                          entities_cfg["npcs"]["zombie"]["maxHp"].asInt(),
+  //                          entities_cfg["npcs"]["zombie"]["level"].asInt(),
+  //                          entities_cfg["npcs"]["zombie"]["dps"].asInt(), map);
+
+  // std::cout << "placing monster with id: " << entities_ids << std::endl;
+  // map.ocupy_cell(48, 48, entities_ids);
+  // monsters.emplace(entities_ids++, e);
+  // std::cout << "value of entities ids after placing a monster: " << entities_ids << std::endl;
+  // std::cout << "value of hero id is " << hero->unique_id << std::endl;
+  try {
     if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
@@ -163,27 +135,26 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         attack_info.attacker_weapon_range, hero->orientation, std::ref(map));
     projectiles.emplace(entities_ids++, projectile);
   }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
 }
 
 void ArgentumGame::pick_up_drop(unsigned int player_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(player_id));
-  if (hero) {
+
+  try {
     std::tuple<unsigned int, unsigned int> pos =
         std::tuple<unsigned int, unsigned int>(hero->x_position,
                                                hero->y_position);
-    if (drops.count(pos) > 0) {
-      Drop *drop = drops.at(pos);
-      if ((drop->size() > 0) && (hero->has_free_space())) {
-        // siempre tomo el ultimo item en el drop
-        Item *item = drop->take_item(drop->size());
-        hero->add_item(item);
-      }
-      if ((drop->ammount_of_gold() > 0) && hero->can_hold_more_gold()) {
-        unsigned int hero_gold_space = hero->gold_space_remaining();
-        unsigned int taken_gold = drop->take_gold(hero_gold_space);
-        hero->add_gold(taken_gold);
-      }
-    }
+    if (drops.count(pos) == 0) return;
+    Drop *drop = drops.at(pos);
+    hero->pick_up_drop(drop);
+  }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
   }
 }
 
@@ -218,7 +189,8 @@ void ArgentumGame::update() {
     delete cmd;
   }
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
-                             std::ref(drops), entities_cfg["items"]);
+                             std::ref(drops), entities_cfg["items"],
+                             std::ref(entities_ids));
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 
   heroes_manager.update(std::ref(heroes));
@@ -226,6 +198,10 @@ void ArgentumGame::update() {
 
   monsters_manager.update(std::ref(monsters));
   monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
+  monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
+                                    std::ref(entities_cfg["npcs"]),
+                                    std::ref(entities_ids));
+
   // actualizar siempre al final los proyectiles ya que tambien afectan el
   // estado de heroes/monstruos
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
@@ -238,6 +214,7 @@ void ArgentumGame::run() {
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
+    //print_debug_map();
     send_game_status();
     long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
@@ -255,7 +232,7 @@ unsigned int ArgentumGame::get_room() { return room; }
 std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status_v2(this);
+      Serializer::serialize_game_status_v3(this);
 
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));
@@ -313,6 +290,10 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       std::string hero_class,
                                       std::string hero_name, unsigned int x,
                                       unsigned int y) {
+
+  std::cout << "placing hero at position (" << x << ", " << y << ")"
+            << std::endl;
+  std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(

@@ -14,9 +14,13 @@ Inventory::~Inventory() {
   }
 }
 
+bool Inventory::is_empty() {
+  return (items.size() == 0);
+}
+
 void Inventory::add_item(Item* item) {
-  std::cout << "adding new item, inventory size is " << items.size()
-            << " capacitiy is " << items.capacity() << std::endl;
+  // std::cout << "adding new item, inventory size is " << items.size()
+  //           << " capacitiy is " << items.capacity() << std::endl;
   if ((items.size() - items.capacity()) == 0)
     throw ModelException("Inventory is full", "1");
   items.push_back(item);

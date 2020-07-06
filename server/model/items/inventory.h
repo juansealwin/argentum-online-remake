@@ -15,6 +15,7 @@ class Inventory {
   void add_item(Item *item);
   bool has_item(unsigned int id);
   bool is_full();
+  bool is_empty();
   Item* remove_item(unsigned int id);
   friend class Serializer;
   friend class Drop;

@@ -33,3 +33,14 @@ void MonstersManager::remove_death_monsters(
     }
   }
 }
+
+void MonstersManager::respawn_monsters(
+    std::map<unsigned int, Monster *> &monsters, Map &map,
+    unsigned int total_monster_poblation, Json::Value &monsters_cfg,
+    unsigned int &entities_ids) {
+  while (monsters.size() < total_monster_poblation) {
+    Monster *random_monster =
+        MonstersFactory::create_random_monster(monsters_cfg, entities_ids, map);
+    monsters.emplace(entities_ids++, random_monster);
+  }
+}
