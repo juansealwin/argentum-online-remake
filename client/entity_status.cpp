@@ -27,7 +27,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int spell)
     case 19:
       type_entity = ITEM;
       item = (item_t)type_ent;
-
       break;
 
     case 25:

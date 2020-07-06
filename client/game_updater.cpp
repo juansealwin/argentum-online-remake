@@ -80,12 +80,12 @@ void GameUpdater::deserialize_status() {
     // Dejamos afuera a los npc de compra y venta
     if (is_drop(entity_type)) {
       items_in_drop = extract<uint8_t>(status_serialized, j);
-      std::cout << "ES DROP "<<std::endl;
+      //std::cout << "ES DROP "<<std::endl;
       for (int x = items_in_drop; x > 0; x--) {
         current_item_id = extract<uint8_t>(status_serialized, j);
         entity_type = current_item_id;
-        std::cout << "dropped item " << current_item_id << " X: " << x * 32
-                  << " Y: "<<y*32<<std::endl;
+        //std::cout << "dropped item " << current_item_id << " X: " << x * 32
+          //        << " Y: "<<y*32<<std::endl;
       }
       // Si drop_has_coins == 1 hay oro, si es 0 no
 
