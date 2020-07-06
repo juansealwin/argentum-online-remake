@@ -28,17 +28,16 @@ void ArgentumGame::tests_drops() {
   // inventory->add_item(new Weapon(17, 4, 8, 5));
   // std::cout << "Inventory has item 17? " << inventory->has_item(17)
   //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  // Drop *drop = new Drop(34, inventory, 0);
-  // std::cout << "Is drop empty?" << drop->is_empty() << std::endl;
-  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
+  // std::endl; Drop *drop = new Drop(34, inventory, 0); std::cout << "Is drop
+  // empty?" << drop->is_empty() << std::endl; std::cout << "Inventory has item
+  // 17? " << inventory->has_item(17)
   //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) << std::endl;
-  // std::cout << "picking up first item" << std::endl;
-  // Item *item17 = drop->take_item(drop->size());
-  // std::cout << "picking up second item" << std::endl;
-  // Item *item8 = drop->take_item(drop->size());
-  // std::cout << "picked up items " << item17->id << ", " << item8->id
+  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
+  // std::endl; std::cout << "picking up first item" << std::endl; Item *item17
+  // = drop->take_item(drop->size()); std::cout << "picking up second item" <<
+  // std::endl; Item *item8 = drop->take_item(drop->size()); std::cout <<
+  // "picked up items " << item17->id << ", " << item8->id
   //           << std::endl;
   // Inventory *inventory2 = new Inventory(25);
   // Drop *drop2 = new Drop(34, inventory2, 0);
@@ -147,7 +146,8 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
-  if (hero) {
+
+  try {
     if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
@@ -163,27 +163,26 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         attack_info.attacker_weapon_range, hero->orientation, std::ref(map));
     projectiles.emplace(entities_ids++, projectile);
   }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
 }
 
 void ArgentumGame::pick_up_drop(unsigned int player_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(player_id));
-  if (hero) {
+
+  try {
     std::tuple<unsigned int, unsigned int> pos =
         std::tuple<unsigned int, unsigned int>(hero->x_position,
                                                hero->y_position);
-    if (drops.count(pos) > 0) {
-      Drop *drop = drops.at(pos);
-      if ((drop->size() > 0) && (hero->has_free_space())) {
-        // siempre tomo el ultimo item en el drop
-        Item *item = drop->take_item(drop->size());
-        hero->add_item(item);
-      }
-      if ((drop->ammount_of_gold() > 0) && hero->can_hold_more_gold()) {
-        unsigned int hero_gold_space = hero->gold_space_remaining();
-        unsigned int taken_gold = drop->take_gold(hero_gold_space);
-        hero->add_gold(taken_gold);
-      }
-    }
+    if (drops.count(pos) == 0) return;
+    Drop *drop = drops.at(pos);
+    hero->pick_up_drop(drop);
+  }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
   }
 }
 
@@ -218,7 +217,8 @@ void ArgentumGame::update() {
     delete cmd;
   }
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
-                             std::ref(drops), entities_cfg["items"], std::ref(entities_ids));
+                             std::ref(drops), entities_cfg["items"],
+                             std::ref(entities_ids));
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 
   heroes_manager.update(std::ref(heroes));
@@ -256,8 +256,6 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);
-  
-  
 
   for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
     q->push(new GameStatusNotification(game_status));

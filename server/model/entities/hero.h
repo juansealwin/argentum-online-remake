@@ -9,9 +9,11 @@
 #include "inventory.h"
 #include "monster.h"
 #include "stdint.h"
+
 // meter en el json!
 class Inventory;
 class Item;
+class Drop;
 class Hero : public BaseCharacter {
  public:
   // constructor para heroes nuevos
@@ -61,6 +63,7 @@ class Hero : public BaseCharacter {
   //devuelve true 
   bool can_hold_more_gold();
   bool has_excedent_coins();
+  void pick_up_drop(Drop *drop);
   //devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
   void meditate();
