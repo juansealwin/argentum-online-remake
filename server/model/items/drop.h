@@ -24,5 +24,6 @@ class Drop {
   unsigned int gold, unique_id;
 
   std::vector<Item *> items;
+  friend class Serializer;
 };
 #endif  // DROP_H

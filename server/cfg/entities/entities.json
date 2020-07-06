@@ -23,6 +23,15 @@
       "dps": 40,
       "level": 1,
       "id": 32
+    },
+    "priest": {
+      "id" : 33
+    },
+    "merchant": {
+      "id" : 34
+    },
+    "baker": {
+      "id" : 35
     }
   },
   "items": {
@@ -86,7 +95,7 @@
         "id": 10
       },
       "coins": {
-        "id": 33
+        "id": 36
       }
     },
     "weapons": {
@@ -160,7 +169,7 @@
       }
     },
     "drop": {
-      "id": 34
+      "id": 37
     }
   },
   "classes": {
@@ -259,5 +268,5 @@
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
   "ups": 60.0,
-  "lastId": 34
+  "lastId": 37
 }
