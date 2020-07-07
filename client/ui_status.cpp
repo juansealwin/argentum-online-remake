@@ -135,8 +135,15 @@ id_texture_t UIStatus::get_item(int new_item) {
       break;
 
     case ELVEN_FLUTE:
-      item = ID_ASH_STICK;
+      item = ID_ELVEN_ELUDE;
       break;
+
+    case GOLD:
+      item = ID_GOLD;
   }
   return item;
+}
+
+std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_items() {
+  return inventory.get_items();
 }

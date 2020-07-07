@@ -32,6 +32,7 @@ Game::Game(const Game& other_game) {
     else
       characters[it->first] = new PlayableCharacter(*pc);
   }
+  items = other_game.items;
 }
 
 Game& Game::operator=(const Game& other_game) {
@@ -57,6 +58,7 @@ Game& Game::operator=(const Game& other_game) {
     else
       characters[it->first] = new PlayableCharacter(*pc);
   }
+  items = other_game.items;
   return *this;
 }
 
@@ -134,44 +136,68 @@ void Game::render(SDL_Renderer* renderer) {
   texture_manager.get_texture(background)
       .render(renderer, &map_piece, &viewport);
 
-  // Renderizamos las entidades "vivientes"
-  render_characters(renderer);
+  // Renderizamos las entidades
+  render_entities(renderer);
 
   // Renderizamos los objetos que tapan a las entidades
   texture_manager.get_texture(static_objects)
       .render(renderer, &map_piece, &viewport);
 }
 
-void Game::load_character(int id, character_t char_type, int x, int y) {
-  if (char_type == HUMAN || char_type == ELF || char_type == GNOME ||
-      char_type == DWARF) {
-    characters[id] = new PlayableCharacter(char_type, x, y);
+void Game::load_character(int id, entity_t entity_type, int x, int y) {
+  if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
+      entity_type == DWARF) {
+    characters[id] = new PlayableCharacter(entity_type, x, y);
     // Si cargamos a hero por primera vez ubicamos el viewport donde debe
     if (id == id_hero)
       update_map(x * TILE_SIZE - screen_width / 2,
                  y * TILE_SIZE - screen_height / 2);
   } else {
-    characters[id] = new Npc(char_type, x, y);
+    characters[id] = new Npc(entity_type, x, y);
   }
 }
 
-void Game::render_characters(SDL_Renderer* renderer) {
+void Game::load_item(int id, item_t item, int new_x, int new_y) {
+  items[id].type_item = get_item_texture(item);
+  items[id].x = new_x * TILE_SIZE;
+  items[id].y = new_y * TILE_SIZE;
+}
+
+void Game::render_entities(SDL_Renderer* renderer) {
   std::map<int, Character*>::iterator it;
+  std::map<int, dropped_t>::iterator it2;
+
+  for (it2 = items.begin(); it2 != items.end(); it2++) {
+    // El item DEBE estar dentro del viewport
+    std::cout << items.size() << std::endl;
+    if ((map_piece.x <= it2->second.x) &&
+        (it2->second.x <= map_piece.x + screen_width))
+      if ((map_piece.y <= it2->second.y) &&
+          (it2->second.y <= map_piece.y + screen_height)) {
+        texture_manager.get_texture(it2->second.type_item)
+            .render(renderer, NULL, it2->second.x - map_piece.x,
+                    it2->second.y - map_piece.y + HEIGHT_UI);
+      }
+  }
+
   for (it = characters.begin(); it != characters.end(); it++) {
     // El personaje DEBE estar dentro del viewport
     if ((map_piece.x <= it->second->get_x()) &&
         (it->second->get_x() <= map_piece.x + screen_width))
       if ((map_piece.y <= it->second->get_y()) &&
           (it->second->get_y() <= map_piece.y + screen_height)) {
-        it->second->render(renderer, map_piece.x,
-                           map_piece.y - HEIGHT_UI);
+        it->second->render(renderer, map_piece.x, map_piece.y - HEIGHT_UI);
       }
   }
 }
 
-void Game::clean_character(int i) {
-  delete characters[i];
-  characters.erase(i);
+void Game::clean_entity(int i, entity_t type_entity) {
+  if (type_entity == ITEM) {
+    items.erase(i);
+  } else {
+    delete characters[i];
+    characters.erase(i);
+  }
 }
 
 void Game::clean_all_characters() {
@@ -180,4 +206,94 @@ void Game::clean_all_characters() {
     delete characters[it->first];
     characters.erase(it->first);
   }
+}
+
+id_texture_t Game::get_item_texture(item_t new_item) const {
+  id_texture_t item;
+
+  switch (new_item) {
+    case DUMMY_ITEM:
+      item = ID_NULL;
+      break;
+
+    case TURTLE_SHIELD:
+      item = ID_TURTLE_SHIELD;
+      break;
+
+    case IRON_SHIELD:
+      item = ID_IRON_SHIELD;
+      break;
+
+    case HOOD:
+      item = ID_HOOD;
+      break;
+
+    case IRON_HELMET:
+      item = ID_IRON_HELMET;
+      break;
+
+    case MAGIC_HAT:
+      item = ID_MAGIC_HAT;
+      break;
+
+    case LEATHER_ARMOR:
+      item = ID_LEATHER_ARMOR;
+      break;
+
+    case PLATE_ARMOR:
+      item = ID_PLATE_ARMOR;
+      break;
+
+    case BLUE_TUNIC:
+      item = ID_BLUE_TUNIC;
+      break;
+
+    case HP_POTION:
+      item = ID_HP_POTION;
+      break;
+
+    case MANA_POTION:
+      item = ID_MANA_POTION;
+      break;
+
+    case SWORD:
+      item = ID_SWORD;
+      break;
+
+    case AXE:
+      item = ID_AXE;
+      break;
+
+    case HAMMER:
+      item = ID_HAMMER;
+      break;
+
+    case SIMPLE_BOW:
+      item = ID_SIMPLE_BOW;
+      break;
+
+    case COMPUND_BOW:
+      item = ID_COMPOUND_BOW;
+      break;
+
+    case ASH_STICK:
+      item = ID_ASH_STICK;
+      break;
+
+    case GNARLED_STAFF:
+      item = ID_KNOTTY_STAFF;
+      break;
+
+    case CRIMP_STAFF:
+      item = ID_CRIMPED_STAFF;
+      break;
+
+    case ELVEN_FLUTE:
+      item = ID_ELVEN_ELUDE;
+      break;
+
+    case GOLD:
+      item = ID_GOLD;
+  }
+  return item;
 }

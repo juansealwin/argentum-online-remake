@@ -51,19 +51,17 @@ bool is_monster(uint8_t t) {
   return vector_contains(monsters, t);
 }
 
-bool is_drop(uint8_t t) {
-  return (t == 37);
-}
+bool is_drop(uint8_t t) { return (t == 37); }
 
 void GameUpdater::deserialize_status() {
-  //std::cout << "vector size is " << status_serialized.size() << std::endl;
+  // std::cout << "vector size is " << status_serialized.size() << std::endl;
   unsigned int j = 1;
 
   // Declaramos las variables necesarias para extraer la informacion int para
   // las de 1 byte y uint16_t para las de 2 bytes
-  int entity_type, y, x, k, orientation, affected_by, name_size, class_id,
-      meditating, ghost_mode, items_equiped, current_item_slot, current_item_id,
-      items_inventory;
+  int entity_type, y, x, k, orientation, items_in_drop, drop_has_coins,
+      affected_by, name_size, class_id, meditating, ghost_mode, items_equiped,
+      current_item_slot, current_item_id, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
       intelligence, agility, constitution, gold, xp_limit, current_xp;
 
@@ -73,24 +71,28 @@ void GameUpdater::deserialize_status() {
     y = extract<uint8_t>(status_serialized, j);
     x = extract<uint8_t>(status_serialized, j);
     k = 0;
-    next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
+    drop_has_coins = 0;
+    // next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
     orientation = extract<uint8_t>(status_serialized, j);
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
     // Dejamos afuera a los npc de compra y venta
     if (is_drop(entity_type)) {
-      int items_in_drop = extract<uint8_t>(status_serialized, j);
+      items_in_drop = extract<uint8_t>(status_serialized, j);
+      //std::cout << "ES DROP "<<std::endl;
       for (int x = items_in_drop; x > 0; x--) {
-        int current_item_id = extract<uint8_t>(status_serialized, j);
-        // std::cout << "dropped item " << current_item_id << std::endl;
+        current_item_id = extract<uint8_t>(status_serialized, j);
+        entity_type = current_item_id;
+        //std::cout << "dropped item " << current_item_id << " X: " << x * 32
+          //        << " Y: "<<y*32<<std::endl;
       }
-      int drop_has_coins = extract<uint8_t>(status_serialized, j);
-      if (drop_has_coins == 1) {
-        // std::cout << "Drop has coins!!" << std::endl;
-      }
+      // Si drop_has_coins == 1 hay oro, si es 0 no
+
+      drop_has_coins = extract<uint8_t>(status_serialized, j);
     }
     if (is_hero(entity_type) || is_monster(entity_type)) {
+      //std::cout << "ES HERO "<<std::endl;
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
       current_hp = ntohs(extract<uint16_t>(status_serialized, j));
       level = ntohs(extract<uint16_t>(status_serialized, j));
@@ -152,5 +154,6 @@ void GameUpdater::deserialize_status() {
     } else {
       // Deberia ser un NPC, no tiene mas atributos
     }
+    next_status[(int)id] = EntityStatus(entity_type, x, y, k);
   }
 }

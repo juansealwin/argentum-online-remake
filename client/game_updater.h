@@ -5,7 +5,7 @@
 
 #include <map>
 
-#include "character_status.h"
+#include "entity_status.h"
 #include "common_socket.h"
 #include "exception_messages.h"
 #include "game.h"
@@ -20,7 +20,7 @@ class GameUpdater : public Thread {
  private:
   int id_hero;
   ProtectedMap& protected_map;
-  std::map<int, CharacterStatus> next_status;
+  std::map<int, EntityStatus> next_status;
   UIStatus next_ui_status;
   bool& is_running;
   Socket& read_socket;

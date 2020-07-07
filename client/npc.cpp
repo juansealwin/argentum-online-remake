@@ -1,6 +1,6 @@
 #include "npc.h"
 
-Npc::Npc(character_t id_npc, int new_x, int new_y) {
+Npc::Npc(entity_t id_npc, int new_x, int new_y) {
   x = new_x * TILE_SIZE;
   y = new_y * TILE_SIZE;
   set_character_features(id_npc);

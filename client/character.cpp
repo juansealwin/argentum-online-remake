@@ -38,7 +38,7 @@ void Character::update_position(int new_x, int new_y) {
   move(move_type);
 }
 
-int Character::set_character_features(character_t id) {
+int Character::set_character_features(entity_t id) {
   // Lo seteamos de antemano porque en algunos personajes cambia
   body_rect.x = 0;
   body_rect.y = 0;

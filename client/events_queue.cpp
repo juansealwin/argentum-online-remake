@@ -9,10 +9,19 @@ void EventsQueue::push(event_t event) {
   queue.push_front(event);
 }
 
-void EventsQueue::push(event_t event, int i) {
+bool EventsQueue::push(event_t event, id_texture_t& item, int& i,
+                       bool& is_equipped) {
   std::unique_lock<std::mutex> lock(block_queue);
-  queue.push_front(event);
-  index = i;
+  // Si no hay items no hay nada que seleccionar
+  if (inventory_status[i].first != ID_NULL) {
+    item = inventory_status[i].first;
+    queue.push_front(event);
+    index = i;
+    // Para saber si el item esta equipado o no
+    is_equipped = inventory_status[i].second;
+    return true;
+  }
+  return false;
 }
 
 event_t EventsQueue::pop(int& i) {
@@ -23,9 +32,13 @@ event_t EventsQueue::pop(int& i) {
   event_t last_event = queue.back();
   queue.pop_back();
 
-  if(last_event == EVENT_SELECT_ITEM)
-    i = index;
-    
+  if (last_event == EVENT_SELECT_ITEM) i = index;
+
   return last_event;
 }
 
+void EventsQueue::write_inventory(
+    std::map<int, std::pair<id_texture_t, bool>> inventory_updated) {
+  std::unique_lock<std::mutex> lock(block_queue);
+  inventory_status = inventory_updated;
+}

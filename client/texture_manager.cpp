@@ -17,6 +17,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   /* UI */
   map[ID_UI] = new Texture("ui.png", renderer);
   map[ID_SELECTOR] = new Texture("selector_item.png", renderer);
+  map[ID_ITEM_EQUIPPED] = new Texture("opcion_equipado.png", renderer);
 
   /* PLAYABLE CHARACTER TEXTURES */
   map[ID_HUMAN] = new Texture("humano.png", renderer);
@@ -88,6 +89,9 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_CRIMPED_STAFF] = new Texture("baculo_engarzado.png", renderer);
   map[ID_CRIMPED_STAFF_EQUIPPED] =
       new Texture("baculo_engarzado_equipado.png", renderer);
+  map[ID_ELVEN_ELUDE] = new Texture("laud_elfico.png", renderer);
+  map[ID_ELVEN_ELUDE_EQUIPPED] =
+      new Texture("laud_elfico_equipado.png", renderer);
 
   /* SHIELD TEXTURES */
   map[ID_IRON_SHIELD] = new Texture("escudo_hierro.png", renderer);
@@ -98,6 +102,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
       new Texture("escudo_tortuga_equipado.png", renderer);
 
   /* OTHER ITEMS */
+  map[ID_GOLD] = new Texture("oro.png", renderer);
   map[ID_HP_POTION] = new Texture("pocion_vida.png", renderer);
   map[ID_MANA_POTION] = new Texture("pocion_mana.png", renderer);
 
