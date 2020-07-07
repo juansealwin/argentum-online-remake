@@ -200,6 +200,14 @@ void ArgentumGame::update() {
     cmd->execute(this);
     delete cmd;
   }
+  // actualizar monstruos antes que heroes ya que pueden atacarlos y matarlos
+  // creando drops
+  monsters_manager.update(std::ref(monsters), std::ref(heroes));
+  monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
+  monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
+                                    std::ref(entities_cfg["npcs"]),
+                                    std::ref(entities_ids));
+
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
                              std::ref(drops), entities_cfg["items"],
                              std::ref(entities_ids));
@@ -207,12 +215,6 @@ void ArgentumGame::update() {
 
   heroes_manager.update(std::ref(heroes));
   heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
-
-  monsters_manager.update(std::ref(monsters));
-  monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
-  monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
-                                    std::ref(entities_cfg["npcs"]),
-                                    std::ref(entities_ids));
 
   // actualizar siempre al final los proyectiles ya que tambien afectan el
   // estado de heroes/monstruos

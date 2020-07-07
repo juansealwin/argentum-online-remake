@@ -38,7 +38,7 @@ void DropsManager::add_heroes_drops(
                                                  it->second->y_position);
       Drop *drop =
           new Drop(items_config["drop"]["id"].asUInt(), entities_last_id++,
-                   it->second->inventory, it->second->remove_surplus_coins());
+                   it->second->inventory, it->second->remove_excess_gold());
       drops.emplace(drop_coordinates, drop);
     }
     it++;

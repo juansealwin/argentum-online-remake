@@ -1,7 +1,7 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 #include <vector>
-
+#include <math.h> 
 #include "base_character.h"
 #include "stdint.h"
 class Monster : public BaseCharacter {
@@ -18,7 +18,7 @@ class Monster : public BaseCharacter {
   virtual bool is_death() override;
   virtual void notify_damage_done(BaseCharacter *other,
                                   unsigned int damage_done) override;
-
+  bool is_next_to(int other_x, int other_y);
  private:
   int dps;
   std::vector<std::tuple<int, int>> moves;

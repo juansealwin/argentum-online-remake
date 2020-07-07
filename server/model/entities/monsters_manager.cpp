@@ -1,21 +1,34 @@
 #include "monsters_manager.h"
 
+#include "hero.h"
 MonstersManager::MonstersManager() {
   last_update_time = std::chrono::high_resolution_clock::now();
 }
 
 MonstersManager::~MonstersManager() {}
 
-void MonstersManager::update(std::map<unsigned int, Monster *> &monsters) {
+void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
+                             std::map<unsigned int, Hero *> heroes) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
 
   for (auto &monster : monsters) {
     if (time_difference.count() >= 1000000000) {
-      monster.second->auto_move();
       last_update_time = actual_time;
+      for (auto &hero : heroes) {
+        if (!hero.second->is_death()) {
+          attack_or_move_to_hero(monster.second, hero.second);
+        }
+      }
+      monster.second->auto_move();
     }
     monster.second->clear_effects();
+  }
+}
+
+void MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
+  if (m->is_next_to(h->x_position, h->y_position)) {
+    std::cout << "monster is next to hero!!!" << std::endl;
   }
 }
 

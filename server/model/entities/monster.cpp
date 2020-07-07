@@ -46,6 +46,10 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
   return last_hp - current_hp;
 }
 
+bool Monster::is_next_to(int other_x, int other_y) {
+  return (sqrt(pow(other_x - x_position, 2) + pow(other_y - y_position, 2)) == 1);
+}
+
 void Monster::notify_damage_done(BaseCharacter *other,
                                  unsigned int damage_done) {
   // subirlo de nivel?
