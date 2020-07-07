@@ -91,7 +91,10 @@ void Equipment::equip_shield(DefensiveItem *shield) { this->shield = shield; }
 
 void Equipment::equip_helmet(DefensiveItem *helmet) { this->helmet = helmet; }
 
-void Equipment::equip_armour(DefensiveItem *armour) { this->armour = armour; }
+void Equipment::equip_armour(DefensiveItem *armour) { 
+  this->armour = armour;
+  if(this->armour) std::cout << "succesfully set this->armour, the id is " << this->armour->id << std::endl;
+  }
 
 Weapon *Equipment::unequip_weapon() {
   Weapon *w = weapon;
@@ -168,4 +171,27 @@ uint8_t Equipment::count() {
   if (helmet) count++;
   if (armour) count++;
   return count;
+}
+
+bool Equipment::can_hold_weapon() {
+  return (!staff);
+}
+bool Equipment::can_hold_staff() {
+  return (!weapon);
+}
+
+bool Equipment::has_weapon() {
+  return weapon;
+}
+bool Equipment::has_staff() {
+  return staff;
+}
+bool Equipment::has_helmet() {
+  return helmet;
+}
+bool Equipment::has_armour() {
+  return armour;
+}
+bool Equipment::has_shield() {
+  return shield;
 }

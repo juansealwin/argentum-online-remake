@@ -112,6 +112,17 @@ void ArgentumGame::hero_dequip_item(int entity_id, int item_id) {
   }
 }
 
+void ArgentumGame::hero_use_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->use_item(item_id);
+  }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(heroes.at(entity_id));

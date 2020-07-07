@@ -1,9 +1,8 @@
 #include "hero.h"
-
 #include "defensive_item.h"
+#include "drop.h"
 #include "staff.h"
 #include "weapon.h"
-#include "drop.h"
 
 Hero::Hero(
     unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
@@ -57,84 +56,123 @@ void Hero::regenerate() {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
-  if (inventory->has_item(weapon_id)) {
+  if (inventory->has_item(weapon_id) && equipment->can_hold_weapon()) {
     Item *w = inventory->remove_item(weapon_id);
     equipment->equip_weapon(dynamic_cast<Weapon *>(w));
   }
+    std::cout << "after equipping wea, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::equip_staff(unsigned int staff_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
-  if (inventory->has_item(staff_id)) {
+  if (inventory->has_item(staff_id) && equipment->can_hold_staff()) {
     Item *w = inventory->remove_item(staff_id);
     equipment->equip_staff(dynamic_cast<Staff *>(w));
   }
+    std::cout << "after equipping staff, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::equip_shield(unsigned int shield_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(shield_id)) {
     Item *w = inventory->remove_item(shield_id);
     equipment->equip_shield(dynamic_cast<DefensiveItem *>(w));
   }
+    std::cout << "after equipping shield, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(helmet_id)) {
     Item *w = inventory->remove_item(helmet_id);
     equipment->equip_helmet(dynamic_cast<DefensiveItem *>(w));
   }
+  std::cout << "after equipping helmet, the count is " << (int)equipment->count() << std::endl;
 }
 void Hero::equip_armour(unsigned int armour_id) {
+ 
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(armour_id)) {
     Item *w = inventory->remove_item(armour_id);
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
   }
+    std::cout << "after equipping armour, the count is " << (int)equipment->count() << std::endl;
 }
 
 void Hero::unequip(unsigned int item_id) {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if(inventory->is_full()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Item *item = equipment->unequip(item_id);
-  if (!item) throw ModelException("Tried to unequip item that is not equipped!", "6");
+  if (!item)
+    throw ModelException("Tried to unequip item that is not equipped!", "6");
   inventory->add_item(item);
+  std::cout << "after uneqip wea, the count is " << (int)equipment->count() << std::endl;
+
 }
 
 void Hero::unequip_weapon() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_weapon()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
-  if (weapon) inventory->add_item(weapon);
+  if (weapon) {inventory->add_item(weapon);}
+  //else { std::cout << "no weapon to unequip" << std::endl;}
+  std::cout << "after uneqip wea, the count is " << (int)equipment->count() << std::endl;
+  
 }
 void Hero::unequip_staff() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_staff()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
+  std::cout << "after uneqip staff, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::unequip_shield() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_shield()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
+  std::cout << "after uneqip shield, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::unequip_helmet() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_helmet()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
+  std::cout << "after uneqip helmet, the count is " << (int)equipment->count() << std::endl;
+
 }
 void Hero::unequip_armour() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_armour()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
+  std::cout << "after uneqip armour, the count is " << (int)equipment->count() << std::endl;
+
+}
+
+void Hero::use_item(unsigned int item_id) {
+  if (ghost_mode) throw ModelException("Ghosts can't use items!", "5");
+  meditating = false;
+  Item *i = inventory->item_with_id(item_id);
+  i->use(this);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
@@ -159,8 +197,7 @@ bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
 void Hero::add_gold(unsigned int gold) { this->gold += gold; }
 
 void Hero::pick_up_drop(Drop *drop) {
-  if (ghost_mode)
-    throw ModelException("Ghosts can't pick up drops!", "4");
+  if (ghost_mode) throw ModelException("Ghosts can't pick up drops!", "4");
   if ((drop->size() > 0) && (this->has_free_space())) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());

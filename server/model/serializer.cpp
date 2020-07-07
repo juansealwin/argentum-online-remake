@@ -23,7 +23,7 @@ void insert(std::vector<unsigned char> &v, X value) {
 
 void Serializer::serialize_common_fields_v2(
     std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity) {
-      // std::cout << "uid to serialize: " << uid << std::endl;
+  // std::cout << "uid to serialize: " << uid << std::endl;
   uint16_t entity_id = htons(uid);
   insert(serialization, entity_id);
   uint8_t entity_type = entity->type;
@@ -43,7 +43,8 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
   unsigned int monsters_serialized = 0;
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
-  //std::cout << "@@@@@@@@@monsters size is@@@@@@@@@@ " << game->monsters.size() << std::endl;
+  // std::cout << "@@@@@@@@@monsters size is@@@@@@@@@@ " <<
+  // game->monsters.size() << std::endl;
   for (auto &entity : game->npcs) {
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
@@ -52,7 +53,8 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
     serialize_common_fields_v2(std::ref(serialization), entity.first,
                                entity.second);
     serialize_hero(std::ref(serialization), entity.second);
-    // std::cout << "serialized hero, his id is " << entity.second->unique_id << std::endl;
+    // std::cout << "serialized hero, his id is " << entity.second->unique_id <<
+    // std::endl;
   }
   for (auto &entity : game->monsters) {
     monsters_serialized++;
@@ -75,7 +77,6 @@ std::vector<unsigned char> Serializer::serialize_game_status_v3(
   debug_deserialize_v3(serialization);
   return serialization;
 }
-
 
 void Serializer::serialize_drop(
     std::vector<unsigned char> &serialization, Drop *drop,
@@ -233,6 +234,9 @@ void Serializer::debug_deserialize_v3(
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
       uint8_t affected_by = extract<uint8_t>(serialization, j);
+      if (affected_by != 0) {
+        std::cout << "affected by : " << (int)affected_by << std::endl;
+      }
       // std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
       //           << "current_hp" << current_hp << std::endl;
     } else if (is_hero(entity_type)) {
@@ -242,13 +246,17 @@ void Serializer::debug_deserialize_v3(
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
       uint8_t affected_by = extract<uint8_t>(serialization, j);
+      if (affected_by != 0) {
+        std::cout << "affected by : " << (int)affected_by << std::endl;
+      }
       int name_size = extract<uint8_t>(serialization, j);
       std::string name;
       for (int x = 0; x < name_size; x++) {
         name += serialization.at(j);
         j++;
       }
-      // std::cout << "Name of the hero: " << name << "id of the hero " << id<< std::endl;
+      // std::cout << "Name of the hero: " << name << "id of the hero " << id<<
+      // std::endl;
       int class_id = extract<uint8_t>(serialization, j);
       uint16_t mana_max = ntohs(extract<uint16_t>(serialization, j));
       uint16_t curr_mana = ntohs(extract<uint16_t>(serialization, j));
@@ -288,7 +296,10 @@ void Serializer::debug_deserialize_v3(
       // Deberia ser un NPC, no tiene mas atributos
     }
   }
-  // std::cout << "monsters detecteD: " << monsters_detected << " heroes_detected " << heroes_detected << " npcs_or_others_detected " << npcs_or_others_detected << " drops detected " << drops_detected << std::endl;
+  // std::cout << "monsters detecteD: " << monsters_detected << "
+  // heroes_detected " << heroes_detected << " npcs_or_others_detected " <<
+  // npcs_or_others_detected << " drops detected " << drops_detected <<
+  // std::endl;
 }
 
 /************* METODOS PRIVADOS **************/

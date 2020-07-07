@@ -1,5 +1,5 @@
 #include "item_factory.h"
-
+#include "item_ids.h"
 Item *ItemFactory::create_random_item(Json::Value items_config) {
   int random_id = HelperFunctions::random_int(first_item_id, last_item_id);
   switch (random_id) {

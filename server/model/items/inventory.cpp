@@ -35,6 +35,17 @@ bool Inventory::has_item(unsigned int id) {
 }
 bool Inventory::is_full() { return ((items.size() - items.capacity()) == 0); }
 
+Item* Inventory::item_with_id(unsigned int id) {
+  using Iter = std::vector<Item*>::const_iterator;
+  for (Iter it = items.begin(); it != items.end(); ++it) {
+    if ((*it)->id == id) {
+      Item* item = (*it);
+      return item;
+    }
+  }
+  return nullptr;
+}
+
 Item* Inventory::remove_item(unsigned int id) {
   using Iter = std::vector<Item*>::const_iterator;
   for (Iter it = items.begin(); it != items.end(); ++it) {

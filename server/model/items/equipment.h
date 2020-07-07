@@ -14,8 +14,15 @@ class Equipment {
   Equipment();
   ~Equipment();
   Equipment(const Equipment &) = delete;
-  // PRE: Se debe llamar a unequip_x antes de equipar, si no
-  // se perdera memoria!
+  bool has_weapon();
+  bool has_staff();
+  bool has_helmet();
+  bool has_armour();
+  bool has_shield();
+  // PRE: Se debe llamar a unequip_x antes de equipar, si no,
+  // se perdera memoria
+  bool can_hold_weapon();
+  bool can_hold_staff();
   void equip_weapon(Weapon *weapon);
   void equip_staff(Staff *staff);
   void equip_shield(DefensiveItem *shield);

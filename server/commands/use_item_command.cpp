@@ -14,6 +14,6 @@ void UseItemCommand::execute(ArgentumGame *game) {
     game->hero_dequip_item(uid, item);
   }
   else {
-    std::cout << "item is not equipped" << std::endl;
+    game->hero_use_item(uid, item);
   }
 }
