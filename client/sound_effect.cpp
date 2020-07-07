@@ -84,5 +84,3 @@ void SoundEffect::decrease_music_volume(int dec) {
   music_volume - dec < 0 ? Mix_VolumeMusic(0)
                          : Mix_VolumeMusic(music_volume - dec);
 }
-
-bool SoundEffect::is_playing() { return Mix_Playing(channel) != 0; }

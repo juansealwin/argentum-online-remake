@@ -4,6 +4,7 @@ ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height) {
   read_map = new Game(id_player, screen_width, screen_height);
   write_map = new Game(id_player, screen_width, screen_height);
   current_status.clear();
+  characters_afected.clear();
 }
 
 ProtectedMap::~ProtectedMap() {
@@ -32,32 +33,38 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
   for (it = next_status.begin(); it != next_status.end(); it++) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna
     // animación en curso de otro hechizo
-    if ((it->second.is_afected()) &&
-        (characters_afected[it->first].lifetime == 0)) {
-      characters_afected[it->first].type_spell = it->second.is_afected();
-      characters_afected[it->first].lifetime = it->second.get_life_time();
-    }
+    std::cout << "LIFE TIME: " << characters_afected.size() << std::endl;
+    if (it->second.is_afected() != ID_NULL)
+      if (characters_afected[it->first].lifetime == 0) {
+        characters_afected[it->first].type_spell = it->second.is_afected();
+        characters_afected[it->first].lifetime = it->second.get_life_time();
+      }
 
     // Chequeamos si dicha entidad ya existia dentro del mapa
     it2 = current_status.find(it->first);
 
-    if (it2 != current_status.end()) {
+    if (it2 != current_status.end() && (it->second.get_type_entity() != ITEM)) {
       // Chequeamos si dicho personaje se mantuvo cte. o se modifico
       if (!(it2->second.is_equal(it->second))) {
         // Si cambio hacemos un update del personaje
-        write_map->update_character(it->first, it->second.get_x(),
-                                    it->second.get_y());
+        write_map->update_character(
+            it->first, it->second.get_type_entity(), it->second.get_x(),
+            it->second.get_y(), it->second.get_equipped(HELMET),
+            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
+            it->second.get_equipped(WEAPON));
       }
     } else {
       // Como no existe la creamos
-
       // Vemos si es un personaje o un item estático
       if (it->second.get_type_entity() == ITEM)
         write_map->load_item(it->first, it->second.get_item(),
-                                  it->second.get_x(), it->second.get_y());
+                             it->second.get_x(), it->second.get_y());
       else
-        write_map->load_character(it->first, it->second.get_type_entity(),
-                                  it->second.get_x(), it->second.get_y());
+        write_map->load_character(
+            it->first, it->second.get_type_entity(), it->second.get_x(),
+            it->second.get_y(), it->second.get_equipped(HELMET),
+            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
+            it->second.get_equipped(WEAPON));
     }
 
     // Si todavía queda resto de alguna animación de hechizo, lo actualizamos

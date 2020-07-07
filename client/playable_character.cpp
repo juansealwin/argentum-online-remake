@@ -1,16 +1,19 @@
 #include "playable_character.h"
 
-PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x,
-                                     int new_y) {
+PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
+                                     id_texture_t new_helmet,
+                                     id_texture_t new_armor,
+                                     id_texture_t new_shield,
+                                     id_texture_t new_weapon) {
   x = new_x * TILE_SIZE;
   y = new_y * TILE_SIZE;
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
-  helmet = ID_NULL;
-  armor = ID_NULL;
-  weapon = ID_NULL;
-  shield = ID_NULL;
+  set_item_dimensions(new_helmet);
+  set_item_dimensions(new_armor);
+  set_item_dimensions(new_weapon);
+  set_item_dimensions(new_shield);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -106,7 +109,7 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
   // Si esta afectado por algún hechizo lo renderizamos
   if (spellbound.spell_alive())
-    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);    
+    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
 }
 
 int PlayableCharacter::set_head_dimensions(entity_t id) {
@@ -133,9 +136,9 @@ int PlayableCharacter::set_head_dimensions(entity_t id) {
   }
 }
 
-void PlayableCharacter::unequip_item(equipped_t id) {
+void PlayableCharacter::unequip_item(equipped_t item) {
   // Reinicializamos el item para que no tenga valores dentro
-  switch (id) {
+  switch (item) {
     case HELMET:
       helmet = ID_NULL;
       break;
@@ -154,7 +157,7 @@ void PlayableCharacter::unequip_item(equipped_t id) {
   }
 }
 
-void PlayableCharacter::equip_item(item_t item, id_texture_t id) {
+void PlayableCharacter::equip_item(equipped_t item, id_texture_t id) {
   // Reinicializamos el item para que no tenga valores dentro
   switch (item) {
     case HELMET:
@@ -171,6 +174,129 @@ void PlayableCharacter::equip_item(item_t item, id_texture_t id) {
 
     case WEAPON:
       weapon = id;
+      break;
+  }
+}
+
+void PlayableCharacter::update_equipment(id_texture_t new_helmet,
+                                         id_texture_t new_armor,
+                                         id_texture_t new_shield,
+                                         id_texture_t new_weapon) {
+  if (new_helmet == ID_NULL && helmet != ID_NULL)
+    unequip_item(HELMET);
+  else if (new_helmet != ID_NULL && helmet == ID_NULL)
+    equip_item(HELMET, new_helmet);
+  if (new_armor == ID_NULL && armor != ID_NULL)
+    unequip_item(ARMOR);
+  else if (new_armor != ID_NULL && armor == ID_NULL)
+    equip_item(ARMOR, new_armor);
+  if (new_shield == ID_NULL && shield != ID_NULL)
+    unequip_item(SHIELD);
+  else if (new_shield != ID_NULL && shield == ID_NULL)
+    equip_item(SHIELD, new_shield);
+  if (new_weapon == ID_NULL && weapon != ID_NULL)
+    unequip_item(WEAPON);
+  else if (new_weapon != ID_NULL && weapon == ID_NULL)
+    equip_item(WEAPON, new_weapon);
+}
+
+/*void PlayableCharacter::get_next_frame(move_t move_type) {
+  frame_equipped = animation_equipped.get_next_clip(move_type);
+}*/
+
+void PlayableCharacter::set_item_dimensions(id_texture_t id) {
+  switch (id) {
+    // Armas
+    case ID_SWORD:
+      // frame_equipped = {0, 0, 25, 48};
+      weapon = ID_SWORD_EQUIPPED;
+      break;
+
+    case ID_AXE:
+      // frame_equipped = {0, 0, 25, 48};
+      weapon = ID_AXE_EQUIPPED;
+      break;
+
+    case ID_HAMMER:
+      // frame_equipped = {0, 0, 25, 48};
+      weapon = ID_HAMMER_EQUIPPED;
+      break;
+
+    case ID_ASH_STICK:
+      // frame_equipped = {0, 0, 25, 48};
+      weapon = ID_ASH_STICK_EQUIPPED;
+      break;
+
+    case ID_KNOTTY_STAFF:
+      // frame_equipped = {0, 0, 25, 45};
+      weapon = ID_KNOTTY_STAFF_EQUIPPED;
+      break;
+
+    case ID_CRIMPED_STAFF:
+      // frame_equipped = {0, 0, 25, 45};
+      // item_equipped = ID_CRIMPED_STAFF_EQUIPPED;
+      weapon = ID_CRIMPED_STAFF_EQUIPPED;
+      break;
+
+    case ID_SIMPLE_BOW:
+      // frame_equipped = {0, 0, 25, 45};
+      weapon = ID_SIMPLE_BOW_EQUIPPED;
+      break;
+
+    case ID_COMPOUND_BOW:
+      // frame_equipped = {0, 0, 25, 45};
+      weapon = ID_COMPOUND_BOW_EQUIPPED;
+      break;
+
+    // Escudos
+    case ID_IRON_SHIELD:
+      // frame_equipped = {0, 0, 25, 45};
+      shield = ID_IRON_SHIELD_EQUIPPED;
+      break;
+
+    case ID_TURTLE_SHIELD:
+      // frame_equipped = {0, 0, 25, 45};
+      shield = ID_TURTLE_SHIELD_EQUIPPED;
+      break;
+
+    // Cascos y sombreros
+    case ID_MAGIC_HAT:
+      // frame_equipped = {0, 0, 17, 19};
+      helmet = ID_MAGIC_HAT_EQUIPPED;
+      break;
+
+    case ID_HOOD:
+      // frame_equipped = {0, 0, 17, 18};
+      helmet = ID_HOOD_EQUIPPED;
+      break;
+
+    case ID_IRON_HELMET:
+      // frame_equipped = {0, 0, 17, 18};
+      helmet = ID_IRON_HELMET_EQUIPPED;
+      break;
+
+    // Armaduras y vestimentas
+    case ID_LEATHER_ARMOR:
+      // El frame es el mismo para ambas texturas
+      // frame_equipped = {0, 0, 25, 45};
+      if (type_character == ID_GNOME || type_character == ID_DWARF)
+        armor = ID_LEATHER_ARMOR_XS_EQUIPPED;
+      else
+        armor = ID_LEATHER_ARMOR_EQUIPPED;
+      break;
+
+    case ID_PLATE_ARMOR:
+      // El frame es el mismo para ambas texturas
+      // frame_equipped = {0, 0, 25, 45};
+      if (type_character == ID_GNOME || type_character == ID_DWARF)
+        armor = ID_PLATE_ARMOR_EQUIPPED;
+      else
+        armor = ID_PLATE_ARMOR_XS_EQUIPPED;
+      break;
+
+    case ID_BLUE_TUNIC:
+      // frame_equipped = {0, 0, 17, 19};
+      armor = ID_BLUE_TUNIC_EQUIPPED;
       break;
   }
 }
