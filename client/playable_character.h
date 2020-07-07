@@ -14,6 +14,13 @@ class PlayableCharacter : public Character {
   id_texture_t armor;
   id_texture_t shield;
   id_texture_t weapon;
+  Animation armor_animation;
+  Animation shield_animation;
+  Animation weapon_animation;
+  SDL_Rect frame_equipped_h;
+  SDL_Rect frame_equipped_a;
+  SDL_Rect frame_equipped_s;
+  SDL_Rect frame_equipped_w;
 
  public:
   PlayableCharacter(entity_t, int, int, id_texture_t, id_texture_t,

@@ -11,6 +11,19 @@ Animation::Animation(int char_width, int char_height, id_texture_t id_character)
   current_clip[CLIP_RIGHT] = 0;
 }
 
+Animation::Animation(int char_width, int char_height/*, size_t current_clip_down,
+                     size_t current_clip_up, size_t current_clip_left,
+                     size_t current_clip_right*/)
+    : character_width(char_width), character_height(char_height) {
+  // Todos los items equipables(menos cascos) tienen esta cantidad de frames
+  clips_up_down = 5;
+  clips_up_down = 4;
+  current_clip[CLIP_DOWN] = 0;   // current_clip_down;
+  current_clip[CLIP_UP] = 0;     // current_clip_up;
+  current_clip[CLIP_LEFT] = 0;   // current_clip_left;
+  current_clip[CLIP_RIGHT] = 0;  // current_clip_right;
+}
+
 Animation::Animation(const Animation& other_animation) {
   character_width = other_animation.character_width;
   character_height = other_animation.character_height;
@@ -156,21 +169,6 @@ int Animation::set_total_clips(id_texture_t id) {
     case ID_BANKER:
       clips_up_down = 5;
       clips_left_right = 5;
-      break;
-
-    case ID_SWORD_EQUIPPED:
-      clips_up_down = 5;
-      clips_left_right = 4;
-      break;
-
-    case ID_AXE_EQUIPPED:
-      clips_up_down = 5;
-      clips_left_right = 4;
-      break;
-
-    case ID_HAMMER_EQUIPPED:
-      clips_up_down = 5;
-      clips_left_right = 4;
       break;
 
     case ID_MAGIC_ARROW:

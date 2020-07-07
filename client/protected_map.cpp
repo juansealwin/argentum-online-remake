@@ -33,7 +33,6 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
   for (it = next_status.begin(); it != next_status.end(); it++) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna
     // animación en curso de otro hechizo
-    std::cout << "LIFE TIME: " << characters_afected.size() << std::endl;
     if (it->second.is_afected() != ID_NULL)
       if (characters_afected[it->first].lifetime == 0) {
         characters_afected[it->first].type_spell = it->second.is_afected();
