@@ -39,7 +39,6 @@ Hero::Hero(
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap) {
-  std::cout << "created hero with id " << unique_id << std::endl;
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size);
@@ -63,8 +62,6 @@ void Hero::equip_weapon(unsigned int weapon_id) {
     Item *w = inventory->remove_item(weapon_id);
     equipment->equip_weapon(dynamic_cast<Weapon *>(w));
   }
-    std::cout << "after equipping wea, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::equip_staff(unsigned int staff_id) {
 
@@ -74,8 +71,6 @@ void Hero::equip_staff(unsigned int staff_id) {
     Item *w = inventory->remove_item(staff_id);
     equipment->equip_staff(dynamic_cast<Staff *>(w));
   }
-    std::cout << "after equipping staff, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::equip_shield(unsigned int shield_id) {
 
@@ -85,8 +80,6 @@ void Hero::equip_shield(unsigned int shield_id) {
     Item *w = inventory->remove_item(shield_id);
     equipment->equip_shield(dynamic_cast<DefensiveItem *>(w));
   }
-    std::cout << "after equipping shield, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
 
@@ -96,7 +89,6 @@ void Hero::equip_helmet(unsigned int helmet_id) {
     Item *w = inventory->remove_item(helmet_id);
     equipment->equip_helmet(dynamic_cast<DefensiveItem *>(w));
   }
-  std::cout << "after equipping helmet, the count is " << (int)equipment->count() << std::endl;
 }
 void Hero::equip_armour(unsigned int armour_id) {
  
@@ -106,7 +98,6 @@ void Hero::equip_armour(unsigned int armour_id) {
     Item *w = inventory->remove_item(armour_id);
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
   }
-    std::cout << "after equipping armour, the count is " << (int)equipment->count() << std::endl;
 }
 
 void Hero::unequip(unsigned int item_id) {
@@ -117,8 +108,6 @@ void Hero::unequip(unsigned int item_id) {
   if (!item)
     throw ModelException("Tried to unequip item that is not equipped!", "6");
   inventory->add_item(item);
-  std::cout << "after uneqip wea, the count is " << (int)equipment->count() << std::endl;
-
 }
 
 void Hero::unequip_weapon() {
@@ -126,10 +115,7 @@ void Hero::unequip_weapon() {
   if (inventory->is_full() && equipment->has_weapon()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
-  if (weapon) {inventory->add_item(weapon);}
-  //else { std::cout << "no weapon to unequip" << std::endl;}
-  std::cout << "after uneqip wea, the count is " << (int)equipment->count() << std::endl;
-  
+  if (weapon) {inventory->add_item(weapon);}  
 }
 void Hero::unequip_staff() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
@@ -137,8 +123,6 @@ void Hero::unequip_staff() {
   meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
-  std::cout << "after uneqip staff, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::unequip_shield() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
@@ -146,8 +130,6 @@ void Hero::unequip_shield() {
   meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
-  std::cout << "after uneqip shield, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::unequip_helmet() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
@@ -155,8 +137,6 @@ void Hero::unequip_helmet() {
   meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
-  std::cout << "after uneqip helmet, the count is " << (int)equipment->count() << std::endl;
-
 }
 void Hero::unequip_armour() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
@@ -164,8 +144,6 @@ void Hero::unequip_armour() {
   meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
-  std::cout << "after uneqip armour, the count is " << (int)equipment->count() << std::endl;
-
 }
 
 void Hero::use_item(unsigned int item_id) {
@@ -221,11 +199,11 @@ unsigned int Hero::gold_space_remaining() {
 bool Hero::has_excedent_coins() { return (gold > max_safe_gold); }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
-  std::cout << "My spell hit an enemy!!!" << std::endl;
+  // std::cout << "My spell hit an enemy!!!" << std::endl;
   update_experience(damage_done, other);
-  std::cout << "Updated experience!!: " << experience << " out of "
-            << next_level_xp_limit << std::endl;
-  std::cout << " My level is : " << level << std::endl;
+  // std::cout << "Updated experience!!: " << experience << " out of "
+  //           << next_level_xp_limit << std::endl;
+  // std::cout << " My level is : " << level << std::endl;
 }
 
 const Attack Hero::attack() {
@@ -320,18 +298,12 @@ void Hero::level_up() {
   max_safe_gold = max_safe_gold_multiplier * level;
 }
 
-unsigned int Hero::remove_surplus_coins() {
-  unsigned int surplus_coins = 0;
+unsigned int Hero::remove_excess_gold() {
+  unsigned int excess_gold = 0;
 
   if (gold > max_safe_gold) {
-    std::cout << " gold: " << gold << " is higher than mxsfg " << max_safe_gold
-              << std::endl;
-    surplus_coins = gold - max_safe_gold;
+    excess_gold = gold - max_safe_gold;
     gold = max_safe_gold;
   }
-
-  if (surplus_coins > 0) {
-    std::cout << "surplus coins are " << surplus_coins << std::endl;
-  };
-  return surplus_coins;
+  return excess_gold;
 }
