@@ -13,7 +13,7 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
   auto time_difference = actual_time - last_update_time;
 
   for (auto &monster : monsters) {
-    if (time_difference.count() >= 1000000000) {
+    if (time_difference.count() >= 800000000) {
       last_update_time = actual_time;
       for (auto &hero : heroes) {
         if (!hero.second->is_death()) {
@@ -28,7 +28,8 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
 
 bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
   if (m->is_next_to(h->x_position, h->y_position)) {
-    std::cout << "monster is next to hero!!!" << std::endl;
+    const Attack att = m->attack();
+    h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
     // atacar
     return true;
   } else if (m->is_close_to(h->x_position, h->y_position)) {

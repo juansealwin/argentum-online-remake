@@ -19,6 +19,7 @@ class Monster : public BaseCharacter {
   virtual bool is_death() override;
   virtual void notify_damage_done(BaseCharacter *other,
                                   unsigned int damage_done) override;
+  const Attack attack();
   bool is_next_to(int other_x, int other_y);
   bool is_close_to(int other_x, int other_y);
   void move_closer_to(int other_x, int other_y);

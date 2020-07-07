@@ -53,6 +53,12 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
   return last_hp - current_hp;
 }
 
+const Attack Monster::attack() {
+  Attack attack = {dps, false, 128, //poner un id que reciba por parametro de la config
+                   0};
+  return std::move(attack);
+}
+
 bool Monster::is_next_to(int other_x, int other_y) {
   return (HelperFunctions::distance(other_x, x_position, other_y, y_position) ==
           1);
