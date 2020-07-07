@@ -72,7 +72,7 @@ void GameUpdater::deserialize_status() {
     x = extract<uint8_t>(status_serialized, j);
     orientation = extract<uint8_t>(status_serialized, j);
     // En principio la entidad no fue afectada por un arma
-    // affected_by = 0;
+    affected_by = 0;
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
@@ -90,6 +90,9 @@ void GameUpdater::deserialize_status() {
       // Si drop_has_coins == 1 hay oro, si es 0 no
       drop_has_coins = extract<uint8_t>(status_serialized, j);
 
+      // Agregamos la entidad "Item"
+      next_status[(int)id] = EntityStatus(get_item_texture(entity_type), x, y);
+
     } else if (is_hero(entity_type) || is_monster(entity_type)) {
       // std::cout << "ES HERO "<<std::endl;
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
@@ -98,6 +101,10 @@ void GameUpdater::deserialize_status() {
       affected_by = extract<uint8_t>(status_serialized, j);
       // std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
       //           << "current_hp" << current_hp << std::endl;
+
+      // Agregamos la entidad "monstruo"
+      if (is_monster(entity_type))
+        next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
     }
     if (is_hero(entity_type)) {
       int name_size = extract<uint8_t>(status_serialized, j);
@@ -106,6 +113,10 @@ void GameUpdater::deserialize_status() {
         name += status_serialized.at(j);
         j++;
       }
+      id_texture_t helmet = ID_NULL;
+      id_texture_t armor = ID_NULL;
+      id_texture_t shield = ID_NULL;
+      id_texture_t weapon = ID_NULL;
       // std::cout << "Name of the hero: " << name << std::endl;
       class_id = extract<uint8_t>(status_serialized, j);
       mana_max = ntohs(extract<uint16_t>(status_serialized, j));
@@ -137,9 +148,20 @@ void GameUpdater::deserialize_status() {
       for (int x = items_equiped; x > 0; x--) {
         int current_item_slot = extract<uint8_t>(status_serialized, j);
         int current_item_id = extract<uint8_t>(status_serialized, j);
+
+        equipped_t item_type = get_type_equipped(current_item_id);
+        if (item_type == HELMET)
+          helmet = get_item_texture(current_item_id);
+        else if (item_type == ARMOR)
+          armor = get_item_texture(current_item_id);
+        else if (item_type == SHIELD)
+          shield = get_item_texture(current_item_id);
+        else if (item_type == WEAPON)
+          weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(current_item_id, current_item_slot);
+          next_ui_status.add_item(get_item_texture(current_item_id),
+                                  current_item_slot);
       }
 
       // Agregamos los items del inventario
@@ -150,12 +172,138 @@ void GameUpdater::deserialize_status() {
       for (int x = items_inventory; x > 0; x--) {
         int current_item_id = extract<uint8_t>(status_serialized, j);
         // Si son los items del cliente, queremos mostrarlos en la UI
-        // std::cout<<"ITEM: "<<current_item_id<<std::endl;
-        if (id == id_hero) next_ui_status.add_item(current_item_id);
+        if (id == id_hero)
+          next_ui_status.add_item(get_item_texture(current_item_id));
       }
-    } else {
-      // Deberia ser un NPC, no tiene mas atributos
+      // Agregamos la entidad "personaje jugable"
+      next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by,
+                                          helmet, armor, shield, weapon);
     }
-    next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
   }
+}
+
+id_texture_t GameUpdater::get_item_texture(int new_item) const {
+  id_texture_t item;
+
+  switch ((item_t)new_item) {
+    case DUMMY_ITEM:
+      item = ID_NULL;
+      break;
+
+    case TURTLE_SHIELD:
+      item = ID_TURTLE_SHIELD;
+      break;
+
+    case IRON_SHIELD:
+      item = ID_IRON_SHIELD;
+      break;
+
+    case HOOD:
+      item = ID_HOOD;
+      break;
+
+    case IRON_HELMET:
+      item = ID_IRON_HELMET;
+      break;
+
+    case MAGIC_HAT:
+      item = ID_MAGIC_HAT;
+      break;
+
+    case LEATHER_ARMOR:
+      item = ID_LEATHER_ARMOR;
+      break;
+
+    case PLATE_ARMOR:
+      item = ID_PLATE_ARMOR;
+      break;
+
+    case BLUE_TUNIC:
+      item = ID_BLUE_TUNIC;
+      break;
+
+    case HP_POTION:
+      item = ID_HP_POTION;
+      break;
+
+    case MANA_POTION:
+      item = ID_MANA_POTION;
+      break;
+
+    case SWORD:
+      item = ID_SWORD;
+      break;
+
+    case AXE:
+      item = ID_AXE;
+      break;
+
+    case HAMMER:
+      item = ID_HAMMER;
+      break;
+
+    case SIMPLE_BOW:
+      item = ID_SIMPLE_BOW;
+      break;
+
+    case COMPUND_BOW:
+      item = ID_COMPOUND_BOW;
+      break;
+
+    case ASH_STICK:
+      item = ID_ASH_STICK;
+      break;
+
+    case GNARLED_STAFF:
+      item = ID_KNOTTY_STAFF;
+      break;
+
+    case CRIMP_STAFF:
+      item = ID_CRIMPED_STAFF;
+      break;
+
+    case ELVEN_FLUTE:
+      item = ID_ELVEN_ELUDE;
+      break;
+
+    case GOLD:
+      item = ID_GOLD;
+  }
+  return item;
+}
+
+equipped_t GameUpdater::get_type_equipped(int new_item) {
+  equipped_t type_equipped;
+
+  switch ((item_t)new_item) {
+    case TURTLE_SHIELD:
+    case IRON_SHIELD:
+      type_equipped = SHIELD;
+      break;
+
+    case HOOD:
+    case IRON_HELMET:
+    case MAGIC_HAT:
+      type_equipped = HELMET;
+      break;
+
+    case LEATHER_ARMOR:
+    case PLATE_ARMOR:
+    case BLUE_TUNIC:
+      type_equipped = ARMOR;
+      break;
+
+    case SWORD:
+    case AXE:
+    case HAMMER:
+    case SIMPLE_BOW:
+    case COMPUND_BOW:
+    case ASH_STICK:
+    case GNARLED_STAFF:
+    case CRIMP_STAFF:
+    case ELVEN_FLUTE:
+      type_equipped = WEAPON;
+      break;
+  }
+  return type_equipped;
 }

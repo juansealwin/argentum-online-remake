@@ -10,8 +10,8 @@ void Character::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Renderizamos el cuerpo principal
   texture_manager.get_texture(type_character)
       .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
-  
-  if(spellbound.spell_alive())
+
+  if (spellbound.spell_alive())
     spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
 }
 
@@ -130,5 +130,12 @@ int Character::set_character_features(entity_t id) {
 void Character::sound_walk() { walk.play_sound(0); }
 
 void Character::set_spell(id_texture_t id_spell, int lifetime) {
-  spellbound = Spell(id_spell, lifetime);
+  if (lifetime == 0)
+    spellbound = Spell();
+  else
+    spellbound = Spell(id_spell, lifetime);
+}
+
+bool Character::change_position(int new_x, int new_y) {
+  return !(x == new_x && y == new_y);
 }

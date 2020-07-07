@@ -22,7 +22,10 @@ class Animation {
 
  public:
   Animation();
+  // Constructor para animaciones de personajes
   Animation(int, int, id_texture_t);
+  // Construsctor para animaciones de items
+  Animation(int, int/*, size_t, size_t, size_t, size_t*/);
   Animation(const Animation&);
   ~Animation();
   void set_offset_y(int);

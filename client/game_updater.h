@@ -31,6 +31,8 @@ class GameUpdater : public Thread {
   ~GameUpdater();
   void run();
   void deserialize_status();
+  id_texture_t get_item_texture(int) const; 
+  equipped_t get_type_equipped(int);
 };
 
 #endif

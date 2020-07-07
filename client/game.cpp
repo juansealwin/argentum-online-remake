@@ -66,25 +66,35 @@ Game::~Game() {
   if (!characters.empty()) characters.clear();
 }
 
-void Game::update_character(int id, int new_x, int new_y) {
+void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
+                            id_texture_t helmet, id_texture_t armor,
+                            id_texture_t shield, id_texture_t weapon) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
 
-  // Si se actualiza el heroe la camara lo tiene que seguir
-  if (id == id_hero)
-    update_map(x_render_scale - characters[id]->get_x(),
-               y_render_scale - characters[id]->get_y());
+  // Chequeamos si hubo un cambio de posicion
+  if (characters[id]->change_position(x_render_scale, y_render_scale)) {
+    // Si se actualiza el heroe la camara lo tiene que seguir
+    if (id == id_hero)
+      update_map(x_render_scale - characters[id]->get_x(),
+                 y_render_scale - characters[id]->get_y());
 
-  // Si el personaje se mueve dentro del viewport emite sonido
-  if ((map_piece.x < x_render_scale) &&
-      (x_render_scale < map_piece.x + screen_width))
-    if ((map_piece.y < y_render_scale) &&
-        (y_render_scale < map_piece.y + screen_width))
-      characters[id]->sound_walk();
+    // Si el personaje se mueve dentro del viewport emite sonido
+    if ((map_piece.x < x_render_scale) &&
+        (x_render_scale < map_piece.x + screen_width))
+      if ((map_piece.y < y_render_scale) &&
+          (y_render_scale < map_piece.y + screen_width))
+        characters[id]->sound_walk();
 
-  // Actualizamos la posición
-  characters[id]->update_position(new_x, new_y);
+    // Actualizamos la posición
+    characters[id]->update_position(new_x, new_y);
+  }
+  // En caso de que sea un personaje jugable actualizamos su equipamiento
+  if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
+      entity_type == DWARF)
+    dynamic_cast<PlayableCharacter*>(characters[id])
+        ->update_equipment(helmet, armor, shield, weapon);
 }
 
 void Game::update_map(int new_x, int new_y) {
@@ -144,10 +154,13 @@ void Game::render(SDL_Renderer* renderer) {
       .render(renderer, &map_piece, &viewport);
 }
 
-void Game::load_character(int id, entity_t entity_type, int x, int y) {
+void Game::load_character(int id, entity_t entity_type, int x, int y,
+                          id_texture_t helmet, id_texture_t armor,
+                          id_texture_t shield, id_texture_t weapon) {
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
-    characters[id] = new PlayableCharacter(entity_type, x, y);
+    characters[id] =
+        new PlayableCharacter(entity_type, x, y, helmet, armor, shield, weapon);
     // Si cargamos a hero por primera vez ubicamos el viewport donde debe
     if (id == id_hero)
       update_map(x * TILE_SIZE - screen_width / 2,
@@ -157,8 +170,8 @@ void Game::load_character(int id, entity_t entity_type, int x, int y) {
   }
 }
 
-void Game::load_item(int id, item_t item, int new_x, int new_y) {
-  items[id].type_item = get_item_texture(item);
+void Game::load_item(int id, id_texture_t item, int new_x, int new_y) {
+  items[id].type_item = item;
   items[id].x = new_x * TILE_SIZE;
   items[id].y = new_y * TILE_SIZE;
 }
@@ -205,94 +218,4 @@ void Game::clean_all_characters() {
     delete characters[it->first];
     characters.erase(it->first);
   }
-}
-
-id_texture_t Game::get_item_texture(item_t new_item) const {
-  id_texture_t item;
-
-  switch (new_item) {
-    case DUMMY_ITEM:
-      item = ID_NULL;
-      break;
-
-    case TURTLE_SHIELD:
-      item = ID_TURTLE_SHIELD;
-      break;
-
-    case IRON_SHIELD:
-      item = ID_IRON_SHIELD;
-      break;
-
-    case HOOD:
-      item = ID_HOOD;
-      break;
-
-    case IRON_HELMET:
-      item = ID_IRON_HELMET;
-      break;
-
-    case MAGIC_HAT:
-      item = ID_MAGIC_HAT;
-      break;
-
-    case LEATHER_ARMOR:
-      item = ID_LEATHER_ARMOR;
-      break;
-
-    case PLATE_ARMOR:
-      item = ID_PLATE_ARMOR;
-      break;
-
-    case BLUE_TUNIC:
-      item = ID_BLUE_TUNIC;
-      break;
-
-    case HP_POTION:
-      item = ID_HP_POTION;
-      break;
-
-    case MANA_POTION:
-      item = ID_MANA_POTION;
-      break;
-
-    case SWORD:
-      item = ID_SWORD;
-      break;
-
-    case AXE:
-      item = ID_AXE;
-      break;
-
-    case HAMMER:
-      item = ID_HAMMER;
-      break;
-
-    case SIMPLE_BOW:
-      item = ID_SIMPLE_BOW;
-      break;
-
-    case COMPUND_BOW:
-      item = ID_COMPOUND_BOW;
-      break;
-
-    case ASH_STICK:
-      item = ID_ASH_STICK;
-      break;
-
-    case GNARLED_STAFF:
-      item = ID_KNOTTY_STAFF;
-      break;
-
-    case CRIMP_STAFF:
-      item = ID_CRIMPED_STAFF;
-      break;
-
-    case ELVEN_FLUTE:
-      item = ID_ELVEN_ELUDE;
-      break;
-
-    case GOLD:
-      item = ID_GOLD;
-  }
-  return item;
 }

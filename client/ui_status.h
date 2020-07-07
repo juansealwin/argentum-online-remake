@@ -24,8 +24,8 @@ class UIStatus {
   ~UIStatus();
   UIStatus& operator=(const UIStatus&);
   void render(SDL_Renderer*, bool, int);
-  void add_item(int);
-  void add_item(int, int);
+  void add_item(id_texture_t);
+  void add_item(id_texture_t, int);
   std::map<int, std::pair<id_texture_t, bool>> get_items();
 };
 
