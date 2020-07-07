@@ -381,7 +381,7 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       break;
 
     case ID_BLUE_TUNIC:
-      frame_equipped_a = {body_rect.x, body_rect.y, 17, 19};
+      frame_equipped_a = {body_rect.x, body_rect.y, 25, 45};
       armor_animation = Animation(frame_equipped_a.w, frame_equipped_a.h);
       armor = ID_BLUE_TUNIC_EQUIPPED;
       break;
