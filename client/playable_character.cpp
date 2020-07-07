@@ -240,21 +240,36 @@ void PlayableCharacter::update_equipment(id_texture_t new_helmet,
                                          id_texture_t new_armor,
                                          id_texture_t new_shield,
                                          id_texture_t new_weapon) {
+  // Chequeamos si cambio el caso
   if (new_helmet == ID_NULL && helmet != ID_NULL)
     unequip_item(HELMET);
   else if (new_helmet != ID_NULL && helmet == ID_NULL)
     equip_item(HELMET, new_helmet);
+  else if (new_helmet != helmet)
+    equip_item(HELMET, new_helmet);
+
+  // Chequeamos si cambio la armadura
   if (new_armor == ID_NULL && armor != ID_NULL)
     unequip_item(ARMOR);
   else if (new_armor != ID_NULL && armor == ID_NULL)
     equip_item(ARMOR, new_armor);
+  else if (new_armor != armor)
+    equip_item(ARMOR, new_armor);
+
+  // Chequeamos si cambio el escudo
   if (new_shield == ID_NULL && shield != ID_NULL)
     unequip_item(SHIELD);
   else if (new_shield != ID_NULL && shield == ID_NULL)
     equip_item(SHIELD, new_shield);
+  else if (new_shield != shield)
+    equip_item(SHIELD, new_shield);
+
+  // Chequeamos si hubo algun cambio el arma
   if (new_weapon == ID_NULL && weapon != ID_NULL)
     unequip_item(WEAPON);
   else if (new_weapon != ID_NULL && weapon == ID_NULL)
+    equip_item(WEAPON, new_weapon);
+  else if (new_weapon != weapon)
     equip_item(WEAPON, new_weapon);
 }
 
