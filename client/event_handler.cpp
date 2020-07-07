@@ -69,6 +69,7 @@ void EventHandler::get_events() {
           }
         }
         // Eventos de mouse
+         
         else if (event.type == SDL_MOUSEBUTTONDOWN) {
           int x, y;
           SDL_GetMouseState(&x, &y);

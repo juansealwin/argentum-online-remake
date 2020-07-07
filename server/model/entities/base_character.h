@@ -28,6 +28,7 @@ class BaseCharacter : public Entity {
                                       unsigned int weapon_origin) = 0;
   virtual void move(int next_x, int next_y);
   virtual bool is_death() = 0;
+  virtual const Attack attack() = 0;
   virtual void notify_damage_done(BaseCharacter *other,
                                   unsigned int damage_done) = 0;
   //remueve efecto que recibe por las armas
