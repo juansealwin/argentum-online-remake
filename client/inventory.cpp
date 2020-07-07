@@ -24,14 +24,8 @@ Inventory& Inventory::operator=(const Inventory& other_inv) {
   std::map<int, std::pair<id_texture_t, bool>>::const_iterator it;
 
   for (it = other_inv.items.begin(); it != other_inv.items.end(); it++) {
-    if (it->second.first == ID_NULL) {
-      items[it->first].first = ID_NULL;
-      items[it->first].second = false;
-    } else if (it->second.second) {
-      add_item(it->second.first, it->first);
-    } else {
-      add_item(it->second.first);
-    }
+    items[it->first].first = it->second.first;
+    items[it->first].second = it->second.second;
   }
   return *this;
 }
@@ -91,7 +85,6 @@ void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
   }
 }
 
-
-std::map<int, std::pair<id_texture_t, bool>> Inventory::get_items(){
+std::map<int, std::pair<id_texture_t, bool>> Inventory::get_items() {
   return items;
 }

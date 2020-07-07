@@ -169,7 +169,6 @@ void Game::render_entities(SDL_Renderer* renderer) {
 
   for (it2 = items.begin(); it2 != items.end(); it2++) {
     // El item DEBE estar dentro del viewport
-    std::cout << items.size() << std::endl;
     if ((map_piece.x <= it2->second.x) &&
         (it2->second.x <= map_piece.x + screen_width))
       if ((map_piece.y <= it2->second.y) &&

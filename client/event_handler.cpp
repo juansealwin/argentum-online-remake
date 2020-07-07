@@ -82,8 +82,8 @@ void EventHandler::get_events() {
             // Chequeamos si hay item en el slot y si ademas esta equipado o no
             if (events_queue.push(EVENT_SELECT_ITEM, item, item_slot,
                                   is_equipped)) {
-              UseItemCommandDTO* use_item_command =
-                  new UseItemCommandDTO(item, item_slot, is_equipped);
+              UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
+                  get_item_t(item), item_slot, is_equipped);
               commands_queue.push(use_item_command);
             }
           }
