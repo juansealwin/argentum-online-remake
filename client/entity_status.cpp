@@ -2,7 +2,7 @@
 
 EntityStatus::EntityStatus() {}
 
-EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int spell)
+EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
     : x(new_x), y(new_y) {
   // poner los id que usa el server
   switch (type_ent) {
@@ -79,35 +79,45 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int spell)
       break;
   }
   // Vemos si la entidad la esta afectando alguna magia/estado
-  switch (spell) {
+  // Corresponde al numero de item_t que le haya atinado
+  switch (affected_by) {
     case 0:
       spellbound = ID_NULL;
       lifetime = 0;
       break;
 
-    case 1:
+    /*case 11:
+    case 12:
+    case 13:
+    case 14:
+    case 15:
       spellbound = ID_BLEEDING;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_BLEEDING;
       break;
 
-    case 2:
+    case 16:
       spellbound = ID_MAGIC_ARROW;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_MAGIC_ARROW;
       break;
 
-    case 3:
-      spellbound = ID_HEAL;
-      lifetime = FRAMES_PER_TEXTURE * FRAMES_HEAL;
-      break;
-
-    case 4:
+    case 17:
       spellbound = ID_ELECTRIC_SHOCK;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_ELECTRIC_SHOCK;
       break;
 
-    case 5:
+    case 18:
       spellbound = ID_EXPLOSION;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_EXPLOSION;
+      break;
+
+    case 19:
+      spellbound = ID_HEAL;
+      lifetime = FRAMES_PER_TEXTURE * FRAMES_HEAL;
+      break;*/
+
+    default:
+      spellbound = ID_NULL;
+      lifetime = 0;
       break;
   }
 }

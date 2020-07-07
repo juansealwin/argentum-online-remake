@@ -99,6 +99,7 @@ void Hero::equip_armour(unsigned int armour_id) {
 
 void Hero::unequip(unsigned int item_id) {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if(inventory->is_full()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Item *item = equipment->unequip(item_id);
   if (!item) throw ModelException("Tried to unequip item that is not equipped!", "6");
