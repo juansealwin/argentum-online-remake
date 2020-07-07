@@ -136,7 +136,7 @@ void Game::render(SDL_Renderer* renderer) {
   texture_manager.get_texture(background)
       .render(renderer, &map_piece, &viewport);
 
-  // Renderizamos las entidades "vivientes"
+  // Renderizamos las entidades
   render_entities(renderer);
 
   // Renderizamos los objetos que tapan a las entidades
@@ -159,14 +159,26 @@ void Game::load_character(int id, entity_t entity_type, int x, int y) {
 
 void Game::load_item(int id, item_t item, int new_x, int new_y) {
   items[id].type_item = get_item_texture(item);
-  items[id].x = new_x*TILE_SIZE;
-  items[id].y = new_y*TILE_SIZE;
+  items[id].x = new_x * TILE_SIZE;
+  items[id].y = new_y * TILE_SIZE;
 }
-
 
 void Game::render_entities(SDL_Renderer* renderer) {
   std::map<int, Character*>::iterator it;
   std::map<int, dropped_t>::iterator it2;
+
+  for (it2 = items.begin(); it2 != items.end(); it2++) {
+    // El item DEBE estar dentro del viewport
+    std::cout << items.size() << std::endl;
+    if ((map_piece.x <= it2->second.x) &&
+        (it2->second.x <= map_piece.x + screen_width))
+      if ((map_piece.y <= it2->second.y) &&
+          (it2->second.y <= map_piece.y + screen_height)) {
+        texture_manager.get_texture(it2->second.type_item)
+            .render(renderer, NULL, it2->second.x - map_piece.x,
+                    it2->second.y - map_piece.y + HEIGHT_UI);
+      }
+  }
 
   for (it = characters.begin(); it != characters.end(); it++) {
     // El personaje DEBE estar dentro del viewport
@@ -176,18 +188,6 @@ void Game::render_entities(SDL_Renderer* renderer) {
           (it->second->get_y() <= map_piece.y + screen_height)) {
         it->second->render(renderer, map_piece.x, map_piece.y - HEIGHT_UI);
       }
-  }
-  for (it2 = items.begin(); it2 != items.end(); it2++) {
-    // El item DEBE estar dentro del viewport
-    std::cout<<items.size()<<std::endl;
-    if ((map_piece.x <= it2->second.x) &&
-        (it2->second.x <= map_piece.x + screen_width))
-      if ((map_piece.y <= it2->second.y) &&
-          (it2->second.y <= map_piece.y + screen_height)){
-        texture_manager.get_texture(it2->second.type_item)
-            .render(renderer, NULL, map_piece.x, map_piece.y - HEIGHT_UI);
-          std::cout<<"RENDERICE UN ITEM"<<std::endl;
-          }
   }
 }
 
