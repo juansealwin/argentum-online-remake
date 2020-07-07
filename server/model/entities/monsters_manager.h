@@ -20,7 +20,7 @@ class MonstersManager {
 
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> last_update_time;
-  void attack_or_move_to_hero(Monster* m, Hero* h);
+  bool attack_or_move_to_hero(Monster* m, Hero* h);
 };
 
 #endif  // MONSTERS_MANAGER_H

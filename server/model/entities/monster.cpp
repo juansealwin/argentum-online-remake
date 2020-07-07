@@ -24,10 +24,17 @@ void Monster::auto_move() {
 
   int next_x_pos = x_position + x_step;
   int next_y_pos = y_position + y_step;
-  if (!map.tile_is_safe(next_x_pos, next_y_pos)) {
-    move(next_x_pos, next_y_pos);
-  }
+  try_to_move_to_position(next_x_pos, next_y_pos);
+  // if (!map.tile_is_safe(next_x_pos, next_y_pos)) {
+  //   move(next_x_pos, next_y_pos);
+  // }
   if (current_move >= moves.size()) current_move = 0;
+}
+
+void Monster::try_to_move_to_position(int x, int y) {
+  if (!map.tile_is_safe(x, y)) {
+    move(x, y);
+  }
 }
 
 unsigned int Monster::receive_damage(unsigned int damage, bool critical,
@@ -47,7 +54,43 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
 }
 
 bool Monster::is_next_to(int other_x, int other_y) {
-  return (sqrt(pow(other_x - x_position, 2) + pow(other_y - y_position, 2)) == 1);
+  return (HelperFunctions::distance(other_x, x_position, other_y, y_position) ==
+          1);
+}
+
+bool Monster::is_close_to(int other_x, int other_y) {
+  return (HelperFunctions::distance(other_x, x_position, other_y, y_position) <=
+          5);
+}
+
+void Monster::move_closer_to(int other_x, int other_y) {
+  using namespace std;
+  vector<tuple<int, int>> possible_moves = get_possible_next_moves();
+  tuple<int, int> best_move = possible_moves.at(0);
+  int best_distance = HelperFunctions::distance(other_x, get<0>(best_move),
+                                                other_y, get<1>(best_move));
+  for (int j = 1; j < possible_moves.size(); j++) {
+    int curr_x = get<0>(possible_moves.at(j));
+    int curr_y = get<1>(possible_moves.at(j));
+    int current_distance =
+        HelperFunctions::distance(other_x, curr_x, other_y, curr_y);
+    if (current_distance < best_distance) {
+      best_move = possible_moves.at(j);
+      best_distance = current_distance;
+    }
+  }
+  int x = get<0>(best_move);
+  int y = get<1>(best_move);
+  try_to_move_to_position(x, y);
+}
+
+std::vector<std::tuple<int, int>> Monster::get_possible_next_moves() {
+  using namespace std;
+  //solo es posible moverse un casillero
+  return {tuple<int, int>(x_position + 1, y_position),
+          tuple<int, int>(x_position - 1, y_position),
+          tuple<int, int>(x_position, y_position + 1),
+          tuple<int, int>(x_position, y_position - 1)};
 }
 
 void Monster::notify_damage_done(BaseCharacter *other,
