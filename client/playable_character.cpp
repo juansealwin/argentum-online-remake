@@ -300,6 +300,12 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       weapon = ID_ASH_STICK_EQUIPPED;
       break;
 
+    case ID_ELVEN_ELUDE:
+      frame_equipped_w = {body_rect.x, body_rect.y, 25, 45};
+      weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);
+      weapon = ID_ELVEN_ELUDE_EQUIPPED;
+      break;
+
     case ID_KNOTTY_STAFF:
       frame_equipped_w = {body_rect.x, body_rect.y, 25, 45};
       weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);
