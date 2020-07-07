@@ -6,7 +6,6 @@
 #include <vector>
 
 #include "character.h"
-#include "item.h"
 #include "npc.h"
 #include "playable_character.h"
 #include "sound_effect.h"

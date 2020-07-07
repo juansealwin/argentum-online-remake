@@ -2,7 +2,6 @@
 #define PLAYABLE_CHARACTER_H
 
 #include "character.h"
-#include "item.h"
 #include "sound_effect.h"
 #include "spell.h"
 
