@@ -30,6 +30,16 @@ MoveCommandDTO* receive_move(const Socket& socket) {
   return new MoveCommandDTO(movement_t(movement_type));
 }
 
+UseItemCommandDTO* receive_use_item(const Socket& socket) {
+  uint8_t item;
+  socket.recv(&item, 1);
+  uint8_t item_slot;
+  socket.recv(&item_slot, 1);
+  uint8_t is_equipped;
+  socket.recv(&is_equipped, 1);
+  return new UseItemCommandDTO(item, item_slot, is_equipped);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -46,6 +56,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return new AttackCommandDTO();
     case PICK_UP_ITEM_COMMAND:
       return new PickUpCommandDTO();
+    case USE_ITEM_COMMAND:
+      return receive_use_item(socket);
     default:
       return nullptr;
   }

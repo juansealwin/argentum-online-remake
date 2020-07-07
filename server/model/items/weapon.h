@@ -8,6 +8,7 @@ class Weapon : public Item {
          unsigned int range);
   virtual ~Weapon();
   Weapon(const Weapon &) = delete;
+  virtual void use(Hero *hero) override;
   unsigned int min_damage, max_damage, range;
 };
 #endif  // WEAPON_H

@@ -45,6 +45,8 @@ class Hero : public BaseCharacter {
   void equip_shield(unsigned int shield_id);
   void equip_helmet(unsigned int helmet_id);
   void equip_armour(unsigned int armour_id);
+  void use_item(unsigned int item_id);
+  void unequip(unsigned int item_id);
   void unequip_weapon();
   void unequip_staff();
   void unequip_shield();
@@ -74,7 +76,7 @@ class Hero : public BaseCharacter {
   // para el caso del staff que cura podria hacerse algo parecido
   void consume(unsigned int item_id);
   void revive();
-  unsigned int remove_surplus_coins();
+  unsigned int remove_excess_gold();
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;

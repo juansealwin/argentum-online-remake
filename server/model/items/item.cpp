@@ -7,5 +7,3 @@ Item::~Item() {}
 bool Item::can_be_used_by(Hero *hero) {
   return true;
 }
-
-void Item::use(Hero *hero) {}

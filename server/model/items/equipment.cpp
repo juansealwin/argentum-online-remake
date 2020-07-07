@@ -3,6 +3,7 @@
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
+
 Equipment::Equipment(Weapon *weapon, Staff *staff, DefensiveItem *helmet,
                      DefensiveItem *armour, DefensiveItem *shield)
     : weapon(weapon),
@@ -90,14 +91,45 @@ void Equipment::equip_shield(DefensiveItem *shield) { this->shield = shield; }
 
 void Equipment::equip_helmet(DefensiveItem *helmet) { this->helmet = helmet; }
 
-void Equipment::equip_armour(DefensiveItem *armour) { this->armour = armour; }
+void Equipment::equip_armour(DefensiveItem *armour) { 
+  this->armour = armour;
+  if(this->armour) std::cout << "succesfully set this->armour, the id is " << this->armour->id << std::endl;
+  }
 
 Weapon *Equipment::unequip_weapon() {
   Weapon *w = weapon;
   weapon = nullptr;
   return w;
 }
-
+Item *Equipment::unequip(unsigned int item_id) {
+  Item *i = nullptr;
+  if (staff)
+    if (staff->id == item_id) {
+      i = staff;
+      staff = nullptr;
+    }
+  if (weapon)
+    if (weapon->id == item_id) {
+      i = weapon;
+      weapon = nullptr;
+    }
+  if (armour)
+    if (armour->id == item_id) {
+      i = armour;
+      armour = nullptr;
+    }
+  if (helmet)
+    if (helmet->id == item_id) {
+      i = helmet;
+      helmet = nullptr;
+    }
+  if (shield)
+    if (shield->id == item_id) {
+      i = shield;
+      shield = nullptr;
+    }
+  return i;
+}
 Staff *Equipment::unequip_staff() {
   Staff *s = staff;
   staff = nullptr;
@@ -124,8 +156,10 @@ DefensiveItem *Equipment::unequip_armour() {
 
 unsigned int Equipment::primary_weapon_id() {
   unsigned int id = 0;
-  if (weapon) id = weapon->id;
-  else if (staff) id = staff->id;
+  if (weapon)
+    id = weapon->id;
+  else if (staff)
+    id = staff->id;
   return id;
 }
 
@@ -137,4 +171,27 @@ uint8_t Equipment::count() {
   if (helmet) count++;
   if (armour) count++;
   return count;
+}
+
+bool Equipment::can_hold_weapon() {
+  return (!staff);
+}
+bool Equipment::can_hold_staff() {
+  return (!weapon);
+}
+
+bool Equipment::has_weapon() {
+  return weapon;
+}
+bool Equipment::has_staff() {
+  return staff;
+}
+bool Equipment::has_helmet() {
+  return helmet;
+}
+bool Equipment::has_armour() {
+  return armour;
+}
+bool Equipment::has_shield() {
+  return shield;
 }

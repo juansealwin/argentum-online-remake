@@ -14,7 +14,8 @@ bool Staff::can_be_used_by(Hero *hero) {
 }
 
 void Staff::use(Hero *hero) {
-  hero->current_hp = std::min(hero->current_hp + hp_regen, hero->max_hp);
-  
-  hero->current_mana -= mana_consumption;
+  hero->unequip_staff();
+  hero->equip_staff(this->id);
+  // hero->current_hp = std::min(hero->current_hp + hp_regen, hero->max_hp);
+  // hero->current_mana -= mana_consumption;
 }

@@ -5,7 +5,7 @@
 
 class UseItemCommandDTO : public CommandDTO {
  public:
-  UseItemCommandDTO(const int, const int, const bool);
+  UseItemCommandDTO(const int it, const int slot, const bool equip);
   UseItemCommandDTO(const UseItemCommandDTO&) = delete;
   ~UseItemCommandDTO();
   int get_id();

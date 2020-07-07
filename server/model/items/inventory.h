@@ -16,7 +16,10 @@ class Inventory {
   bool has_item(unsigned int id);
   bool is_full();
   bool is_empty();
+  //obtiene referencia al item y lo remueve del inventario.
   Item* remove_item(unsigned int id);
+  //obtiene una referencia al item, pero no lo remueve del inventario.
+  Item* item_with_id(unsigned int id);
   friend class Serializer;
   friend class Drop;
   private:

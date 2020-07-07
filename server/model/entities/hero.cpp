@@ -1,9 +1,8 @@
 #include "hero.h"
-
 #include "defensive_item.h"
+#include "drop.h"
 #include "staff.h"
 #include "weapon.h"
-#include "drop.h"
 
 Hero::Hero(
     unsigned int unique_id, int x, int y, unsigned int race_id, char repr,
@@ -40,7 +39,6 @@ Hero::Hero(
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap) {
-  std::cout << "created hero with id " << unique_id << std::endl;
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size);
@@ -57,22 +55,25 @@ void Hero::regenerate() {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
-  if (inventory->has_item(weapon_id)) {
+  if (inventory->has_item(weapon_id) && equipment->can_hold_weapon()) {
     Item *w = inventory->remove_item(weapon_id);
     equipment->equip_weapon(dynamic_cast<Weapon *>(w));
   }
 }
 void Hero::equip_staff(unsigned int staff_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
-  if (inventory->has_item(staff_id)) {
+  if (inventory->has_item(staff_id) && equipment->can_hold_staff()) {
     Item *w = inventory->remove_item(staff_id);
     equipment->equip_staff(dynamic_cast<Staff *>(w));
   }
 }
 void Hero::equip_shield(unsigned int shield_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(shield_id)) {
@@ -81,6 +82,7 @@ void Hero::equip_shield(unsigned int shield_id) {
   }
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
+
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(helmet_id)) {
@@ -89,6 +91,7 @@ void Hero::equip_helmet(unsigned int helmet_id) {
   }
 }
 void Hero::equip_armour(unsigned int armour_id) {
+ 
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(armour_id)) {
@@ -96,35 +99,58 @@ void Hero::equip_armour(unsigned int armour_id) {
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
   }
 }
+
+void Hero::unequip(unsigned int item_id) {
+  if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full()) throw ModelException("Inventory is full!", "6");
+  meditating = false;
+  Item *item = equipment->unequip(item_id);
+  if (!item)
+    throw ModelException("Tried to unequip item that is not equipped!", "6");
+  inventory->add_item(item);
+}
+
 void Hero::unequip_weapon() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_weapon()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
-  if (weapon) inventory->add_item(weapon);
+  if (weapon) {inventory->add_item(weapon);}  
 }
 void Hero::unequip_staff() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_staff()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_shield()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_helmet()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  if (inventory->is_full() && equipment->has_armour()) throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
+}
+
+void Hero::use_item(unsigned int item_id) {
+  if (ghost_mode) throw ModelException("Ghosts can't use items!", "5");
+  meditating = false;
+  Item *i = inventory->item_with_id(item_id);
+  i->use(this);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
@@ -149,8 +175,7 @@ bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
 void Hero::add_gold(unsigned int gold) { this->gold += gold; }
 
 void Hero::pick_up_drop(Drop *drop) {
-  if (ghost_mode)
-    throw ModelException("Ghosts can't pick up drops!", "4");
+  if (ghost_mode) throw ModelException("Ghosts can't pick up drops!", "4");
   if ((drop->size() > 0) && (this->has_free_space())) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());
@@ -174,11 +199,11 @@ unsigned int Hero::gold_space_remaining() {
 bool Hero::has_excedent_coins() { return (gold > max_safe_gold); }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
-  std::cout << "My spell hit an enemy!!!" << std::endl;
+  // std::cout << "My spell hit an enemy!!!" << std::endl;
   update_experience(damage_done, other);
-  std::cout << "Updated experience!!: " << experience << " out of "
-            << next_level_xp_limit << std::endl;
-  std::cout << " My level is : " << level << std::endl;
+  // std::cout << "Updated experience!!: " << experience << " out of "
+  //           << next_level_xp_limit << std::endl;
+  // std::cout << " My level is : " << level << std::endl;
 }
 
 const Attack Hero::attack() {
@@ -273,18 +298,12 @@ void Hero::level_up() {
   max_safe_gold = max_safe_gold_multiplier * level;
 }
 
-unsigned int Hero::remove_surplus_coins() {
-  unsigned int surplus_coins = 0;
+unsigned int Hero::remove_excess_gold() {
+  unsigned int excess_gold = 0;
 
   if (gold > max_safe_gold) {
-    std::cout << " gold: " << gold << " is higher than mxsfg " << max_safe_gold
-              << std::endl;
-    surplus_coins = gold - max_safe_gold;
+    excess_gold = gold - max_safe_gold;
     gold = max_safe_gold;
   }
-
-  if (surplus_coins > 0) {
-    std::cout << "surplus coins are " << surplus_coins << std::endl;
-  };
-  return surplus_coins;
+  return excess_gold;
 }
