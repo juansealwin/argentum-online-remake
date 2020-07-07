@@ -261,7 +261,7 @@
     }
   },
   "critialDamageMiltiplier": 2,
-  "inventorySize": 5,
+  "inventorySize": 10,
   "criticalDamageProbability": 0.125,
   "evasionProbability": 0.001,
   "maxSafeGoldMultiplier": 400,

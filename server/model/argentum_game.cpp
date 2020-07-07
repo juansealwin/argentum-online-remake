@@ -203,25 +203,22 @@ void ArgentumGame::update() {
   // actualizar monstruos antes que heroes ya que pueden atacarlos y matarlos
   // creando drops
   monsters_manager.update(std::ref(monsters), std::ref(heroes));
-  monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
   monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
                                     std::ref(entities_cfg["npcs"]),
                                     std::ref(entities_ids));
 
-  drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
-                             std::ref(drops), entities_cfg["items"],
-                             std::ref(entities_ids));
-  drops_manager.remove_old_and_empty_drops(std::ref(drops));
-
   heroes_manager.update(std::ref(heroes));
-  heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
 
-  // actualizar siempre al final los proyectiles ya que tambien afectan el
-  // estado de heroes/monstruos
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles));
   projectile_manager.remove_death_projectiles(std::ref(projectiles),
                                               std::ref(map));
+  drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
+                             std::ref(drops), entities_cfg["items"],
+                             std::ref(entities_ids));
+  drops_manager.remove_old_and_empty_drops(std::ref(drops));
+  heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
+  monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
 }
 
 void ArgentumGame::run() {
