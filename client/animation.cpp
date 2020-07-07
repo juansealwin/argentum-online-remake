@@ -17,7 +17,7 @@ Animation::Animation(int char_width, int char_height/*, size_t current_clip_down
     : character_width(char_width), character_height(char_height) {
   // Todos los items equipables(menos cascos) tienen esta cantidad de frames
   clips_up_down = 5;
-  clips_up_down = 4;
+  clips_left_right = 4;
   current_clip[CLIP_DOWN] = 0;   // current_clip_down;
   current_clip[CLIP_UP] = 0;     // current_clip_up;
   current_clip[CLIP_LEFT] = 0;   // current_clip_left;

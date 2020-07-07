@@ -66,28 +66,34 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
             it->second.get_equipped(WEAPON));
     }
 
-    // Si todavía queda resto de alguna animación de hechizo, lo actualizamos
-    // y restamos al lifetime de lo que queda de dicha animación
-    if (characters_afected[it->first].lifetime > 0) {
-      write_map->update_spellbound(it->first,
-                                   characters_afected[it->first].type_spell,
-                                   characters_afected[it->first].lifetime);
-      characters_afected[it->first].lifetime--;
-    }
-
     // Mofificamos/creamos el status para la proxima pasada
     current_status[it->first] = it->second;
+  }
+
+  // Si todavía queda resto de alguna animación de hechizo, lo actualizamos
+  // y restamos al lifetime de lo que queda de dicha animación
+  for (it_afected = characters_afected.begin();
+       it_afected != characters_afected.end(); it_afected++) {
+    if (it_afected->second.lifetime >= 0) {
+      write_map->update_spellbound(it_afected->first,
+                                   it_afected->second.type_spell,
+                                   it_afected->second.lifetime);
+      it_afected->second.lifetime--;
+      // Si se termino el lifetime del hechizo borramos la id del pj afectado
+    } else if (it_afected->second.lifetime == -1) {
+      characters_afected.erase(it_afected->first);
+    }
   }
 
   // Comprobamos si hay entidades que no están más en el mapa
   for (it = current_status.begin(); it != current_status.end(); it++) {
     it2 = next_status.find(it->first);
-    // Si no están más, las borramos del current status, del mapa y de afectados
-    if (it2 == next_status.end()) {
+    it_afected = characters_afected.find(it->first);
+    // Si no están y además no tienen una animación en curso encima, las
+    // borramos del current status y del mapa
+    if (it2 == next_status.end() && it_afected == characters_afected.end()) {
       current_status.erase(it->first);
       write_map->clean_entity(it->first, it->second.get_type_entity());
-
-      characters_afected.erase(it->first);
     }
   }
 }

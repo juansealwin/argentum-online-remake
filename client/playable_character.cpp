@@ -155,16 +155,14 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
 
   // Si tiene el escudo equipado lo renderizamos
   if (shield != ID_NULL) {
-    texture_manager.get_texture(weapon).render(renderer, &frame_equipped_s,
-                                               x - width / 2 - x_rel,
-                                               y - height / 2 - y_rel);
+    texture_manager.get_texture(shield).render(
+        renderer, &frame_equipped_s, x - x_rel, y - height / 2 - y_rel);
   }
 
   // Si tiene el arma equipada la renderizamos
   if (weapon != ID_NULL) {
-    texture_manager.get_texture(weapon).render(renderer, &frame_equipped_w,
-                                               x - width / 2 - x_rel,
-                                               y - height / 2 - y_rel);
+    texture_manager.get_texture(weapon).render(
+        renderer, &frame_equipped_w, x - x_rel, y - height * 3 / 5 - y_rel);
   }
 
   // Si esta afectado por algún hechizo lo renderizamos
