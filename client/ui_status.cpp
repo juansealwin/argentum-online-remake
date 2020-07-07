@@ -41,12 +41,12 @@ UIStatus& UIStatus::operator=(const UIStatus& other_status) {
   return *this;
 }
 
-void UIStatus::add_item(int new_item, int slot) {
-  inventory.add_item(get_item(new_item), slot);
+void UIStatus::add_item(id_texture_t new_item, int slot) {
+  inventory.add_item(new_item, slot);
 }
 
-void UIStatus::add_item(int new_item) {
-  inventory.add_item(get_item(new_item));
+void UIStatus::add_item(id_texture_t new_item) {
+  inventory.add_item(new_item);
 }
 
 void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {

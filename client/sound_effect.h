@@ -26,16 +26,11 @@ class SoundEffect {
   void channel_finished();
 
  public:
-  // Constructor por defecto
   SoundEffect();
-
-  // Destructor, libera el Mix_Chunk
   ~SoundEffect();
-
-  // Setea los archivos de sonidos
   void set_sound(std::string);
   void set_music(std::string);
-
+  
   // Reproduce el sonido loops+1
   // veces. -1: reproduce eternamente
   // hasta que se lo detenga.
@@ -45,21 +40,10 @@ class SoundEffect {
   // veces. -1: reproduce eternamente
   // hasta que se lo detenga.
   void play_music(int loops = -1);
-
-  // Aumenta el volumen de la musica
   void increase_music_volume(int inc = 10);
-
-  // Disminuye el volumen de la musica
   void decrease_music_volume(int dec = 10);
-
-  // Para el sonido
   void stop_sound();
-
-  // Para la música
   void stop_music();
-
-  // Checkea si esta playing
-  bool is_playing();
 };
 
 #endif

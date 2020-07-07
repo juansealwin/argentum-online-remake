@@ -12,13 +12,22 @@ class EntityStatus {
   int y;
   bool is_alive;
   id_texture_t spellbound;
-  item_t item;
+  id_texture_t item;
   int lifetime;
-
+  id_texture_t helmet;
+  id_texture_t armor;
+  id_texture_t shield;
+  id_texture_t weapon;
 
  public:
   EntityStatus();
+  // Constructor para drops
+  EntityStatus(id_texture_t, int, int);
+  // Constructor para npcs
   EntityStatus(int, int, int, int);
+  // Constructor para personajes jugables
+  EntityStatus(int, int, int, int, id_texture_t, id_texture_t, id_texture_t,
+               id_texture_t);
   ~EntityStatus();
   EntityStatus& operator=(const EntityStatus&);
   bool is_equal(EntityStatus);
@@ -27,7 +36,9 @@ class EntityStatus {
   entity_t get_type_entity() const;
   id_texture_t is_afected() const;
   int get_life_time() const;
-  item_t get_item() const;
+  id_texture_t get_item() const;
+  void set_spellbound(int);
+  id_texture_t get_equipped(equipped_t);
 };
 
 #endif
