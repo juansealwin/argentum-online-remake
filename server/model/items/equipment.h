@@ -5,6 +5,7 @@ class Weapon;
 class DefensiveItem;
 class Staff;
 class Hero;
+class Item;
 class Equipment {
  public:
   // constructores de equipamiento vacio o con items
@@ -29,6 +30,7 @@ class Equipment {
   DefensiveItem *unequip_shield();
   DefensiveItem *unequip_helmet();
   DefensiveItem *unequip_armour();
+  Item *unequip(unsigned int item_id);
   unsigned int get_attack_bonus();
   unsigned int get_defense_bonus();
   unsigned int primary_weapon_id();

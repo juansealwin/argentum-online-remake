@@ -45,6 +45,7 @@ class ArgentumGame : public Thread {
   unsigned int get_room();
   void kill();
   void print_debug_map();
+  void hero_dequip_item(int entity_id, int item_id);
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);

@@ -96,6 +96,15 @@ void Hero::equip_armour(unsigned int armour_id) {
     equipment->equip_armour(dynamic_cast<DefensiveItem *>(w));
   }
 }
+
+void Hero::unequip(unsigned int item_id) {
+  if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
+  meditating = false;
+  Item *item = equipment->unequip(item_id);
+  if (!item) throw ModelException("Tried to unequip item that is not equipped!", "6");
+  inventory->add_item(item);
+}
+
 void Hero::unequip_weapon() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;

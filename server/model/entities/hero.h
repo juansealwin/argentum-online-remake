@@ -45,6 +45,7 @@ class Hero : public BaseCharacter {
   void equip_shield(unsigned int shield_id);
   void equip_helmet(unsigned int helmet_id);
   void equip_armour(unsigned int armour_id);
+  void unequip(unsigned int item_id);
   void unequip_weapon();
   void unequip_staff();
   void unequip_shield();

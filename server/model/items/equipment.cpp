@@ -3,6 +3,7 @@
 #include "defensive_item.h"
 #include "staff.h"
 #include "weapon.h"
+
 Equipment::Equipment(Weapon *weapon, Staff *staff, DefensiveItem *helmet,
                      DefensiveItem *armour, DefensiveItem *shield)
     : weapon(weapon),
@@ -97,7 +98,35 @@ Weapon *Equipment::unequip_weapon() {
   weapon = nullptr;
   return w;
 }
-
+Item *Equipment::unequip(unsigned int item_id) {
+  Item *i = nullptr;
+  if (staff)
+    if (staff->id == item_id) {
+      i = staff;
+      staff = nullptr;
+    }
+  if (weapon)
+    if (weapon->id == item_id) {
+      i = weapon;
+      weapon = nullptr;
+    }
+  if (armour)
+    if (armour->id == item_id) {
+      i = armour;
+      armour = nullptr;
+    }
+  if (helmet)
+    if (helmet->id == item_id) {
+      i = helmet;
+      helmet = nullptr;
+    }
+  if (shield)
+    if (shield->id == item_id) {
+      i = shield;
+      shield = nullptr;
+    }
+  return i;
+}
 Staff *Equipment::unequip_staff() {
   Staff *s = staff;
   staff = nullptr;
@@ -124,8 +153,10 @@ DefensiveItem *Equipment::unequip_armour() {
 
 unsigned int Equipment::primary_weapon_id() {
   unsigned int id = 0;
-  if (weapon) id = weapon->id;
-  else if (staff) id = staff->id;
+  if (weapon)
+    id = weapon->id;
+  else if (staff)
+    id = staff->id;
   return id;
 }
 

@@ -69,6 +69,7 @@ void EventHandler::get_events() {
           }
         }
         // Eventos de mouse
+         
         else if (event.type == SDL_MOUSEBUTTONDOWN) {
           int x, y;
           SDL_GetMouseState(&x, &y);
@@ -83,7 +84,7 @@ void EventHandler::get_events() {
             if (events_queue.push(EVENT_SELECT_ITEM, item, item_slot,
                                   is_equipped)) {
               UseItemCommandDTO* use_item_command =
-                  new UseItemCommandDTO(item, item_slot, is_equipped);
+                  new UseItemCommandDTO(get_item_t(item), item_slot, is_equipped);
               commands_queue.push(use_item_command);
             }
           }

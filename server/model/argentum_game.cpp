@@ -100,6 +100,18 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 }
 
 /*********************** Acciones personajes *************************/
+
+void ArgentumGame::hero_dequip_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->unequip(item_id);
+  }
+
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   BaseCharacter *character =
       dynamic_cast<BaseCharacter *>(heroes.at(entity_id));
@@ -108,17 +120,6 @@ void ArgentumGame::move_entity(int entity_id, int x, int y) {
 
 void ArgentumGame::throw_projectile(int attacker_id) {
   Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
-  //   Monster *e = new Monster(entities_ids, 48, 48,
-  //                          entities_cfg["npcs"]["zombie"]["id"].asInt(), 'g',
-  //                          entities_cfg["npcs"]["zombie"]["maxHp"].asInt(),
-  //                          entities_cfg["npcs"]["zombie"]["level"].asInt(),
-  //                          entities_cfg["npcs"]["zombie"]["dps"].asInt(), map);
-
-  // std::cout << "placing monster with id: " << entities_ids << std::endl;
-  // map.ocupy_cell(48, 48, entities_ids);
-  // monsters.emplace(entities_ids++, e);
-  // std::cout << "value of entities ids after placing a monster: " << entities_ids << std::endl;
-  // std::cout << "value of hero id is " << hero->unique_id << std::endl;
   try {
     if (map.tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
@@ -214,7 +215,7 @@ void ArgentumGame::run() {
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
-    //print_debug_map();
+    // print_debug_map();
     send_game_status();
     long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
@@ -290,7 +291,6 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       std::string hero_class,
                                       std::string hero_name, unsigned int x,
                                       unsigned int y) {
-
   std::cout << "placing hero at position (" << x << ", " << y << ")"
             << std::endl;
   std::cout << "new hero id will be " << entities_ids << std::endl;
