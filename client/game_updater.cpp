@@ -61,7 +61,7 @@ void GameUpdater::deserialize_status() {
   // las de 1 byte y uint16_t para las de 2 bytes
   int entity_type, y, x, k, orientation, items_in_drop, drop_has_coins,
       affected_by, name_size, class_id, meditating, ghost_mode, items_equiped,
-      current_item_slot, current_item_id, items_inventory;
+      items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
       intelligence, agility, constitution, gold, xp_limit, current_xp;
 
@@ -70,29 +70,28 @@ void GameUpdater::deserialize_status() {
     entity_type = extract<uint8_t>(status_serialized, j);
     y = extract<uint8_t>(status_serialized, j);
     x = extract<uint8_t>(status_serialized, j);
-    k = 0;
-    drop_has_coins = 0;
-    // next_status[(int)id] = CharacterStatus(entity_type, x, y, k);
     orientation = extract<uint8_t>(status_serialized, j);
+    // En principio la entidad no fue afectada por un arma
+    // affected_by = 0;
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
     // Dejamos afuera a los npc de compra y venta
     if (is_drop(entity_type)) {
       items_in_drop = extract<uint8_t>(status_serialized, j);
-      //std::cout << "ES DROP "<<std::endl;
+      // std::cout << "ES DROP "<<std::endl;
       for (int x = items_in_drop; x > 0; x--) {
-        current_item_id = extract<uint8_t>(status_serialized, j);
+        int current_item_id = extract<uint8_t>(status_serialized, j);
         entity_type = current_item_id;
-        //std::cout << "dropped item " << current_item_id << " X: " << x * 32
-          //        << " Y: "<<y*32<<std::endl;
+        // std::cout << "dropped item " << current_item_id << " X: " << x * 32
+        //        << " Y: "<<y*32<<std::endl;
       }
-      // Si drop_has_coins == 1 hay oro, si es 0 no
 
+      // Si drop_has_coins == 1 hay oro, si es 0 no
       drop_has_coins = extract<uint8_t>(status_serialized, j);
-    }
-    if (is_hero(entity_type) || is_monster(entity_type)) {
-      //std::cout << "ES HERO "<<std::endl;
+
+    } else if (is_hero(entity_type) || is_monster(entity_type)) {
+      // std::cout << "ES HERO "<<std::endl;
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
       current_hp = ntohs(extract<uint16_t>(status_serialized, j));
       level = ntohs(extract<uint16_t>(status_serialized, j));
@@ -127,6 +126,7 @@ void GameUpdater::deserialize_status() {
         next_ui_status = UIStatus(name, level, max_hp, current_hp, mana_max,
                                   curr_mana, xp_limit, current_xp, gold);
 
+      // Agregamos los items equipados
       items_equiped = extract<uint8_t>(status_serialized, j);
       // std::cout << "@@@Hero stats@@@" << std::endl
       //           << "max_hp: " << max_hp << " max_mana " << mana_max << "
@@ -135,25 +135,27 @@ void GameUpdater::deserialize_status() {
       //           << items_equiped << "name size" << name_size << std::endl;
       // std::cout << "@@Deserializing items equiped@@" << std::endl;
       for (int x = items_equiped; x > 0; x--) {
-        current_item_slot = extract<uint8_t>(status_serialized, j);
-        current_item_id = extract<uint8_t>(status_serialized, j);
+        int current_item_slot = extract<uint8_t>(status_serialized, j);
+        int current_item_id = extract<uint8_t>(status_serialized, j);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
           next_ui_status.add_item(current_item_id, current_item_slot);
       }
 
+      // Agregamos los items del inventario
       items_inventory = extract<uint8_t>(status_serialized, j);
 
       // std::cout << "items in inventory: " << items_inventory << std::endl;
       // std::cout << "@@Deserializing items in invetory@@" << std::endl;
       for (int x = items_inventory; x > 0; x--) {
-        current_item_id = extract<uint8_t>(status_serialized, j);
+        int current_item_id = extract<uint8_t>(status_serialized, j);
         // Si son los items del cliente, queremos mostrarlos en la UI
+        // std::cout<<"ITEM: "<<current_item_id<<std::endl;
         if (id == id_hero) next_ui_status.add_item(current_item_id);
       }
     } else {
       // Deberia ser un NPC, no tiene mas atributos
     }
-    next_status[(int)id] = EntityStatus(entity_type, x, y, k);
+    next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
   }
 }
