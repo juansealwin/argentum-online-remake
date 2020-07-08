@@ -6,8 +6,8 @@
 #include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           Json::Value &map_cfg, std::ifstream &entities_config)
-    : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg) {
+                           Json::Value &map_cfg, std::ifstream &entities_config, unsigned int &entities_ids)
+    : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg), alive(true),  entities_ids(entities_ids) {
   std::unique_lock<std::mutex> lock(mutex);
   // Json::Value map_cfg;
   // map_config >> map_cfg;
@@ -205,7 +205,7 @@ void ArgentumGame::update() {
   monsters_manager.update(std::ref(monsters), std::ref(heroes));
   monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
                                     std::ref(entities_cfg["npcs"]),
-                                    std::ref(entities_ids));
+                                    entities_ids);
 
   heroes_manager.update(std::ref(heroes));
 
@@ -215,7 +215,7 @@ void ArgentumGame::update() {
                                               std::ref(map));
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
                              std::ref(drops), entities_cfg["items"],
-                             std::ref(entities_ids));
+                             entities_ids);
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
   heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
   monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
@@ -303,7 +303,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       unsigned int y) {
   std::cout << "placing hero at position (" << x << ", " << y << ")"
             << std::endl;
-  std::cout << "new hero id will be " << entities_ids << std::endl;
+  // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(

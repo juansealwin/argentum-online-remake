@@ -39,6 +39,7 @@ class ClientListener : public Thread {
    que hayan muerto o hayan terminado de jugar
   */
   void garbage_collector();
+  unsigned int entities_ids = 0;
 };
 
 #endif  // CLIENTLISTENER_H

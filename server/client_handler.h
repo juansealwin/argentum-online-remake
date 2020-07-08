@@ -32,6 +32,7 @@ class ClientHandler {  //: public Thread {
   BlockingThreadSafeQueue<Notification *> *notifications_queue;
   Socket peer_socket;
   bool alive = true;
+  
 };
 
 #endif  // CLIENTHANDLER_H

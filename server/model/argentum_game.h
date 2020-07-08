@@ -39,7 +39,7 @@ class ArgentumGame : public Thread {
   //              std::ifstream &map_config, std::ifstream &entities_config);
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
-               std::ifstream &entities_config);
+               std::ifstream &entities_config, unsigned int &entities_ids);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -72,6 +72,7 @@ class ArgentumGame : public Thread {
   std::string map_name;
   Map map;
   bool alive = true;
+  unsigned int &entities_ids;
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
@@ -91,7 +92,7 @@ class ArgentumGame : public Thread {
 
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
-  unsigned int entities_ids = 0;
+  
   std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);

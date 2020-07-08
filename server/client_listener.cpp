@@ -11,7 +11,7 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
   server_socket.bind_and_listen(port);
   this->server_socket = std::move(server_socket);
   // Mover constante a cfg.
-  const int x = 2;
+  const int x = 1;
   for (int i = 0; i < x; i++) {
     std::ifstream map_file(map_cfg_file);
     std::ifstream entities_file(entities_cfg_file);
@@ -20,7 +20,7 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
     Json::Value map_cfg;
     map_file >> map_cfg;
     ArgentumGame *game =
-        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file);
+        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file, std::ref(entities_ids));
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
