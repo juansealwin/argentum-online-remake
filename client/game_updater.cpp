@@ -179,8 +179,8 @@ void GameUpdater::deserialize_status() {
       }
       // Agregamos la entidad "personaje jugable"
       next_status[(int)id] =
-          EntityStatus(entity_type, x, y, 1, affected_by, helmet, armor,
-                       shield, weapon);
+          EntityStatus(entity_type, x, y, ghost_mode, affected_by, helmet,
+                       armor, shield, weapon);
     }
   }
 }
