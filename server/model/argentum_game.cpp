@@ -191,8 +191,11 @@ ArgentumGame::remove_hero_and_notification_queue(int player_id) {
       it_queues;
   it_heroes = heroes.find(player_id);
   it_queues = queues_notifications.find(player_id);
-  return std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>(
-      it_heroes->second, it_queues->second);
+  Hero *hero = it_heroes->second;
+  BlockingThreadSafeQueue<Notification *> *q = it_queues->second;
+  heroes.erase(player_id);
+  queues_notifications.erase(player_id);
+  return std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>(hero, q);
 }
 
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
