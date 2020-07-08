@@ -56,12 +56,16 @@ class ArgentumGame : public Thread {
   // devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class,
                             std::string hero_name);
-  void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id);
+  void add_existing_hero(Hero *hero, unsigned int id);
+  void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue,
+                              unsigned int player_id);
   // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
-
+  // remueve y devuelve el heroe y su cola de notificaciones asociada
+  std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>
+  remove_hero_and_notification_queue(int player_id);
   friend class Serializer;
-
+  ThreadSafeQueue<Command *> * get_commands_queue();
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -92,14 +96,18 @@ class ArgentumGame : public Thread {
 
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
-  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *> queues_notifications;
-  //std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>
+      queues_notifications;
+
+  // std::vector<BlockingThreadSafeQueue<Notification *> *>
+  // queues_notifications;
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);
   // agrega heroe en posicion x,y (los ejes estan invertidos)
   unsigned int place_hero(std::string hero_race, std::string hero_class,
                           std::string hero_name, unsigned int x,
                           unsigned int y);
+
   void tests_proyectiles();
   void tests_drops();
   void place_monster(unsigned int x, unsigned int y);

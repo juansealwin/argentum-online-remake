@@ -26,7 +26,12 @@ void ClientCommandReceiver::run() {
   while (alive) {
     CommandDTO *command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
-      if (command_blocker.can_process(command_dto)) {
+      ChangeGameRoomDTO *cgrDTO = dynamic_cast<ChangeGameRoomDTO*>(command_dto);
+      if (cgrDTO) {
+        change_game_room(cgrDTO->room_number - 1);
+
+      }
+      else if (command_blocker.can_process(command_dto)) {
         Command *command = CommandFactory::create_command(command_dto, hero_id);
         commands_queue->push(command);
       }
@@ -41,3 +46,19 @@ void ClientCommandReceiver::run() {
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }
+
+/********************** metodos privados ********************/
+
+void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
+  if (current_game_room == new_game_room) return;
+  std::cout << "Changing to game game room: " << new_game_room << std::endl;
+  std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *> hero_and_queue =
+      game_rooms.at(current_game_room)
+          ->remove_hero_and_notification_queue(hero_id);
+  game_rooms.at(new_game_room)
+      ->add_existing_hero(std::get<0>(hero_and_queue), hero_id);
+  game_rooms.at(new_game_room)
+      ->add_notification_queue(std::get<1>(hero_and_queue), hero_id);
+  commands_queue = game_rooms.at(new_game_room)->get_commands_queue();
+  current_game_room = new_game_room;
+}

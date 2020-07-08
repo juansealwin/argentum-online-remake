@@ -47,4 +47,13 @@ void BaseCharacter::clear_effects() {
   affected_by = 0;
 }
 
+void BaseCharacter::set_position(int x, int y) {
+  x_position = x;
+  y_position = y;
+}
+
+void BaseCharacter::set_map(Map &map) {
+  this->map = map;
+}
+
 BaseCharacter::~BaseCharacter() {}

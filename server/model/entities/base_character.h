@@ -31,6 +31,8 @@ class BaseCharacter : public Entity {
   virtual const Attack attack() = 0;
   virtual void notify_damage_done(BaseCharacter *other,
                                   unsigned int damage_done) = 0;
+  void set_position(int x, int y);
+  void set_map(Map &map);
   //remueve efecto que recibe por las armas
   void clear_effects();
   int current_hp;

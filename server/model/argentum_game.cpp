@@ -183,15 +183,43 @@ void ArgentumGame::kill_player(unsigned int player_id) {
 
 /*********************** Fin acciones personajes *********************/
 
+std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>
+ArgentumGame::remove_hero_and_notification_queue(int player_id) {
+  std::unique_lock<std::mutex> lock(mutex);
+  std::map<unsigned int, Hero *>::iterator it_heroes;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it_queues;
+  it_heroes = heroes.find(player_id);
+  it_queues = queues_notifications.find(player_id);
+  return std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>(
+      it_heroes->second, it_queues->second);
+}
+
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
                                         std::string hero_class,
                                         std::string hero_name) {
+  std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map.get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   unsigned int new_player_id =
       place_hero(hero_race, hero_class, hero_name, x, y);
   return new_player_id;
+}
+
+void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
+  std::cout << "Currently in game room: " << room << " adding a existing hero "
+            << std::endl;
+  std::unique_lock<std::mutex> lock(mutex);
+  std::tuple<int, int> free_tile = map.get_random_free_space();
+  int x = std::get<0>(free_tile);
+  int y = std::get<1>(free_tile);
+  hero->set_position(x, y);
+  std::cout << "setting new map" << std::endl;
+  hero->set_map(std::ref(map));
+  std::cout << "setted map " << std::endl;
+  map.ocupy_cell(x, y, id);
+  heroes.emplace(id, hero);
 }
 
 void ArgentumGame::kill() {
@@ -263,9 +291,18 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
 
 void ArgentumGame::add_notification_queue(
     BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id) {
+  std::cout << "Currently in game room: " << room
+            << " adding noptification queue " << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   // queues_notifications.push_back(queue);
   queues_notifications.emplace(player_id, queue);
+}
+
+ThreadSafeQueue<Command *> *ArgentumGame::get_commands_queue() {
+  std::cout << "Currently in game room: " << room << " getting command queue "
+            << std::endl;
+
+  return commands_queue;
 }
 
 void ArgentumGame::clean_notifications_queues() {

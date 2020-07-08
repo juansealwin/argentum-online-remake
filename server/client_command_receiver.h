@@ -11,6 +11,7 @@
 #include "common_socket.h"
 #include "protocol.h"
 #include "thread.h"
+#include "change_game_room_dto.h"
 
 class ClientCommandReceiver : public Thread {
  public:
@@ -33,6 +34,9 @@ class ClientCommandReceiver : public Thread {
   bool alive;
   std::vector<ArgentumGame *> game_rooms;
   CommandBlocker command_blocker;
+  //transfiere al heroe y su cola de notificaciones a la nueva sala
+  //tambien cambia la referencia de la cola de comandos
+  void change_game_room(unsigned int new_game_room);
  
 };
 
