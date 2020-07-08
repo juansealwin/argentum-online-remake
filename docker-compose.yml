@@ -1,0 +1,19 @@
+version: "2"
+services:
+  client:
+    container_name: client
+    build:
+      context: ./
+      dockerfile: client.Dockerfile
+      args:
+        SERVER_HOST: server
+        SERVER_PORT: 8080
+    depends_on:
+      - server
+  server:
+    container_name: server
+    build:
+      context: ./
+      dockerfile: server.Dockerfile
+    ports:
+      - "8080:8080"
