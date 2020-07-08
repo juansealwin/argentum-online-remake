@@ -15,7 +15,6 @@ class UIStatus {
   int level;
   int xp_limit;
   int current_xp;
-  id_texture_t get_item(int);
 
  public:
   UIStatus();

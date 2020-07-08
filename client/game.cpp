@@ -67,7 +67,7 @@ Game::~Game() {
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
-                            id_texture_t helmet, id_texture_t armor,
+                            bool ghost, id_texture_t helmet, id_texture_t armor,
                             id_texture_t shield, id_texture_t weapon) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
@@ -94,7 +94,7 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF)
     dynamic_cast<PlayableCharacter*>(characters[id])
-        ->update_equipment(helmet, armor, shield, weapon);
+        ->update_equipment(ghost, helmet, armor, shield, weapon);
 }
 
 void Game::update_map(int new_x, int new_y) {
@@ -155,12 +155,12 @@ void Game::render(SDL_Renderer* renderer) {
 }
 
 void Game::load_character(int id, entity_t entity_type, int x, int y,
-                          id_texture_t helmet, id_texture_t armor,
+                          bool alive, id_texture_t helmet, id_texture_t armor,
                           id_texture_t shield, id_texture_t weapon) {
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
-    characters[id] =
-        new PlayableCharacter(entity_type, x, y, helmet, armor, shield, weapon);
+    characters[id] = new PlayableCharacter(entity_type, x, y, alive, helmet,
+                                           armor, shield, weapon);
     // Si cargamos a hero por primera vez ubicamos el viewport donde debe
     if (id == id_hero)
       update_map(x * TILE_SIZE - screen_width / 2,

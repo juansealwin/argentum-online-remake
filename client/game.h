@@ -44,11 +44,11 @@ class Game {
   ~Game();
   void render(SDL_Renderer*);
   void update_map(int, int);
-  void update_character(int, entity_t, int, int, id_texture_t, id_texture_t,
-                        id_texture_t, id_texture_t);
+  void update_character(int, entity_t, int, int, bool, id_texture_t,
+                        id_texture_t, id_texture_t, id_texture_t);
   void update_spellbound(int, id_texture_t, int);
   void change_map(int);
-  void load_character(int, entity_t, int, int, id_texture_t, id_texture_t,
+  void load_character(int, entity_t, int, int, bool, id_texture_t, id_texture_t,
                       id_texture_t, id_texture_t);
   void load_item(int, id_texture_t, int, int);
   void render_entities(SDL_Renderer*);

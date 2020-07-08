@@ -13,6 +13,8 @@ typedef enum {
   ID_UI,
   ID_SELECTOR,
   ID_ITEM_EQUIPPED,
+  ID_CORPSE,
+  ID_CORPSE_HEAD,
   ID_HUMAN,
   ID_HUMAN_HEAD,
   ID_ELF,

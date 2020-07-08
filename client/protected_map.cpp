@@ -48,9 +48,9 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
         // Si cambio hacemos un update del personaje
         write_map->update_character(
             it->first, it->second.get_type_entity(), it->second.get_x(),
-            it->second.get_y(), it->second.get_equipped(HELMET),
-            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
-            it->second.get_equipped(WEAPON));
+            it->second.get_y(), it->second.is_ghost(),
+            it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
+            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
       }
     } else {
       // Como no existe la creamos
@@ -61,9 +61,9 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
       else
         write_map->load_character(
             it->first, it->second.get_type_entity(), it->second.get_x(),
-            it->second.get_y(), it->second.get_equipped(HELMET),
-            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
-            it->second.get_equipped(WEAPON));
+            it->second.get_y(), it->second.is_ghost(),
+            it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
+            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
     }
 
     // Mofificamos/creamos el status para la proxima pasada
