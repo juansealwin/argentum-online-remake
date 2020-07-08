@@ -1,16 +1,11 @@
-# tp_final_taller
+# Remake del Argentum
 
-Remake del Argentum
+## Para correr app:
+  - Pararse en el root y correr: mkdir build && cd build && cmake .. && make && make install
+  - Para levantar el server pararse en root y correr: ./build/server/server 8080 server/cfg/map/mapa.json server/cfg/entities/entities.json
+  - Para levantar el client pararse en root y correr: ./build/client/client localhost 8080
 
-| Librería | Versión mínima         |
-|--------|---------------------------|
-| libsdl2-dev | 2.0.8 |
-| libsdl2-image-dev | 2.0.3 |
-| qt5-default | 5.9.5 |
-| gcc | 7.3.0 |
-| libmsgpack* | 3.3.0 |
+## Con Valgrind (desde el root):  
+valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./build/server/server 8080 server/cfg/map/mapa.json server/cfg/entities/entities.json
 
-## Para correr app:  
-valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all ./server 8080 mapa.json entities.json
-
-valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=../../client/suppressions.txt ./client localhost 8080
+valgrind --trace-children=yes --track-fds=yes --leak-check=full --show-leak-kinds=all --suppressions=client/suppressions.txt ./build/client/client localhost 8080
