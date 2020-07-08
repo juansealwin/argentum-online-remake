@@ -219,3 +219,12 @@ void Game::clean_all_characters() {
     characters.erase(it->first);
   }
 }
+
+void Game::change_map(map_t new_map) {
+  switch (new_map) {
+    case GRASS_MAP:
+      background = ID_MAP_GRASS_BACKGROUND;
+      static_objects = ID_MAP_GRASS_OBJECTS;
+      break;
+  }
+}

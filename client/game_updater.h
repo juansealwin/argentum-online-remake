@@ -16,6 +16,9 @@
 // Para el desserializar
 #include "algorithm"
 
+#define STATUS_NOTIFICATION 1
+#define MAP_CHANGING_NOTIFICATION 2
+
 class GameUpdater : public Thread {
  private:
   int id_hero;
@@ -30,9 +33,10 @@ class GameUpdater : public Thread {
   GameUpdater(int, ProtectedMap&, Socket&, bool&);
   ~GameUpdater();
   void run();
-  void deserialize_status();
+  void deserialize_status(unsigned int&);
   id_texture_t get_item_texture(int) const; 
   equipped_t get_type_equipped(int);
+  map_t get_new_map(int);
 };
 
 #endif

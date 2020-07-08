@@ -138,7 +138,7 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
-typedef enum { EVENT_NONE = 0, EVENT_QUIT , EVENT_SELECT_ITEM} event_t;
+typedef enum { EVENT_NONE = 0, EVENT_QUIT, EVENT_SELECT_ITEM } event_t;
 
 typedef enum {
   DUMMY_ITEM,
@@ -163,6 +163,8 @@ typedef enum {
   ELVEN_FLUTE,
   GOLD
 } item_t;
+
+typedef enum { CURRENT_MAP, GRASS_MAP } map_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
 

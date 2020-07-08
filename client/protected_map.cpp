@@ -24,11 +24,25 @@ void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
   *read_map = *write_map;
 }
 
-void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status) {
+void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
+                              map_t new_map) {
   std::map<int, EntityStatus>::iterator it;
   std::map<int, EntityStatus>::iterator it2;
   std::map<int, spellbound_t>::iterator it_afected;
 
+  // Verificamos si hubo cambio de mapa
+  if(new_map != CURRENT_MAP){
+    // Limpiamos el mapa de personajes
+    write_map->clean_all_characters();
+
+    // Limpiamos los mapas de estados del mapa viejo
+    current_status.clear();
+    characters_afected.clear();
+
+    // Cambiamos el nuevo mapa
+    write_map->change_map(new_map);
+  }
+  
   // Hacemos updates de las entidades que aun estan y creamos las nuevas
   for (it = next_status.begin(); it != next_status.end(); it++) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna

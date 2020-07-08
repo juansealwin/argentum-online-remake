@@ -47,7 +47,7 @@ class Game {
   void update_character(int, entity_t, int, int, bool, id_texture_t,
                         id_texture_t, id_texture_t, id_texture_t);
   void update_spellbound(int, id_texture_t, int);
-  void change_map(int);
+  void change_map(map_t);
   void load_character(int, entity_t, int, int, bool, id_texture_t, id_texture_t,
                       id_texture_t, id_texture_t);
   void load_item(int, id_texture_t, int, int);
