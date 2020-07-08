@@ -278,12 +278,7 @@ void ArgentumGame::run() {
 unsigned int ArgentumGame::get_room() { return room; }
 
 void ArgentumGame::send_game_status() {
-  if (heroes.size() == 0)
-    return;
-  else {
-    std::cout << "currently in game " << room << " there are heroes to notify "
-              << std::endl;
-  }
+  if (heroes.size() == 0) return;
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);

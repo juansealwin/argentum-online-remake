@@ -17,7 +17,7 @@
 #include "algorithm"
 
 #define STATUS_NOTIFICATION 1
-#define MAP_CHANGING_NOTIFICATION 2
+#define MAP_CHANGING_NOTIFICATION 3
 
 class GameUpdater : public Thread {
  private:
