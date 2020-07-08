@@ -23,7 +23,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  tests_drops();
+  //tests_drops();
 }
 void ArgentumGame::tests_drops() {
   // std::cout << "testing drops" << std::endl;
@@ -211,8 +211,8 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
 }
 
 void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
-  std::cout << "Currently in game room: " << room << " adding a existing hero "
-            << std::endl;
+  // std::cout << "Currently in game room: " << room << " adding a existing hero "
+  //           << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map.get_random_free_space();
   int x = std::get<0>(free_tile);
@@ -277,7 +277,13 @@ void ArgentumGame::run() {
 
 unsigned int ArgentumGame::get_room() { return room; }
 
-std::vector<unsigned char> ArgentumGame::send_game_status() {
+void ArgentumGame::send_game_status() {
+  if (heroes.size() == 0)
+    return;
+  else {
+    std::cout << "currently in game " << room << " there are heroes to notify "
+              << std::endl;
+  }
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);
@@ -288,8 +294,6 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
     it->second->push(new GameStatusNotification(game_status));
     ++it;
   }
-
-  return game_status;
 }
 
 void ArgentumGame::add_notification_queue(

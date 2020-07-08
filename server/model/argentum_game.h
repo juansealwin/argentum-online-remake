@@ -94,7 +94,7 @@ class ArgentumGame : public Thread {
   std::map<unsigned int, Projectile *> projectiles;
   std::map<std::tuple<unsigned int, unsigned int>, Drop *> drops;
 
-  std::vector<unsigned char> send_game_status();
+  void send_game_status();
   Json::Value entities_cfg;
   std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>
       queues_notifications;
