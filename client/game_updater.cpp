@@ -19,6 +19,8 @@ void GameUpdater::run() {
       // Recibimos las actualizaciones del mapa
       Protocol::receive_notification(read_socket, status_serialized);
 
+      // extract<uint8_t>(status_serialized, j);
+
       // Deserializamos la información recibida
       deserialize_status();
 
@@ -176,8 +178,9 @@ void GameUpdater::deserialize_status() {
           next_ui_status.add_item(get_item_texture(current_item_id));
       }
       // Agregamos la entidad "personaje jugable"
-      next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by,
-                                          helmet, armor, shield, weapon);
+      next_status[(int)id] =
+          EntityStatus(entity_type, x, y, ghost_mode, affected_by, helmet,
+                       armor, shield, weapon);
     }
   }
 }

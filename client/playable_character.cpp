@@ -1,7 +1,7 @@
 #include "playable_character.h"
 
 PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
-                                     id_texture_t new_helmet,
+                                     bool ghost_mod, id_texture_t new_helmet,
                                      id_texture_t new_armor,
                                      id_texture_t new_shield,
                                      id_texture_t new_weapon) {
@@ -10,22 +10,7 @@ PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
-  if (new_helmet != ID_NULL)
-    set_item_dimensions(new_helmet);
-  else
-    new_helmet = ID_NULL;
-  if (new_armor != ID_NULL)
-    set_item_dimensions(new_armor);
-  else
-    new_armor = ID_NULL;
-  if (new_weapon != ID_NULL)
-    set_item_dimensions(new_weapon);
-  else
-    new_weapon = ID_NULL;
-  if (new_shield != ID_NULL)
-    set_item_dimensions(new_shield);
-  else
-    new_shield = ID_NULL;
+  update_equipment(ghost_mod, new_helmet, new_armor, new_shield, new_weapon);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -47,6 +32,11 @@ PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
+  ghost = other_pc.ghost;
+  if (ghost) {
+    ghost_body = other_pc.ghost_body;
+    ghost_frame = other_pc.ghost_frame;
+  }
   // Copiamos las animaciones y los frames solo si tienen equipado el item
   helmet = other_pc.helmet;
   if (helmet != ID_NULL) frame_equipped_h = other_pc.frame_equipped_h;
@@ -87,6 +77,11 @@ PlayableCharacter& PlayableCharacter::operator=(
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
+  ghost = other_pc.ghost;
+  if (ghost) {
+    ghost_body = other_pc.ghost_body;
+    ghost_frame = other_pc.ghost_frame;
+  }
   // Copiamos las animaciones y los frames solo si tienen equipado el item
   helmet = other_pc.helmet;
   if (helmet != ID_NULL) frame_equipped_h = other_pc.frame_equipped_h;
@@ -111,63 +106,81 @@ PlayableCharacter& PlayableCharacter::operator=(
 PlayableCharacter::~PlayableCharacter() {}
 
 void PlayableCharacter::move(move_t move_type) {
-  body_rect = animation_move.get_next_clip(move_type);
+  // Vemos que frame queremos dependiendo de si esta en modo fantasma
+  if (ghost) {
+    ghost_body = ghost_frame.get_next_clip(move_type);
+  } else {
+    body_rect = animation_move.get_next_clip(move_type);
+    // Si tenemos algun arma equipada actualizamos su animacion
+    if (armor != ID_NULL)
+      frame_equipped_a = armor_animation.get_next_clip(move_type);
+    if (shield != ID_NULL)
+      frame_equipped_s = shield_animation.get_next_clip(move_type);
+    if (weapon != ID_NULL)
+      frame_equipped_w = weapon_animation.get_next_clip(move_type);
+  }
   // A los jugables hay que actualizarles el perfil
   update_face_profile(move_type);
-  // Si tenemos algun arma equipada actualizamos su animacion
-  if (armor != ID_NULL)
-    frame_equipped_a = armor_animation.get_next_clip(move_type);
-  if (shield != ID_NULL)
-    frame_equipped_s = shield_animation.get_next_clip(move_type);
-  if (weapon != ID_NULL)
-    frame_equipped_w = weapon_animation.get_next_clip(move_type);
 }
 
 void PlayableCharacter::update_face_profile(move_t move_type) {
+  // La cabeza del fantasma coincide
   head_rect.x = move_type * head_rect.w;
   // Si tiene un caso quipado tambien actualizamos el frame
-  if (helmet != ID_NULL) frame_equipped_h.x = move_type * frame_equipped_h.w;
+  if (helmet != ID_NULL && !ghost)
+    frame_equipped_h.x = move_type * frame_equipped_h.w;
 }
 
 void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
-  // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
-  if (armor != ID_NULL) {
-    texture_manager.get_texture(armor).render(
-        renderer, &frame_equipped_a, x - x_rel, y - height / 2 - y_rel);
+  // Si esta muerto lo renderizamos en modo fantasma
+  if (ghost) {
+    texture_manager.get_texture(ID_CORPSE).render(
+        renderer, &ghost_body, x - x_rel, y - GHOST_HEIGHT / 2 - y_rel);
+    
+    // El 3 es para corregir la cabeza que no coincide EXACTAMENTE
+    texture_manager.get_texture(ID_CORPSE_HEAD)
+        .render(renderer, &head_rect, x + head_rect.w / 4 - x_rel + 2,
+                y - GHOST_HEIGHT / 2 - head_rect.h / 2 - y_rel);
   } else {
-    texture_manager.get_texture(type_character)
-        .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
-  }
-  // Renderizamos cabeza
-  texture_manager.get_texture(type_head).render(
-      renderer, &head_rect, x + head_rect.w / 4 - x_rel,
-      y - height / 2 - head_rect.h / 2 - y_rel);
+    // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
+    if (armor != ID_NULL) {
+      texture_manager.get_texture(armor).render(
+          renderer, &frame_equipped_a, x - x_rel, y - height / 2 - y_rel);
+    } else {
+      texture_manager.get_texture(type_character)
+          .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
+    }
+    // Renderizamos cabeza
+    texture_manager.get_texture(type_head).render(
+        renderer, &head_rect, x + head_rect.w / 4 - x_rel,
+        y - height / 2 - head_rect.h / 2 - y_rel);
 
-  // Si tiene el casco equipado lo renderizamos
-  if (helmet != ID_NULL) {
-    int offset_y = 0;
-    // Los gorros tienen un offset
-    if (helmet == ID_MAGIC_HAT_EQUIPPED) offset_y = head_rect.h;
-    texture_manager.get_texture(helmet).render(
-        renderer, &frame_equipped_h, x + head_rect.w / 4 - x_rel,
-        y - height / 2 - head_rect.h / 2 - y_rel - offset_y);
-  }
+    // Si tiene el casco equipado lo renderizamos
+    if (helmet != ID_NULL) {
+      int offset_y = 0;
+      // Los gorros tienen un offset
+      if (helmet == ID_MAGIC_HAT_EQUIPPED) offset_y = head_rect.h;
+      texture_manager.get_texture(helmet).render(
+          renderer, &frame_equipped_h, x + head_rect.w / 4 - x_rel,
+          y - height / 2 - head_rect.h / 2 - y_rel - offset_y);
+    }
 
-  // Si tiene el escudo equipado lo renderizamos
-  if (shield != ID_NULL) {
-    texture_manager.get_texture(shield).render(
-        renderer, &frame_equipped_s, x - x_rel, y - height / 2 - y_rel);
-  }
+    // Si tiene el escudo equipado lo renderizamos
+    if (shield != ID_NULL) {
+      texture_manager.get_texture(shield).render(
+          renderer, &frame_equipped_s, x - x_rel, y - height / 2 - y_rel);
+    }
 
-  // Si tiene el arma equipada la renderizamos
-  if (weapon != ID_NULL) {
-    texture_manager.get_texture(weapon).render(
-        renderer, &frame_equipped_w, x - x_rel, y - height * 3 / 5 - y_rel);
-  }
+    // Si tiene el arma equipada la renderizamos
+    if (weapon != ID_NULL) {
+      texture_manager.get_texture(weapon).render(
+          renderer, &frame_equipped_w, x - x_rel, y - height * 3 / 5 - y_rel);
+    }
 
-  // Si esta afectado por algún hechizo lo renderizamos
-  if (spellbound.spell_alive())
-    spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
+    // Si esta afectado por algún hechizo lo renderizamos
+    if (spellbound.spell_alive())
+      spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
+  }
 }
 
 int PlayableCharacter::set_head_dimensions(entity_t id) {
@@ -236,26 +249,52 @@ void PlayableCharacter::equip_item(equipped_t item, id_texture_t id) {
   }
 }
 
-void PlayableCharacter::update_equipment(id_texture_t new_helmet,
+void PlayableCharacter::update_equipment(bool ghost_mod,
+                                         id_texture_t new_helmet,
                                          id_texture_t new_armor,
                                          id_texture_t new_shield,
                                          id_texture_t new_weapon) {
-  if (new_helmet == ID_NULL && helmet != ID_NULL)
-    unequip_item(HELMET);
-  else if (new_helmet != ID_NULL && helmet == ID_NULL)
-    equip_item(HELMET, new_helmet);
-  if (new_armor == ID_NULL && armor != ID_NULL)
-    unequip_item(ARMOR);
-  else if (new_armor != ID_NULL && armor == ID_NULL)
-    equip_item(ARMOR, new_armor);
-  if (new_shield == ID_NULL && shield != ID_NULL)
-    unequip_item(SHIELD);
-  else if (new_shield != ID_NULL && shield == ID_NULL)
-    equip_item(SHIELD, new_shield);
-  if (new_weapon == ID_NULL && weapon != ID_NULL)
-    unequip_item(WEAPON);
-  else if (new_weapon != ID_NULL && weapon == ID_NULL)
-    equip_item(WEAPON, new_weapon);
+  // Chequeamos si el personaje murió
+  if (!ghost && ghost_mod) {
+    ghost = ghost_mod;
+    ghost_frame = Animation(GHOST_WIDTH, GHOST_HEIGHT, ID_CORPSE);
+    ghost_body = {0, 0, GHOST_WIDTH, GHOST_HEIGHT};
+  } else {
+    // Chequeamos si revivio
+    if (ghost && !ghost_mod) ghost = ghost_mod;
+
+    // Chequeamos si cambio el caso
+    if (new_helmet == ID_NULL && helmet != ID_NULL)
+      unequip_item(HELMET);
+    else if (new_helmet != ID_NULL && helmet == ID_NULL)
+      equip_item(HELMET, new_helmet);
+    else if (new_helmet != helmet)
+      equip_item(HELMET, new_helmet);
+
+    // Chequeamos si cambio la armadura
+    if (new_armor == ID_NULL && armor != ID_NULL)
+      unequip_item(ARMOR);
+    else if (new_armor != ID_NULL && armor == ID_NULL)
+      equip_item(ARMOR, new_armor);
+    else if (new_armor != armor)
+      equip_item(ARMOR, new_armor);
+
+    // Chequeamos si cambio el escudo
+    if (new_shield == ID_NULL && shield != ID_NULL)
+      unequip_item(SHIELD);
+    else if (new_shield != ID_NULL && shield == ID_NULL)
+      equip_item(SHIELD, new_shield);
+    else if (new_shield != shield)
+      equip_item(SHIELD, new_shield);
+
+    // Chequeamos si hubo algun cambio el arma
+    if (new_weapon == ID_NULL && weapon != ID_NULL)
+      unequip_item(WEAPON);
+    else if (new_weapon != ID_NULL && weapon == ID_NULL)
+      equip_item(WEAPON, new_weapon);
+    else if (new_weapon != weapon)
+      equip_item(WEAPON, new_weapon);
+  }
 }
 
 void PlayableCharacter::set_item_dimensions(id_texture_t id) {
@@ -283,6 +322,12 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       frame_equipped_w = {body_rect.x, body_rect.y, 25, 48};
       weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);
       weapon = ID_ASH_STICK_EQUIPPED;
+      break;
+
+    case ID_ELVEN_ELUDE:
+      frame_equipped_w = {body_rect.x, body_rect.y, 25, 45};
+      weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);
+      weapon = ID_ELVEN_ELUDE_EQUIPPED;
       break;
 
     case ID_KNOTTY_STAFF:
@@ -360,7 +405,7 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       break;
 
     case ID_BLUE_TUNIC:
-      frame_equipped_a = {body_rect.x, body_rect.y, 17, 19};
+      frame_equipped_a = {body_rect.x, body_rect.y, 25, 45};
       armor_animation = Animation(frame_equipped_a.w, frame_equipped_a.h);
       armor = ID_BLUE_TUNIC_EQUIPPED;
       break;

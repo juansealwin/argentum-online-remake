@@ -128,6 +128,11 @@ SDL_Rect Animation::next_clip_move_right() {
 int Animation::set_total_clips(id_texture_t id) {
   // Seteamos el total de clips -1, ya que el 0 lo cuenta
   switch (id) {
+    case ID_CORPSE:
+      clips_up_down = 2;
+      clips_left_right = 2;
+      break;
+
     case ID_HUMAN:
     case ID_ELF:
     case ID_DWARF:
