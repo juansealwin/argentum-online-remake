@@ -296,10 +296,8 @@ void Serializer::debug_deserialize_v3(
       // Deberia ser un NPC, no tiene mas atributos
     }
   }
-  // std::cout << "monsters detecteD: " << monsters_detected << "
-  // heroes_detected " << heroes_detected << " npcs_or_others_detected " <<
-  // npcs_or_others_detected << " drops detected " << drops_detected <<
-  // std::endl;
+  // std::cout << "monsters detecteD: " << monsters_detected << " heroes_detected " << heroes_detected << " npcs_or_others_detected " <<
+  // npcs_or_others_detected << " drops detected " << drops_detected << std::endl;
 }
 
 /************* METODOS PRIVADOS **************/

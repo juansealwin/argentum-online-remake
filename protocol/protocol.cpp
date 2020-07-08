@@ -8,6 +8,7 @@
 
 #include "../server/notifications/notification.h"
 #include "attack_command_dto.h"
+#include "change_game_room_dto.h"
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "pick_up_command_dto.h"
@@ -40,6 +41,12 @@ UseItemCommandDTO* receive_use_item(const Socket& socket) {
   return new UseItemCommandDTO(item, item_slot, is_equipped);
 }
 
+ChangeGameRoomDTO* receive_change_game_room(const Socket& socket) {
+  uint8_t room_number;
+  socket.recv(&room_number, 1);
+  return new ChangeGameRoomDTO(room_number);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -58,6 +65,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return new PickUpCommandDTO();
     case USE_ITEM_COMMAND:
       return receive_use_item(socket);
+    case CHANGE_GAME_ROOM:
+      return receive_change_game_room(socket);
     default:
       return nullptr;
   }
@@ -66,6 +75,13 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
 void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
   uint8_t command_id = LOGIN_COMMAND;
   uint8_t room_number = login_command->room_number;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&room_number, 1);
+}
+
+void send_change_game_room(const Socket& socket, const ChangeGameRoomDTO* change_game_room) {
+  uint8_t command_id = CHANGE_GAME_ROOM;
+  uint8_t room_number = change_game_room->room_number;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&room_number, 1);
 }
@@ -107,25 +123,28 @@ void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
-      send_login(socket, static_cast<LoginCommandDTO*>(commandDTO));
+      send_login(socket, dynamic_cast<LoginCommandDTO*>(commandDTO));
       break;
 
     case QUIT_COMMAND:
-      send_quit(socket, static_cast<QuitCommandDTO*>(commandDTO));
+      send_quit(socket, dynamic_cast<QuitCommandDTO*>(commandDTO));
       break;
 
     case MOVE_COMMAND:
-      send_move(socket, static_cast<MoveCommandDTO*>(commandDTO));
+      send_move(socket, dynamic_cast<MoveCommandDTO*>(commandDTO));
       break;
 
     case ATTACK_COMMAND:
-      send_attack(socket, static_cast<AttackCommandDTO*>(commandDTO));
+      send_attack(socket, dynamic_cast<AttackCommandDTO*>(commandDTO));
       break;
     case PICK_UP_ITEM_COMMAND:
-      send_pick_up_item(socket, static_cast<PickUpCommandDTO*>(commandDTO));
+      send_pick_up_item(socket, dynamic_cast<PickUpCommandDTO*>(commandDTO));
       break;
     case USE_ITEM_COMMAND:
-      send_use_item(socket, static_cast<UseItemCommandDTO*>(commandDTO));
+      send_use_item(socket, dynamic_cast<UseItemCommandDTO*>(commandDTO));
+      break;
+    case CHANGE_GAME_ROOM:
+      send_change_game_room(socket, dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
       break;
     default:
       break;

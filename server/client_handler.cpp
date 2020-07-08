@@ -5,14 +5,15 @@
 #include <vector>
 
 ClientHandler::ClientHandler(
-    Socket socket, ArgentumGame *game,
+    Socket socket, unsigned int game_room,
     ThreadSafeQueue<Command *> *commands_queue,
     BlockingThreadSafeQueue<Notification *> *notifications_queue,
-    unsigned int hero_id)
-    : game(game), notifications_queue(notifications_queue) {
+    unsigned int hero_id, std::vector<ArgentumGame *> &games)
+    :  notifications_queue(notifications_queue) {
   this->peer_socket = std::move(socket);
-  sender = new ClientNotificationSender(peer_socket, game, notifications_queue);
-  receiver = new ClientCommandReceiver(peer_socket, game, commands_queue, hero_id);
+  sender = new ClientNotificationSender(peer_socket, notifications_queue);
+  receiver =
+      new ClientCommandReceiver(peer_socket, game_room, commands_queue, hero_id, std::ref(games));
   sender->start();
   receiver->start();
 }

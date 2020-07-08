@@ -6,8 +6,14 @@
 #include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           Json::Value &map_cfg, std::ifstream &entities_config)
-    : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg) {
+                           Json::Value &map_cfg, std::ifstream &entities_config,
+                           unsigned int &entities_ids)
+    : room(room_number),
+      commands_queue(commands_queue),
+      mutex(),
+      map(map_cfg),
+      alive(true),
+      entities_ids(entities_ids) {
   std::unique_lock<std::mutex> lock(mutex);
   // Json::Value map_cfg;
   // map_config >> map_cfg;
@@ -17,7 +23,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  tests_drops();
+  //tests_drops();
 }
 void ArgentumGame::tests_drops() {
   // std::cout << "testing drops" << std::endl;
@@ -177,15 +183,46 @@ void ArgentumGame::kill_player(unsigned int player_id) {
 
 /*********************** Fin acciones personajes *********************/
 
+std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>
+ArgentumGame::remove_hero_and_notification_queue(int player_id) {
+  std::unique_lock<std::mutex> lock(mutex);
+  std::map<unsigned int, Hero *>::iterator it_heroes;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it_queues;
+  it_heroes = heroes.find(player_id);
+  it_queues = queues_notifications.find(player_id);
+  Hero *hero = it_heroes->second;
+  BlockingThreadSafeQueue<Notification *> *q = it_queues->second;
+  heroes.erase(player_id);
+  queues_notifications.erase(player_id);
+  return std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>(hero, q);
+}
+
 unsigned int ArgentumGame::add_new_hero(std::string hero_race,
                                         std::string hero_class,
                                         std::string hero_name) {
+  std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map.get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   unsigned int new_player_id =
       place_hero(hero_race, hero_class, hero_name, x, y);
   return new_player_id;
+}
+
+void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
+  // std::cout << "Currently in game room: " << room << " adding a existing hero "
+  //           << std::endl;
+  std::unique_lock<std::mutex> lock(mutex);
+  std::tuple<int, int> free_tile = map.get_random_free_space();
+  int x = std::get<0>(free_tile);
+  int y = std::get<1>(free_tile);
+  hero->set_position(x, y);
+  std::cout << "setting new map" << std::endl;
+  hero->set_map(std::ref(map));
+  std::cout << "setted map " << std::endl;
+  map.ocupy_cell(x, y, id);
+  heroes.emplace(id, hero);
 }
 
 void ArgentumGame::kill() {
@@ -205,7 +242,7 @@ void ArgentumGame::update() {
   monsters_manager.update(std::ref(monsters), std::ref(heroes));
   monsters_manager.respawn_monsters(std::ref(monsters), std::ref(map), 20,
                                     std::ref(entities_cfg["npcs"]),
-                                    std::ref(entities_ids));
+                                    entities_ids);
 
   heroes_manager.update(std::ref(heroes));
 
@@ -215,7 +252,7 @@ void ArgentumGame::update() {
                                               std::ref(map));
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
                              std::ref(drops), entities_cfg["items"],
-                             std::ref(entities_ids));
+                             entities_ids);
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
   heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
   monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
@@ -240,36 +277,56 @@ void ArgentumGame::run() {
 
 unsigned int ArgentumGame::get_room() { return room; }
 
-std::vector<unsigned char> ArgentumGame::send_game_status() {
+void ArgentumGame::send_game_status() {
+  if (heroes.size() == 0)
+    return;
+  else {
+    std::cout << "currently in game " << room << " there are heroes to notify "
+              << std::endl;
+  }
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);
 
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->push(new GameStatusNotification(game_status));
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
+  for (it = queues_notifications.begin(); it != queues_notifications.end();) {
+    it->second->push(new GameStatusNotification(game_status));
+    ++it;
   }
-
-  return game_status;
 }
 
 void ArgentumGame::add_notification_queue(
-    BlockingThreadSafeQueue<Notification *> *queue) {
+    BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id) {
+  std::cout << "Currently in game room: " << room
+            << " adding noptification queue " << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
-  queues_notifications.push_back(queue);
+  // queues_notifications.push_back(queue);
+  queues_notifications.emplace(player_id, queue);
+}
+
+ThreadSafeQueue<Command *> *ArgentumGame::get_commands_queue() {
+  std::cout << "Currently in game room: " << room << " getting command queue "
+            << std::endl;
+
+  return commands_queue;
 }
 
 void ArgentumGame::clean_notifications_queues() {
   // std::unique_lock<std::mutex> lock(mutex);
-  std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
+  // std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
-    if ((*it)->is_closed()) {
+    if ((it->second)->is_closed()) {
       Notification *n;
-      while (!(*it)->is_empty()) {
-        n = (*it)->pop();
+      while (!(it->second)->is_empty()) {
+        n = (it->second)->pop();
         delete n;
       }
-      delete (*it);
+      delete (it->second);
       it = queues_notifications.erase(it);
+
     } else
       ++it;
   }
@@ -303,7 +360,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       unsigned int y) {
   std::cout << "placing hero at position (" << x << ", " << y << ")"
             << std::endl;
-  std::cout << "new hero id will be " << entities_ids << std::endl;
+  // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(
@@ -382,13 +439,26 @@ ArgentumGame::~ArgentumGame() {
     delete cmd;
   }
   // cierro y elimino las colas de notificaciones
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->close();
+  // for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+  //   q->close();
+  //   Notification *n;
+  //   while (!q->is_empty()) {
+  //     n = q->pop();
+  //     delete n;
+  //   }
+  //   delete q;
+  // }
+
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
+  for (it = queues_notifications.begin(); it != queues_notifications.end();) {
+    it->second->close();
     Notification *n;
-    while (!q->is_empty()) {
-      n = q->pop();
+    while (!(it->second)->is_empty()) {
+      n = (it->second)->pop();
       delete n;
     }
-    delete q;
+    delete (it->second);
+    it = queues_notifications.erase(it);
   }
 }

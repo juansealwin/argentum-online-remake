@@ -30,7 +30,7 @@ class ClientListener : public Thread {
   void stop_listening();
 
  private:
-  std::vector<ArgentumGame *> games;
+  std::vector<ArgentumGame *> game_rooms;
   std::vector<ThreadSafeQueue<Command *> *> queues_commands;
   Socket server_socket;
   std::list<ClientHandler *> clients;
@@ -39,6 +39,7 @@ class ClientListener : public Thread {
    que hayan muerto o hayan terminado de jugar
   */
   void garbage_collector();
+  unsigned int entities_ids = 0;
 };
 
 #endif  // CLIENTLISTENER_H

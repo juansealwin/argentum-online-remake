@@ -18,6 +18,7 @@
 #include "sdl_exception.h"
 #include "texture.h"
 #include "use_item_command_dto.h"
+#include "change_game_room_dto.h"
 
 class EventHandler {
  private:
