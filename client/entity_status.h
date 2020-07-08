@@ -26,8 +26,8 @@ class EntityStatus {
   // Constructor para npcs
   EntityStatus(int, int, int, int);
   // Constructor para personajes jugables
-  EntityStatus(int, int, int, int, id_texture_t, id_texture_t, id_texture_t,
-               id_texture_t);
+  EntityStatus(int, int, int, int, int, id_texture_t, id_texture_t,
+               id_texture_t, id_texture_t);
   ~EntityStatus();
   EntityStatus& operator=(const EntityStatus&);
   bool is_equal(EntityStatus);
@@ -37,6 +37,7 @@ class EntityStatus {
   id_texture_t is_afected() const;
   int get_life_time() const;
   id_texture_t get_item() const;
+  bool is_ghost() const;
   void set_spellbound(int);
   id_texture_t get_equipped(equipped_t);
 };

@@ -20,6 +20,8 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_ITEM_EQUIPPED] = new Texture("opcion_equipado.png", renderer);
 
   /* PLAYABLE CHARACTER TEXTURES */
+  map[ID_CORPSE] = new Texture("muerto_cuerpo.png", renderer);
+  map[ID_CORPSE_HEAD] = new Texture("muerto_cabeza.png", renderer);
   map[ID_HUMAN] = new Texture("humano.png", renderer);
   map[ID_HUMAN_HEAD] = new Texture("cabeza_humano.png", renderer);
   map[ID_ELF] = new Texture("elfo.png", renderer);

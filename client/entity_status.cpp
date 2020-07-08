@@ -47,11 +47,13 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
   weapon = ID_NULL;
 }
 
-EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by,
-                           id_texture_t new_helmet, id_texture_t new_armor,
-                           id_texture_t new_shield, id_texture_t new_weapon)
+EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int ghost_mod,
+                           int affected_by, id_texture_t new_helmet,
+                           id_texture_t new_armor, id_texture_t new_shield,
+                           id_texture_t new_weapon)
     : x(new_x),
       y(new_y),
+      is_alive(ghost_mod),
       helmet(new_helmet),
       armor(new_armor),
       shield(new_shield),
@@ -148,6 +150,9 @@ int EntityStatus::get_y() const { return y; }
 id_texture_t EntityStatus::is_afected() const { return spellbound; }
 
 int EntityStatus::get_life_time() const { return lifetime; }
+
+bool EntityStatus::is_ghost() const { return is_alive; }
+
 
 id_texture_t EntityStatus::get_item() const { return item; }
 
