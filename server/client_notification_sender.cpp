@@ -5,10 +5,9 @@
 #include <vector>
 
 ClientNotificationSender::ClientNotificationSender(
-    Socket& peer_socket, ArgentumGame* game,
+    Socket& peer_socket,
     BlockingThreadSafeQueue<Notification*>* notifications_queue)
-    : game(game),
-      peer_socket(peer_socket),
+    : peer_socket(peer_socket),
       notifications_queue(notifications_queue),
       alive(true) {}
 
@@ -21,7 +20,6 @@ ClientNotificationSender::~ClientNotificationSender() {
 void ClientNotificationSender::stop() { this->alive = false; }
 
 void ClientNotificationSender::run() {
-  std::cout << "receiver, game room :" << game->get_room() << std::endl;
 
   while (alive) {
 
@@ -32,7 +30,7 @@ void ClientNotificationSender::run() {
     //notificaciones
     delete n;
   }
-  std::cout << "stopping notification sender" << std::endl;
+  //std::cout << "stopping notification sender" << std::endl;
 
 }
 

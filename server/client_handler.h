@@ -16,10 +16,11 @@ class ClientHandler {  //: public Thread {
  public:
   // Instancia un nuevo manejador de clientes para que juege
   // a el juego ArgentumGame recibido por parametro (Es la sala)
-  ClientHandler(Socket socket, ArgentumGame *game,
+  ClientHandler(Socket socket, unsigned int game_room,
                 ThreadSafeQueue<Command *> *commands_queue,
                 BlockingThreadSafeQueue<Notification *> *notifications_queue,
-                unsigned int hero_id);
+                unsigned int hero_id,
+                std::vector<ArgentumGame *> &games);
   ~ClientHandler();
   // void run() override;
   // Devuelve True mientras el juego siga en curso
@@ -28,7 +29,6 @@ class ClientHandler {  //: public Thread {
  private:
   ClientCommandReceiver *receiver;
   ClientNotificationSender *sender;
-  ArgentumGame *game;
   BlockingThreadSafeQueue<Notification *> *notifications_queue;
   Socket peer_socket;
   bool alive = true;
