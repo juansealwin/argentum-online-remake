@@ -56,7 +56,7 @@ class ArgentumGame : public Thread {
   // devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class,
                             std::string hero_name);
-  void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue);
+  void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id);
   // remueve colas de notificaciones para no notificar a clientes meurtos
   void clean_notifications_queues();
 
@@ -92,8 +92,8 @@ class ArgentumGame : public Thread {
 
   std::vector<unsigned char> send_game_status();
   Json::Value entities_cfg;
-  
-  std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *> queues_notifications;
+  //std::vector<BlockingThreadSafeQueue<Notification *> *> queues_notifications;
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);
   // agrega heroe en posicion x,y (los ejes estan invertidos)

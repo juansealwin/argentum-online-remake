@@ -6,8 +6,14 @@
 #include "weapon.h"
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
-                           Json::Value &map_cfg, std::ifstream &entities_config, unsigned int &entities_ids)
-    : room(room_number), commands_queue(commands_queue), mutex(), map(map_cfg), alive(true),  entities_ids(entities_ids) {
+                           Json::Value &map_cfg, std::ifstream &entities_config,
+                           unsigned int &entities_ids)
+    : room(room_number),
+      commands_queue(commands_queue),
+      mutex(),
+      map(map_cfg),
+      alive(true),
+      entities_ids(entities_ids) {
   std::unique_lock<std::mutex> lock(mutex);
   // Json::Value map_cfg;
   // map_config >> map_cfg;
@@ -245,31 +251,38 @@ std::vector<unsigned char> ArgentumGame::send_game_status() {
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);
 
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->push(new GameStatusNotification(game_status));
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
+  for (it = queues_notifications.begin(); it != queues_notifications.end();) {
+    it->second->push(new GameStatusNotification(game_status));
+    ++it;
   }
 
   return game_status;
 }
 
 void ArgentumGame::add_notification_queue(
-    BlockingThreadSafeQueue<Notification *> *queue) {
+    BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id) {
   std::unique_lock<std::mutex> lock(mutex);
-  queues_notifications.push_back(queue);
+  // queues_notifications.push_back(queue);
+  queues_notifications.emplace(player_id, queue);
 }
 
 void ArgentumGame::clean_notifications_queues() {
   // std::unique_lock<std::mutex> lock(mutex);
-  std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
+  // std::vector<BlockingThreadSafeQueue<Notification *> *>::iterator it;
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
-    if ((*it)->is_closed()) {
+    if ((it->second)->is_closed()) {
       Notification *n;
-      while (!(*it)->is_empty()) {
-        n = (*it)->pop();
+      while (!(it->second)->is_empty()) {
+        n = (it->second)->pop();
         delete n;
       }
-      delete (*it);
+      delete (it->second);
       it = queues_notifications.erase(it);
+
     } else
       ++it;
   }
@@ -382,13 +395,26 @@ ArgentumGame::~ArgentumGame() {
     delete cmd;
   }
   // cierro y elimino las colas de notificaciones
-  for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
-    q->close();
+  // for (BlockingThreadSafeQueue<Notification *> *q : queues_notifications) {
+  //   q->close();
+  //   Notification *n;
+  //   while (!q->is_empty()) {
+  //     n = q->pop();
+  //     delete n;
+  //   }
+  //   delete q;
+  // }
+
+  std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
+      it;
+  for (it = queues_notifications.begin(); it != queues_notifications.end();) {
+    it->second->close();
     Notification *n;
-    while (!q->is_empty()) {
-      n = q->pop();
+    while (!(it->second)->is_empty()) {
+      n = (it->second)->pop();
       delete n;
     }
-    delete q;
+    delete (it->second);
+    it = queues_notifications.erase(it);
   }
 }

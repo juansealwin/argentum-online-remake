@@ -75,10 +75,11 @@ void ClientListener::run() {
     // aca a game pasarle la cola de notificaciones para que la agregue de
     // manera segura (con locks) a el vector de notificaciones, si no puede
     // haber race conditions
-    game_rooms[login_command->room_number]->add_notification_queue(
-        notifications_queue);
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
         "human", "warrior", "test_name1");
+    game_rooms[login_command->room_number]->add_notification_queue(
+        notifications_queue, hero_id);
+
     StartingInfoNotification *starting_info =
         create_start_notification(hero_id);
     Protocol::send_notification(client_socket, starting_info);
