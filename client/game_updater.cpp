@@ -37,7 +37,6 @@ void GameUpdater::run() {
         new_map = get_new_map(extract<uint8_t>(status_serialized, j));
         Protocol::receive_notification(read_socket, status_serialized);
         // Sabemos que tiene que ser un status
-        j = 1;
         deserialize_status(j);
       }
 

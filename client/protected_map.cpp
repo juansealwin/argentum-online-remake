@@ -1,8 +1,8 @@
 #include "protected_map.h"
 
 ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height) {
-  read_map = new Game(id_player, screen_width, screen_height);
-  write_map = new Game(id_player, screen_width, screen_height);
+  read_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
+  write_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
   current_status.clear();
   characters_afected.clear();
 }
@@ -33,10 +33,9 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
   // Verificamos si hubo cambio de mapa
   if(new_map != CURRENT_MAP){
     // Limpiamos el mapa de personajes
-    write_map->clean_all_characters();
+    write_map->clean_all_characters(false);
 
     // Limpiamos los mapas de estados del mapa viejo
-    current_status.clear();
     characters_afected.clear();
 
     // Cambiamos el nuevo mapa

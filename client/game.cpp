@@ -1,12 +1,11 @@
 #include "game.h"
 
 // 620 ancho y 465 de alto el viewport
-Game::Game(int id_player, int scr_width, int scr_height)
+Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
     : id_hero(id_player),
       screen_width(scr_width - WIDTH_UI),
       screen_height(scr_height - HEIGHT_UI) {
-  background = ID_MAP_GRASS_BACKGROUND;
-  static_objects = ID_MAP_GRASS_OBJECTS;
+  change_map(new_map);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, HEIGHT_UI, screen_width, screen_height};
 }
@@ -63,7 +62,10 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 Game::~Game() {
-  if (!characters.empty()) characters.clear();
+  if (!characters.empty()) {
+    // clean_all_characters(true);
+    //characters.clear();
+  }
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
@@ -212,11 +214,13 @@ void Game::clean_entity(int i, entity_t type_entity) {
   }
 }
 
-void Game::clean_all_characters() {
+void Game::clean_all_characters(bool also_hero) {
   std::map<int, Character*>::iterator it;
   for (it = characters.begin(); it != characters.end(); it++) {
-    delete characters[it->first];
-    characters.erase(it->first);
+    if (it->first != id_hero || also_hero) {
+      delete it->second;
+      characters.erase(it);
+    }
   }
 }
 
