@@ -9,7 +9,7 @@ ClientHandler::ClientHandler(
     ThreadSafeQueue<Command *> *commands_queue,
     BlockingThreadSafeQueue<Notification *> *notifications_queue,
     unsigned int hero_id, std::vector<ArgentumGame *> &games)
-    :  notifications_queue(notifications_queue) {
+    :  notifications_queue(notifications_queue), commands_queue(commands_queue) {
   this->peer_socket = std::move(socket);
   sender = new ClientNotificationSender(peer_socket, notifications_queue);
   receiver =
@@ -21,7 +21,6 @@ ClientHandler::ClientHandler(
 ClientHandler::~ClientHandler() {
   this->sender->stop();
   this->receiver->stop();
-  notifications_queue->close();
   delete sender;
   delete receiver;
   this->peer_socket.close();
