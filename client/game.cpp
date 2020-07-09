@@ -159,16 +159,21 @@ void Game::render(SDL_Renderer* renderer) {
 void Game::load_character(int id, entity_t entity_type, int x, int y,
                           bool alive, id_texture_t helmet, id_texture_t armor,
                           id_texture_t shield, id_texture_t weapon) {
+  int x_render_scale = x * TILE_SIZE;
+  int y_render_scale = y * TILE_SIZE;
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
-    characters[id] = new PlayableCharacter(entity_type, x, y, alive, helmet,
-                                           armor, shield, weapon);
-    // Si cargamos a hero por primera vez ubicamos el viewport donde debe
-    if (id == id_hero)
-      update_map(x * TILE_SIZE - screen_width / 2,
-                 y * TILE_SIZE - screen_height / 2);
+    characters[id] =
+        new PlayableCharacter(entity_type, x_render_scale, y_render_scale,
+                              alive, helmet, armor, shield, weapon);
+    // Si cargamos a hero por primera vez ubicamos la parte del mapa que
+    // queremos ver
+    if (id == id_hero) 
+      update_map(x_render_scale - screen_width / 2,
+                 y_render_scale - screen_height / 2);
+    
   } else {
-    characters[id] = new Npc(entity_type, x, y);
+    characters[id] = new Npc(entity_type, x_render_scale, y_render_scale);
   }
 }
 
@@ -205,6 +210,20 @@ void Game::render_entities(SDL_Renderer* renderer) {
   }
 }
 
+void Game::change_map(map_t new_map) {
+  switch (new_map) {
+    case GRASS_MAP:
+      background = ID_MAP_GRASS_BACKGROUND;
+      static_objects = ID_MAP_GRASS_OBJECTS;
+      break;
+
+    case DESERT_MAP:
+      background = ID_MAP_DESERT_BACKGROUND;
+      static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+  }
+}
+
 void Game::clean_entity(int i, entity_t type_entity) {
   if (type_entity == ITEM) {
     items.erase(i);
@@ -222,18 +241,5 @@ void Game::clean_all_characters(bool also_hero) {
       characters.erase(it);
     }
   }
-}
-
-void Game::change_map(map_t new_map) {
-  switch (new_map) {
-    case GRASS_MAP:
-      background = ID_MAP_GRASS_BACKGROUND;
-      static_objects = ID_MAP_GRASS_OBJECTS;
-      break;
-
-    case DESERT_MAP:
-      background = ID_MAP_DESERT_BACKGROUND;
-      static_objects = ID_MAP_DESERT_OBJECTS;
-      break;
-  }
+  items.clear();
 }

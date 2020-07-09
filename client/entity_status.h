@@ -23,7 +23,9 @@ class EntityStatus {
   EntityStatus();
   // Constructor para drops
   EntityStatus(id_texture_t, int, int);
-  // Constructor para npcs
+  // Constructor para npcs no atacables
+  EntityStatus(int, int, int);
+  // Constructor para npcs atacables
   EntityStatus(int, int, int, int);
   // Constructor para personajes jugables
   EntityStatus(int, int, int, int, int, id_texture_t, id_texture_t,

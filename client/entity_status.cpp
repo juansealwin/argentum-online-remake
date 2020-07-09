@@ -8,6 +8,29 @@ EntityStatus::EntityStatus(id_texture_t texture_item, int new_x, int new_y)
   spellbound = ID_NULL;
 }
 
+EntityStatus::EntityStatus(int type_ent, int new_x, int new_y)
+    : x(new_x), y(new_y) {
+  // poner los id que usa el server
+  switch (type_ent) {
+    case 33:
+      type_entity = PRIEST;
+      break;
+
+    case 34:
+      type_entity = MERCHANT;
+      break;
+
+    case 35:
+      type_entity = BANKER;
+      break;
+  }
+  set_spellbound(DUMMY_ITEM);
+  helmet = ID_NULL;
+  armor = ID_NULL;
+  shield = ID_NULL;
+  weapon = ID_NULL;
+}
+
 EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
     : x(new_x), y(new_y) {
   // poner los id que usa el server
@@ -152,7 +175,6 @@ id_texture_t EntityStatus::is_afected() const { return spellbound; }
 int EntityStatus::get_life_time() const { return lifetime; }
 
 bool EntityStatus::is_ghost() const { return is_alive; }
-
 
 id_texture_t EntityStatus::get_item() const { return item; }
 
