@@ -64,7 +64,7 @@ Game& Game::operator=(const Game& other_game) {
 Game::~Game() {
   if (!characters.empty()) {
     // clean_all_characters(true);
-    //characters.clear();
+    characters.clear();
   }
 }
 
