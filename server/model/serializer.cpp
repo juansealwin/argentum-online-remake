@@ -216,7 +216,6 @@ void Serializer::debug_deserialize_v3(
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
-    if (id > 100) {std::cout << "id mayor a 100! " << id <<std::endl;}
     if (is_drop(entity_type)) {
       drops_detected++;
       int items_in_drop = extract<uint8_t>(serialization, j);

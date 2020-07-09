@@ -14,7 +14,6 @@ void Map::load_terrain(Json::Value &map_json) {
   for (auto &it : matrix) {
     it.reserve(cols);
     for (int curr_col = 0; curr_col < cols; ++curr_col) {
-      //Tile *tile = nullptr;
       bool fixed = false;
       bool safe = false;
       int type = map_json["layers"][0]["data"][i].asInt();
@@ -37,7 +36,6 @@ void Map::load_terrain(Json::Value &map_json) {
         repr = 'f';
       } else {
       }
-      //tile = new Tile(type, repr, safe, fixed);
       Tile tile(type, repr, safe, fixed);
       it.push_back(std::ref(tile));
       i++;
@@ -47,18 +45,12 @@ void Map::load_terrain(Json::Value &map_json) {
 }
 
 Map::~Map() {
-  // for (auto &it : matrix) {
-  //   for (auto p : it) {
-  //     delete p;
-  //   }
-  //   it.clear();
-  // }
 }
 
 std::tuple<int, int> Map::get_random_free_space() {
   while (true) {
-    int x = rand() % 100;
-    int y = rand() % 100;
+    int x = HelperFunctions::random_int(0, rows - 1);
+    int y = HelperFunctions::random_int(0, cols - 1);
     if (matrix[x][y].free && !matrix[x][y].fixed) {
       return std::tuple<int, int>(x, y);
     }
@@ -67,8 +59,8 @@ std::tuple<int, int> Map::get_random_free_space() {
 
 std::tuple<int, int> Map::get_random_free_unsafe_space() {
   while (true) {
-    int x = rand() % 100;
-    int y = rand() % 100;
+    int x = HelperFunctions::random_int(0, rows - 1);
+    int y = HelperFunctions::random_int(0, cols - 1);
     if (matrix[x][y].free && !matrix[x][y].fixed && !matrix[x][y].safe) {
       return std::tuple<int, int>(x, y);
     }

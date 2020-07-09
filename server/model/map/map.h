@@ -6,6 +6,7 @@
 #include "../util/json/json.h"
 #include "stdint.h"
 #include "tile.h"
+#include "helper_functions.h"
 // 1st layer
 #define GROUND 1
 #define FLOOR 1217
