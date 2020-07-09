@@ -13,10 +13,20 @@ ClientNotificationSender::ClientNotificationSender(
 
 ClientNotificationSender::~ClientNotificationSender() {
   join();
-  notifications_queue->close();
+  // notifications_queue->close();
+  delete notifications_queue;
 }
 
-void ClientNotificationSender::stop() { this->alive = false; }
+void ClientNotificationSender::stop() {
+  notifications_queue->close();
+  Notification* n;
+  while (!notifications_queue->is_empty()) {
+    n = notifications_queue->pop();
+    delete n;
+  }
+
+  this->alive = false;
+}
 
 void ClientNotificationSender::run() {
   while (alive) {
@@ -28,8 +38,8 @@ void ClientNotificationSender::run() {
       Protocol::send_notification(this->peer_socket, n);
       delete n;
     }
-    
   }
+  std::cout << "notification sender stopped" << std::endl;
 }
 
 bool ClientNotificationSender::is_alive() { return this->alive; }

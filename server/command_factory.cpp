@@ -17,10 +17,16 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
     case USE_ITEM_COMMAND:
       return use_item_command(dynamic_cast<UseItemCommandDTO*>(command_dto),
                               player_id);
-      ;
+    case DROP_ITEM_COMMAND:
+      return drop_item_command(dynamic_cast<DropItemCommandDTO*>(command_dto),
+                              player_id);
     default:
       return nullptr;
   }
+}
+
+DropItemCommand* CommandFactory::drop_item_command(DropItemCommandDTO* command_dto, unsigned int player_id) {
+  return new DropItemCommand(player_id, command_dto->item_id);
 }
 
 UseItemCommand* CommandFactory::use_item_command(UseItemCommandDTO* command_dto,

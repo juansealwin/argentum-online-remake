@@ -11,6 +11,8 @@ class Drop {
   // si esta vacio, se deberia eliminar
   bool is_empty();
   void add_item(Item *item);
+  void add_items(Inventory *inv);
+  void add_gold(unsigned int gold);
   Item *take_item(unsigned int position);
   std::size_t size();
   unsigned int take_gold(unsigned int ammount);

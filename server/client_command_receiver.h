@@ -13,6 +13,8 @@
 #include "map_change_notification.h"
 #include "protocol.h"
 #include "thread.h"
+#include "change_game_room_dto.h"
+#include "quit_command_dto.h"
 
 class ClientCommandReceiver : public Thread {
  public:

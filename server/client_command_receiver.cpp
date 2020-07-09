@@ -20,10 +20,11 @@ ClientCommandReceiver::~ClientCommandReceiver() { join(); }
 void ClientCommandReceiver::stop() { this->alive = false; }
 
 void ClientCommandReceiver::run() {
-  std::cout << "Starting command receiver, hero id: " << hero_id << "at room "
-            << current_game_room << " total rooms are " << game_rooms.size()
-            << std::endl;
   while (alive) {
+    if (commands_queue->is_closed()) {
+      alive = false;
+      break;
+    }
     CommandDTO *command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
       ChangeGameRoomDTO *cgrDTO =
@@ -34,14 +35,13 @@ void ClientCommandReceiver::run() {
         Command *command = CommandFactory::create_command(command_dto, hero_id);
         commands_queue->push(command);
       }
+      if (dynamic_cast<QuitCommandDTO *>(command_dto)) {
+        alive = false;
+      }
       delete command_dto;
-    } else {
-      std::cerr << "Received unknown command or client stopped connection!"
-                << std::endl;
-      alive = false;
     }
   }
-  std::cout << "stopping command receiver" << std::endl;
+ // std::cout << "stopping command receiver" << std::endl;
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }
