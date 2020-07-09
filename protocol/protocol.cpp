@@ -14,6 +14,7 @@
 #include "pick_up_command_dto.h"
 #include "quit_command_dto.h"
 #include "use_item_command_dto.h"
+#include "drop_item_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -47,6 +48,12 @@ ChangeGameRoomDTO* receive_change_game_room(const Socket& socket) {
   return new ChangeGameRoomDTO(room_number);
 }
 
+DropItemCommandDTO* receive_drop_item(const Socket& socket) {
+  uint8_t item_id;
+  socket.recv(&item_id, 1);
+  return new DropItemCommandDTO(item_id);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -65,8 +72,10 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return new PickUpCommandDTO();
     case USE_ITEM_COMMAND:
       return receive_use_item(socket);
-    case CHANGE_GAME_ROOM:
+    case CHANGE_GAME_ROOM_COMMAND:
       return receive_change_game_room(socket);
+    case DROP_ITEM_COMMAND:
+      return receive_drop_item(socket);
     default:
       return nullptr;
   }
@@ -80,7 +89,7 @@ void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
 }
 
 void send_change_game_room(const Socket& socket, const ChangeGameRoomDTO* change_game_room) {
-  uint8_t command_id = CHANGE_GAME_ROOM;
+  uint8_t command_id = CHANGE_GAME_ROOM_COMMAND;
   uint8_t room_number = change_game_room->room_number;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&room_number, 1);
@@ -120,6 +129,13 @@ void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
   socket.send(&is_equipped, ID_LENGTH);
 }
 
+void send_drop_item_command(const Socket& socket, const DropItemCommandDTO* drop_command) {
+  uint8_t command_id = DROP_ITEM_COMMAND;
+  uint8_t item = drop_command->item_id;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, ID_LENGTH);  
+}
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
@@ -143,8 +159,11 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case USE_ITEM_COMMAND:
       send_use_item(socket, dynamic_cast<UseItemCommandDTO*>(commandDTO));
       break;
-    case CHANGE_GAME_ROOM:
+    case CHANGE_GAME_ROOM_COMMAND:
       send_change_game_room(socket, dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
+      break;
+    case DROP_ITEM_COMMAND:
+      send_drop_item_command(socket, dynamic_cast<DropItemCommandDTO*>(commandDTO));
       break;
     default:
       break;

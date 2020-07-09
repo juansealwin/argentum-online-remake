@@ -5,4 +5,4 @@ ChangeGameRoomDTO::ChangeGameRoomDTO(const int room_number)
 
 ChangeGameRoomDTO::~ChangeGameRoomDTO() {}
 
-int ChangeGameRoomDTO::get_id() { return CHANGE_GAME_ROOM; }
+int ChangeGameRoomDTO::get_id() { return CHANGE_GAME_ROOM_COMMAND; }
