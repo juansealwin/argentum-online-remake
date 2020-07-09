@@ -46,13 +46,8 @@ void Client::play() {
 
   while (is_running) {
   }
-  std::cout << "is_running en client.cpp: " << is_running << std::endl;
   // Una vez que se cierra el juego se hace join de los subprocesos
-  std::cout << "JOINEANDO RENDERER" << std::endl;
   renderer.join();
-  std::cout << "JOINEANDO SENDERER" << std::endl;
   sender.join();
-  std::cout << "JOINEANDO UPDATER" << std::endl;
   updater.join();
-  std::cout << "JOINEO TODO" << std::endl;
 }

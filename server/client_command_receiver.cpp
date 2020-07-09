@@ -36,12 +36,24 @@ void ClientCommandReceiver::run() {
         commands_queue->push(command);
       }
       if (dynamic_cast<QuitCommandDTO *>(command_dto)) {
+        send_close_connection();
         alive = false;
       }
       delete command_dto;
     }
   }
  // std::cout << "stopping command receiver" << std::endl;
+}
+
+void ClientCommandReceiver::send_close_connection() {
+
+  std::vector<unsigned char> notification;
+  // mover a la clase
+  uint8_t notification_id = 0;
+  notification.push_back(notification_id);
+  CloseConnectionNotification* n = new CloseConnectionNotification(notification);
+  Protocol::send_notification(peer_socket ,n);
+  delete n;
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }

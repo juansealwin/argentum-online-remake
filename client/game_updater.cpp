@@ -40,6 +40,10 @@ void GameUpdater::run() {
         deserialize_status(j);
       }
 
+      else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
+        break;
+      }
+
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status, new_map);
 
