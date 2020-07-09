@@ -13,6 +13,7 @@
 #include "thread.h"
 #include "change_game_room_dto.h"
 #include "quit_command_dto.h"
+#include "close_connection_notification.h"
 
 class ClientCommandReceiver : public Thread {
  public:
@@ -25,6 +26,7 @@ class ClientCommandReceiver : public Thread {
   void run() override;
   bool is_alive();
   void stop();
+  void send_close_connection();
 
  private:
   
