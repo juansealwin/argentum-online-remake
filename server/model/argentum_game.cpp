@@ -219,9 +219,9 @@ void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   hero->set_position(x, y);
-  std::cout << "setting new map" << std::endl;
+  //std::cout << "setting new map" << std::endl;
   hero->set_map(std::ref(map));
-  std::cout << "setted map " << std::endl;
+  //std::cout << "setted map " << std::endl;
   map.ocupy_cell(x, y, id);
   heroes.emplace(id, hero);
 }
@@ -299,8 +299,8 @@ void ArgentumGame::add_notification_queue(
 }
 
 ThreadSafeQueue<Command *> *ArgentumGame::get_commands_queue() {
-  std::cout << "Currently in game room: " << room << " getting command queue "
-            << std::endl;
+  // std::cout << "Currently in game room: " << room << " getting command queue "
+  //           << std::endl;
 
   return commands_queue;
 }
@@ -311,7 +311,7 @@ void ArgentumGame::clean_notifications_queues() {
       it;
   for (it = queues_notifications.begin(); it != queues_notifications.end();) {
     if ((it->second)->is_closed()) {
-      std::cout << "cleaning notif q" << std::endl;
+      //std::cout << "cleaning notif q" << std::endl;
       it = queues_notifications.erase(it);
 
     } else

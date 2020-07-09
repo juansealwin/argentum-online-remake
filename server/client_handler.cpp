@@ -22,8 +22,11 @@ ClientHandler::~ClientHandler() {
   this->sender->stop();
   this->receiver->stop();
   delete sender;
-  delete receiver;
+  //std::cout << "deleeted sender" << std::endl;
   this->peer_socket.close();
+
+  delete receiver;
+  //std::cout << "deleted receiver" << std::endl;
 }
 
 bool ClientHandler::is_alive() {

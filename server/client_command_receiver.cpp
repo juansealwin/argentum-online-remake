@@ -34,10 +34,7 @@ void ClientCommandReceiver::run() {
 
       } else if (command_blocker.can_process(command_dto)) {
         Command *command = CommandFactory::create_command(command_dto, hero_id);
-        if (!commands_queue->is_closed()) {
-          commands_queue->push(command);
-        } else
-          delete command;
+        commands_queue->push(command);
       }
       if (dynamic_cast<QuitCommandDTO *>(command_dto)) {
         alive = false;
@@ -45,7 +42,7 @@ void ClientCommandReceiver::run() {
       delete command_dto;
     }
   }
-  std::cout << "stopping command receiver" << std::endl;
+ // std::cout << "stopping command receiver" << std::endl;
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }
