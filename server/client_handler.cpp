@@ -21,11 +21,12 @@ ClientHandler::ClientHandler(
 ClientHandler::~ClientHandler() {
   this->sender->stop();
   this->receiver->stop();
+  notifications_queue->close();
   delete sender;
   delete receiver;
   this->peer_socket.close();
 }
 
 bool ClientHandler::is_alive() {
-  return this->receiver->is_alive() || this->sender->is_alive();
+  return this->receiver->is_alive(); //|| this->sender->is_alive();
 }
