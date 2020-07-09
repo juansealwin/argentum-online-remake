@@ -67,10 +67,10 @@ void EventHandler::get_events() {
             PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
             commands_queue.push(pick_up_item_command);
           }
-          if (event.key.keysym.sym == SDLK_h) {
-            DropItemCommandDTO* change_game_room_command = new DropItemCommandDTO(6);
-            commands_queue.push(change_game_room_command);
-          }
+          // if (event.key.keysym.sym == SDLK_h) {
+          //   DropItemCommandDTO* change_game_room_command = new DropItemCommandDTO(6);
+          //   commands_queue.push(change_game_room_command);
+          // }
 
           // if (event.key.keysym.sym == SDLK_F1) {
           //   ChangeGameRoomDTO* change_game_room_command = new ChangeGameRoomDTO(1);
