@@ -201,7 +201,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 
 void Serializer::debug_deserialize_v3(
     std::vector<unsigned char> serialization) {
-  unsigned int monsters_detected = 0;
+  unsigned int monsters_detected, entities_quantity = 0;
   unsigned int heroes_detected = 0;
   unsigned int npcs_or_others_detected = 0;
   unsigned int drops_detected = 0;
@@ -209,12 +209,14 @@ void Serializer::debug_deserialize_v3(
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
     int entity_type = extract<uint8_t>(serialization, j);
+    entities_quantity++;
     int x = extract<uint8_t>(serialization, j);
     int y = extract<uint8_t>(serialization, j);
     int orientation = extract<uint8_t>(serialization, j);
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
+    if (id > 100) {std::cout << "id mayor a 100! " << id <<std::endl;}
     if (is_drop(entity_type)) {
       drops_detected++;
       int items_in_drop = extract<uint8_t>(serialization, j);
@@ -296,6 +298,7 @@ void Serializer::debug_deserialize_v3(
       // Deberia ser un NPC, no tiene mas atributos
     }
   }
+  //std::cout << "Enviando: " << entities_quantity << " entidades" << std::endl;
   // std::cout << "monsters detecteD: " << monsters_detected << " heroes_detected " << heroes_detected << " npcs_or_others_detected " <<
   // npcs_or_others_detected << " drops detected " << drops_detected << std::endl;
 }

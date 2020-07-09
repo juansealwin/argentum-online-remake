@@ -43,7 +43,7 @@ class ClientCommandReceiver : public Thread {
   void change_game_room(unsigned int new_game_room);
 
  private:
-  MapChangeNotification *create_start_notification();
+  MapChangeNotification *map_change_notification();
 };
 
 #endif  // CLIENT_COMMAND_RECEIVER_H

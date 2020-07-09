@@ -72,10 +72,12 @@ void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
       ->add_notification_queue(std::get<1>(hero_and_queue), hero_id);
   commands_queue = game_rooms.at(new_game_room)->get_commands_queue();
   current_game_room = new_game_room;
-  Protocol::send_notification(peer_socket, create_start_notification());
+  MapChangeNotification *n = map_change_notification();
+  Protocol::send_notification(peer_socket, n);
+  delete n;
 }
 
-MapChangeNotification *ClientCommandReceiver::create_start_notification() {
+MapChangeNotification *ClientCommandReceiver::map_change_notification() {
   std::vector<unsigned char> notification;
   // mover a la clase
   uint8_t notification_id = 3;
