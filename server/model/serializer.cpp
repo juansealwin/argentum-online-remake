@@ -201,7 +201,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 
 void Serializer::debug_deserialize_v3(
     std::vector<unsigned char> serialization) {
-  unsigned int monsters_detected = 0;
+  unsigned int monsters_detected, entities_quantity = 0;
   unsigned int heroes_detected = 0;
   unsigned int npcs_or_others_detected = 0;
   unsigned int drops_detected = 0;
@@ -209,6 +209,7 @@ void Serializer::debug_deserialize_v3(
   while (j < serialization.size()) {
     uint16_t id = ntohs(extract<uint16_t>(serialization, j));
     int entity_type = extract<uint8_t>(serialization, j);
+    entities_quantity++;
     int x = extract<uint8_t>(serialization, j);
     int y = extract<uint8_t>(serialization, j);
     int orientation = extract<uint8_t>(serialization, j);
@@ -234,9 +235,9 @@ void Serializer::debug_deserialize_v3(
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
       uint8_t affected_by = extract<uint8_t>(serialization, j);
-      if (affected_by != 0) {
-        std::cout << "affected by : " << (int)affected_by << std::endl;
-      }
+      // if (affected_by != 0) {
+      //   std::cout << "monster affected by : " << (int)affected_by << std::endl;
+      // }
       // std::cout << "Monster: lvl: " << level << "maxhp: " << max_hp
       //           << "current_hp" << current_hp << std::endl;
     } else if (is_hero(entity_type)) {
@@ -246,9 +247,9 @@ void Serializer::debug_deserialize_v3(
       uint16_t current_hp = ntohs(extract<uint16_t>(serialization, j));
       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
       uint8_t affected_by = extract<uint8_t>(serialization, j);
-      if (affected_by != 0) {
-        std::cout << "affected by : " << (int)affected_by << std::endl;
-      }
+      // if (affected_by != 0) {
+      //   std::cout << "hero affected by : " << (int)affected_by << std::endl;
+      // }
       int name_size = extract<uint8_t>(serialization, j);
       std::string name;
       for (int x = 0; x < name_size; x++) {
@@ -296,6 +297,7 @@ void Serializer::debug_deserialize_v3(
       // Deberia ser un NPC, no tiene mas atributos
     }
   }
+  //std::cout << "Enviando: " << entities_quantity << " entidades" << std::endl;
   // std::cout << "monsters detecteD: " << monsters_detected << " heroes_detected " << heroes_detected << " npcs_or_others_detected " <<
   // npcs_or_others_detected << " drops detected " << drops_detected << std::endl;
 }

@@ -5,22 +5,28 @@
 #include "client_handler.h"
 #include "login_command_dto.h"
 
-ClientListener::ClientListener(const char *port, const char *map_cfg_file,
+ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
   Socket server_socket;
   server_socket.bind_and_listen(port);
   this->server_socket = std::move(server_socket);
-  // Mover constante a cfg.
-  const int x = 2;
-  for (int i = 0; i < x; i++) {
-    std::ifstream map_file(map_cfg_file);
+  std::ifstream entities_file_aux(entities_cfg_file);
+  Json::Value entities_cfg;
+  entities_file_aux >> entities_cfg;
+  const int maps_quantity = entities_cfg["maps"].size();
+  for (int i = 0; i < maps_quantity; i++) {
     std::ifstream entities_file(entities_cfg_file);
+    std::string map_cfg_file = entities_cfg["maps"][i].asString();
+    const char *map_cfg_file_aux = map_cfg_file.c_str();
+    std::ifstream map_file(map_cfg_file_aux);
+
     ThreadSafeQueue<Command *> *commands_queue =
         new ThreadSafeQueue<Command *>();
     Json::Value map_cfg;
     map_file >> map_cfg;
     ArgentumGame *game =
-        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file, std::ref(entities_ids));
+        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
+                         std::ref(entities_ids));
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
@@ -30,8 +36,6 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
 ClientListener::~ClientListener() { join(); }
 
 void ClientListener::stop_listening() {
-  
-  
   for (ArgentumGame *g : game_rooms) {
     g->kill();
     g->join();
@@ -47,7 +51,6 @@ void ClientListener::stop_listening() {
   server_socket.close();
 }
 
-// agregar mapa en el que este jugando
 StartingInfoNotification *ClientListener::create_start_notification(
     unsigned int hero_id) {
   std::vector<unsigned char> notification;

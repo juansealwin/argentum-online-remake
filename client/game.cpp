@@ -1,12 +1,11 @@
 #include "game.h"
 
 // 620 ancho y 465 de alto el viewport
-Game::Game(int id_player, int scr_width, int scr_height)
+Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
     : id_hero(id_player),
       screen_width(scr_width - WIDTH_UI),
       screen_height(scr_height - HEIGHT_UI) {
-  background = ID_MAP_GRASS_BACKGROUND;
-  static_objects = ID_MAP_GRASS_OBJECTS;
+  change_map(new_map);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, HEIGHT_UI, screen_width, screen_height};
 }
@@ -63,7 +62,10 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 Game::~Game() {
-  if (!characters.empty()) characters.clear();
+  if (!characters.empty()) {
+    // clean_all_characters(true);
+    characters.clear();
+  }
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
@@ -157,16 +159,21 @@ void Game::render(SDL_Renderer* renderer) {
 void Game::load_character(int id, entity_t entity_type, int x, int y,
                           bool alive, id_texture_t helmet, id_texture_t armor,
                           id_texture_t shield, id_texture_t weapon) {
+  int x_render_scale = x * TILE_SIZE;
+  int y_render_scale = y * TILE_SIZE;
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
-    characters[id] = new PlayableCharacter(entity_type, x, y, alive, helmet,
-                                           armor, shield, weapon);
-    // Si cargamos a hero por primera vez ubicamos el viewport donde debe
-    if (id == id_hero)
-      update_map(x * TILE_SIZE - screen_width / 2,
-                 y * TILE_SIZE - screen_height / 2);
+    characters[id] =
+        new PlayableCharacter(entity_type, x_render_scale, y_render_scale,
+                              alive, helmet, armor, shield, weapon);
+    // Si cargamos a hero por primera vez ubicamos la parte del mapa que
+    // queremos ver
+    if (id == id_hero) 
+      update_map(x_render_scale - screen_width / 2,
+                 y_render_scale - screen_height / 2);
+    
   } else {
-    characters[id] = new Npc(entity_type, x, y);
+    characters[id] = new Npc(entity_type, x_render_scale, y_render_scale);
   }
 }
 
@@ -203,6 +210,20 @@ void Game::render_entities(SDL_Renderer* renderer) {
   }
 }
 
+void Game::change_map(map_t new_map) {
+  switch (new_map) {
+    case GRASS_MAP:
+      background = ID_MAP_GRASS_BACKGROUND;
+      static_objects = ID_MAP_GRASS_OBJECTS;
+      break;
+
+    case DESERT_MAP:
+      background = ID_MAP_DESERT_BACKGROUND;
+      static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+  }
+}
+
 void Game::clean_entity(int i, entity_t type_entity) {
   if (type_entity == ITEM) {
     items.erase(i);
@@ -212,10 +233,13 @@ void Game::clean_entity(int i, entity_t type_entity) {
   }
 }
 
-void Game::clean_all_characters() {
+void Game::clean_all_characters(bool also_hero) {
   std::map<int, Character*>::iterator it;
   for (it = characters.begin(); it != characters.end(); it++) {
-    delete characters[it->first];
-    characters.erase(it->first);
+    if (it->first != id_hero || also_hero) {
+      delete it->second;
+      characters.erase(it);
+    }
   }
+  items.clear();
 }

@@ -39,16 +39,15 @@ void Client::play() {
   EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al
   // server
-  
+
   updater.start();
   renderer.start();
   event_handler.get_events();
 
   while (is_running) {
   }
-
   // Una vez que se cierra el juego se hace join de los subprocesos
   renderer.join();
-  updater.join();
   sender.join();
+  updater.join();
 }

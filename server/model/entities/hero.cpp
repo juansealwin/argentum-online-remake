@@ -239,7 +239,11 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
     actual_damage =
         std::max(damage - equipment->get_defense_bonus(), (unsigned int)0);
   }  // Hacer chequeos si esta vivo etc?
-  if (actual_damage > 0) affected_by = weapon_origin;
+  if (actual_damage > 0) { 
+    std::cout << "changed hero affected by: " << affected_by << std::endl;
+    affected_by = weapon_origin;
+  }
+
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
   std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode

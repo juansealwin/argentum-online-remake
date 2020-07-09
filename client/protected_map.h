@@ -30,7 +30,7 @@ class ProtectedMap {
   ~ProtectedMap();
   Game map_reader(UIStatus&);
   void copy_buffer(UIStatus&);
-  void map_writer(std::map<int, EntityStatus>&);
+  void map_writer(std::map<int, EntityStatus>&, map_t);
 };
 
 #endif

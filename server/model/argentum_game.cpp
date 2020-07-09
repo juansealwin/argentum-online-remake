@@ -264,12 +264,18 @@ void ArgentumGame::update() {
                             std::ref(projectiles));
   projectile_manager.remove_death_projectiles(std::ref(projectiles),
                                               std::ref(map));
+
+
+}
+
+void ArgentumGame::remove_death_entities() {
   drops_manager.create_drops(std::ref(heroes), std::ref(monsters),
                              std::ref(drops), entities_cfg["items"],
                              entities_ids);
-  drops_manager.remove_old_and_empty_drops(std::ref(drops));
   heroes_manager.remove_death_heroes(std::ref(heroes), std::ref(map));
   monsters_manager.remove_death_monsters(std::ref(monsters), std::ref(map));
+  drops_manager.remove_old_and_empty_drops(std::ref(drops));
+
 }
 
 void ArgentumGame::run() {
@@ -278,6 +284,7 @@ void ArgentumGame::run() {
     update();
     // print_debug_map();
     send_game_status();
+    remove_death_entities();
     long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
@@ -376,7 +383,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
       class_stats["id"].asUInt(), std::ref(map), hero_name,
-      entities_cfg["critialDamageMiltiplier"].asFloat(),
+      entities_cfg["criticalDamageMiltiplier"].asFloat(),
       entities_cfg["inventorySize"].asInt(),
       entities_cfg["criticalDamageProbability"].asFloat(),
       entities_cfg["evasionProbability"].asFloat(),

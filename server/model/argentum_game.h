@@ -82,6 +82,7 @@ class ArgentumGame : public Thread {
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
   void update();
+  void remove_death_entities();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_npcs(Json::Value &map_cfg);

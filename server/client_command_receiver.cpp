@@ -31,18 +31,29 @@ void ClientCommandReceiver::run() {
           dynamic_cast<ChangeGameRoomDTO *>(command_dto);
       if (cgrDTO) {
         change_game_room(cgrDTO->room_number - 1);
-
       } else if (command_blocker.can_process(command_dto)) {
         Command *command = CommandFactory::create_command(command_dto, hero_id);
         commands_queue->push(command);
       }
       if (dynamic_cast<QuitCommandDTO *>(command_dto)) {
+        send_close_connection();
         alive = false;
       }
       delete command_dto;
     }
   }
  // std::cout << "stopping command receiver" << std::endl;
+}
+
+void ClientCommandReceiver::send_close_connection() {
+
+  std::vector<unsigned char> notification;
+  // mover a la clase
+  uint8_t notification_id = 0;
+  notification.push_back(notification_id);
+  CloseConnectionNotification* n = new CloseConnectionNotification(notification);
+  Protocol::send_notification(peer_socket ,n);
+  delete n;
 }
 
 bool ClientCommandReceiver::is_alive() { return this->alive; }
@@ -61,4 +72,16 @@ void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
       ->add_notification_queue(std::get<1>(hero_and_queue), hero_id);
   commands_queue = game_rooms.at(new_game_room)->get_commands_queue();
   current_game_room = new_game_room;
+  MapChangeNotification *n = map_change_notification();
+  Protocol::send_notification(peer_socket, n);
+  delete n;
+}
+
+MapChangeNotification *ClientCommandReceiver::map_change_notification() {
+  std::vector<unsigned char> notification;
+  // mover a la clase
+  uint8_t notification_id = 3;
+  notification.push_back(notification_id);
+  notification.push_back(0);
+  return new MapChangeNotification(notification);
 }

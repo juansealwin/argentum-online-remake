@@ -43,6 +43,10 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   /* MAP TEXTURES */
   map[ID_MAP_GRASS_BACKGROUND] = new Texture("mapa_hierba_fondo.png", renderer);
   map[ID_MAP_GRASS_OBJECTS] = new Texture("mapa_hierba_objetos.png", renderer);
+  map[ID_MAP_DESERT_BACKGROUND] =
+      new Texture("mapa_desierto_fondo.png", renderer);
+  map[ID_MAP_DESERT_OBJECTS] =
+      new Texture("mapa_desierto_objetos.png", renderer);
 
   /* HELMETS AND HATS TEXTURES*/
   map[ID_MAGIC_HAT] = new Texture("sombrero_magico.png", renderer);

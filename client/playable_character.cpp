@@ -5,8 +5,8 @@ PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
                                      id_texture_t new_armor,
                                      id_texture_t new_shield,
                                      id_texture_t new_weapon) {
-  x = new_x * TILE_SIZE;
-  y = new_y * TILE_SIZE;
+  x = new_x;
+  y = new_y;
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
@@ -136,7 +136,7 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   if (ghost) {
     texture_manager.get_texture(ID_CORPSE).render(
         renderer, &ghost_body, x - x_rel, y - GHOST_HEIGHT / 2 - y_rel);
-    
+
     // El 3 es para corregir la cabeza que no coincide EXACTAMENTE
     texture_manager.get_texture(ID_CORPSE_HEAD)
         .render(renderer, &head_rect, x + head_rect.w / 4 - x_rel + 2,
@@ -399,9 +399,9 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       frame_equipped_a = {body_rect.x, body_rect.y, 25, 45};
       armor_animation = Animation(frame_equipped_a.w, frame_equipped_a.h);
       if (type_character == ID_GNOME || type_character == ID_DWARF)
-        armor = ID_PLATE_ARMOR_EQUIPPED;
-      else
         armor = ID_PLATE_ARMOR_XS_EQUIPPED;
+      else
+        armor = ID_PLATE_ARMOR_EQUIPPED;
       break;
 
     case ID_BLUE_TUNIC:

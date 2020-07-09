@@ -15,17 +15,35 @@ GameUpdater::~GameUpdater() {}
 
 void GameUpdater::run() {
   try {
+    int type_of_notification;
+    unsigned int j;
+    map_t new_map;
+
     while (is_running) {
+      j = 0;
+
       // Recibimos las actualizaciones del mapa
       Protocol::receive_notification(read_socket, status_serialized);
 
-      // extract<uint8_t>(status_serialized, j);
+      type_of_notification = extract<uint8_t>(status_serialized, j);
 
-      // Deserializamos la información recibida
-      deserialize_status();
+      if (type_of_notification == STATUS_NOTIFICATION) {
+        // Deserializamos la información recibida
+        deserialize_status(j);
+        new_map = CURRENT_MAP;
+
+      } else if (type_of_notification == MAP_CHANGING_NOTIFICATION) {
+        new_map = get_new_map(extract<uint8_t>(status_serialized, j));
+        Protocol::receive_notification(read_socket, status_serialized);
+        // Sabemos que tiene que ser un status, no necesitamos saber el tipo
+        j = 1;
+        deserialize_status(j);
+      } else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
+        break;
+      }
 
       // Escribimos la información en el mapa protegido
-      protected_map.map_writer(next_status);
+      protected_map.map_writer(next_status, new_map);
 
       // Copiamos todo el update en el mapa de lectura
       protected_map.copy_buffer(next_ui_status);
@@ -55,9 +73,8 @@ bool is_monster(uint8_t t) {
 
 bool is_drop(uint8_t t) { return (t == 37); }
 
-void GameUpdater::deserialize_status() {
+void GameUpdater::deserialize_status(unsigned int& j) {
   // std::cout << "vector size is " << status_serialized.size() << std::endl;
-  unsigned int j = 1;
 
   // Declaramos las variables necesarias para extraer la informacion int para
   // las de 1 byte y uint16_t para las de 2 bytes
@@ -181,6 +198,9 @@ void GameUpdater::deserialize_status() {
       next_status[(int)id] =
           EntityStatus(entity_type, x, y, ghost_mode, affected_by, helmet,
                        armor, shield, weapon);
+    } else {
+      // Es un NPC interactivo
+      next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
     }
   }
 }
@@ -309,4 +329,16 @@ equipped_t GameUpdater::get_type_equipped(int new_item) {
       break;
   }
   return type_equipped;
+}
+
+map_t GameUpdater::get_new_map(int map) {
+  map_t new_map;
+
+  switch (map) {
+    case 0:
+      new_map = GRASS_MAP;
+      break;
+  }
+
+  return new_map;
 }

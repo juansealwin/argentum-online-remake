@@ -1,8 +1,8 @@
 #include "npc.h"
 
 Npc::Npc(entity_t id_npc, int new_x, int new_y) {
-  x = new_x * TILE_SIZE;
-  y = new_y * TILE_SIZE;
+  x = new_x;
+  y = new_y;
   set_character_features(id_npc);
   animation_move = Animation(width, height, type_character);
 }

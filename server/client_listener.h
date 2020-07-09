@@ -4,21 +4,21 @@
 #include <list>
 #include <vector>
 
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "../util/thread_safe_queue.h"
 #include "argentum_game.h"
 #include "client_handler.h"
 #include "common_socket.h"
-#include "thread.h"
-#include "../util/json/json-forwards.h"
-#include "../util/json/json.h"
 #include "protocol.h"
 #include "starting_info_notification.h"
+#include "thread.h"
+
 class ClientListener : public Thread {
  public:
   /*Crea un nuevo ClientListener que escuchara en el puerto port
   y utilizara numbers para asignarle a cada cliente que se conecte*/
-  explicit ClientListener(const char *port, const char *map_cfg_file,
-                          const char *entities_cfg_file);
+  explicit ClientListener(const char *port, const char *entities_cfg_file);
 
   ~ClientListener() override;
   /*Escucha nuevos clientes en el puerto 'port'.

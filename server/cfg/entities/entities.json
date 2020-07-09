@@ -25,13 +25,13 @@
       "id": 32
     },
     "priest": {
-      "id" : 33
+      "id": 33
     },
     "merchant": {
-      "id" : 34
+      "id": 34
     },
     "baker": {
-      "id" : 35
+      "id": 35
     }
   },
   "items": {
@@ -260,7 +260,8 @@
       "id": 28
     }
   },
-  "critialDamageMiltiplier": 2,
+  "maps": ["../../server/cfg/maps/grass_map.json", "../../server/cfg/maps/grass_mapII.json"],
+  "criticalDamageMiltiplier": 2,
   "inventorySize": 10,
   "criticalDamageProbability": 0.125,
   "evasionProbability": 0.001,
