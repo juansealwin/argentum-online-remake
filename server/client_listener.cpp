@@ -30,14 +30,17 @@ ClientListener::ClientListener(const char *port, const char *map_cfg_file,
 ClientListener::~ClientListener() { join(); }
 
 void ClientListener::stop_listening() {
-  for (ClientHandler *c : clients) {
-    delete c;
-  }
+  
+  
   for (ArgentumGame *g : game_rooms) {
     g->kill();
     g->join();
     delete g;
   }
+  for (ClientHandler *c : clients) {
+    delete c;
+  }
+
   for (ThreadSafeQueue<Command *> *q : queues_commands) {
     delete q;
   }
@@ -65,11 +68,8 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
-    std::cout << "trying to get rno" << std::endl;
     LoginCommandDTO *login_command = static_cast<LoginCommandDTO *>(
         Protocol::receive_command(client_socket));
-    std::cout << "room number received: " << login_command->room_number
-              << std::endl;
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
     // aca a game pasarle la cola de notificaciones para que la agregue de
@@ -101,7 +101,6 @@ void ClientListener::garbage_collector() {
   std::list<ClientHandler *>::iterator it = clients.begin();
   while (it != clients.end()) {
     if (!(*it)->is_alive()) {
-      std::cout << "Client is dead!" << std::endl;
       delete *it;
       it = clients.erase(it);
     } else {

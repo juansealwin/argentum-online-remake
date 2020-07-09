@@ -3,16 +3,17 @@
 Drop::Drop(unsigned int id, unsigned int unique_id, Inventory *inventory,
            unsigned int gold)
     : id(id), unique_id(unique_id), gold(gold) {
-      std::cout << "created drop with id " << unique_id << std::endl;
-  items.insert(items.end(), std::make_move_iterator(inventory->items.begin()),
-               std::make_move_iterator(inventory->items.end()));
-  inventory->items.erase(inventory->items.begin(), inventory->items.end());
+  std::cout << "created drop with id " << unique_id << std::endl;
+  add_items(inventory);
+  // items.insert(items.end(), std::make_move_iterator(inventory->items.begin()),
+  //              std::make_move_iterator(inventory->items.end()));
+  // inventory->items.erase(inventory->items.begin(), inventory->items.end());
 }
 
 Drop::Drop(unsigned int id, unsigned int unique_id, Item *item,
            unsigned int gold)
     : id(id), unique_id(unique_id), gold(gold) {
-      std::cout << "created drop with id " << unique_id << std::endl;
+  std::cout << "created drop with id " << unique_id << std::endl;
   items.push_back(item);
 }
 
@@ -28,6 +29,14 @@ std::size_t Drop::size() { return items.size(); }
 bool Drop::is_empty() { return ((items.size() == 0) && (gold == 0)); }
 
 void Drop::add_item(Item *item) { items.push_back(item); }
+
+void Drop::add_items(Inventory *inv) {
+  items.insert(items.end(), std::make_move_iterator(inv->items.begin()),
+               std::make_move_iterator(inv->items.end()));
+  inv->items.erase(inv->items.begin(), inv->items.end());
+}
+
+void Drop::add_gold(unsigned int gold) { this->gold += gold; }
 
 Item *Drop::take_item(unsigned int index) {
   Item *item = items.at(index - 1);

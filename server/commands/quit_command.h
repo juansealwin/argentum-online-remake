@@ -7,7 +7,7 @@
 
 class QuitCommand : public Command {
  public:
-  QuitCommand(const unsigned int player_id);
+  QuitCommand(const unsigned int uid);
   QuitCommand(const QuitCommand &) = delete;
   ~QuitCommand();
   // Ejecuta cambios en el juego segun
