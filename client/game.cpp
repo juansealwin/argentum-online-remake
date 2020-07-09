@@ -161,7 +161,6 @@ void Game::load_character(int id, entity_t entity_type, int x, int y,
                           id_texture_t shield, id_texture_t weapon) {
   int x_render_scale = x * TILE_SIZE;
   int y_render_scale = y * TILE_SIZE;
-
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
     characters[id] =
