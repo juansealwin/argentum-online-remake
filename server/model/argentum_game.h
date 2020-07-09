@@ -34,9 +34,6 @@
 class ArgentumGame : public Thread {
  public:
   // Instancia una nueva sala de Argentum
-  // ArgentumGame(const unsigned int room,
-  //              ThreadSafeQueue<Command *> *commands_queue,
-  //              std::ifstream &map_config, std::ifstream &entities_config);
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
                std::ifstream &entities_config, unsigned int &entities_ids);
@@ -66,6 +63,7 @@ class ArgentumGame : public Thread {
   remove_hero_and_notification_queue(int player_id);
   friend class Serializer;
   ThreadSafeQueue<Command *> * get_commands_queue();
+  void stop_notification_queue(int player_id);
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -80,14 +78,10 @@ class ArgentumGame : public Thread {
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
-  // void update(bool one_second_update);
   void update();
   // segun los ids de la capa 2 del json generado por tiled,
   // coloca a los monstruos iniciales del mapa.
   void place_initial_npcs(Json::Value &map_cfg);
-  // void remove_death_entities();
-  // entities se usa para serializar el mapa (quitar mas adelante)
-  // std::map<unsigned int, Entity *> entities;
   std::map<unsigned int, Entity *> npcs;
   std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
@@ -98,9 +92,6 @@ class ArgentumGame : public Thread {
   Json::Value entities_cfg;
   std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>
       queues_notifications;
-
-  // std::vector<BlockingThreadSafeQueue<Notification *> *>
-  // queues_notifications;
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);
   // agrega heroe en posicion x,y (los ejes estan invertidos)
