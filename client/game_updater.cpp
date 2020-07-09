@@ -33,14 +33,12 @@ void GameUpdater::run() {
         new_map = CURRENT_MAP;
 
       } else if (type_of_notification == MAP_CHANGING_NOTIFICATION) {
-        std::cout << "detected map change " << std::endl;
         new_map = get_new_map(extract<uint8_t>(status_serialized, j));
         Protocol::receive_notification(read_socket, status_serialized);
-        // Sabemos que tiene que ser un status
+        // Sabemos que tiene que ser un status, no necesitamos saber el tipo
+        j = 1;
         deserialize_status(j);
-      }
-
-      else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
+      } else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
         break;
       }
 
@@ -331,7 +329,6 @@ equipped_t GameUpdater::get_type_equipped(int new_item) {
 }
 
 map_t GameUpdater::get_new_map(int map) {
-  std::cout << "new map is " << map << std::endl;
   map_t new_map;
 
   switch (map) {
