@@ -230,5 +230,10 @@ void Game::change_map(map_t new_map) {
       background = ID_MAP_GRASS_BACKGROUND;
       static_objects = ID_MAP_GRASS_OBJECTS;
       break;
+
+    case DESERT_MAP:
+      background = ID_MAP_DESERT_BACKGROUND;
+      static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
   }
 }

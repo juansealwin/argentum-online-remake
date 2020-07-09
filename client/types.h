@@ -32,6 +32,8 @@ typedef enum {
   ID_BANKER,
   ID_MAP_GRASS_BACKGROUND,
   ID_MAP_GRASS_OBJECTS,
+  ID_MAP_DESERT_BACKGROUND,
+  ID_MAP_DESERT_OBJECTS,
   ID_GOLD,
   ID_HP_POTION,
   ID_MANA_POTION,
@@ -164,7 +166,7 @@ typedef enum {
   GOLD
 } item_t;
 
-typedef enum { CURRENT_MAP, GRASS_MAP } map_t;
+typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP } map_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
 
