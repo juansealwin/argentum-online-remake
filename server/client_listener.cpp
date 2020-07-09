@@ -51,7 +51,6 @@ void ClientListener::stop_listening() {
   server_socket.close();
 }
 
-// agregar mapa en el que este jugando
 StartingInfoNotification *ClientListener::create_start_notification(
     unsigned int hero_id) {
   std::vector<unsigned char> notification;

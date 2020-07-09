@@ -6,9 +6,11 @@
 #include "../util/json/json-forwards.h"
 #include "../util/json/json.h"
 #include "argentum_game.h"
+#include "change_game_room_dto.h"
 #include "command_blocker.h"
 #include "command_factory.h"
 #include "common_socket.h"
+#include "map_change_notification.h"
 #include "protocol.h"
 #include "thread.h"
 #include "change_game_room_dto.h"
@@ -29,7 +31,6 @@ class ClientCommandReceiver : public Thread {
   void send_close_connection();
 
  private:
-  
   Socket &peer_socket;
   unsigned int current_game_room;
   ThreadSafeQueue<Command *> *commands_queue;
@@ -37,10 +38,12 @@ class ClientCommandReceiver : public Thread {
   bool alive;
   std::vector<ArgentumGame *> game_rooms;
   CommandBlocker command_blocker;
-  //transfiere al heroe y su cola de notificaciones a la nueva sala
-  //tambien cambia la referencia de la cola de comandos
+  // transfiere al heroe y su cola de notificaciones a la nueva sala
+  // tambien cambia la referencia de la cola de comandos
   void change_game_room(unsigned int new_game_room);
- 
+
+ private:
+  MapChangeNotification *create_start_notification();
 };
 
 #endif  // CLIENT_COMMAND_RECEIVER_H
