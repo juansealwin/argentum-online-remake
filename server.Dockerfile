@@ -10,4 +10,4 @@ COPY . .
 
 RUN rm -rf build && mkdir build && cd build && cmake .. && make && make install
 
-ENTRYPOINT ["/home/build/server/server", "8080", "/home/server/cfg/map/mapa.json", "/home/server/cfg/entities/entities.json"]
+ENTRYPOINT ["/home/build/server/server", "8080", "/home/server/cfg/entities/entities.json"]

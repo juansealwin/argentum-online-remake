@@ -8,4 +8,4 @@ if [ ! -d "build" ]; then
 fi
 
 cd build/server
-./server ${1:-8080} ../../server/cfg/map/mapa.json ../../server/cfg/entities/entities.json
+./server ${1:-8080} ../../server/cfg/entities/entities.json

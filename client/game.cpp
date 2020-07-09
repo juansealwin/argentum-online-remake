@@ -5,6 +5,7 @@ Game::Game(int id_player, int scr_width, int scr_height)
     : id_hero(id_player),
       screen_width(scr_width - WIDTH_UI),
       screen_height(scr_height - HEIGHT_UI) {
+  // CAMBIAR IDS HARCODEADOS POR LO QUE MANDE EL SERVER
   background = ID_MAP_GRASS_BACKGROUND;
   static_objects = ID_MAP_GRASS_OBJECTS;
   map_piece = {0, 0, screen_width, screen_height};

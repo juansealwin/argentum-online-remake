@@ -4,8 +4,7 @@
 
 #include "server.h"
 
-#define NUMBERS_LENGTH 3
-#define ARGC 4
+#define ARGC 3
 #define SUCCESS 0
 #define ERROR 1
 
@@ -16,7 +15,7 @@ int main(int argc, char *argv[]) {
   }
   char *port = argv[1];
   // Recibir archivo de configuracion y pasarlo por parametro al server
-  Server server(port, argv[2], argv[3]);
+  Server server(port, argv[2]);
   server.run();
   return SUCCESS;
 }

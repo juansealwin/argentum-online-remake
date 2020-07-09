@@ -129,5 +129,4 @@ target_link_libraries(server ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES})
 install(DIRECTORY cfg/entities/ DESTINATION ${CMAKE_BINARY_DIR}/server)
 
 #Install the map file
-install(DIRECTORY cfg/map/ DESTINATION ${CMAKE_BINARY_DIR}/server)
-
+install(DIRECTORY cfg/maps/ DESTINATION ${CMAKE_BINARY_DIR}/server)
