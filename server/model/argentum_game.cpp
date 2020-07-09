@@ -107,6 +107,18 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Item *i = hero->remove_item(item_id);
+    std::cout << "Got item!!!" << std::endl;
+    delete i;
+  }
+  catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::hero_dequip_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
