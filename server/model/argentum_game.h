@@ -45,11 +45,14 @@ class ArgentumGame : public Thread {
   void hero_dequip_item(int entity_id, int item_id);
   // equipa o usa una pocion
   void hero_use_item(int entity_id, int item_id);
+  void hero_drop_item(int entity_id, int item_id);
+
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);
   // Settea a un jugador como muerto para que sea removido durante el update()
   void kill_player(unsigned int player_id);
+  
   // devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class,
                             std::string hero_name);

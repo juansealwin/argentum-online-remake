@@ -8,27 +8,42 @@ void DropsManager::create_drops(
     std::map<unsigned int, Hero *> &heroes,
     std::map<unsigned int, Monster *> &monsters,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
-    Json::Value items_config, unsigned int &entities_last_id) {
-  add_monster_drops(monsters, drops, items_config, entities_last_id);
-  add_heroes_drops(heroes, drops, items_config, entities_last_id);
+    Json::Value items_config, unsigned int &entities_ids) {
+  add_monster_drops(monsters, drops, items_config, entities_ids);
+  add_heroes_drops(heroes, drops, items_config, entities_ids);
 }
 
 void DropsManager::add_monster_drops(
     std::map<unsigned int, Monster *> &monsters,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
-    Json::Value items_config, unsigned int &entities_last_id) {
+    Json::Value items_config, unsigned int &entities_ids) {
   std::map<unsigned int, Monster *>::iterator it = monsters.begin();
   while (it != monsters.end()) {
     if (it->second->is_death()) {
-      randomly_add_drop(it->second, drops, items_config, entities_last_id);
+      randomly_add_drop(it->second, drops, items_config, entities_ids);
     }
     it++;
   }
 }
+
+void DropsManager::add_drop(
+    std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops, Item *i,
+    std::tuple<unsigned int, unsigned int> pos, Json::Value items_config,
+    unsigned int &entities_ids) {
+  Drop *drop;
+  if (drops.count(pos) > 0) {
+    drop = drops.at(pos);
+    drop->add_item(i);
+  } else {
+    drop = new Drop(items_config["drop"]["id"].asUInt(), entities_ids++, i, 0);
+    drops.emplace(pos, drop);
+  }
+}
+
 void DropsManager::add_heroes_drops(
     std::map<unsigned int, Hero *> &heroes,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
-    Json::Value items_config, unsigned int &entities_last_id) {
+    Json::Value items_config, unsigned int &entities_ids) {
   std::map<unsigned int, Hero *>::iterator it = heroes.begin();
   while (it != heroes.end()) {
     if (it->second->is_death() && (it->second->has_items_in_inventory() ||
@@ -44,7 +59,7 @@ void DropsManager::add_heroes_drops(
         drop->add_items(inv);
         drop->add_gold(gold);
       } else {
-        drop = new Drop(items_config["drop"]["id"].asUInt(), entities_last_id++,
+        drop = new Drop(items_config["drop"]["id"].asUInt(), entities_ids++,
                         inv, gold);
         drops.emplace(drop_coordinates, drop);
       }
@@ -70,7 +85,7 @@ void DropsManager::remove_old_and_empty_drops(
 void DropsManager::randomly_add_drop(
     Monster *dead_monster,
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops,
-    Json::Value items_config, unsigned int &entities_last_id) {
+    Json::Value items_config, unsigned int &entities_ids) {
   int rand_int = HelperFunctions::random_int(0, 9);
   Drop *drop = nullptr;
   if (rand_int < 8) {
@@ -89,8 +104,8 @@ void DropsManager::randomly_add_drop(
       drop->add_item(item);
       drop->add_gold(gold);
     } else {
-      Drop *drop = new Drop(items_config["drop"]["id"].asUInt(),
-                            entities_last_id++, item, gold);
+      Drop *drop = new Drop(items_config["drop"]["id"].asUInt(), entities_ids++,
+                            item, gold);
       drops.emplace(drop_coordinates, drop);
     }
   }
