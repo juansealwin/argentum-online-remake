@@ -52,9 +52,9 @@ class Game {
                       id_texture_t, id_texture_t);
   void load_item(int, id_texture_t, int, int);
   void render_entities(SDL_Renderer*);
-  void clean_entity(int i, entity_t);
-  void clean_all_characters(bool);
   id_texture_t get_item_texture(item_t) const;
+  void clean_entity(int i, entity_t);
+  void clean_all_characters(bool);  
 };
 
 #endif
