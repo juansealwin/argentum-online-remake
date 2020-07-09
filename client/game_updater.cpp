@@ -198,6 +198,9 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       next_status[(int)id] =
           EntityStatus(entity_type, x, y, ghost_mode, affected_by, helmet,
                        armor, shield, weapon);
+    } else {
+      // Es un NPC interactivo
+      next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
     }
   }
 }
