@@ -23,7 +23,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  //tests_drops();
+  // tests_drops();
 }
 void ArgentumGame::tests_drops() {
   // std::cout << "testing drops" << std::endl;
@@ -211,7 +211,8 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
 }
 
 void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
-  // std::cout << "Currently in game room: " << room << " adding a existing hero "
+  // std::cout << "Currently in game room: " << room << " adding a existing hero
+  // "
   //           << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map.get_random_free_space();
@@ -278,12 +279,7 @@ void ArgentumGame::run() {
 unsigned int ArgentumGame::get_room() { return room; }
 
 void ArgentumGame::send_game_status() {
-  if (heroes.size() == 0)
-    return;
-  else {
-    std::cout << "currently in game " << room << " there are heroes to notify "
-              << std::endl;
-  }
+  if (heroes.size() == 0) return;
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
       Serializer::serialize_game_status_v3(this);
@@ -298,8 +294,8 @@ void ArgentumGame::send_game_status() {
 
 void ArgentumGame::add_notification_queue(
     BlockingThreadSafeQueue<Notification *> *queue, unsigned int player_id) {
-  std::cout << "Currently in game room: " << room
-            << " adding noptification queue " << std::endl;
+  // std::cout << "Currently in game room: " << room
+  //           << " adding noptification queue " << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   // queues_notifications.push_back(queue);
   queues_notifications.emplace(player_id, queue);
@@ -358,8 +354,8 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       std::string hero_class,
                                       std::string hero_name, unsigned int x,
                                       unsigned int y) {
-  std::cout << "placing hero at position (" << x << ", " << y << ")"
-            << std::endl;
+  // std::cout << "placing hero at position (" << x << ", " << y << ")"
+  //           << std::endl;
   // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
