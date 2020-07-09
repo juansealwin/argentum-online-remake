@@ -36,16 +36,25 @@ void DropsManager::add_heroes_drops(
       std::tuple<unsigned int, unsigned int> drop_coordinates =
           std::tuple<unsigned int, unsigned int>(it->second->x_position,
                                                  it->second->y_position);
-      Drop *drop =
-          new Drop(items_config["drop"]["id"].asUInt(), entities_last_id++,
-                   it->second->inventory, it->second->remove_excess_gold());
-      drops.emplace(drop_coordinates, drop);
+      Drop *drop;
+      Inventory *inv = it->second->inventory;
+      unsigned int gold = it->second->remove_excess_gold();
+      if (drops.count(drop_coordinates) > 0) {
+        drop = drops.at(drop_coordinates);
+        drop->add_items(inv);
+        drop->add_gold(gold);
+      } else {
+        drop = new Drop(items_config["drop"]["id"].asUInt(), entities_last_id++,
+                        inv, gold);
+        drops.emplace(drop_coordinates, drop);
+      }
     }
     it++;
   }
 }
 void DropsManager::remove_old_and_empty_drops(
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops) {
+  // TO DO: Chequear hace cuanto fueron creados los drops y eliminarlos
   std::map<std::tuple<unsigned int, unsigned int>, Drop *>::iterator it =
       drops.begin();
   for (auto it = drops.cbegin(); it != drops.cend();) {
@@ -68,14 +77,21 @@ void DropsManager::randomly_add_drop(
     std::tuple<unsigned int, unsigned int> drop_coordinates =
         std::tuple<unsigned int, unsigned int>(dead_monster->x_position,
                                                dead_monster->y_position);
+
     Item *item = ItemFactory::create_random_item(items_config);
     rand_int = HelperFunctions::random_int(0, 9);
-    unsigned int coins = 0;
+    unsigned int gold = 0;
     if (rand_int < 3) {  // 30% de probabilidades de agregar monedas al drop
-      coins = rand_int * dead_monster->max_hp;
+      gold = rand_int * dead_monster->max_hp;
     }
-    Drop *drop = new Drop(items_config["drop"]["id"].asUInt(),
-                          entities_last_id++, item, coins);
-    drops.emplace(drop_coordinates, drop);
+    if (drops.count(drop_coordinates) > 0) {
+      drop = drops.at(drop_coordinates);
+      drop->add_item(item);
+      drop->add_gold(gold);
+    } else {
+      Drop *drop = new Drop(items_config["drop"]["id"].asUInt(),
+                            entities_last_id++, item, gold);
+      drops.emplace(drop_coordinates, drop);
+    }
   }
 }
