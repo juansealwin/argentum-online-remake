@@ -7,13 +7,16 @@
 ClientCommandReceiver::ClientCommandReceiver(
     Socket &peer_socket, unsigned int game_room,
     ThreadSafeQueue<Command *> *commands_queue, unsigned int hero_id,
-    std::vector<ArgentumGame *> &game_rooms)
+    std::vector<ArgentumGame *> &game_rooms, 
+    std::string player_name, MessageCenter &message_center)
     : peer_socket(peer_socket),
       current_game_room(game_room),
       commands_queue(commands_queue),
       hero_id(hero_id),
       alive(true),
-      game_rooms(game_rooms) {}
+      game_rooms(game_rooms),
+      player_name(player_name),
+      message_center(message_center) {}
 
 ClientCommandReceiver::~ClientCommandReceiver() { join(); }
 
@@ -37,6 +40,7 @@ void ClientCommandReceiver::run() {
       }
       if (dynamic_cast<QuitCommandDTO *>(command_dto)) {
         send_close_connection();
+        message_center.remove_player(player_name);
         alive = false;
       }
       delete command_dto;

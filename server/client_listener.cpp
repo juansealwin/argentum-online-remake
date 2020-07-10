@@ -75,11 +75,10 @@ void ClientListener::run() {
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
-    // aca a game pasarle la cola de notificaciones para que la agregue de
-    // manera segura (con locks) a el vector de notificaciones, si no puede
-    // haber race conditions
+    std::string player_name = "test";
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
-        "human", "warrior", "test_name1");
+        "human", "warrior", player_name);
+    message_center.add_player(player_name, notifications_queue);
     game_rooms[login_command->room_number]->add_notification_queue(
         notifications_queue, hero_id);
 
@@ -87,11 +86,10 @@ void ClientListener::run() {
         create_start_notification(hero_id);
     Protocol::send_notification(client_socket, starting_info);
     delete starting_info;
-    // Protocol::send_notification();
-    ClientHandler *client =
-        new ClientHandler(std::move(client_socket), login_command->room_number,
-                          queues_commands[login_command->room_number],
-                          notifications_queue, hero_id, std::ref(game_rooms));
+    ClientHandler *client = new ClientHandler(
+        std::move(client_socket), login_command->room_number,
+        queues_commands[login_command->room_number], notifications_queue,
+        hero_id, std::ref(game_rooms), player_name, std::ref(message_center));
 
     clients.push_back(client);
     // client->start();

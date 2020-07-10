@@ -13,7 +13,7 @@
 #include "protocol.h"
 #include "starting_info_notification.h"
 #include "thread.h"
-
+#include "message_center.h"
 class ClientListener : public Thread {
  public:
   /*Crea un nuevo ClientListener que escuchara en el puerto port
@@ -30,6 +30,7 @@ class ClientListener : public Thread {
   void stop_listening();
 
  private:
+  MessageCenter message_center;
   std::vector<ArgentumGame *> game_rooms;
   std::vector<ThreadSafeQueue<Command *> *> queues_commands;
   Socket server_socket;
