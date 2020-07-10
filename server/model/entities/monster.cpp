@@ -50,7 +50,7 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
   //           << std::endl;
   //std::cout << "Monster got affected by weapon!. is alive? " << alive;
   affected_by = weapon_origin;
-  std::cout << "changed monster affected by: " << affected_by << std::endl;
+  //std::cout << "changed monster affected by: " << affected_by << std::endl;
 
   return last_hp - current_hp;
 }

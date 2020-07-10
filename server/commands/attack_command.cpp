@@ -6,6 +6,6 @@ AttackCommand::~AttackCommand() {}
 
 void AttackCommand::execute(ArgentumGame *game) {
   // TODO
-  std::cout << "executing attack command" << std::endl;
+  //std::cout << "executing attack command" << std::endl;
   game->throw_projectile(uid);
 }

@@ -22,7 +22,7 @@
 LoginCommandDTO* receive_login(const Socket& socket) {
   uint8_t room_number;
   socket.recv(&room_number, 1);
-  std::cout << "room number: " << (int)room_number << std::endl;
+  //std::cout << "room number: " << (int)room_number << std::endl;
   return new LoginCommandDTO(room_number);
 }
 

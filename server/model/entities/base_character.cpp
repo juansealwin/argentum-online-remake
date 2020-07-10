@@ -54,7 +54,7 @@ void BaseCharacter::set_position(int x, int y) {
 
 void BaseCharacter::set_map(Map *map) {
   this->map = map;
-  map->debug_print();
+  //map->debug_print();
 }
 
 BaseCharacter::~BaseCharacter() {}

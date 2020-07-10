@@ -230,7 +230,7 @@ void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   hero->set_position(x, y);
-  map->debug_print();
+  //map->debug_print();
   hero->set_map(map);
   map->ocupy_cell(x, y, id);
   heroes.emplace(id, hero);
