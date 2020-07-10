@@ -16,25 +16,28 @@ void Map::load_terrain(Json::Value &map_json) {
     for (int curr_col = 0; curr_col < cols; ++curr_col) {
       bool fixed = false;
       bool safe = false;
+      //si en layer 0 tengo un 1 es inseguro, si no es seguro
       int type = map_json["layers"][0]["data"][i].asInt();
+      //si en layer 1 tengo algo distinto de 0 es porque es fijo
       int type2 = map_json["layers"][1]["data"][i].asInt();
       char repr = '.';
       if (type2 != 0) {
-        if ((type2 >= TREE_1) && (type2 <= TREE_2)) {
-          if (type2 == TREE_ROOT) {
-            fixed = true;
-            repr = 'b';
-          } else {
-            fixed = false;
-          }
-        } else {
-          fixed = true;
-          repr = 'b';
-        }
-      } else if (type == FLOOR) {
+        fixed = true;
+        repr = 'b';
+        // if ((type2 >= TREE_1) && (type2 <= TREE_2)) {
+        //   if (type2 == TREE_ROOT) {
+        //     fixed = true;
+        //     repr = 'b';
+        //   } else {
+        //     fixed = false;
+        //   }
+        // } else {
+        //   fixed = true;
+        //   repr = 'b';
+        // }
+      } else if (type != GROUND) {
         safe = true;
         repr = 'f';
-      } else {
       }
       Tile tile(type, repr, safe, fixed);
       it.push_back(std::ref(tile));

@@ -13,6 +13,6 @@ typedef enum {
 } monster_t;
 
 namespace MonstersFactory {
-  Monster* create_random_monster(Json::Value &monsters_cfg, unsigned int &entities_ids, Map &map);
+  Monster* create_random_monster(Json::Value &monsters_cfg, unsigned int &entities_ids, Map *map);
 }
 #endif  // MONSTERS_FACTORY_H

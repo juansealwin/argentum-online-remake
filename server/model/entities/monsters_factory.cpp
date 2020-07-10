@@ -2,7 +2,7 @@
 
 Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
                                                 unsigned int& entities_ids,
-                                                Map& map) {
+                                                Map* map) {
 
   int random_int =
       HelperFunctions::random_int(first_monster_id, last_monster_id);
@@ -22,13 +22,13 @@ Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
       break;
   }
 
-  std::tuple<int, int> coordinates = map.get_random_free_unsafe_space();
+  std::tuple<int, int> coordinates = map->get_random_free_unsafe_space();
   int x = std::get<0>(coordinates);
   int y = std::get<1>(coordinates);
   Monster* m =
       new Monster(entities_ids, x, y, monster_cfg["id"].asInt(), 'g',
                   monster_cfg["maxHp"].asInt(), monster_cfg["level"].asInt(),
                   monster_cfg["dps"].asInt(), map);
-  map.ocupy_cell(x, y, entities_ids);
+  map->ocupy_cell(x, y, entities_ids);
   return m;
 }

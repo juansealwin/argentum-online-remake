@@ -338,6 +338,9 @@ map_t GameUpdater::get_new_map(int map) {
     case 0:
       new_map = GRASS_MAP;
       break;
+    case 1:
+      new_map = DESERT_MAP;
+      break;
   }
 
   return new_map;

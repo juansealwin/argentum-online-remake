@@ -57,12 +57,12 @@ BaseCharacter *ProjectileManager::get_hero_or_monster(
 }
 
 void ProjectileManager::remove_death_projectiles(
-    std::map<unsigned int, Projectile *> &projectiles, Map &map) {
+    std::map<unsigned int, Projectile *> &projectiles, Map *map) {
   for (auto it = projectiles.cbegin(); it != projectiles.cend();) {
     if (it->second->alive == false) {
       int x_pos = it->second->x_position;
       int y_pos = it->second->y_position;
-      map.empty_cell(x_pos, y_pos);
+      map->empty_cell(x_pos, y_pos);
       delete it->second;
       it = projectiles.erase(it++);
     } else {
