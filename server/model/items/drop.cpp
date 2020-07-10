@@ -3,7 +3,7 @@
 Drop::Drop(unsigned int id, unsigned int unique_id, Inventory *inventory,
            unsigned int gold)
     : id(id), unique_id(unique_id), gold(gold) {
-  std::cout << "created drop with id " << unique_id << std::endl;
+  //std::cout << "created drop with id " << unique_id << std::endl;
   add_items(inventory);
   // items.insert(items.end(), std::make_move_iterator(inventory->items.begin()),
   //              std::make_move_iterator(inventory->items.end()));
@@ -13,7 +13,7 @@ Drop::Drop(unsigned int id, unsigned int unique_id, Inventory *inventory,
 Drop::Drop(unsigned int id, unsigned int unique_id, Item *item,
            unsigned int gold)
     : id(id), unique_id(unique_id), gold(gold) {
-  std::cout << "created drop with id " << unique_id << std::endl;
+  //std::cout << "created drop with id " << unique_id << std::endl;
   items.push_back(item);
 }
 

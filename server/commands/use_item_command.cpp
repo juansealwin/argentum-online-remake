@@ -7,9 +7,9 @@ UseItemCommand::UseItemCommand(const unsigned int uid, const int item,
 UseItemCommand::~UseItemCommand() {}
 
 void UseItemCommand::execute(ArgentumGame *game) {
-  std::cout << "executing use item command "
-                  << "slot is: " << slot << " equipped is " << equipped
-                  << " item is " << item << std::endl;
+  // std::cout << "executing use item command "
+  //                 << "slot is: " << slot << " equipped is " << equipped
+  //                 << " item is " << item << std::endl;
   if(equipped) {
     game->hero_dequip_item(uid, item);
   }

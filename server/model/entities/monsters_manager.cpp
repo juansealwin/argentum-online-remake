@@ -40,12 +40,12 @@ bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
 }
 
 void MonstersManager::remove_death_monsters(
-    std::map<unsigned int, Monster *> &monsters, Map &map) {
+    std::map<unsigned int, Monster *> &monsters, Map *map) {
   for (auto it = monsters.cbegin(); it != monsters.cend();) {
     if (it->second->alive == false) {
       int x_pos = it->second->x_position;
       int y_pos = it->second->y_position;
-      map.empty_cell(x_pos, y_pos);
+      map->empty_cell(x_pos, y_pos);
       delete it->second;
       it = monsters.erase(it++);
     } else {
@@ -55,7 +55,7 @@ void MonstersManager::remove_death_monsters(
 }
 
 void MonstersManager::respawn_monsters(
-    std::map<unsigned int, Monster *> &monsters, Map &map,
+    std::map<unsigned int, Monster *> &monsters, Map *map,
     unsigned int total_monster_poblation, Json::Value &monsters_cfg,
     unsigned int &entities_ids) {
   while (monsters.size() < total_monster_poblation) {

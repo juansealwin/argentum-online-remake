@@ -82,6 +82,6 @@ MapChangeNotification *ClientCommandReceiver::map_change_notification() {
   // mover a la clase
   uint8_t notification_id = 3;
   notification.push_back(notification_id);
-  notification.push_back(0);
+  notification.push_back(current_game_room);
   return new MapChangeNotification(notification);
 }

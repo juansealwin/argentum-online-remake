@@ -23,12 +23,13 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map &map, std::string name,
+       unsigned int class_id, Map *map, std::string name,
        const float critical_damage_multiplier,
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
        const float starting_xp_cap);
+  //Hero(Hero* h, Map &map);
   // devuelve el dano causado
   void regenerate();
   const Attack attack();

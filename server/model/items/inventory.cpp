@@ -2,7 +2,7 @@
 
 #include <iostream>
 Inventory::Inventory(std::size_t size) {
-  std::cout << "new inventory of size " << size << std::endl;
+  //std::cout << "new inventory of size " << size << std::endl;
   items.reserve(size);
 }
 

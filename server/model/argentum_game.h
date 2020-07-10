@@ -75,7 +75,7 @@ class ArgentumGame : public Thread {
   ThreadSafeQueue<Command *> *commands_queue;
   std::mutex mutex;
   std::string map_name;
-  Map map;
+  Map *map;
   bool alive = true;
   unsigned int &entities_ids;
   // actualiza el mundo segun los comandos recibidos

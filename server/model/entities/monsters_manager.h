@@ -13,8 +13,8 @@ class MonstersManager {
   void update(std::map<unsigned int, Monster *> &monsters,
               std::map<unsigned int, Hero *> heroes);
   void remove_death_monsters(std::map<unsigned int, Monster *> &monsters,
-                             Map &map);
-  void respawn_monsters(std::map<unsigned int, Monster *> &monsters, Map &map,
+                             Map *map);
+  void respawn_monsters(std::map<unsigned int, Monster *> &monsters, Map *map,
                         unsigned int total_monster_poblation,
                         Json::Value &monsters_cfg, unsigned int &entities_ids);
 
