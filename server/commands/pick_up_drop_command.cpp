@@ -7,6 +7,6 @@ PickUpDropCommand::PickUpDropCommand(const unsigned int uid) : Command(uid) {}
 PickUpDropCommand::~PickUpDropCommand() {}
 
 void PickUpDropCommand::execute(ArgentumGame *game) {
-  std::cout << "executing pick up item command" << std::endl;
+  //std::cout << "executing pick up item command" << std::endl;
   game->pick_up_drop(uid);
 }

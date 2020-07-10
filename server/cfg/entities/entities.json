@@ -259,8 +259,7 @@
       "gold": 200,
       "id": 28
     }
-  },
-  "maps": ["../../server/cfg/maps/grass_map.json", "../../server/cfg/maps/grass_mapII.json"],
+  },  "maps": ["../../server/cfg/maps/grass_map.json", "../../server/cfg/maps/desert_map.json"],
   "criticalDamageMiltiplier": 2,
   "inventorySize": 10,
   "criticalDamageProbability": 0.125,

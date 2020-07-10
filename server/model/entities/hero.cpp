@@ -1,4 +1,5 @@
 #include "hero.h"
+
 #include "defensive_item.h"
 #include "drop.h"
 #include "staff.h"
@@ -11,7 +12,7 @@ Hero::Hero(
     unsigned int f_race_hp, unsigned int f_race_recovery,
     unsigned int f_race_mana, unsigned int f_class_mana,
     unsigned int f_class_meditation, unsigned int gold, unsigned int class_id,
-    Map &map, std::string name, const float critical_damage_multiplier,
+    Map *map, std::string name, const float critical_damage_multiplier,
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap)
@@ -44,6 +45,38 @@ Hero::Hero(
   inventory = new Inventory(inventory_size);
 }
 
+// Hero::Hero(Hero *h, Map &map)
+//     : BaseCharacter(h->unique_id, h->x_position, h->y_position, h->type, 'h',
+//                     h->level, map),
+//       strength(h->strength),
+//       intelligence(h->intelligence),
+//       agility(h->agility),
+//       constitution(h->constitution),
+//       f_class_hp(h->f_class_hp),
+//       f_race_hp(h->f_race_hp),
+//       f_race_recovery(h->f_race_recovery),
+//       f_race_mana(h->f_race_mana),
+//       f_class_mana(h->f_class_mana),
+//       f_class_meditation(h->f_class_meditation),
+//       gold(h->gold),
+//       class_id(h->class_id),
+//       experience(h->experience),
+//       meditating(h->meditating),
+//       ghost_mode(h->ghost_mode),
+//       name(h->name),
+//       critical_damage_multiplier(h->critical_damage_multiplier),
+//       inventory_size(h->inventory_size),
+//       critical_damage_probability(h->critical_damage_probability),
+//       evasion_probability(h->evasion_probability),
+//       max_safe_gold_multiplier(h->max_safe_gold_multiplier),
+//       inventory(h->inventory),
+//       equipment(h->equipment),
+//       level_up_limit_power(h->level_up_limit_power),
+//       starting_xp_cap(h->starting_xp_cap) {
+//         h->inventory = nullptr;
+//         h->equipment = nullptr;
+//       }
+
 void Hero::regenerate() {
   if (ghost_mode) return;
   current_hp = std::min(current_hp + f_race_recovery, max_hp);
@@ -55,7 +88,6 @@ void Hero::regenerate() {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
-
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(weapon_id) && equipment->can_hold_weapon()) {
@@ -64,7 +96,6 @@ void Hero::equip_weapon(unsigned int weapon_id) {
   }
 }
 void Hero::equip_staff(unsigned int staff_id) {
-
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(staff_id) && equipment->can_hold_staff()) {
@@ -73,7 +104,6 @@ void Hero::equip_staff(unsigned int staff_id) {
   }
 }
 void Hero::equip_shield(unsigned int shield_id) {
-
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(shield_id)) {
@@ -82,7 +112,6 @@ void Hero::equip_shield(unsigned int shield_id) {
   }
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
-
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(helmet_id)) {
@@ -91,7 +120,6 @@ void Hero::equip_helmet(unsigned int helmet_id) {
   }
 }
 void Hero::equip_armour(unsigned int armour_id) {
- 
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
   meditating = false;
   if (inventory->has_item(armour_id)) {
@@ -112,35 +140,42 @@ void Hero::unequip(unsigned int item_id) {
 
 void Hero::unequip_weapon() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if (inventory->is_full() && equipment->has_weapon()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full() && equipment->has_weapon())
+    throw ModelException("Inventory is full!", "6");
   meditating = false;
   Weapon *weapon = equipment->unequip_weapon();
-  if (weapon) {inventory->add_item(weapon);}  
+  if (weapon) {
+    inventory->add_item(weapon);
+  }
 }
 void Hero::unequip_staff() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if (inventory->is_full() && equipment->has_staff()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full() && equipment->has_staff())
+    throw ModelException("Inventory is full!", "6");
   meditating = false;
   Staff *staff = equipment->unequip_staff();
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if (inventory->is_full() && equipment->has_shield()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full() && equipment->has_shield())
+    throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *shield = equipment->unequip_shield();
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if (inventory->is_full() && equipment->has_helmet()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full() && equipment->has_helmet())
+    throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *helmet = equipment->unequip_helmet();
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
   if (ghost_mode) throw ModelException("Ghosts can't unequip/equip!", "6");
-  if (inventory->is_full() && equipment->has_armour()) throw ModelException("Inventory is full!", "6");
+  if (inventory->is_full() && equipment->has_armour())
+    throw ModelException("Inventory is full!", "6");
   meditating = false;
   DefensiveItem *armour = equipment->unequip_armour();
   if (armour) inventory->add_item(armour);
@@ -239,7 +274,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
     actual_damage =
         std::max(damage - equipment->get_defense_bonus(), (unsigned int)0);
   }  // Hacer chequeos si esta vivo etc?
-  if (actual_damage > 0) { 
+  if (actual_damage > 0) {
     std::cout << "changed hero affected by: " << affected_by << std::endl;
     affected_by = weapon_origin;
   }
@@ -259,17 +294,17 @@ void Hero::meditate() {
 
 bool Hero::is_death() { return ghost_mode; }
 
-void Hero::consume(unsigned int item_id) {
-  Item *consumable = inventory->remove_item(item_id);
-  consumable->use(this);
-  delete consumable;
-}
+// void Hero::consume(unsigned int item_id) {
+//   Item *consumable = inventory->remove_item(item_id);
+//   consumable->use(this);
+//   delete consumable;
+// }
 
 void Hero::revive() { ghost_mode = false; }
 
 Hero::~Hero() {
-  delete inventory;
-  delete equipment;
+  if(inventory) delete inventory;
+  if(equipment) delete equipment;
 }
 
 /* private methods */

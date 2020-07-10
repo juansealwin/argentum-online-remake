@@ -16,7 +16,7 @@ class ProjectileManager {
               std::map<unsigned int, Monster *> &monsters,
               std::map<unsigned int, Projectile *> &projectiles);
   void remove_death_projectiles(
-      std::map<unsigned int, Projectile *> &projectiles, Map &map);
+      std::map<unsigned int, Projectile *> &projectiles, Map *map);
 
  private:
   void manage_collision(Projectile *projectile,

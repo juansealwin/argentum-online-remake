@@ -7,7 +7,7 @@
 class Monster : public BaseCharacter {
  public:
   Monster(unsigned int unique_id, int x, int y, int id, char repr, int hp,
-          int level, int dps, Map &map);
+          int level, int dps, Map *map);
   Monster(const Monster &) = delete;
   // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
   // Atacar si hay enemigo cercano (crear proyectil)
