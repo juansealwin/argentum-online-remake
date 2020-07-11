@@ -28,7 +28,8 @@ class Hero : public BaseCharacter {
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap);
+       const float starting_xp_cap,
+       const unsigned int bank_size);
   //Hero(Hero* h, Map &map);
   // devuelve el dano causado
   void regenerate();
@@ -55,6 +56,8 @@ class Hero : public BaseCharacter {
   void unequip_armour();
   // devuelve el Item en el inventario con el id buscado. Devuelve nullptr si no
   // lo tiene
+  void unbank_item(unsigned int item_id);
+  void bank_item(unsigned int item_id);
   Item *remove_item(unsigned int item_id);
   // Agrega un item al inventario, lanza excepcion si este esta lleno
   void add_item(Item *item);
@@ -94,7 +97,6 @@ class Hero : public BaseCharacter {
 
   std::string name;
   // config
-  unsigned int inventory_size;
   float critical_damage_multiplier, critical_damage_probability,
       evasion_probability, max_safe_gold_multiplier, level_up_limit_power,
       starting_xp_cap;
@@ -102,6 +104,7 @@ class Hero : public BaseCharacter {
   unsigned int next_level_xp_limit, max_safe_gold;
   Equipment *equipment;
   Inventory *inventory;
+  Inventory *bank;
 
   // metodos privados
   unsigned int calculate_damage();

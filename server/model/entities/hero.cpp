@@ -15,7 +15,8 @@ Hero::Hero(
     Map *map, std::string name, const float critical_damage_multiplier,
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
-    const float level_up_limit_power, const float starting_xp_cap)
+    const float level_up_limit_power, const float starting_xp_cap,
+    const unsigned int bank_size)
     : BaseCharacter(unique_id, x, y, race_id, repr, level, map, name),
       strength(strength),
       intelligence(intelligence),
@@ -34,7 +35,6 @@ Hero::Hero(
       ghost_mode(false),
       name(name),
       critical_damage_multiplier(critical_damage_multiplier),
-      inventory_size(inventory_size),
       critical_damage_probability(critical_damage_probability),
       evasion_probability(evasion_probability),
       max_safe_gold_multiplier(max_safe_gold_multiplier),
@@ -43,6 +43,7 @@ Hero::Hero(
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
+  bank = new Inventory(bank_size, 0);
 }
 
 // Hero::Hero(Hero *h, Map &map)
@@ -186,6 +187,25 @@ void Hero::use_item(unsigned int item_id) {
   meditating = false;
   Item *i = inventory->item_with_id(item_id);
   i->use(this);
+}
+
+
+void Hero::unbank_item(unsigned int item_id) {
+  if (ghost_mode)
+    throw ModelException("Ghosts can't add items to inventory!", "5");
+  meditating = false;
+  if (inventory->is_full()) throw ModelException("Inventory is full!", "5");
+  Item *i = bank->remove_item(item_id);
+  inventory->add_item(i);  
+  
+}
+void Hero::bank_item(unsigned int item_id) {
+  if (ghost_mode)
+    throw ModelException("Ghosts can't add items to inventory!", "5");
+  meditating = false;
+  if (bank->is_full()) throw ModelException("Bank is full!", "5");
+  Item *i = inventory->remove_item(item_id);
+  bank->add_item(i);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
