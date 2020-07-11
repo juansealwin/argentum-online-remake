@@ -59,7 +59,7 @@ StartingInfoNotification *ClientListener::create_start_notification(
   hero_id = htons(hero_id);
 
   // TODO: en vez de elegir aleatoriamente, tomar el que elige en el lobby
-  unsigned int initial_map = rand() % 2 + 1;
+  unsigned int initial_map = 1;
   initial_map = htons(initial_map);
 
   notification.push_back(notification_id);
