@@ -1,8 +1,9 @@
 #include "protected_map.h"
 
-ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height) {
-  read_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
-  write_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
+ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height,
+                           int initial_map) {
+  read_map = new Game(id_player, screen_width, screen_height, map_t(initial_map));
+  write_map = new Game(id_player, screen_width, screen_height, map_t(initial_map));
   current_status.clear();
   characters_afected.clear();
 }

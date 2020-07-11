@@ -168,10 +168,10 @@ void Game::load_character(int id, entity_t entity_type, int x, int y,
                               alive, helmet, armor, shield, weapon);
     // Si cargamos a hero por primera vez ubicamos la parte del mapa que
     // queremos ver
-    if (id == id_hero) 
+    if (id == id_hero)
       update_map(x_render_scale - screen_width / 2,
                  y_render_scale - screen_height / 2);
-    
+
   } else {
     characters[id] = new Npc(entity_type, x_render_scale, y_render_scale);
   }
