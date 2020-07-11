@@ -88,7 +88,7 @@ class Hero : public BaseCharacter {
   // inicializados en member initialization list
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
-      gold, class_id, experience;
+      class_id, experience;
 
   bool meditating, ghost_mode;
 

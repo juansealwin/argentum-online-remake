@@ -133,7 +133,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   uint16_t intelligence = htons(h->intelligence);
   uint16_t agility = htons(h->agility);
   uint16_t constitution = htons(h->constitution);
-  uint16_t gold = htons(h->gold);
+  uint16_t gold = htons(h->inventory->current_gold());
   uint16_t xp_limit = htons(h->next_level_xp_limit);
   uint16_t current_xp = htons(h->experience);
   uint8_t meditating = (int)h->meditating;

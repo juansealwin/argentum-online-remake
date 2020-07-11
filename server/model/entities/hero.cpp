@@ -27,7 +27,7 @@ Hero::Hero(
       f_race_mana(f_race_mana),
       f_class_mana(f_class_mana),
       f_class_meditation(f_class_meditation),
-      gold(gold),
+      // gold(gold),
       class_id(class_id),
       experience(0),
       meditating(false),
@@ -42,7 +42,7 @@ Hero::Hero(
       starting_xp_cap(starting_xp_cap) {
   level_up();
   equipment = new Equipment();
-  inventory = new Inventory(inventory_size);
+  inventory = new Inventory(inventory_size, gold);
 }
 
 // Hero::Hero(Hero *h, Map &map)
@@ -207,7 +207,10 @@ bool Hero::has_free_space() { return (!inventory->is_full()); }
 
 bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
 
-void Hero::add_gold(unsigned int gold) { this->gold += gold; }
+void Hero::add_gold(unsigned int gold) {
+  inventory->add_gold(gold);
+  // this->gold += gold;
+}
 
 void Hero::pick_up_drop(Drop *drop) {
   if (ghost_mode) throw ModelException("Ghosts can't pick up drops!", "4");
@@ -224,14 +227,14 @@ void Hero::pick_up_drop(Drop *drop) {
 }
 
 bool Hero::can_hold_more_gold() {
-  return (gold < (max_safe_gold + max_safe_gold / 2));
+  return (inventory->current_gold() < (max_safe_gold + max_safe_gold / 2));
 }
 
 unsigned int Hero::gold_space_remaining() {
-  return ((max_safe_gold + max_safe_gold / 2) - gold);
+  return ((max_safe_gold + max_safe_gold / 2) - inventory->current_gold());
 }
 
-bool Hero::has_excedent_coins() { return (gold > max_safe_gold); }
+bool Hero::has_excedent_coins() { return (inventory->current_gold() > max_safe_gold); }
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   // std::cout << "My spell hit an enemy!!!" << std::endl;
@@ -264,35 +267,37 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
-  //std::cout << "@@@Damage al ingresar receive damage: " << damage << std::endl;
+  // std::cout << "@@@Damage al ingresar receive damage: " << damage <<
+  // std::endl;
   int actual_damage = damage;
-  //std::cout << "@@@Damage al castear a int : " << actual_damage << std::endl;
+  // std::cout << "@@@Damage al castear a int : " << actual_damage << std::endl;
 
   float p = pow(rand() / double(RAND_MAX), agility);
   if (critical) {
     actual_damage *= critical_damage_multiplier;
-    //std::cout << "@@@Damage al multiplicar : " << actual_damage << std::endl;
-  }
-  else if (p < evasion_probability) {
+    // std::cout << "@@@Damage al multiplicar : " << actual_damage << std::endl;
+  } else if (p < evasion_probability) {
     actual_damage = 0;
-    //std::cout << "@@@Damage al evadir : " << actual_damage << std::endl;
+    // std::cout << "@@@Damage al evadir : " << actual_damage << std::endl;
 
   } else {
     actual_damage =
         std::max((int)damage - (int)equipment->get_defense_bonus(), 0);
-    //std::cout << "@@@Damage al consultar max: " << actual_damage << std::endl;
+    // std::cout << "@@@Damage al consultar max: " << actual_damage <<
+    // std::endl;
 
   }  // Hacer chequeos si esta vivo etc?
   if (actual_damage > 0) {
-    //std::cout << "changed hero affected by: " << affected_by << std::endl;
+    // std::cout << "changed hero affected by: " << affected_by << std::endl;
     affected_by = weapon_origin;
   }
 
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
-  // std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode
+  // std::cout << "Updated status!! HP: " << current_hp << "ghost? " <<
+  // ghost_mode
   //           << std::endl;
-  //std::cout << "@@@@@@@retornando " << actual_damage << std::endl;
+  // std::cout << "@@@@@@@retornando " << actual_damage << std::endl;
   return actual_damage;
 }
 
@@ -313,8 +318,8 @@ bool Hero::is_death() { return ghost_mode; }
 void Hero::revive() { ghost_mode = false; }
 
 Hero::~Hero() {
-  if(inventory) delete inventory;
-  if(equipment) delete equipment;
+  if (inventory) delete inventory;
+  if (equipment) delete equipment;
 }
 
 /* private methods */
@@ -350,9 +355,10 @@ void Hero::level_up() {
 unsigned int Hero::remove_excess_gold() {
   unsigned int excess_gold = 0;
 
-  if (gold > max_safe_gold) {
-    excess_gold = gold - max_safe_gold;
-    gold = max_safe_gold;
+  if (inventory->current_gold() > max_safe_gold) {
+    excess_gold = inventory->current_gold() - max_safe_gold;
+    inventory->remove_gold(excess_gold);
+    //gold = max_safe_gold;
   }
   return excess_gold;
 }
