@@ -57,9 +57,16 @@ StartingInfoNotification *ClientListener::create_start_notification(
   // mover a la clase
   uint8_t notification_id = 2;
   hero_id = htons(hero_id);
+
+  // TODO: en vez de elegir aleatoriamente, tomar el que elige en el lobby
+  unsigned int initial_map = 1;
+  initial_map = htons(initial_map);
+
   notification.push_back(notification_id);
-  notification.resize(notification.size() + sizeof(uint16_t));
+  notification.resize(notification.size() + sizeof(uint16_t) +
+                      sizeof(uint16_t));
   memcpy(notification.data() + 1, &hero_id, sizeof(uint16_t));
+  memcpy(notification.data() + 3, &initial_map, sizeof(uint16_t));
   return new StartingInfoNotification(notification);
 }
 

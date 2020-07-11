@@ -31,7 +31,8 @@ void Client::play() {
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
   player_id = ntohs(extract<uint16_t>(starting_info, 1));
-  ProtectedMap protected_map(player_id, 800, 600);
+  int initial_map = ntohs(extract<uint16_t>(starting_info, 3));
+  ProtectedMap protected_map(player_id, 800, 600, initial_map);
   EventsQueue event_queue;
 
   GameUpdater updater(player_id, protected_map, socket, is_running);
