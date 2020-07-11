@@ -189,6 +189,23 @@ void Hero::use_item(unsigned int item_id) {
   i->use(this);
 }
 
+void Hero::unbank_gold(unsigned int ammount) {
+  if (ghost_mode)
+    throw ModelException("Ghosts can't add gold to inventory!", "5");
+  meditating = false;
+  if (bank->current_gold() < ammount)
+    throw ModelException("Bank doesn't have that ammount of gold!", "5");
+  if (gold_space_remaining() < ammount)
+    throw ModelException("Can't hold that ammount of gold in inventory!", "5");
+  inventory->add_gold(bank->remove_gold(ammount));
+}
+void Hero::bank_gold(unsigned int ammount) {
+  if (ghost_mode) throw ModelException("Ghosts can't add gold to bank!", "5");
+  meditating = false;
+  if (inventory->current_gold() < ammount)
+    throw ModelException("Inventory doesn't have that ammount of gold!", "5");
+  bank->add_gold(inventory->remove_gold(ammount));
+}
 
 void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
@@ -196,15 +213,16 @@ void Hero::unbank_item(unsigned int item_id) {
   meditating = false;
   if (inventory->is_full()) throw ModelException("Inventory is full!", "5");
   Item *i = bank->remove_item(item_id);
-  inventory->add_item(i);  
-  
+  if (!i) throw ModelException("Bank doesn't have that item!", "5");
+  inventory->add_item(i);
 }
 void Hero::bank_item(unsigned int item_id) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't add items to inventory!", "5");
+    throw ModelException("Ghosts can't transfer items to bank!", "5");
   meditating = false;
   if (bank->is_full()) throw ModelException("Bank is full!", "5");
   Item *i = inventory->remove_item(item_id);
+  if (!i) throw ModelException("Inventory doesn't have that item!", "5");
   bank->add_item(i);
 }
 
@@ -254,7 +272,9 @@ unsigned int Hero::gold_space_remaining() {
   return ((max_safe_gold + max_safe_gold / 2) - inventory->current_gold());
 }
 
-bool Hero::has_excedent_coins() { return (inventory->current_gold() > max_safe_gold); }
+bool Hero::has_excedent_coins() {
+  return (inventory->current_gold() > max_safe_gold);
+}
 
 void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
   // std::cout << "My spell hit an enemy!!!" << std::endl;
@@ -378,7 +398,7 @@ unsigned int Hero::remove_excess_gold() {
   if (inventory->current_gold() > max_safe_gold) {
     excess_gold = inventory->current_gold() - max_safe_gold;
     inventory->remove_gold(excess_gold);
-    //gold = max_safe_gold;
+    // gold = max_safe_gold;
   }
   return excess_gold;
 }

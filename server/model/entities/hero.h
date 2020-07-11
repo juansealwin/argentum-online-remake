@@ -28,9 +28,8 @@ class Hero : public BaseCharacter {
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap,
-       const unsigned int bank_size);
-  //Hero(Hero* h, Map &map);
+       const float starting_xp_cap, const unsigned int bank_size);
+  // Hero(Hero* h, Map &map);
   // devuelve el dano causado
   void regenerate();
   const Attack attack();
@@ -54,10 +53,16 @@ class Hero : public BaseCharacter {
   void unequip_shield();
   void unequip_helmet();
   void unequip_armour();
+
+  // quita item del banco y lo guarda en el inventario
+  void unbank_item(unsigned int item_id);
+  // transfiere item del inventario al banco
+  void bank_item(unsigned int item_id);
+  void unbank_gold(unsigned int ammount);
+  void bank_gold(unsigned int ammount);
+
   // devuelve el Item en el inventario con el id buscado. Devuelve nullptr si no
   // lo tiene
-  void unbank_item(unsigned int item_id);
-  void bank_item(unsigned int item_id);
   Item *remove_item(unsigned int item_id);
   // Agrega un item al inventario, lanza excepcion si este esta lleno
   void add_item(Item *item);
@@ -66,11 +71,11 @@ class Hero : public BaseCharacter {
   // cosa (llamado a cualquier otro metodo)
   bool has_free_space();
   bool has_items_in_inventory();
-  //devuelve true 
+  // devuelve true
   bool can_hold_more_gold();
   bool has_excedent_coins();
   void pick_up_drop(Drop *drop);
-  //devuelve cuantas mas monedas puede guardar el heroe
+  // devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
   void meditate();
   virtual ~Hero();
