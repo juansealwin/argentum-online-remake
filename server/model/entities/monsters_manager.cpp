@@ -34,6 +34,7 @@ bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h,
     const Attack att = m->attack();
     unsigned int dmg =
         h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    //std::cout << "@@@@dmg returned from h->receive damage: @@@" << std::endl;
     message_center.notify_damage_received(h->get_name(), dmg, m->get_name());
     // atacar
     return true;

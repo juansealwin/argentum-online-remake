@@ -16,9 +16,11 @@
 // Para el desserializar
 #include "algorithm"
 
+#define CLOSE_CONNECTION_NOTIFICATION 0
 #define STATUS_NOTIFICATION 1
 #define MAP_CHANGING_NOTIFICATION 3
-#define CLOSE_CONNECTION_NOTIFICATION 0
+#define MESSAGE_NOTIFICATION 4
+
 class GameUpdater : public Thread {
  private:
   int id_hero;

@@ -26,7 +26,6 @@ void GameUpdater::run() {
       Protocol::receive_notification(read_socket, status_serialized);
 
       type_of_notification = extract<uint8_t>(status_serialized, j);
-
       if (type_of_notification == STATUS_NOTIFICATION) {
         // Deserializamos la información recibida
         deserialize_status(j);
@@ -40,6 +39,15 @@ void GameUpdater::run() {
         deserialize_status(j);
       } else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
         break;
+      } else if (type_of_notification == MESSAGE_NOTIFICATION) {
+        uint8_t message_length = extract<uint8_t>(status_serialized, j);
+        std::string message;
+        for (int x = 0; x < message_length; x++) {
+          message += status_serialized.at(j);
+          j++;
+        }
+        std::cout << message << std::endl;
+        continue;
       }
 
       // Escribimos la información en el mapa protegido
