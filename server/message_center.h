@@ -22,7 +22,7 @@ class MessageCenter {
   
   void notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked);
   void notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker);
-
+  void send_private_message(std::string src, std::string dst, std::string message);
 
  private:
   // mapea nombre del jugador con su cola

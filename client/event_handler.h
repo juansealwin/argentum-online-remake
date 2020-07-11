@@ -20,6 +20,7 @@
 #include "use_item_command_dto.h"
 #include "change_game_room_dto.h"
 #include "drop_item_command_dto.h"
+#include "private_message_dto.h"
 
 class EventHandler {
  private:

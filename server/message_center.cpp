@@ -46,6 +46,13 @@ void MessageCenter::notify_damage_received(std::string attacked, unsigned int dm
   // }
 }
 
+void MessageCenter::send_private_message(std::string src, std::string dst, std::string message) {
+  std::unique_lock<std::mutex> lock(mutex);
+  std::string msg = dst + ": " + message;
+  //std::cout << "destination is " << dst << std::endl;
+  send_message(dst, msg);
+}
+
   
 void MessageCenter::notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked) {
   std::unique_lock<std::mutex> lock(mutex);

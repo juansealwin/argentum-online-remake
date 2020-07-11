@@ -69,6 +69,8 @@ class ArgentumGame : public Thread {
   friend class Serializer;
   ThreadSafeQueue<Command *> * get_commands_queue();
   void stop_notification_queue(int player_id);
+  void send_message(unsigned int player_id, std::string dst, std::string msg);
+
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -105,7 +107,6 @@ class ArgentumGame : public Thread {
   unsigned int place_hero(std::string hero_race, std::string hero_class,
                           std::string hero_name, unsigned int x,
                           unsigned int y);
-
   void tests_proyectiles();
   void tests_drops();
   //void place_monster(unsigned int x, unsigned int y);

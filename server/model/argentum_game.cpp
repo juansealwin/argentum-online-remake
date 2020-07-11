@@ -190,6 +190,12 @@ void ArgentumGame::pick_up_drop(unsigned int player_id) {
   }
 }
 
+
+void ArgentumGame::send_message(unsigned int player_id, std::string dst, std::string msg) {
+  Hero *hero = heroes.at(player_id);
+  message_center.send_private_message(hero->get_name(), dst, msg);
+}
+
 void ArgentumGame::kill_player(unsigned int player_id) {
   Hero *hero = heroes.at(player_id);
   hero->alive = false;
@@ -336,6 +342,8 @@ void ArgentumGame::clean_notifications_queues() {
   }
 }
 
+
+
 /********************* metodos privados *****************************/
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
@@ -447,3 +455,4 @@ ArgentumGame::~ArgentumGame() {
 void ArgentumGame::stop_notification_queue(int player_id) {
   queues_notifications.at(player_id)->close();
 }
+
