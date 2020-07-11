@@ -2,8 +2,8 @@
 
 #include <iostream>
 Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
-                 int hp, int level, int dps, Map *map)
-    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map), dps(dps) {
+                 int hp, int level, int dps, Map *map, std::string name)
+    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map, name), dps(dps) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
   std::tuple<int, int> third_move = std::tuple<int, int>(0, -1);

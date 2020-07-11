@@ -16,7 +16,7 @@ Hero::Hero(
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap)
-    : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
+    : BaseCharacter(unique_id, x, y, race_id, repr, level, map, name),
       strength(strength),
       intelligence(intelligence),
       agility(agility),
@@ -259,30 +259,40 @@ const Attack Hero::attack() {
 
 unsigned int Hero::receive_damage(unsigned int damage, bool critical,
                                   unsigned int weapon_origin) {
-  std::cout << "Received damage!! " << damage << " is critical? " << critical
-            << std::endl;
+  // std::cout << "Received damage!! " << damage << " is critical? " << critical
+  //           << std::endl;
   if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
   meditating = false;
   // meter en json!
+  //std::cout << "@@@Damage al ingresar receive damage: " << damage << std::endl;
   int actual_damage = damage;
+  //std::cout << "@@@Damage al castear a int : " << actual_damage << std::endl;
+
   float p = pow(rand() / double(RAND_MAX), agility);
-  if (critical)
+  if (critical) {
     actual_damage *= critical_damage_multiplier;
+    //std::cout << "@@@Damage al multiplicar : " << actual_damage << std::endl;
+  }
   else if (p < evasion_probability) {
     actual_damage = 0;
+    //std::cout << "@@@Damage al evadir : " << actual_damage << std::endl;
+
   } else {
     actual_damage =
-        std::max(damage - equipment->get_defense_bonus(), (unsigned int)0);
+        std::max((int)damage - (int)equipment->get_defense_bonus(), 0);
+    //std::cout << "@@@Damage al consultar max: " << actual_damage << std::endl;
+
   }  // Hacer chequeos si esta vivo etc?
   if (actual_damage > 0) {
-    std::cout << "changed hero affected by: " << affected_by << std::endl;
+    //std::cout << "changed hero affected by: " << affected_by << std::endl;
     affected_by = weapon_origin;
   }
 
   current_hp -= actual_damage;
   if (current_hp <= 0) ghost_mode = true;
-  std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode
-            << std::endl;
+  // std::cout << "Updated status!! HP: " << current_hp << "ghost? " << ghost_mode
+  //           << std::endl;
+  //std::cout << "@@@@@@@retornando " << actual_damage << std::endl;
   return actual_damage;
 }
 

@@ -15,6 +15,7 @@
 #include "thread.h"
 #include "change_game_room_dto.h"
 #include "quit_command_dto.h"
+#include "private_message_dto.h"
 #include "close_connection_notification.h"
 #include "message_center.h"
 class ClientCommandReceiver : public Thread {

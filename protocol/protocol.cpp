@@ -9,12 +9,13 @@
 #include "../server/notifications/notification.h"
 #include "attack_command_dto.h"
 #include "change_game_room_dto.h"
+#include "drop_item_command_dto.h"
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "pick_up_command_dto.h"
+#include "private_message_dto.h"
 #include "quit_command_dto.h"
 #include "use_item_command_dto.h"
-#include "drop_item_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -22,7 +23,6 @@
 LoginCommandDTO* receive_login(const Socket& socket) {
   uint8_t room_number;
   socket.recv(&room_number, 1);
-  //std::cout << "room number: " << (int)room_number << std::endl;
   return new LoginCommandDTO(room_number);
 }
 
@@ -54,6 +54,26 @@ DropItemCommandDTO* receive_drop_item(const Socket& socket) {
   return new DropItemCommandDTO(item_id);
 }
 
+std::string receive_string(const Socket& socket) {
+  std::vector<unsigned char> vector;
+  std::string str;
+  uint8_t size = 0;
+  socket.recv(&size, 1);
+  unsigned char* buffer = new unsigned char[size];
+  socket.recv(buffer, size);
+  vector = std::vector<unsigned char>(buffer, buffer + size);
+  for (auto letter : vector) str += letter;
+  delete[] buffer;
+  return str;
+}
+
+PrivateMessageDTO* receive_private_message(const Socket& socket) {
+  std::string dst = receive_string(socket);
+  std::string message = receive_string(socket);
+
+  return new PrivateMessageDTO(dst, message);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -76,6 +96,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_change_game_room(socket);
     case DROP_ITEM_COMMAND:
       return receive_drop_item(socket);
+    case PRIVATE_MESSAGE_COMMAND:
+      return receive_private_message(socket);
     default:
       return nullptr;
   }
@@ -88,7 +110,8 @@ void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
   socket.send(&room_number, 1);
 }
 
-void send_change_game_room(const Socket& socket, const ChangeGameRoomDTO* change_game_room) {
+void send_change_game_room(const Socket& socket,
+                           const ChangeGameRoomDTO* change_game_room) {
   uint8_t command_id = CHANGE_GAME_ROOM_COMMAND;
   uint8_t room_number = change_game_room->room_number;
   socket.send(&command_id, ID_LENGTH);
@@ -129,11 +152,29 @@ void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
   socket.send(&is_equipped, ID_LENGTH);
 }
 
-void send_drop_item_command(const Socket& socket, const DropItemCommandDTO* drop_command) {
+void send_drop_item(const Socket& socket,
+                    const DropItemCommandDTO* drop_command) {
   uint8_t command_id = DROP_ITEM_COMMAND;
   uint8_t item = drop_command->item_id;
   socket.send(&command_id, ID_LENGTH);
-  socket.send(&item, ID_LENGTH);  
+  socket.send(&item, ID_LENGTH);
+}
+
+void send_string(const Socket& socket, std::string str) {
+  //std::cout << "Sending msg: " << str << std::endl;
+  std::vector<unsigned char> message;
+  message.insert(message.end(), str.begin(), str.end());
+  uint8_t msg_size = message.size();
+  socket.send(&msg_size, 1);
+  socket.send(message.data(), message.size());
+}
+
+void send_private_message(const Socket& socket,
+                          PrivateMessageDTO* msg_command) {
+  uint8_t command_id = PRIVATE_MESSAGE_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+  send_string(socket, msg_command->get_dst());
+  send_string(socket, msg_command->get_msg());
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
@@ -160,14 +201,19 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       send_use_item(socket, dynamic_cast<UseItemCommandDTO*>(commandDTO));
       break;
     case CHANGE_GAME_ROOM_COMMAND:
-      send_change_game_room(socket, dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
+      send_change_game_room(socket,
+                            dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
       break;
     case DROP_ITEM_COMMAND:
-      send_drop_item_command(socket, dynamic_cast<DropItemCommandDTO*>(commandDTO));
+      send_drop_item(socket, dynamic_cast<DropItemCommandDTO*>(commandDTO));
       break;
+    case PRIVATE_MESSAGE_COMMAND:
+      send_private_message(socket,
+                           dynamic_cast<PrivateMessageDTO*>(commandDTO));
     default:
       break;
   }
+  // delete commandDTO;
 }
 
 /********************** NOTIFICACIONES ***********************************/
@@ -189,5 +235,5 @@ void Protocol::receive_notification(const Socket& socket,
   unsigned char* buffer = new unsigned char[notification_size];
   socket.recv(buffer, notification_size);
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
-  delete buffer;
+  delete[] buffer;
 }

@@ -80,6 +80,10 @@ void EventHandler::get_events() {
                         ChangeGameRoomDTO* change_game_room_command = new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
+          if (event.key.keysym.sym == SDLK_3) {
+            PrivateMessageDTO *private_message_command = new PrivateMessageDTO("test", "hello");
+            commands_queue.push(private_message_command);
+          }
         }
         // Eventos de mouse
          
