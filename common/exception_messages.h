@@ -49,12 +49,13 @@
 #define MSG_ERROR_SDL_TTF_INIT \
   "Error: No se pudo inicializar el renderizador de fuentes"
 
-#define MSG_ERROR_LOAD_SOUND \
-  "Error: No se pudo cargar el sonido "
+#define MSG_ERROR_LOAD_MUSIC "Error: No se pudo cargar la musica "
 
-#define MSG_ERROR_LOAD_MUSIC \
-  "Error: No se pudo cargar el sonido "
+#define MSG_ERROR_LOAD_SOUND "Error: No se pudo cargar el sonido "
 
+#define MSG_ERROR_LOAD_TEXTURE "Error: No se pudo cargar la textura "
 
+#define MSG_ERROR_LOAD_TEXTURE_TEXT \
+  "Error: No se puedo cargar la textura desde el texto"
 
 #endif

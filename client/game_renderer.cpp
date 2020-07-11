@@ -100,7 +100,7 @@ void GameRenderer::run() {
 
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_inventory(ui.get_items());
-
+      
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
 
@@ -109,7 +109,7 @@ void GameRenderer::run() {
 
       // Renderizamos la UI con sus valores actualizados
       ui.render(renderer, is_selected, item_selected);
-
+      
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.

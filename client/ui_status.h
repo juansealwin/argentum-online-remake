@@ -1,20 +1,25 @@
 #ifndef UI_STATUS_H
 #define UI_STARUS_H
 
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+
 #include "inventory.h"
+#include "text_box.h"
 #include "types.h"
 
 class UIStatus {
  private:
   Inventory inventory;
-  std::string hero_name;
-  int max_health;
-  int health;
-  int max_mana;
-  int mana;
-  int level;
-  int xp_limit;
-  int current_xp;
+  std::map<text_box_t, std::string> text_messages;
+  /*TextBox level(LEVEL, text_messages[LEVEL]);
+  TextBox name(NAME, text_messages[NAME]);
+  TextBox exp(EXP, text_messages[EXP]);
+  TextBox gold(GOLD_QUANTITY, text_messages[GOLD_QUANTITY]);
+  TextBox health(HEALTH, text_messages[HEALTH]);
+  TextBox mana(MANA, text_messages[MANA]);*/
 
  public:
   UIStatus();

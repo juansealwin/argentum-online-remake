@@ -14,14 +14,12 @@
 
 class Inventory {
  private:
-  int gold;
   std::map<int, std::pair<id_texture_t, bool>> items;
   bool is_selected = false;
   int item_selected;
 
  public:
   Inventory();
-  Inventory(int);
   ~Inventory();
   Inventory& operator=(const Inventory&);
   // Agrega items no equipados
