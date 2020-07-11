@@ -20,6 +20,9 @@ class MessageCenter {
   // ser enviada a player_dst
   void send_message(std::string player_src, std::string player_dst,
                     std::string message);
+  void notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked);
+  void notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker);
+
 
  private:
   // mapea nombre del jugador con su cola

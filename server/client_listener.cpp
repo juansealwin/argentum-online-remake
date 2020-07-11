@@ -26,7 +26,7 @@ ClientListener::ClientListener(const char *port,
     map_file >> map_cfg;
     ArgentumGame *game =
         new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
-                         std::ref(entities_ids));
+                         std::ref(entities_ids), std::ref(message_center));
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);

@@ -16,7 +16,7 @@ Hero::Hero(
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap)
-    : BaseCharacter(unique_id, x, y, race_id, repr, level, map),
+    : BaseCharacter(unique_id, x, y, race_id, repr, level, map, name),
       strength(strength),
       intelligence(intelligence),
       agility(agility),

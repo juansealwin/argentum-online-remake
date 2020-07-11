@@ -27,6 +27,7 @@
 #include "projectile.h"
 #include "projectiles_manager.h"
 #include "serializer.h"
+#include "message_center.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -36,7 +37,8 @@ class ArgentumGame : public Thread {
   // Instancia una nueva sala de Argentum
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
-               std::ifstream &entities_config, unsigned int &entities_ids);
+               std::ifstream &entities_config, unsigned int &entities_ids,
+               MessageCenter &message_center);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -78,6 +80,7 @@ class ArgentumGame : public Thread {
   Map *map;
   bool alive = true;
   unsigned int &entities_ids;
+  MessageCenter &message_center;
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
@@ -105,7 +108,7 @@ class ArgentumGame : public Thread {
 
   void tests_proyectiles();
   void tests_drops();
-  void place_monster(unsigned int x, unsigned int y);
+  //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;

@@ -8,7 +8,8 @@ MonstersManager::MonstersManager() {
 MonstersManager::~MonstersManager() {}
 
 void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
-                             std::map<unsigned int, Hero *> heroes) {
+                             std::map<unsigned int, Hero *> heroes,
+                             MessageCenter &message_center) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
 
@@ -17,7 +18,8 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
       last_update_time = actual_time;
       for (auto &hero : heroes) {
         if (!hero.second->is_death()) {
-          if (!attack_or_move_to_hero(monster.second, hero.second))
+          if (!attack_or_move_to_hero(monster.second, hero.second,
+                                      message_center))
             monster.second->auto_move();
         }
       }
@@ -26,10 +28,13 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
   }
 }
 
-bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
+bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h,
+                                             MessageCenter &message_center) {
   if (m->is_next_to(h->x_position, h->y_position)) {
     const Attack att = m->attack();
-    h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    unsigned int dmg =
+        h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    message_center.notify_damage_received(h->get_name(), dmg, m->get_name());
     // atacar
     return true;
   } else if (m->is_close_to(h->x_position, h->y_position)) {
