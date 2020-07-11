@@ -1,4 +1,5 @@
 #include "client.h"
+#include "helper_functions.h"
 
 template <typename T>
 T extract(const std::vector<unsigned char>& v, int pos) {
@@ -19,13 +20,14 @@ Client::~Client() {}
 void Client::play() {
   CommandsBlockingQueue commands_to_send;
   // TODO: tambien hay que mandar el usuario
-  LoginCommandDTO* login_command = new LoginCommandDTO(0);
+  // TODO: usar el room que ingresa el cliente en lugar de uno al azar
+  int initial_room = HelperFunctions::random_int(0, 1);
+  std::cout << "sala que entra el cliente: " << initial_room << std::endl;
+  LoginCommandDTO* login_command = new LoginCommandDTO(initial_room);
   commands_to_send.push(login_command);
 
   CommandsSender sender(commands_to_send, socket);
   sender.start();
-
-  // TODO: Server envia nombre de mapa ademas del id del jugador
 
   // Esto probablmente quede mejor moverlo
   std::vector<unsigned char> starting_info;
