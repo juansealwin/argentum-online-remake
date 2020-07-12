@@ -128,7 +128,7 @@ void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
 }
-void ArgentumGame::hero_bank_gold(int entity_id, int ammount){
+void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     hero->bank_gold(ammount);
@@ -151,8 +151,9 @@ void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
 void ArgentumGame::hero_get_banked_items(int entity_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    std::cout << "in hero_get_banked_items" << std::endl;
-
+    BankStatusNotification* n = get_bank_status(hero);
+    BlockingThreadSafeQueue<Notification *> *q = queues_notifications.at(entity_id);
+    q->push(n);
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
@@ -501,4 +502,24 @@ ArgentumGame::~ArgentumGame() {
 
 void ArgentumGame::stop_notification_queue(int player_id) {
   queues_notifications.at(player_id)->close();
+}
+
+BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {
+  std::vector<Item *> items = h->bank->items;
+  uint8_t bank_size = items.size();
+  std::vector<unsigned char> notification;
+  uint8_t notification_id = 5;
+  notification.push_back(notification_id);
+  notification.push_back(bank_size);
+  for (int i = 0; i < items.size(); i++) {
+    uint8_t item_id = items.at(i)->id;
+    notification.push_back(item_id);
+  }
+  uint16_t gold = h->bank->current_gold();
+  unsigned int current_pos = notification.size();
+  notification.resize(notification.size() + sizeof(gold));
+  memcpy(notification.data() + current_pos, &gold, sizeof(gold));
+  // mover a la clase
+  BankStatusNotification *n = new BankStatusNotification(notification);
+  return n;
 }

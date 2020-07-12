@@ -89,6 +89,7 @@ class Hero : public BaseCharacter {
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;
+  friend class ArgentumGame;
   unsigned int current_mana;
   unsigned int max_mana;
 

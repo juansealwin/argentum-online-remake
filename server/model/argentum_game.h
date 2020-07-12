@@ -28,6 +28,7 @@
 #include "projectiles_manager.h"
 #include "serializer.h"
 #include "message_center.h"
+#include "bank_status_notification.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -113,6 +114,7 @@ class ArgentumGame : public Thread {
                           unsigned int y);
   void tests_proyectiles();
   void tests_drops();
+  BankStatusNotification * get_bank_status(Hero *h);
   //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;

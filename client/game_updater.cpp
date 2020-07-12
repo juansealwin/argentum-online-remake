@@ -48,6 +48,16 @@ void GameUpdater::run() {
         }
         std::cout << message << std::endl;
         continue;
+      } else if (type_of_notification == BANKED_ITEMS_NOTIFICATION) {
+        int bank_size = extract<uint8_t>(status_serialized, j);
+        //std::cout << "bank size is " << bank_size << std::endl;
+        for (int x = 0; x < bank_size; x++) {
+          int item = extract<uint8_t>(status_serialized, j);
+          std::cout << "item in bank: " << item;
+        }
+        uint16_t gold = extract<uint16_t>(status_serialized, j);
+        std::cout << "gold in bnak: " << gold << std::endl;
+        continue;
       }
 
       // Escribimos la información en el mapa protegido

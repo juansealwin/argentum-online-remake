@@ -25,6 +25,7 @@ class Inventory {
   unsigned int current_gold();
   friend class Serializer;
   friend class Drop;
+  friend class ArgentumGame;
   private:
   std::vector<Item*> items;
   unsigned int gold;
