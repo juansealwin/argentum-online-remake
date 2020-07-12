@@ -170,4 +170,17 @@ typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP } map_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
 
+typedef enum {
+  MESSAGE_1,
+  MESSAGE_2,
+  MESSAGE_3,
+  MESSAGE_4,
+  NAME,
+  LEVEL,
+  EXP,
+  GOLD_QUANTITY,
+  HEALTH,
+  MANA
+}text_box_t;
+
 #endif

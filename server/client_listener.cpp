@@ -52,14 +52,19 @@ void ClientListener::stop_listening() {
 }
 
 StartingInfoNotification *ClientListener::create_start_notification(
-    unsigned int hero_id) {
+    unsigned int hero_id, unsigned int initial_map) {
   std::vector<unsigned char> notification;
   // mover a la clase
   uint8_t notification_id = 2;
   hero_id = htons(hero_id);
+
+  initial_map = htons(initial_map);
+
   notification.push_back(notification_id);
-  notification.resize(notification.size() + sizeof(uint16_t));
+  notification.resize(notification.size() + sizeof(uint16_t) +
+                      sizeof(uint16_t));
   memcpy(notification.data() + 1, &hero_id, sizeof(uint16_t));
+  memcpy(notification.data() + 3, &initial_map, sizeof(uint16_t));
   return new StartingInfoNotification(notification);
 }
 
@@ -83,7 +88,7 @@ void ClientListener::run() {
         notifications_queue, hero_id);
 
     StartingInfoNotification *starting_info =
-        create_start_notification(hero_id);
+        create_start_notification(hero_id, login_command->room_number + 1);
     Protocol::send_notification(client_socket, starting_info);
     delete starting_info;
     ClientHandler *client = new ClientHandler(

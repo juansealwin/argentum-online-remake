@@ -5,22 +5,11 @@ Inventory::Inventory() {
     items[i].first = ID_NULL;
     items[i].second = false;
   }
-  gold = 0;
-}
-
-Inventory::Inventory(int new_gold) {
-  for (int i = 0; i < MAX_ITEMS; i++) {
-    items[i].first = ID_NULL;
-    items[i].second = false;
-  }
-  gold = new_gold;
 }
 
 Inventory::~Inventory() {}
 
 Inventory& Inventory::operator=(const Inventory& other_inv) {
-  gold = other_inv.gold;
-
   std::map<int, std::pair<id_texture_t, bool>>::const_iterator it;
 
   for (it = other_inv.items.begin(); it != other_inv.items.end(); it++) {
@@ -54,8 +43,6 @@ id_texture_t Inventory::drop_item(int index) {
   }
   return temp;
 }
-
-void Inventory::change_gold(int income) { gold = income; }
 
 void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
   int j = X_INVENTORY;
