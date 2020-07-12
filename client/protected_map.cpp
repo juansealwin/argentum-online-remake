@@ -2,8 +2,10 @@
 
 ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height,
                            int initial_map) {
-  read_map = new Game(id_player, screen_width, screen_height, map_t(initial_map));
-  write_map = new Game(id_player, screen_width, screen_height, map_t(initial_map));
+  read_map =
+      new Game(id_player, screen_width, screen_height, map_t(initial_map));
+  write_map =
+      new Game(id_player, screen_width, screen_height, map_t(initial_map));
   current_status.clear();
   characters_afected.clear();
 }
@@ -26,7 +28,7 @@ void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
 }
 
 void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
-                              map_t new_map) {
+                              map_t& new_map) {
   std::map<int, EntityStatus>::iterator it;
   std::map<int, EntityStatus>::iterator it2;
   std::map<int, spellbound_t>::iterator it_afected;
@@ -41,6 +43,9 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
 
     // Cambiamos el nuevo mapa
     write_map->change_map(new_map);
+
+    // Ahora el nuevo mapa es el mapa actual
+    new_map = CURRENT_MAP;
   }
 
   // Hacemos updates de las entidades que aun estan y creamos las nuevas

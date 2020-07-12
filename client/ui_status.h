@@ -14,12 +14,6 @@ class UIStatus {
  private:
   Inventory inventory;
   std::map<text_box_t, std::string> text_messages;
-  /*TextBox level(LEVEL, text_messages[LEVEL]);
-  TextBox name(NAME, text_messages[NAME]);
-  TextBox exp(EXP, text_messages[EXP]);
-  TextBox gold(GOLD_QUANTITY, text_messages[GOLD_QUANTITY]);
-  TextBox health(HEALTH, text_messages[HEALTH]);
-  TextBox mana(MANA, text_messages[MANA]);*/
 
  public:
   UIStatus();
@@ -30,6 +24,7 @@ class UIStatus {
   void render(SDL_Renderer*, bool, int);
   void add_item(id_texture_t);
   void add_item(id_texture_t, int);
+  void charge_messages(std::string, std::string, std::string, std::string);
   std::map<int, std::pair<id_texture_t, bool>> get_items();
 };
 
