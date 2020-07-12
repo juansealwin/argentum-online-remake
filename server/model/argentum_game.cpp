@@ -393,7 +393,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       entities_cfg["evasionProbability"].asFloat(),
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
-      entities_cfg["startingXpCap"].asFloat());
+      entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt());
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(5, 8, 10));
   hero->equip_armour(6);

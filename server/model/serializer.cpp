@@ -93,16 +93,16 @@ void Serializer::serialize_drop(
   serialization.push_back(orientation);
   std::vector<Item *> items = drop->items;
   uint8_t items_in_drop = items.size();
+  if (drop->ammount_of_gold() > 0) items_in_drop++; 
   serialization.push_back(items_in_drop);
-  for (int i = 0; i < items_in_drop; i++) {
+  if (drop->ammount_of_gold() > 0) {
+    serialization.push_back(GOLD_ID);
+  }
+  for (int i = 0; i < items.size(); i++) {
     uint8_t item_id = items.at(i)->id;
     serialization.push_back(item_id);
   }
-  if (drop->ammount_of_gold() > 0) {
-    serialization.push_back(1);
-  } else {
-    serialization.push_back(0);
-  }
+
 }
 
 void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
@@ -223,10 +223,10 @@ void Serializer::debug_deserialize_v3(
         int current_item_id = extract<uint8_t>(serialization, j);
         // std::cout << "dropped item " << current_item_id << std::endl;
       }
-      int drop_has_coins = extract<uint8_t>(serialization, j);
-      if (drop_has_coins == 1) {
-        // std::cout << "Drop has coins!!" << std::endl;
-      }
+      // int drop_has_coins = extract<uint8_t>(serialization, j);
+      // if (drop_has_coins == 1) {
+      //   // std::cout << "Drop has coins!!" << std::endl;
+      // }
     }
     if (is_monster(entity_type)) {
       monsters_detected++;

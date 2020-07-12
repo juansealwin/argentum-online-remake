@@ -256,8 +256,7 @@ void Hero::pick_up_drop(Drop *drop) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());
     this->add_item(item);
-  }
-  if ((drop->ammount_of_gold() > 0) && this->can_hold_more_gold()) {
+  } else if ((drop->ammount_of_gold() > 0) && this->can_hold_more_gold()) {
     unsigned int hero_gold_space = this->gold_space_remaining();
     unsigned int taken_gold = drop->take_gold(hero_gold_space);
     this->add_gold(taken_gold);
@@ -360,6 +359,7 @@ void Hero::revive() { ghost_mode = false; }
 Hero::~Hero() {
   if (inventory) delete inventory;
   if (equipment) delete equipment;
+  if (bank) delete bank;
 }
 
 /* private methods */

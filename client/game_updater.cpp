@@ -115,7 +115,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       }
 
       // Si drop_has_coins == 1 hay oro, si es 0 no
-      drop_has_coins = extract<uint8_t>(status_serialized, j);
+      //drop_has_coins = extract<uint8_t>(status_serialized, j);
 
       // Agregamos la entidad "Item"
       next_status[(int)id] = EntityStatus(get_item_texture(entity_type), x, y);
