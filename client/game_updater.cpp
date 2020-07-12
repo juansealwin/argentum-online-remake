@@ -17,7 +17,11 @@ void GameUpdater::run() {
   try {
     int type_of_notification;
     unsigned int j;
-    map_t new_map;
+    map_t new_map = CURRENT_MAP;
+    std::string chat_message_1 = " ";
+    std::string chat_message_2 = " ";
+    std::string chat_message_3 = " ";
+    std::string chat_message_4 = " ";
 
     while (is_running) {
       j = 0;
@@ -25,30 +29,45 @@ void GameUpdater::run() {
       // Recibimos las actualizaciones del mapa
       Protocol::receive_notification(read_socket, status_serialized);
 
+      // Extraemos el tipo de notificación
       type_of_notification = extract<uint8_t>(status_serialized, j);
+
+      // Vemos si es una notificación de estado del mapa
       if (type_of_notification == STATUS_NOTIFICATION) {
         // Deserializamos la información recibida
         deserialize_status(j);
-        new_map = CURRENT_MAP;
+      }
 
-      } else if (type_of_notification == MAP_CHANGING_NOTIFICATION) {
+      // Chequeamos si es una notificación de cambio de mapa
+      else if (type_of_notification == MAP_CHANGING_NOTIFICATION) {
         new_map = get_new_map(extract<uint8_t>(status_serialized, j));
-        Protocol::receive_notification(read_socket, status_serialized);
-        // Sabemos que tiene que ser un status, no necesitamos saber el tipo
-        j = 1;
-        deserialize_status(j);
-      } else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
-        break;
-      } else if (type_of_notification == MESSAGE_NOTIFICATION) {
+        continue;
+      }
+
+      // Chequeamos si es una notificación de mensaje de texto en el chat
+      else if (type_of_notification == MESSAGE_NOTIFICATION) {
         uint8_t message_length = extract<uint8_t>(status_serialized, j);
         std::string message;
         for (int x = 0; x < message_length; x++) {
           message += status_serialized.at(j);
           j++;
         }
-        std::cout << message << std::endl;
+        // Se borra el mensaje más viejo y se carga el mensaje más nuevo
+        chat_message_1 = chat_message_2;
+        chat_message_2 = chat_message_3;
+        chat_message_3 = chat_message_4;
+        chat_message_4 = message;
         continue;
       }
+
+      // Chequeamos si es una notificación de cierre de cliente
+      else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
+        break;
+      }
+
+      // Cargamos los mensajes en el mini chat
+      next_ui_status.charge_messages(chat_message_1, chat_message_2,
+                                     chat_message_3, chat_message_4);
 
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status, new_map);

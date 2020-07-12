@@ -13,9 +13,6 @@ Texture::Texture(std::string path, SDL_Renderer* renderer) {
 Texture::~Texture() { free(); }
 
 void Texture::load_texture(const char* id_path, SDL_Renderer* renderer) {
-  // Libera la textura si ya tenia algo cargado
-  free();
-  
   // La textura final
   SDL_Texture* new_texture = NULL;
 
@@ -23,7 +20,7 @@ void Texture::load_texture(const char* id_path, SDL_Renderer* renderer) {
   // texture = IMG_LoadTexture(renderer, filename.c_str());
 
   if (!new_surface)
-    throw SdlException("Error al cargar la textura", SDL_GetError());
+    throw SdlException(MSG_ERROR_LOAD_TEXTURE, SDL_GetError());
   else {
     // Color key image
     SDL_SetColorKey(new_surface, SDL_TRUE,
@@ -31,8 +28,9 @@ void Texture::load_texture(const char* id_path, SDL_Renderer* renderer) {
 
     // Create texture from surface pixels
     new_texture = SDL_CreateTextureFromSurface(renderer, new_surface);
+
     if (!new_texture) {
-      throw SdlException("Error al cargar la textura", SDL_GetError());
+      throw SdlException(MSG_ERROR_LOAD_TEXTURE, SDL_GetError());
     } else {
       // Cargamos las dimensiones de la imagen
       width = new_surface->w;
@@ -42,6 +40,37 @@ void Texture::load_texture(const char* id_path, SDL_Renderer* renderer) {
     SDL_FreeSurface(new_surface);
   }
   texture = new_texture;
+}
+
+void Texture::load_from_rendered_text(SDL_Renderer* renderer, TTF_Font* font,
+                                      std::string texture_text,
+                                      SDL_Color text_color) {
+  // Get rid of preexisting texture
+  free();
+
+  // Render text surface
+  SDL_Surface* textSurface =
+      TTF_RenderText_Solid(font, texture_text.c_str(), text_color);
+  if (textSurface == NULL) {
+    throw SdlException(MSG_ERROR_LOAD_TEXTURE_TEXT, SDL_GetError());
+  } else {
+    // Create texture from surface pixels
+    texture = SDL_CreateTextureFromSurface(renderer, textSurface);
+    if (texture == NULL) {
+      throw SdlException(MSG_ERROR_LOAD_TEXTURE_TEXT, SDL_GetError());
+    } else {
+      // Get image dimensions
+      width = textSurface->w;
+      height = textSurface->h;
+    }
+    // Get rid of old surface
+    SDL_FreeSurface(textSurface);
+  }
+}
+
+void Texture::render(SDL_Renderer* renderer, int x, int y) {
+  SDL_Rect render_quad = {x, y, width, height};
+  SDL_RenderCopy(renderer, texture, NULL, &render_quad);
 }
 
 void Texture::render(SDL_Renderer* renderer, SDL_Rect* clip, int x_dest,

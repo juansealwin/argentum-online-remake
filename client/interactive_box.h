@@ -2,8 +2,6 @@
 #define INTERACTIVE_BOX_H
 
 #include "SDL2/SDL.h"
-//borrame
-#include <iostream>
 
 class InteractiveBox {
  private:

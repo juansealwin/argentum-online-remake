@@ -1,20 +1,19 @@
 #ifndef UI_STATUS_H
 #define UI_STARUS_H
 
+#include <iostream>
+#include <map>
+#include <sstream>
+#include <string>
+
 #include "inventory.h"
+#include "text_box.h"
 #include "types.h"
 
 class UIStatus {
  private:
   Inventory inventory;
-  std::string hero_name;
-  int max_health;
-  int health;
-  int max_mana;
-  int mana;
-  int level;
-  int xp_limit;
-  int current_xp;
+  std::map<text_box_t, std::string> text_messages;
 
  public:
   UIStatus();
@@ -25,6 +24,7 @@ class UIStatus {
   void render(SDL_Renderer*, bool, int);
   void add_item(id_texture_t);
   void add_item(id_texture_t, int);
+  void charge_messages(std::string, std::string, std::string, std::string);
   std::map<int, std::pair<id_texture_t, bool>> get_items();
 };
 
