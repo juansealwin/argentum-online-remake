@@ -113,6 +113,7 @@ void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     hero->bank_item(item_id);
+    std::cout << "banked item: " << item_id << std::endl;
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
@@ -121,6 +122,8 @@ void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     hero->unbank_item(item_id);
+    std::cout << "unbanked item: " << item_id << std::endl;
+
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
@@ -129,6 +132,8 @@ void ArgentumGame::hero_bank_gold(int entity_id, int ammount){
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     hero->bank_gold(ammount);
+    std::cout << "banked gold: " << ammount << std::endl;
+
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
@@ -137,11 +142,21 @@ void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     hero->unbank_gold(ammount);
+    std::cout << "unbanked gold: " << ammount << std::endl;
+
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
 }
-void ArgentumGame::hero_get_banked_items(int entity_id) {}
+void ArgentumGame::hero_get_banked_items(int entity_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    std::cout << "in hero_get_banked_items" << std::endl;
+
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
 
 void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
   using namespace std;

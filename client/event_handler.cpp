@@ -84,6 +84,30 @@ void EventHandler::get_events() {
             PrivateMessageDTO *private_message_command = new PrivateMessageDTO("test", "hello");
             commands_queue.push(private_message_command);
           }
+          if (event.key.keysym.sym == SDLK_4) {
+            std::cout << "creating bank item dto" <<std::endl;
+            BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+          if (event.key.keysym.sym == SDLK_5) {
+            UnbankItemCommandDTO* bank_item_command = new UnbankItemCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+          if (event.key.keysym.sym == SDLK_6) {
+            BankGoldCommandDTO* bank_item_command = new BankGoldCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+          if (event.key.keysym.sym == SDLK_7) {
+            UnbankGoldCommandDTO* bank_item_command = new UnbankGoldCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+          if (event.key.keysym.sym == SDLK_8) {
+            GetBankedItemsCommandDTO* bank_item_command = new GetBankedItemsCommandDTO();
+            commands_queue.push(bank_item_command);
+          }
+
+
+
         }
         // Eventos de mouse
          
