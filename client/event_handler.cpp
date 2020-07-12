@@ -138,11 +138,10 @@ void EventHandler::get_events() {
           // Chequeamos si el mouse hizo click dentro de la caja de texto
           else if (text_box.mouse_click_in(x, y)) {
             SDL_Event event_chat;
-
+            int msg_length = 0;
             // Se va a escribir hasta que se haga click fuera de text_box
             while (text_box.mouse_click_in(x, y)) {
               while (SDL_PollEvent(&event_chat) != 0) {
-
                 // Chequea si el click fue fuera de la caja de texto
                 if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
                   SDL_GetMouseState(&x, &y);
@@ -151,8 +150,10 @@ void EventHandler::get_events() {
                 // Chequeamos si el usuario quiere borrar algo
                 else if (event_chat.type == SDL_KEYDOWN &&
                          event_chat.key.keysym.sym == SDLK_BACKSPACE) {
-                  events_queue.delete_character();
-                  events_queue.push(EVENT_MESSAGE);
+                  if (msg_length) {
+                    msg_length = events_queue.delete_character();
+                    events_queue.push(EVENT_MESSAGE);
+                  }
                 }
 
                 // Chequeamos si el usuario quiere escribir
@@ -163,9 +164,12 @@ void EventHandler::get_events() {
                          event_chat.text.text[0] == 'C' ||
                          event_chat.text.text[0] == 'v' ||
                          event_chat.text.text[0] == 'V'))) {
-                    // Agregamos el caracter presionado
-                    events_queue.append_character(*event_chat.text.text);
-                    events_queue.push(EVENT_MESSAGE);
+                    if (msg_length < MAX_MSG_LENGTH) {
+                      // Agregamos el caracter presionado
+                      msg_length =
+                          events_queue.append_character(*event_chat.text.text);
+                      events_queue.push(EVENT_MESSAGE);
+                    }
                   }
                 }
               }

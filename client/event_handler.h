@@ -27,6 +27,8 @@
 #include "unbank_item_command_dto.h"
 #include "get_banked_items_command_dto.h"
 
+#define MAX_MSG_LENGTH 65
+
 class EventHandler {
  private:
   CommandsBlockingQueue& commands_queue;
