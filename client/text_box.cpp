@@ -62,25 +62,25 @@ void TextBox::set_mesures_box(text_box_t box_type) {
     case MESSAGE_1:
       x = 15;
       y = 13;
-      height = 20;
+      height = 16;
       break;
 
     case MESSAGE_2:
       x = 15;
       y = 35;
-      height = 20;
+      height = 16;
       break;
 
     case MESSAGE_3:
       x = 15;
       y = 57;
-      height = 20;
+      height = 16;
       break;
 
     case MESSAGE_4:
       x = 15;
       y = 79;
-      height = 20;
+      height = 16;
       break;
 
     case NAME:
