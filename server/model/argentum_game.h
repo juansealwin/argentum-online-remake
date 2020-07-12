@@ -101,6 +101,8 @@ class ArgentumGame : public Thread {
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;
   std::map<std::tuple<unsigned int, unsigned int>, Drop *> drops;
+  std::map<std::tuple<unsigned int, unsigned int>, int> npc_positions;
+
 
   void send_game_status();
   Json::Value entities_cfg;
@@ -115,6 +117,8 @@ class ArgentumGame : public Thread {
   void tests_proyectiles();
   void tests_drops();
   BankStatusNotification * get_bank_status(Hero *h);
+  //devuelve true si hay un banker a 1 de distancia
+  bool is_banker_close(int x, int y);
   //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;

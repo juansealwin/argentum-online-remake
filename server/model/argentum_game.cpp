@@ -87,12 +87,17 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
     Entity *e = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
-
+    std::tuple<unsigned int, unsigned int> pos =
+        std::tuple<unsigned int, unsigned int>(row, col);
     if (type == PRIEST) {
       e = new Priest(entities_ids, row, col, type, 'p');
+
+      npc_positions.emplace(pos, PRIEST);
     } else if (type == MERCHANT) {
+      npc_positions.emplace(pos, MERCHANT);
       e = new Merchant(entities_ids, row, col, type, 'm');
     } else if (type == BANKER) {
+      npc_positions.emplace(pos, BANKER);
       e = new Banker(entities_ids, row, col, type, 'b');
     }
     if (e) {
@@ -112,6 +117,7 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if (!is_banker_close(hero->x_position, hero->y_position)) return;
     hero->bank_item(item_id);
     std::cout << "banked item: " << item_id << std::endl;
   } catch (ModelException &e) {
@@ -121,6 +127,7 @@ void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
 void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if (!is_banker_close(hero->x_position, hero->y_position)) return;
     hero->unbank_item(item_id);
     std::cout << "unbanked item: " << item_id << std::endl;
 
@@ -131,6 +138,7 @@ void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
 void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if (!is_banker_close(hero->x_position, hero->y_position)) return;
     hero->bank_gold(ammount);
     std::cout << "banked gold: " << ammount << std::endl;
 
@@ -141,6 +149,7 @@ void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
 void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if (!is_banker_close(hero->x_position, hero->y_position)) return;
     hero->unbank_gold(ammount);
     std::cout << "unbanked gold: " << ammount << std::endl;
 
@@ -151,8 +160,10 @@ void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
 void ArgentumGame::hero_get_banked_items(int entity_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    BankStatusNotification* n = get_bank_status(hero);
-    BlockingThreadSafeQueue<Notification *> *q = queues_notifications.at(entity_id);
+    if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    BankStatusNotification *n = get_bank_status(hero);
+    BlockingThreadSafeQueue<Notification *> *q =
+        queues_notifications.at(entity_id);
     q->push(n);
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
@@ -523,3 +534,25 @@ BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {
   BankStatusNotification *n = new BankStatusNotification(notification);
   return n;
 }
+
+bool ArgentumGame::is_banker_close(int x, int y) {
+  using namespace std;
+  vector<tuple<int, int>> possible_spots = {
+    tuple<int, int>(x + 1, y),
+    tuple<int, int>(x - 1, y),
+    tuple<int, int>(x, y + 1),
+    tuple<int, int>(x, y - 1)
+  };
+  for (int j = 0; j < possible_spots.size(); j++) {
+    int curr_x = get<0>(possible_spots.at(j));
+    int curr_y = get<1>(possible_spots.at(j));
+    tuple<int, int> pos = tuple<int, int>(curr_x, curr_y);
+    if(npc_positions.count(pos) > 0) {
+      if (npc_positions.at(pos) == BANKER) {
+        return true;
+      }
+    }
+    }
+    return false;
+  }
+
