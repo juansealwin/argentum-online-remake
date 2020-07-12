@@ -5,8 +5,10 @@ EventHandler::~EventHandler() {}
 EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
+  // Seteamos las dimensiones de la "caja" de inventario
   inventory = InteractiveBox(640, 168, 139, 183);
-  text_box = InteractiveBox(640, 168, 139, 183);
+  // Seteamos las dimensiones de la "caja" para escribir en el minichat
+  text_box = InteractiveBox(10, 112, 544, 20);
 }
 
 void EventHandler::get_events() {
@@ -68,29 +70,34 @@ void EventHandler::get_events() {
             commands_queue.push(pick_up_item_command);
           }
           if (event.key.keysym.sym == SDLK_h) {
-            DropItemCommandDTO* change_game_room_command = new DropItemCommandDTO(6);
+            DropItemCommandDTO* change_game_room_command =
+                new DropItemCommandDTO(6);
             commands_queue.push(change_game_room_command);
           }
 
           if (event.key.keysym.sym == SDLK_1) {
-            ChangeGameRoomDTO* change_game_room_command = new ChangeGameRoomDTO(1);
+            ChangeGameRoomDTO* change_game_room_command =
+                new ChangeGameRoomDTO(1);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_2) {
-                        ChangeGameRoomDTO* change_game_room_command = new ChangeGameRoomDTO(2);
+            ChangeGameRoomDTO* change_game_room_command =
+                new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_3) {
-            PrivateMessageDTO *private_message_command = new PrivateMessageDTO("test", "hello");
+            PrivateMessageDTO* private_message_command =
+                new PrivateMessageDTO("test", "hello");
             commands_queue.push(private_message_command);
           }
           if (event.key.keysym.sym == SDLK_4) {
-            std::cout << "creating bank item dto" <<std::endl;
+            std::cout << "creating bank item dto" << std::endl;
             BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
           if (event.key.keysym.sym == SDLK_5) {
-            UnbankItemCommandDTO* bank_item_command = new UnbankItemCommandDTO(6);
+            UnbankItemCommandDTO* bank_item_command =
+                new UnbankItemCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
           if (event.key.keysym.sym == SDLK_6) {
@@ -98,19 +105,18 @@ void EventHandler::get_events() {
             commands_queue.push(bank_item_command);
           }
           if (event.key.keysym.sym == SDLK_7) {
-            UnbankGoldCommandDTO* bank_item_command = new UnbankGoldCommandDTO(6);
+            UnbankGoldCommandDTO* bank_item_command =
+                new UnbankGoldCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
           if (event.key.keysym.sym == SDLK_8) {
-            GetBankedItemsCommandDTO* bank_item_command = new GetBankedItemsCommandDTO();
+            GetBankedItemsCommandDTO* bank_item_command =
+                new GetBankedItemsCommandDTO();
             commands_queue.push(bank_item_command);
           }
-
-
-
         }
         // Eventos de mouse
-         
+
         else if (event.type == SDL_MOUSEBUTTONDOWN) {
           int x, y;
           SDL_GetMouseState(&x, &y);
@@ -129,14 +135,41 @@ void EventHandler::get_events() {
               commands_queue.push(use_item_command);
             }
           }
-        } else if (event.type == SDL_TEXTINPUT) {
-          // Para impedir el copiado y pegado
-          if (!(SDL_GetModState() & KMOD_CTRL &&
-                (event.text.text[0] == 'c' || event.text.text[0] == 'C' ||
-                 event.text.text[0] == 'v' || event.text.text[0] == 'V'))) {
-            // Append character
-            // inputText += e.text.text;
-            // renderText = true;
+          // Chequeamos si el mouse hizo click dentro de la caja de texto
+          else if (text_box.mouse_click_in(x, y)) {
+            SDL_Event event_chat;
+
+            // Se va a escribir hasta que se haga click fuera de text_box
+            while (text_box.mouse_click_in(x, y)) {
+              while (SDL_PollEvent(&event_chat) != 0) {
+
+                // Chequea si el click fue fuera de la caja de texto
+                if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
+                  SDL_GetMouseState(&x, &y);
+                }
+
+                // Chequeamos si el usuario quiere borrar algo
+                else if (event_chat.type == SDL_KEYDOWN &&
+                         event_chat.key.keysym.sym == SDLK_BACKSPACE) {
+                  events_queue.delete_character();
+                  events_queue.push(EVENT_MESSAGE);
+                }
+
+                // Chequeamos si el usuario quiere escribir
+                else if (event_chat.type == SDL_TEXTINPUT) {
+                  // Para impedir el copiado y pegado
+                  if (!(SDL_GetModState() & KMOD_CTRL &&
+                        (event_chat.text.text[0] == 'c' ||
+                         event_chat.text.text[0] == 'C' ||
+                         event_chat.text.text[0] == 'v' ||
+                         event_chat.text.text[0] == 'V'))) {
+                    // Agregamos el caracter presionado
+                    events_queue.append_character(*event_chat.text.text);
+                    events_queue.push(EVENT_MESSAGE);
+                  }
+                }
+              }
+            }
           }
         }
       }

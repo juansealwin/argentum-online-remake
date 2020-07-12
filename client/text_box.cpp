@@ -1,20 +1,15 @@
 #include "text_box.h"
 
 TextBox::TextBox(text_box_t type, std::string new_text) {
-  /*x = 15;
-  y = 116;
-  width = 0;        // El ancho dependera del texto
-  height = height;  // El alto del rectangulo es configurable*/
-
-  set_mesures_box(type);
-
-  text = new_text;
-
   // Text color default blanco
   text_color = {255, 255, 255, 0};
 
   // Background color default negro
   background_color = {0, 0, 0, 0};
+
+  set_mesures_box(type);
+
+  text = new_text;
 
   padding = 2;
 
@@ -81,6 +76,14 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       x = 15;
       y = 79;
       height = 16;
+      break;
+
+    case INPUT_TEXT:
+      x = 15;
+      y = 114;
+      height = 16;
+      // El color del input text es negro
+      text_color = {0, 0, 0, 0};
       break;
 
     case NAME:

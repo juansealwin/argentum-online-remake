@@ -9,6 +9,7 @@ class InteractiveBox {
 
  public:
   InteractiveBox();
+  // Constructor: x, y, ancho y alto
   InteractiveBox(int, int, int, int);
   ~InteractiveBox();
   bool mouse_click_in(int, int);

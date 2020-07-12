@@ -21,7 +21,7 @@ class UIStatus {
   UIStatus(std::string, int, int, int, int, int, int, int, int);
   ~UIStatus();
   UIStatus& operator=(const UIStatus&);
-  void render(SDL_Renderer*, bool, int);
+  void render(SDL_Renderer*, std::string, bool, int);
   void add_item(id_texture_t);
   void add_item(id_texture_t, int);
   void charge_messages(std::string, std::string, std::string, std::string);

@@ -140,7 +140,12 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
-typedef enum { EVENT_NONE = 0, EVENT_QUIT, EVENT_SELECT_ITEM } event_t;
+typedef enum {
+  EVENT_NONE = 0,
+  EVENT_QUIT,
+  EVENT_SELECT_ITEM,
+  EVENT_MESSAGE
+} event_t;
 
 typedef enum {
   DUMMY_ITEM,
@@ -175,12 +180,13 @@ typedef enum {
   MESSAGE_2,
   MESSAGE_3,
   MESSAGE_4,
+  INPUT_TEXT,
   NAME,
   LEVEL,
   EXP,
   GOLD_QUANTITY,
   HEALTH,
   MANA
-}text_box_t;
+} text_box_t;
 
 #endif

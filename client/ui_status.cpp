@@ -61,7 +61,8 @@ void UIStatus::charge_messages(std::string msg1, std::string msg2,
   text_messages[MESSAGE_4] = msg4;
 }
 
-void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {
+void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
+                      bool is_selected, int index) {
   // Renderizamos el UI estático
   texture_manager.get_texture(ID_UI).render(renderer, NULL, 0, 0);
 
@@ -73,6 +74,7 @@ void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {
   TextBox message2(MESSAGE_2, text_messages[MESSAGE_2]);
   TextBox message3(MESSAGE_3, text_messages[MESSAGE_3]);
   TextBox message4(MESSAGE_4, text_messages[MESSAGE_4]);
+  TextBox input_text(INPUT_TEXT, input_txt);
   TextBox level(LEVEL, text_messages[LEVEL]);
   TextBox name(NAME, text_messages[NAME]);
   TextBox exp(EXP, text_messages[EXP]);
@@ -85,6 +87,7 @@ void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {
   message2.set_texture(renderer);
   message3.set_texture(renderer);
   message4.set_texture(renderer);
+  input_text.set_texture(renderer);
   level.set_texture(renderer);
   name.set_texture(renderer);
   exp.set_texture(renderer);
@@ -97,6 +100,7 @@ void UIStatus::render(SDL_Renderer* renderer, bool is_selected, int index) {
   message2.render(renderer, 0, 0);
   message3.render(renderer, 0, 0);
   message4.render(renderer, 0, 0);
+  input_text.render(renderer, 0, 0);
   level.render(renderer, 0, 0);
   name.render(renderer, 0, 0);
   exp.render(renderer, 0, 0);

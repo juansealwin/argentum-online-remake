@@ -68,6 +68,7 @@ void GameRenderer::run() {
     int index;
     bool is_selected = false;
     int item_selected = 20;
+    std::string input_message = " ";
 
     while (is_running) {
       frame_start = SDL_GetTicks();
@@ -92,6 +93,12 @@ void GameRenderer::run() {
               is_selected = true;
             }
             break;
+
+          case EVENT_MESSAGE:
+            input_message = events_queue.read_message();
+            // Para que no quede un string vacio ya que no se puede renderizar
+            if (input_message.size() == 0) input_message = " ";
+            break;
         }
       }
 
@@ -100,7 +107,7 @@ void GameRenderer::run() {
 
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_inventory(ui.get_items());
-      
+
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
 
@@ -108,8 +115,8 @@ void GameRenderer::run() {
       current_game.render(renderer);
 
       // Renderizamos la UI con sus valores actualizados
-      ui.render(renderer, is_selected, item_selected);
-      
+      ui.render(renderer, input_message, is_selected, item_selected);
+
       SDL_RenderPresent(renderer);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.
