@@ -11,12 +11,16 @@
 #include "use_item_command.h"
 #include "drop_item_command_dto.h"
 #include "drop_item_command.h"
+#include "private_message_dto.h"
+#include "private_message_command.h"
 namespace CommandFactory {
 Command* create_command(CommandDTO* command_dto, unsigned int player_id);
 
 MoveCommand* move_command(MoveCommandDTO* command_dto, unsigned int player_id);
 UseItemCommand* use_item_command(UseItemCommandDTO* command_dto, unsigned int player_id);
 DropItemCommand* drop_item_command(DropItemCommandDTO* command_dto, unsigned int player_id);
+PrivateMessageCommand* pm_command(PrivateMessageDTO* command_dto, unsigned int player_id);
+
 }  // namespace CommandFactory
 
 

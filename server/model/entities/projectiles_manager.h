@@ -6,6 +6,8 @@
 #include "map.h"
 #include "monster.h"
 #include "projectile.h"
+#include "message_center.h"
+#include <string>
 class ProjectileManager {
  public:
   ProjectileManager();
@@ -14,14 +16,16 @@ class ProjectileManager {
 
   void update(std::map<unsigned int, Hero *> &heroes,
               std::map<unsigned int, Monster *> &monsters,
-              std::map<unsigned int, Projectile *> &projectiles);
+              std::map<unsigned int, Projectile *> &projectiles,
+              MessageCenter &message_center);
   void remove_death_projectiles(
-      std::map<unsigned int, Projectile *> &projectiles, Map &map);
+      std::map<unsigned int, Projectile *> &projectiles, Map *map);
 
  private:
   void manage_collision(Projectile *projectile,
                         std::map<unsigned int, Hero *> &heroes,
-                        std::map<unsigned int, Monster *> &monsters);
+                        std::map<unsigned int, Monster *> &monsters,
+                        MessageCenter &message_center);
   BaseCharacter *get_hero_or_monster(
       int uid, std::map<unsigned int, Hero *> &heroes,
       std::map<unsigned int, Monster *> &monsters);

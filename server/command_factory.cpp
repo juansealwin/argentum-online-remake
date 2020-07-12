@@ -19,20 +19,31 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
                               player_id);
     case DROP_ITEM_COMMAND:
       return drop_item_command(dynamic_cast<DropItemCommandDTO*>(command_dto),
-                              player_id);
+                               player_id);
+    case PRIVATE_MESSAGE_COMMAND:
+      return pm_command(dynamic_cast<PrivateMessageDTO*>(command_dto),
+                        player_id);
     default:
       return nullptr;
   }
 }
 
-DropItemCommand* CommandFactory::drop_item_command(DropItemCommandDTO* command_dto, unsigned int player_id) {
+PrivateMessageCommand* CommandFactory::pm_command(PrivateMessageDTO* command_dto,
+                                  unsigned int player_id) {
+  return new PrivateMessageCommand(player_id, command_dto->get_dst(),
+                                   command_dto->get_msg());
+}
+
+DropItemCommand* CommandFactory::drop_item_command(
+    DropItemCommandDTO* command_dto, unsigned int player_id) {
   return new DropItemCommand(player_id, command_dto->item_id);
 }
 
 UseItemCommand* CommandFactory::use_item_command(UseItemCommandDTO* command_dto,
                                                  unsigned int player_id) {
-    return new UseItemCommand(player_id, command_dto->item, command_dto->item_slot, command_dto->equipped);
-  }
+  return new UseItemCommand(player_id, command_dto->item,
+                            command_dto->item_slot, command_dto->equipped);
+}
 
 MoveCommand* CommandFactory::move_command(MoveCommandDTO* command_dto,
                                           unsigned int player_id) {

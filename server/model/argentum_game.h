@@ -27,6 +27,7 @@
 #include "projectile.h"
 #include "projectiles_manager.h"
 #include "serializer.h"
+#include "message_center.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -36,7 +37,8 @@ class ArgentumGame : public Thread {
   // Instancia una nueva sala de Argentum
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
-               std::ifstream &entities_config, unsigned int &entities_ids);
+               std::ifstream &entities_config, unsigned int &entities_ids,
+               MessageCenter &message_center);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -67,6 +69,8 @@ class ArgentumGame : public Thread {
   friend class Serializer;
   ThreadSafeQueue<Command *> * get_commands_queue();
   void stop_notification_queue(int player_id);
+  void send_message(unsigned int player_id, std::string dst, std::string msg);
+
  private:
   unsigned int room = 0;
   // A esta cola deberian tener acceso tambien los clientes conectados a esta
@@ -75,9 +79,10 @@ class ArgentumGame : public Thread {
   ThreadSafeQueue<Command *> *commands_queue;
   std::mutex mutex;
   std::string map_name;
-  Map map;
+  Map *map;
   bool alive = true;
   unsigned int &entities_ids;
+  MessageCenter &message_center;
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo
@@ -102,10 +107,9 @@ class ArgentumGame : public Thread {
   unsigned int place_hero(std::string hero_race, std::string hero_class,
                           std::string hero_name, unsigned int x,
                           unsigned int y);
-
   void tests_proyectiles();
   void tests_drops();
-  void place_monster(unsigned int x, unsigned int y);
+  //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;

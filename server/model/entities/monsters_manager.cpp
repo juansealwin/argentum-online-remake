@@ -8,7 +8,8 @@ MonstersManager::MonstersManager() {
 MonstersManager::~MonstersManager() {}
 
 void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
-                             std::map<unsigned int, Hero *> heroes) {
+                             std::map<unsigned int, Hero *> heroes,
+                             MessageCenter &message_center) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
 
@@ -17,7 +18,8 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
       last_update_time = actual_time;
       for (auto &hero : heroes) {
         if (!hero.second->is_death()) {
-          if (!attack_or_move_to_hero(monster.second, hero.second))
+          if (!attack_or_move_to_hero(monster.second, hero.second,
+                                      message_center))
             monster.second->auto_move();
         }
       }
@@ -26,10 +28,14 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
   }
 }
 
-bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
+bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h,
+                                             MessageCenter &message_center) {
   if (m->is_next_to(h->x_position, h->y_position)) {
     const Attack att = m->attack();
-    h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    unsigned int dmg =
+        h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    //std::cout << "@@@@dmg returned from h->receive damage: @@@" << std::endl;
+    message_center.notify_damage_received(h->get_name(), dmg, m->get_name());
     // atacar
     return true;
   } else if (m->is_close_to(h->x_position, h->y_position)) {
@@ -40,12 +46,12 @@ bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
 }
 
 void MonstersManager::remove_death_monsters(
-    std::map<unsigned int, Monster *> &monsters, Map &map) {
+    std::map<unsigned int, Monster *> &monsters, Map *map) {
   for (auto it = monsters.cbegin(); it != monsters.cend();) {
     if (it->second->alive == false) {
       int x_pos = it->second->x_position;
       int y_pos = it->second->y_position;
-      map.empty_cell(x_pos, y_pos);
+      map->empty_cell(x_pos, y_pos);
       delete it->second;
       it = monsters.erase(it++);
     } else {
@@ -55,7 +61,7 @@ void MonstersManager::remove_death_monsters(
 }
 
 void MonstersManager::respawn_monsters(
-    std::map<unsigned int, Monster *> &monsters, Map &map,
+    std::map<unsigned int, Monster *> &monsters, Map *map,
     unsigned int total_monster_poblation, Json::Value &monsters_cfg,
     unsigned int &entities_ids) {
   while (monsters.size() < total_monster_poblation) {
