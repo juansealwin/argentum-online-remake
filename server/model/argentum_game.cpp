@@ -7,11 +7,12 @@
 ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            Json::Value &map_cfg, std::ifstream &entities_config,
-                           unsigned int &entities_ids, MessageCenter &message_center)
+                           unsigned int &entities_ids,
+                           MessageCenter &message_center)
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
-      //map(map_cfg),
+      // map(map_cfg),
       alive(true),
       entities_ids(entities_ids),
       message_center(message_center) {
@@ -20,7 +21,7 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
   // map_config >> map_cfg;
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
-  //this->map = Map(map_cfg);
+  // this->map = Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
@@ -108,6 +109,40 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->bank_item(item_id);
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->unbank_item(item_id);
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+void ArgentumGame::hero_bank_gold(int entity_id, int ammount){
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->bank_gold(ammount);
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->unbank_gold(ammount);
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+void ArgentumGame::hero_get_banked_items(int entity_id) {}
+
 void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
   using namespace std;
   try {
@@ -115,7 +150,8 @@ void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
     Item *i = hero->remove_item(item_id);
     tuple<unsigned int, unsigned int> pos =
         tuple<unsigned int, unsigned int>(hero->x_position, hero->y_position);
-    drops_manager.add_drop(std::ref(drops), i, pos, std::ref(entities_cfg["items"]), entities_ids);
+    drops_manager.add_drop(std::ref(drops), i, pos,
+                           std::ref(entities_cfg["items"]), entities_ids);
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
@@ -190,8 +226,8 @@ void ArgentumGame::pick_up_drop(unsigned int player_id) {
   }
 }
 
-
-void ArgentumGame::send_message(unsigned int player_id, std::string dst, std::string msg) {
+void ArgentumGame::send_message(unsigned int player_id, std::string dst,
+                                std::string msg) {
   Hero *hero = heroes.at(player_id);
   message_center.send_private_message(hero->get_name(), dst, msg);
 }
@@ -231,13 +267,12 @@ unsigned int ArgentumGame::add_new_hero(std::string hero_race,
 }
 
 void ArgentumGame::add_existing_hero(Hero *hero, unsigned int id) {
-  
   std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map->get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
   hero->set_position(x, y);
-  //map->debug_print();
+  // map->debug_print();
   hero->set_map(map);
   map->ocupy_cell(x, y, id);
   heroes.emplace(id, hero);
@@ -266,8 +301,7 @@ void ArgentumGame::update() {
 
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles), message_center);
-  projectile_manager.remove_death_projectiles(std::ref(projectiles),
-                                              map);
+  projectile_manager.remove_death_projectiles(std::ref(projectiles), map);
 }
 
 void ArgentumGame::remove_death_entities() {
@@ -277,7 +311,6 @@ void ArgentumGame::remove_death_entities() {
   heroes_manager.remove_death_heroes(std::ref(heroes), map);
   monsters_manager.remove_death_monsters(std::ref(monsters), map);
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
-
 }
 
 void ArgentumGame::run() {
@@ -342,8 +375,6 @@ void ArgentumGame::clean_notifications_queues() {
   }
 }
 
-
-
 /********************* metodos privados *****************************/
 
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
@@ -393,7 +424,8 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
       entities_cfg["evasionProbability"].asFloat(),
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
-      entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt());
+      entities_cfg["startingXpCap"].asFloat(),
+      entities_cfg["bankSize"].asInt());
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(5, 8, 10));
   hero->equip_armour(6);
@@ -455,4 +487,3 @@ ArgentumGame::~ArgentumGame() {
 void ArgentumGame::stop_notification_queue(int player_id) {
   queues_notifications.at(player_id)->close();
 }
-
