@@ -4,6 +4,8 @@ BankItemCommand::BankItemCommand(const unsigned int uid, const int item) : Comma
 
 }
 
+BankItemCommand::~BankItemCommand() {}
+
 void BankItemCommand::execute(ArgentumGame *game) {
   game->hero_bank_item(uid, item);
 }

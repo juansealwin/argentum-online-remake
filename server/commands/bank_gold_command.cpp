@@ -4,6 +4,8 @@ BankGoldCommand::BankGoldCommand(const unsigned int uid, const int ammount) : Co
 
 }
 
+BankGoldCommand::~BankGoldCommand() {}
+
 void BankGoldCommand::execute(ArgentumGame *game) {
   game->hero_bank_gold(uid, ammount);
 }

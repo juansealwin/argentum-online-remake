@@ -3,6 +3,8 @@
 UnbankGoldCommand::UnbankGoldCommand(const unsigned int uid, const int ammount)
     : Command(uid),  ammount(ammount) {}
 
+
+UnbankGoldCommand::~UnbankGoldCommand() {}
 void UnbankGoldCommand::execute(ArgentumGame *game) {
   game->hero_unbank_gold(uid, ammount);
 }

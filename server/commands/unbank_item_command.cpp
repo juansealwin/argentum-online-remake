@@ -5,3 +5,5 @@ UnbankItemCommand::UnbankItemCommand(const unsigned int uid, const int item) : C
 void UnbankItemCommand::execute(ArgentumGame *game) {
   game->hero_unbank_item(uid, item);
 }
+
+UnbankItemCommand::~UnbankItemCommand() {}
