@@ -28,8 +28,8 @@ class Hero : public BaseCharacter {
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap);
-  //Hero(Hero* h, Map &map);
+       const float starting_xp_cap, const unsigned int bank_size);
+  // Hero(Hero* h, Map &map);
   // devuelve el dano causado
   void regenerate();
   const Attack attack();
@@ -53,6 +53,14 @@ class Hero : public BaseCharacter {
   void unequip_shield();
   void unequip_helmet();
   void unequip_armour();
+
+  // quita item del banco y lo guarda en el inventario
+  void unbank_item(unsigned int item_id);
+  // transfiere item del inventario al banco
+  void bank_item(unsigned int item_id);
+  void unbank_gold(unsigned int ammount);
+  void bank_gold(unsigned int ammount);
+
   // devuelve el Item en el inventario con el id buscado. Devuelve nullptr si no
   // lo tiene
   Item *remove_item(unsigned int item_id);
@@ -63,11 +71,11 @@ class Hero : public BaseCharacter {
   // cosa (llamado a cualquier otro metodo)
   bool has_free_space();
   bool has_items_in_inventory();
-  //devuelve true 
+  // devuelve true
   bool can_hold_more_gold();
   bool has_excedent_coins();
   void pick_up_drop(Drop *drop);
-  //devuelve cuantas mas monedas puede guardar el heroe
+  // devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
   void meditate();
   virtual ~Hero();
@@ -81,6 +89,7 @@ class Hero : public BaseCharacter {
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;
+  friend class ArgentumGame;
   unsigned int current_mana;
   unsigned int max_mana;
 
@@ -88,13 +97,12 @@ class Hero : public BaseCharacter {
   // inicializados en member initialization list
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
-      gold, class_id, experience;
+      class_id, experience;
 
   bool meditating, ghost_mode;
 
   std::string name;
   // config
-  unsigned int inventory_size;
   float critical_damage_multiplier, critical_damage_probability,
       evasion_probability, max_safe_gold_multiplier, level_up_limit_power,
       starting_xp_cap;
@@ -102,6 +110,7 @@ class Hero : public BaseCharacter {
   unsigned int next_level_xp_limit, max_safe_gold;
   Equipment *equipment;
   Inventory *inventory;
+  Inventory *bank;
 
   // metodos privados
   unsigned int calculate_damage();

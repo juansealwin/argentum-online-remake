@@ -262,6 +262,7 @@
   },  "maps": ["../../server/cfg/maps/grass_map.json", "../../server/cfg/maps/desert_map.json"],
   "criticalDamageMiltiplier": 2,
   "inventorySize": 10,
+  "bankSize": 10,
   "criticalDamageProbability": 0.125,
   "evasionProbability": 0.001,
   "maxSafeGoldMultiplier": 400,

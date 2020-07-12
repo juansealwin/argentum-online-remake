@@ -163,7 +163,7 @@ typedef enum {
   GNARLED_STAFF,
   CRIMP_STAFF,
   ELVEN_FLUTE,
-  GOLD
+  GOLD = 36
 } item_t;
 
 typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP } map_t;

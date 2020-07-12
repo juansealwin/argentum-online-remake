@@ -23,13 +23,44 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
     case PRIVATE_MESSAGE_COMMAND:
       return pm_command(dynamic_cast<PrivateMessageDTO*>(command_dto),
                         player_id);
+    case BANK_ITEM_COMMAND:
+      return bank_item_command(dynamic_cast<BankItemCommandDTO*>(command_dto),
+                               player_id);
+    case UNBANK_ITEM_COMMAND:
+      return unbank_item_command(
+          dynamic_cast<UnbankItemCommandDTO*>(command_dto), player_id);
+    case BANK_GOLD_COMMAND:
+      return bank_gold_command(dynamic_cast<BankGoldCommandDTO*>(command_dto),
+                               player_id);
+    case UNBANK_GOLD_COMMAND:
+      return unbank_gold_command(
+          dynamic_cast<UnbankGoldCommandDTO*>(command_dto), player_id);
+    case GET_BANKED_ITEMS_COMMAND:
+      return new GetBankedItemsCommand(player_id);
     default:
       return nullptr;
   }
 }
 
-PrivateMessageCommand* CommandFactory::pm_command(PrivateMessageDTO* command_dto,
-                                  unsigned int player_id) {
+BankItemCommand* CommandFactory::bank_item_command(BankItemCommandDTO* command_dto,
+                                   unsigned int player_id) {
+  return new BankItemCommand(player_id, command_dto->item);
+}
+UnbankItemCommand* CommandFactory::unbank_item_command(UnbankItemCommandDTO* command_dto,
+                                       unsigned int player_id) {
+  return new UnbankItemCommand(player_id, command_dto->item);
+}
+BankGoldCommand* CommandFactory::bank_gold_command(BankGoldCommandDTO* command_dto,
+                                   unsigned int player_id) {
+  return new BankGoldCommand(player_id, command_dto->ammount);
+}
+UnbankGoldCommand* CommandFactory::unbank_gold_command(UnbankGoldCommandDTO* command_dto,
+                                       unsigned int player_id) {
+  return new UnbankGoldCommand(player_id, command_dto->ammount);
+}
+
+PrivateMessageCommand* CommandFactory::pm_command(
+    PrivateMessageDTO* command_dto, unsigned int player_id) {
   return new PrivateMessageCommand(player_id, command_dto->get_dst(),
                                    command_dto->get_msg());
 }

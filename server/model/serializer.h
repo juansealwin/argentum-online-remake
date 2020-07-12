@@ -6,6 +6,7 @@
 #include <arpa/inet.h>
 #include <algorithm>
 #include "drop.h"
+#define GOLD_ID 36
 class Serializer {
  public:
   static std::vector<unsigned char> serialize_game_status_v3(ArgentumGame *game);

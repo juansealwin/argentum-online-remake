@@ -58,6 +58,16 @@ void GameUpdater::run() {
         chat_message_3 = chat_message_4;
         chat_message_4 = message;
         continue;
+      } else if (type_of_notification == BANKED_ITEMS_NOTIFICATION) {
+        int bank_size = extract<uint8_t>(status_serialized, j);
+        //std::cout << "bank size is " << bank_size << std::endl;
+        for (int x = 0; x < bank_size; x++) {
+          int item = extract<uint8_t>(status_serialized, j);
+          std::cout << "item in bank: " << item;
+        }
+        uint16_t gold = extract<uint16_t>(status_serialized, j);
+        std::cout << "gold in bnak: " << gold << std::endl;
+        continue;
       }
 
       // Chequeamos si es una notificación de cierre de cliente
@@ -134,7 +144,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       }
 
       // Si drop_has_coins == 1 hay oro, si es 0 no
-      drop_has_coins = extract<uint8_t>(status_serialized, j);
+      //drop_has_coins = extract<uint8_t>(status_serialized, j);
 
       // Agregamos la entidad "Item"
       next_status[(int)id] = EntityStatus(get_item_texture(entity_type), x, y);

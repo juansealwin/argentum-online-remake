@@ -31,8 +31,9 @@ void ProjectileManager::manage_collision(
     std::map<unsigned int, Monster *> &monsters,
     MessageCenter &message_center) {
   int attacked_id = projectile->get_collided_entity();
+
   unsigned int damage_done = 0;
-  BaseCharacter *attacked, *attacker;
+  BaseCharacter *attacked, *attacker = nullptr;
   attacked = get_hero_or_monster(attacked_id, heroes, monsters);
   if (attacked) {
     if (!attacked->is_death()) {
@@ -41,20 +42,25 @@ void ProjectileManager::manage_collision(
                                    projectile->is_critical(), projectile->type);
       int attacker_id = projectile->get_attacker_id();
       attacker = get_hero_or_monster(attacker_id, heroes, monsters);
-      if (attacker) attacker->notify_damage_done(attacked, damage_done);
+      if (attacker) {
+        attacker->notify_damage_done(attacked, damage_done);
+      }
     }
   }
 
   if (dynamic_cast<Hero *>(attacker)) {
     Hero *h = dynamic_cast<Hero *>(attacker);
-    message_center.notify_damage_done(h->get_name(), damage_done, attacked->get_name());
-    // message_center.send_message("", dynamic_cast<Hero *>(attacker)->get_name(),
+    message_center.notify_damage_done(h->get_name(), damage_done,
+                                      attacked->get_name());
+    // message_center.send_message("", dynamic_cast<Hero
+    // *>(attacker)->get_name(),
     //                             message);
   }
   if (dynamic_cast<Hero *>(attacked)) {
     Hero *h = dynamic_cast<Hero *>(attacked);
     std::cout << "calling message center damage received!!!" << std::endl;
-    message_center.notify_damage_received(h->get_name(), damage_done, attacker->get_name());
+    message_center.notify_damage_received(h->get_name(), damage_done,
+                                          attacker->get_name());
   }
   projectile->kill();
 }
@@ -62,6 +68,7 @@ void ProjectileManager::manage_collision(
 BaseCharacter *ProjectileManager::get_hero_or_monster(
     int uid, std::map<unsigned int, Hero *> &heroes,
     std::map<unsigned int, Monster *> &monsters) {
+  if (uid < 0) return nullptr;
   BaseCharacter *c = nullptr;
   if (heroes.count(uid) > 0) {
     c = dynamic_cast<BaseCharacter *>(heroes.at(uid));

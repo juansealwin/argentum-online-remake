@@ -8,13 +8,18 @@
 
 #include "../server/notifications/notification.h"
 #include "attack_command_dto.h"
+#include "bank_gold_command_dto.h"
+#include "bank_item_command_dto.h"
 #include "change_game_room_dto.h"
 #include "drop_item_command_dto.h"
+#include "get_banked_items_command_dto.h"
 #include "login_command_dto.h"
 #include "move_command_dto.h"
 #include "pick_up_command_dto.h"
 #include "private_message_dto.h"
 #include "quit_command_dto.h"
+#include "unbank_gold_command_dto.h"
+#include "unbank_item_command_dto.h"
 #include "use_item_command_dto.h"
 #define ID_LENGTH 1
 
@@ -74,6 +79,30 @@ PrivateMessageDTO* receive_private_message(const Socket& socket) {
   return new PrivateMessageDTO(dst, message);
 }
 
+BankItemCommandDTO* receive_bank_item_command(const Socket& socket) {
+  uint8_t item = 0;
+  socket.recv(&item, 1);
+  return new BankItemCommandDTO(item);
+}
+
+UnbankItemCommandDTO* receive_unbank_item_command(const Socket& socket) {
+  uint8_t item = 0;
+  socket.recv(&item, 1);
+  return new UnbankItemCommandDTO(item);
+}
+
+BankGoldCommandDTO* receive_bank_gold_command(const Socket& socket) {
+  uint16_t ammount = 0;
+  socket.recv(&ammount, 2);
+  return new BankGoldCommandDTO(ammount);
+}
+
+UnbankGoldCommandDTO* receive_unbank_gold_command(const Socket& socket) {
+  uint16_t ammount = 0;
+  socket.recv(&ammount, 2);
+  return new UnbankGoldCommandDTO(ammount);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -98,6 +127,16 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_drop_item(socket);
     case PRIVATE_MESSAGE_COMMAND:
       return receive_private_message(socket);
+    case BANK_ITEM_COMMAND:
+      return receive_bank_item_command(socket);
+    case UNBANK_ITEM_COMMAND:
+      return receive_unbank_item_command(socket);
+    case BANK_GOLD_COMMAND:
+      return receive_bank_gold_command(socket);
+    case UNBANK_GOLD_COMMAND:
+      return receive_unbank_gold_command(socket);
+    case GET_BANKED_ITEMS_COMMAND:
+      return new GetBankedItemsCommandDTO();
     default:
       return nullptr;
   }
@@ -161,7 +200,7 @@ void send_drop_item(const Socket& socket,
 }
 
 void send_string(const Socket& socket, std::string str) {
-  //std::cout << "Sending msg: " << str << std::endl;
+  // std::cout << "Sending msg: " << str << std::endl;
   std::vector<unsigned char> message;
   message.insert(message.end(), str.begin(), str.end());
   uint8_t msg_size = message.size();
@@ -175,6 +214,44 @@ void send_private_message(const Socket& socket,
   socket.send(&command_id, ID_LENGTH);
   send_string(socket, msg_command->get_dst());
   send_string(socket, msg_command->get_msg());
+}
+
+void send_bank_item_command(const Socket& socket,
+                            BankItemCommandDTO* commandDTO) {
+  uint8_t command_id = BANK_ITEM_COMMAND;
+  uint8_t item = commandDTO->item;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, 1);
+}
+
+void send_unbank_item_command(const Socket& socket,
+                              UnbankItemCommandDTO* commandDTO) {
+  uint8_t command_id = UNBANK_ITEM_COMMAND;
+  uint8_t item = commandDTO->item;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, 1);
+}
+
+void send_bank_gold_command(const Socket& socket,
+                            BankGoldCommandDTO* commandDTO) {
+  uint8_t command_id = BANK_GOLD_COMMAND;
+  uint16_t ammount = commandDTO->ammount;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&ammount, 2);
+}
+
+void send_unbank_gold_command(const Socket& socket,
+                              UnbankGoldCommandDTO* commandDTO) {
+  uint8_t command_id = UNBANK_GOLD_COMMAND;
+  uint16_t ammount = commandDTO->ammount;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&ammount, 2);
+}
+
+void send_get_banked_items_command(const Socket& socket,
+                                   GetBankedItemsCommandDTO*) {
+  uint8_t command_id = GET_BANKED_ITEMS_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
 }
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
@@ -210,6 +287,33 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case PRIVATE_MESSAGE_COMMAND:
       send_private_message(socket,
                            dynamic_cast<PrivateMessageDTO*>(commandDTO));
+      break;
+
+    case BANK_ITEM_COMMAND:
+      send_bank_item_command(socket,
+                             dynamic_cast<BankItemCommandDTO*>(commandDTO));
+      break;
+
+    case UNBANK_ITEM_COMMAND:
+      send_unbank_item_command(socket,
+                               dynamic_cast<UnbankItemCommandDTO*>(commandDTO));
+      break;
+
+    case BANK_GOLD_COMMAND:
+      send_bank_gold_command(socket,
+                             dynamic_cast<BankGoldCommandDTO*>(commandDTO));
+      break;
+
+    case UNBANK_GOLD_COMMAND:
+      send_unbank_gold_command(socket,
+                               dynamic_cast<UnbankGoldCommandDTO*>(commandDTO));
+      break;
+
+    case GET_BANKED_ITEMS_COMMAND:
+      send_get_banked_items_command(
+          socket, dynamic_cast<GetBankedItemsCommandDTO*>(commandDTO));
+      break;
+
     default:
       break;
   }

@@ -21,6 +21,11 @@
 #include "change_game_room_dto.h"
 #include "drop_item_command_dto.h"
 #include "private_message_dto.h"
+#include "bank_item_command_dto.h"
+#include "bank_gold_command_dto.h"
+#include "unbank_gold_command_dto.h"
+#include "unbank_item_command_dto.h"
+#include "get_banked_items_command_dto.h"
 
 class EventHandler {
  private:

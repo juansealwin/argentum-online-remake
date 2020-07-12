@@ -28,6 +28,7 @@
 #include "projectiles_manager.h"
 #include "serializer.h"
 #include "message_center.h"
+#include "bank_status_notification.h"
 #define PRIEST 33
 #define MERCHANT 34
 #define BANKER 35
@@ -48,7 +49,11 @@ class ArgentumGame : public Thread {
   // equipa o usa una pocion
   void hero_use_item(int entity_id, int item_id);
   void hero_drop_item(int entity_id, int item_id);
-
+  void hero_bank_item(int entity_id, int item_id);
+  void hero_unbank_item(int entity_id, int item_id);
+  void hero_bank_gold(int entity_id, int ammount);
+  void hero_unbank_gold(int entity_id, int ammount);
+  void hero_get_banked_items(int entity_id);
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);
@@ -96,6 +101,8 @@ class ArgentumGame : public Thread {
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;
   std::map<std::tuple<unsigned int, unsigned int>, Drop *> drops;
+  std::map<std::tuple<unsigned int, unsigned int>, int> npc_positions;
+
 
   void send_game_status();
   Json::Value entities_cfg;
@@ -109,6 +116,9 @@ class ArgentumGame : public Thread {
                           unsigned int y);
   void tests_proyectiles();
   void tests_drops();
+  BankStatusNotification * get_bank_status(Hero *h);
+  //devuelve true si hay un banker a 1 de distancia
+  bool is_banker_close(int x, int y);
   //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
