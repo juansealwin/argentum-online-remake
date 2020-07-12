@@ -18,10 +18,10 @@ void GameUpdater::run() {
     int type_of_notification;
     unsigned int j;
     map_t new_map = CURRENT_MAP;
-    std::string chat_message_1 = "";
-    std::string chat_message_2 = "";
-    std::string chat_message_3 = "";
-    std::string chat_message_4 = "";
+    std::string chat_message_1 = " ";
+    std::string chat_message_2 = " ";
+    std::string chat_message_3 = " ";
+    std::string chat_message_4 = " ";
 
     while (is_running) {
       j = 0;
@@ -64,6 +64,10 @@ void GameUpdater::run() {
       else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
         break;
       }
+
+      // Cargamos los mensajes en el mini chat
+      next_ui_status.charge_messages(chat_message_1, chat_message_2,
+                                     chat_message_3, chat_message_4);
 
       // Escribimos la información en el mapa protegido
       protected_map.map_writer(next_status, new_map);

@@ -18,15 +18,12 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
 
   padding = 2;
 
-  font = TTF_OpenFont( "alagard.ttf", height );
+  font = TTF_OpenFont("alagard.ttf", height);
 }
 
-TextBox::~TextBox() {
-  TTF_CloseFont(font);
-}
+TextBox::~TextBox() { TTF_CloseFont(font); }
 
 void TextBox::set_texture(SDL_Renderer* renderer) {
-  //std::cout<<"TEXTO: "<<text<<std::endl;
   text_texture.load_from_rendered_text(renderer, font, text, text_color);
   width = text_texture.get_width() + padding * 2;
 }
@@ -35,11 +32,11 @@ void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Background rect
   SDL_Rect background_rect = {x - x_rel, y - y_rel, width, height};
 
-  //SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
-   //background_color.b, background_color.a);
+  // SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
+  // background_color.b, background_color.a);
 
   // No quiero que rellene el text_box
-  //SDL_RenderFillRect(renderer, &background_rect);
+  // SDL_RenderFillRect(renderer, &background_rect);
 
   // Render text
   text_texture.render(renderer, x + padding - x_rel, y + padding - y_rel);
@@ -59,31 +56,31 @@ void TextBox::set_y(int y) { y = y - height / 2; }
 
 void TextBox::set_mesures_box(text_box_t box_type) {
   // Depende del ancho del texto
-  width = 100;
+  width = 0;
 
   switch (box_type) {
     case MESSAGE_1:
       x = 15;
-      y = 116;
-      height = 17;
+      y = 13;
+      height = 20;
       break;
 
     case MESSAGE_2:
       x = 15;
-      y = 116;
-      height = 17;
+      y = 35;
+      height = 20;
       break;
 
     case MESSAGE_3:
       x = 15;
-      y = 120;
-      height = 17;
+      y = 57;
+      height = 20;
       break;
 
     case MESSAGE_4:
       x = 15;
-      y = 116;
-      height = 17;
+      y = 79;
+      height = 20;
       break;
 
     case NAME:
