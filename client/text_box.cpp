@@ -84,19 +84,19 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       break;
 
     case NAME:
-      x = 620;
+      x = 640;
       y = 52;
       height = 25;
       break;
 
     case LEVEL:
-      x = 650;
+      x = 640;
       y = 23;
       height = 20;
       break;
 
     case EXP:
-      x = 670;
+      x = 660;
       y = 92;
       height = 20;
       break;
