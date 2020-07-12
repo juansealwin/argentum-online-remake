@@ -1,5 +1,5 @@
-#ifndef BANK_ITEM_COMMAND_H
-#define BANK_ITEM_COMMAND_H
+#ifndef GET_BANKED_ITEMS_COMMAND_H
+#define GET_BANKED_ITEMS_COMMAND_H
 
 #include "argentum_game.h"
 #include "command.h"

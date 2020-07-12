@@ -1,5 +1,5 @@
-#ifndef GET_BANKED_ITEMS_COMMAND_H
-#define GET_BANKED_ITEMS_COMMAND_H
+#ifndef GET_BANKED_ITEMS_COMMAND_DTO_H
+#define GET_BANKED_ITEMS_COMMAND_DTO_H
 
 #include "command_dto.h"
 
