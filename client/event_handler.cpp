@@ -198,46 +198,67 @@ void EventHandler::get_events() {
 
 void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere meditar
-  if (input_text.compare(0, sizeof(input_text), MSG_MEDITATE) == 0) {
+  if (input_text.compare(0, input_text.length(), MSG_MEDITATE) == 0) {
     std::cout << "COMANDO MEDITAR" << std::endl;
   }
   // Chequeamos si el usuario quiere curarse
-  else if (input_text.compare(0, sizeof(input_text), MSG_HEAL) == 0) {
+  else if (input_text.compare(0, input_text.length(), MSG_HEAL) == 0) {
     std::cout << "COMANDO CURAR" << std::endl;
   }
   // Chequeamos si el usuario quiere depositar algún item en el banco
-  else if (input_text.compare(0, sizeof(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
+  else if (input_text.compare(0, strlen(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
     std::cout << "COMANDO DESPOSITAR" << std::endl;
+    std::string item = input_text;
+    std::string deposit = input_text.erase(0, strlen(MSG_DEPOSIT));
+    int i = 0;
+
+    // Chequeo si se quiere depositar oro o un item
+    if (std::isdigit(deposit[i])) {
+      for (i = 1; i < deposit.size(); i++) {
+        if (!std::isdigit(deposit[i])) {
+          break;
+        }
+      }
+      // Si todos los caracteres fueron numeros se intenta depositar el oro
+      if (i == deposit.size()) {
+        BankGoldCommandDTO* bank_item_command =
+            new BankGoldCommandDTO(std::stoi(deposit));
+        commands_queue.push(bank_item_command);
+      }
+    } else {
+      BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
+            commands_queue.push(bank_item_command);
+    }
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
+  else if (input_text.compare(0, strlen(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
     std::cout << "COMANDO RETIRAR" << std::endl;
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(input_text), MSG_LIST) == 0) {
+  else if (input_text.compare(0, input_text.length(), MSG_LIST) == 0) {
     std::cout << "COMANDO LISTAR" << std::endl;
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(MSG_BUY), MSG_BUY) == 0) {
+  else if (input_text.compare(0, strlen(MSG_BUY), MSG_BUY) == 0) {
     std::cout << "COMANDO COMPRAR" << std::endl;
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(MSG_SELL), MSG_SELL) == 0) {
+  else if (input_text.compare(0, strlen(MSG_SELL), MSG_SELL) == 0) {
     std::cout << "COMANDO VENDER" << std::endl;
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(input_text), MSG_TAKE) == 0) {
+  else if (input_text.compare(0, input_text.length(), MSG_TAKE) == 0) {
     std::cout << "COMANDO TOMAR" << std::endl;
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
-  else if (input_text.compare(0, sizeof(input_text), MSG_DROP) == 0) {
+  else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
   }
   // Chequeamos si se ingreso un mensaje privado
   else if (input_text[0] == PRIVATE_MSG) {
     size_t pos = input_text.find(" ");
-    std::string receiver = input_text.substr(1, pos-1);
-    std::string message = input_text.substr(pos+1);
+    std::string receiver = input_text.substr(1, pos - 1);
+    std::string message = input_text.substr(pos + 1);
 
     PrivateMessageDTO* private_message_command =
         new PrivateMessageDTO(receiver, message);
