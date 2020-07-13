@@ -114,6 +114,15 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_meditate(int entity_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->meditate();
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
@@ -121,14 +130,12 @@ void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
         1)
       return;
-    // ENVIAR MENSAJE inventario lleno0
     if (hero->inventory->is_full()) {
       message_center.send_inventory_is_full_message(hero->name);
       return;
     }
     unsigned int item_price =
         ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
-    // ENVIAR MENSAJE oro insuficiente
     if (!hero->has_gold(item_price)) {
       message_center.send_not_enough_gold_message(hero->name, item_price);
       return;
@@ -258,10 +265,10 @@ void ArgentumGame::hero_use_item(int entity_id, int item_id) {
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  Hero *character =
-      dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *character = dynamic_cast<Hero *>(heroes.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
   character->set_close_to_npc(false);
+  character->meditating = false;
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
@@ -644,8 +651,8 @@ SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
         leather_armour, plate_armour, blue_tunic,  sword,       axe,
         hammer,         simple_bow,   compound_bow};
   } else if (npc == PRIEST) {
-    sale_items = {
-        hp_potion, mana_potion, ash_stick, gnarled_staff, crimp_staff, elven_flute};
+    sale_items = {hp_potion,     mana_potion, ash_stick,
+                  gnarled_staff, crimp_staff, elven_flute};
   }
   notification.push_back(sale_items.size());
   notification.insert(notification.end(), sale_items.begin(), sale_items.end());

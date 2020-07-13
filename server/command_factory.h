@@ -27,6 +27,8 @@
 #include "sell_item_command.h"
 #include "buy_item_command_dto.h"
 #include "buy_item_command.h"
+#include "meditate_command_dto.h"
+#include "meditate_command.h"
 
 namespace CommandFactory {
 Command* create_command(CommandDTO* command_dto, unsigned int player_id);

@@ -23,6 +23,7 @@
 #include "unbank_gold_command_dto.h"
 #include "unbank_item_command_dto.h"
 #include "use_item_command_dto.h"
+#include "meditate_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -155,7 +156,8 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_buy_command(socket);
     case SELL_ITEM_COMMAND:
       return receive_sell_command(socket);
-
+    case MEDITATE_COMMAND:
+      return new MeditateCommandDTO();
     default:
       return nullptr;
   }
@@ -287,6 +289,11 @@ void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
   socket.send(&item, 1);
 }
 
+void send_meditate_command(const Socket& socket, MeditateCommandDTO* commandDTO) {
+  uint8_t command_id = MEDITATE_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
@@ -352,7 +359,9 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case SELL_ITEM_COMMAND:
       send_sell_command(socket, dynamic_cast<SellItemCommandDTO*>(commandDTO));
       break;
-
+    case MEDITATE_COMMAND:
+      send_meditate_command(socket, dynamic_cast<MeditateCommandDTO*>(commandDTO));
+      break;
     default:
       break;
   }

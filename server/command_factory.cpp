@@ -41,6 +41,8 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
       return buy_item_command(dynamic_cast<BuyItemCommandDTO*>(command_dto), player_id);
     case SELL_ITEM_COMMAND:
       return sell_item_command(dynamic_cast<SellItemCommandDTO*>(command_dto), player_id);
+    case MEDITATE_COMMAND:
+      return new MeditateCommand(player_id);
     default:
       return nullptr;
   }

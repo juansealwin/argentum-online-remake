@@ -57,6 +57,7 @@ class ArgentumGame : public Thread {
   void hero_unbank_item(int entity_id, int item_id);
   void hero_bank_gold(int entity_id, int ammount);
   void hero_unbank_gold(int entity_id, int ammount);
+  void hero_meditate(int entity_id);
   //envia una notificacion al cliente del estado del banco o
   //de lo que venda el merchant/priest mas cercano
   void hero_get_closest_npc_info(int entity_id);

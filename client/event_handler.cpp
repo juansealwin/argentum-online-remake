@@ -20,6 +20,7 @@ void EventHandler::get_events() {
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {
         // El usuario cierra la ventana
+        
         if (event.type == SDL_QUIT) {
           is_running = false;
           QuitCommandDTO* quit_command = new QuitCommandDTO();
@@ -69,10 +70,9 @@ void EventHandler::get_events() {
             PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
             commands_queue.push(pick_up_item_command);
           }
-          if (event.key.keysym.sym == SDLK_h) {
-            DropItemCommandDTO* change_game_room_command =
-                new DropItemCommandDTO(6);
-            commands_queue.push(change_game_room_command);
+          if (event.key.keysym.sym == SDLK_e) {
+            MeditateCommandDTO* meditate_command = new MeditateCommandDTO();
+            commands_queue.push(meditate_command);
           }
 
           if (event.key.keysym.sym == SDLK_1) {
@@ -85,13 +85,18 @@ void EventHandler::get_events() {
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
+          // borrar todos estos if, son de prueba
+          if (event.key.keysym.sym == SDLK_h) {
+            DropItemCommandDTO* change_game_room_command =
+                new DropItemCommandDTO(6);
+            commands_queue.push(change_game_room_command);
+          }
           if (event.key.keysym.sym == SDLK_3) {
             PrivateMessageDTO* private_message_command =
                 new PrivateMessageDTO("test", "hello");
             commands_queue.push(private_message_command);
           }
           if (event.key.keysym.sym == SDLK_4) {
-            std::cout << "creating bank item dto" << std::endl;
             BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
@@ -115,7 +120,6 @@ void EventHandler::get_events() {
             commands_queue.push(bank_item_command);
           }
           if (event.key.keysym.sym == SDLK_9) {
-            std::cout << "sending buy item command" << std::endl;
             BuyItemCommandDTO* bank_item_command = new BuyItemCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
@@ -123,9 +127,6 @@ void EventHandler::get_events() {
             SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
             commands_queue.push(bank_item_command);
           }
-
-
-
 
         }
 
@@ -213,6 +214,8 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere meditar
   if (input_text.compare(0, input_text.length(), MSG_MEDITATE) == 0) {
     std::cout << "COMANDO MEDITAR" << std::endl;
+    MeditateCommandDTO* meditate_command = new MeditateCommandDTO();
+    commands_queue.push(meditate_command);
   }
   // Chequeamos si el usuario quiere curarse
   else if (input_text.compare(0, input_text.length(), MSG_HEAL) == 0) {
