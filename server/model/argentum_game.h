@@ -29,9 +29,11 @@
 #include "serializer.h"
 #include "message_center.h"
 #include "bank_status_notification.h"
-#define PRIEST 33
-#define MERCHANT 34
-#define BANKER 35
+#include "sale_info_notification.h"
+typedef enum {PRIEST=33, MERCHANT, BANKER} npc_t;
+// #define PRIEST 33
+// #define MERCHANT 34
+// #define BANKER 35
 
 class ArgentumGame : public Thread {
  public:
@@ -47,13 +49,17 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void hero_dequip_item(int entity_id, int item_id);
   // equipa o usa una pocion
+  void hero_buy_item(int entity_id, int item_id);
+  void hero_sell_item(int entity_id, int item_id);
   void hero_use_item(int entity_id, int item_id);
   void hero_drop_item(int entity_id, int item_id);
   void hero_bank_item(int entity_id, int item_id);
   void hero_unbank_item(int entity_id, int item_id);
   void hero_bank_gold(int entity_id, int ammount);
   void hero_unbank_gold(int entity_id, int ammount);
-  void hero_get_banked_items(int entity_id);
+  //envia una notificacion al cliente del estado del banco o
+  //de lo que venda el merchant/priest mas cercano
+  void hero_get_closest_npc_info(int entity_id);
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);
@@ -116,9 +122,11 @@ class ArgentumGame : public Thread {
                           unsigned int y);
   void tests_proyectiles();
   void tests_drops();
+  npc_t find_closest_npc();
   BankStatusNotification * get_bank_status(Hero *h);
+  SaleInfoNotification* get_sale_info(npc_t npc);
   //devuelve true si hay un banker a 1 de distancia
-  bool is_banker_close(int x, int y);
+  bool is_npc_close(int x, int y, npc_t npc);
   //void place_monster(unsigned int x, unsigned int y);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;

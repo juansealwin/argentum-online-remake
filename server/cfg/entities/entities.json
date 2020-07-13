@@ -40,11 +40,13 @@
         "turtleShield": {
           "minDefense": 1,
           "maxDefense": 2,
+          "price" : 50,
           "id": 1
         },
         "ironShield": {
           "minDefense": 1,
           "maxDefense": 4,
+          "price" : 100,
           "id": 2
         }
       },
@@ -52,16 +54,19 @@
         "hood": {
           "minDefense": 1,
           "maxDefense": 4,
+          "price" : 50,
           "id": 3
         },
         "ironHelmet": {
           "minDefense": 4,
           "maxDefense": 8,
+          "price" : 150,
           "id": 4
         },
         "magicHat": {
           "minDefense": 4,
           "maxDefense": 12,
+          "price" : 200,
           "id": 5
         }
       },
@@ -69,16 +74,19 @@
         "leatherArmour": {
           "minDefense": 2,
           "maxDefense": 16,
+          "price" : 100,
           "id": 6
         },
         "plateArmour": {
           "minDefense": 15,
           "maxDefense": 30,
+          "price" : 300,
           "id": 7
         },
         "blueTunic": {
           "minDefense": 6,
           "maxDefense": 10,
+          "price" : 125,
           "id": 8
         }
       }
@@ -87,11 +95,13 @@
       "hpPotion": {
         "hpRegen": 50,
         "manaRegen": 0,
+        "price" : 25,
         "id": 9
       },
       "manaPotion": {
         "hpRegen": 0,
         "manaRegen": 50,
+        "price": 25,
         "id": 10
       },
       "coins": {
@@ -103,17 +113,20 @@
         "minDmg": 2,
         "maxDmg": 5,
         "range": 1,
+        "price": 50,
         "id": 11
       },
       "axe": {
         "minDmg": 4,
         "maxDmg": 5,
+        "price": 75,
         "range": 1,
         "id": 12
       },
       "hammer": {
         "minDmg": 1,
         "maxDmg": 9,
+        "price": 100,
         "range": 1,
         "id": 13
       },
@@ -121,12 +134,14 @@
         "minDmg": 1,
         "maxDmg": 4,
         "range": 6,
+        "price": 100,
         "id": 14
       },
       "compoundBow": {
         "minDmg": 4,
         "maxDmg": 16,
         "range": 6,
+        "price": 200,
         "id": 15
       }
     },
@@ -138,6 +153,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 5,
+        "price": 100,
         "id": 16
       },
       "gnarledStaff": {
@@ -147,6 +163,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 15,
+        "price": 150,
         "id": 17
       },
       "crimpStaff": {
@@ -156,6 +173,7 @@
         "hpRecovery": 0,
         "range": 5,
         "mana": 30,
+        "price": 350,
         "id": 18
       },
       "elvenFlute": {
@@ -165,6 +183,7 @@
         "hpRecovery": 120,
         "range": 0,
         "mana": 100,
+        "price": 200,
         "id": 19
       }
     },
@@ -268,6 +287,6 @@
   "maxSafeGoldMultiplier": 400,
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
-  "ups": 60.0,
+  "ups": 30.0,
   "lastId": 37
 }

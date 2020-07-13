@@ -114,10 +114,56 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
+            (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
+        1)
+      return;
+    // ENVIAR MENSAJE inventario lleno0
+    if (hero->inventory->is_full()) {
+      message_center.send_inventory_is_full_message(hero->name);
+      return;
+    }
+    unsigned int item_price =
+        ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
+    // ENVIAR MENSAJE oro insuficiente
+    if (!hero->has_gold(item_price)) {
+      message_center.send_not_enough_gold_message(hero->name, item_price);
+      return;
+    }
+    hero->remove_gold(item_price);
+    Item *i = ItemFactory::create_item(entities_cfg["items"], (item_t)item_id);
+    hero->add_item(i);
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
+void ArgentumGame::hero_sell_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
+            (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
+        1)
+      return;
+    // ENVIAR MENSAJE oro en inventario completo
+    unsigned int item_price =
+        ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
+    if (hero->gold_space_remaining() < item_price) return;
+    Item *i = hero->remove_item(item_id);
+    hero->add_gold(item_price);
+    delete i;
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) return;
     hero->bank_item(item_id);
     std::cout << "banked item: " << item_id << std::endl;
   } catch (ModelException &e) {
@@ -127,7 +173,7 @@ void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
 void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) return;
     hero->unbank_item(item_id);
     std::cout << "unbanked item: " << item_id << std::endl;
 
@@ -138,7 +184,7 @@ void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
 void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) return;
     hero->bank_gold(ammount);
     std::cout << "banked gold: " << ammount << std::endl;
 
@@ -149,7 +195,7 @@ void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
 void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) return;
     hero->unbank_gold(ammount);
     std::cout << "unbanked gold: " << ammount << std::endl;
 
@@ -157,17 +203,22 @@ void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
     std::cout << "Exception occured: " << e.what() << std::endl;
   }
 }
-void ArgentumGame::hero_get_banked_items(int entity_id) {
-  try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_banker_close(hero->x_position, hero->y_position)) return;
-    BankStatusNotification *n = get_bank_status(hero);
-    BlockingThreadSafeQueue<Notification *> *q =
-        queues_notifications.at(entity_id);
-    q->push(n);
-  } catch (ModelException &e) {
-    std::cout << "Exception occured: " << e.what() << std::endl;
+void ArgentumGame::hero_get_closest_npc_info(int entity_id) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Notification *n = nullptr;
+  if (is_npc_close(hero->x_position, hero->y_position, BANKER)) {
+    n = get_bank_status(hero);
+
+  } else if (is_npc_close(hero->x_position, hero->y_position, MERCHANT)) {
+    n = get_sale_info(MERCHANT);
+  } else if (is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
+    n = get_sale_info(PRIEST);
   }
+  if (!n) return;
+  hero->set_close_to_npc(true);
+  BlockingThreadSafeQueue<Notification *> *q =
+      queues_notifications.at(entity_id);
+  q->push(n);
 }
 
 void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
@@ -207,9 +258,10 @@ void ArgentumGame::hero_use_item(int entity_id, int item_id) {
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  BaseCharacter *character =
-      dynamic_cast<BaseCharacter *>(heroes.at(entity_id));
+  Hero *character =
+      dynamic_cast<Hero *>(heroes.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
+  character->set_close_to_npc(false);
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
@@ -341,16 +393,20 @@ void ArgentumGame::remove_death_entities() {
 }
 
 void ArgentumGame::run() {
+  auto send_update_time = std::chrono::high_resolution_clock::now();
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
     // print_debug_map();
     send_game_status();
     remove_death_entities();
-    long time_step = 1000 / entities_cfg["ups"].asFloat();  // 60fps
+    long time_step = 1000 / entities_cfg["ups"].asFloat();
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
+    auto update_time_diff =
+        std::chrono::duration_cast<std::chrono::milliseconds>(initial -
+                                                              send_update_time);
     long sleep_time = time_step - loop_duration.count();
     if (sleep_time > 0) {
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));
@@ -535,24 +591,63 @@ BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {
   return n;
 }
 
-bool ArgentumGame::is_banker_close(int x, int y) {
+bool ArgentumGame::is_npc_close(int x, int y, npc_t npc) {
   using namespace std;
   vector<tuple<int, int>> possible_spots = {
-    tuple<int, int>(x + 1, y),
-    tuple<int, int>(x - 1, y),
-    tuple<int, int>(x, y + 1),
-    tuple<int, int>(x, y - 1)
-  };
+      tuple<int, int>(x + 1, y), tuple<int, int>(x - 1, y),
+      tuple<int, int>(x, y + 1), tuple<int, int>(x, y - 1)};
   for (int j = 0; j < possible_spots.size(); j++) {
     int curr_x = get<0>(possible_spots.at(j));
     int curr_y = get<1>(possible_spots.at(j));
     tuple<int, int> pos = tuple<int, int>(curr_x, curr_y);
-    if(npc_positions.count(pos) > 0) {
-      if (npc_positions.at(pos) == BANKER) {
+    if (npc_positions.count(pos) > 0) {
+      if (npc_positions.at(pos) == npc) {
         return true;
       }
     }
-    }
-    return false;
   }
+  return false;
+}
 
+// typedef enum {
+//   turtle_shield = 1,
+//   iron_shield,
+//   hood,
+//   iron_helmet,
+//   magic_hat,
+//   leather_armour,
+//   plate_armour,
+//   blue_tunic,
+//   hp_potion,
+//   mana_potion,
+//   sword,
+//   axe,
+//   hammer,
+//   simple_bow,
+//   compound_bow,
+//   ash_stick,
+//   gnarled_staff,
+//   crimp_staff,
+//   elven_flute,
+//   //Actualizar esto si se agregan mas items!
+//   first_item_id = turtle_shield,
+//   last_ite
+
+SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
+  uint8_t notification_id = 6;
+  std::vector<unsigned char> notification;
+  notification.push_back(notification_id);
+  std::vector<item_t> sale_items;
+  if (npc == MERCHANT) {
+    sale_items = {
+        turtle_shield,  iron_shield,  hood,        iron_helmet, magic_hat,
+        leather_armour, plate_armour, blue_tunic,  sword,       axe,
+        hammer,         simple_bow,   compound_bow};
+  } else if (npc == PRIEST) {
+    sale_items = {
+        hp_potion, mana_potion, ash_stick, gnarled_staff, crimp_staff, elven_flute};
+  }
+  notification.push_back(sale_items.size());
+  notification.insert(notification.end(), sale_items.begin(), sale_items.end());
+  return new SaleInfoNotification(notification);
+}

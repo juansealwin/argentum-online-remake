@@ -27,6 +27,8 @@
 #include "unbank_gold_command_dto.h"
 #include "unbank_item_command_dto.h"
 #include "get_banked_items_command_dto.h"
+#include "buy_item_command_dto.h"
+#include "sell_item_command_dto.h"
 
 #define MAX_MSG_LENGTH 65
 #define PRIVATE_MSG '@'

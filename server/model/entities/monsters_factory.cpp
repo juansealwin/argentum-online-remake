@@ -10,22 +10,22 @@ Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
   switch (random_int) {
     case zombie:
       monster_cfg = monsters_cfg["zombie"];
-      monster_name = "zombie";
+      monster_name = "Zombie";
       break;
 
     case spider:
       monster_cfg = monsters_cfg["spider"];
-      monster_name = "spider";
+      monster_name = "Araña";
       break;
 
     case goblin:
       monster_cfg = monsters_cfg["goblin"];
-      monster_name = "goblin";
+      monster_name = "Goblin";
       break;
 
     case skeleton:
       monster_cfg = monsters_cfg["skeleton"];
-      monster_name = "skeleton";
+      monster_name = "Esqueleto";
       break;
   }
 
