@@ -138,6 +138,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   uint16_t current_xp = htons(h->experience);
   uint8_t meditating = (int)h->meditating;
   uint8_t ghost_mode = (int)h->ghost_mode;
+  uint8_t close_to_npc = (int)h->close_to_npc;
 
   insert(serialization, max_hp);
   insert(serialization, current_hp);
@@ -159,6 +160,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   insert(serialization, current_xp);
   serialization.push_back(meditating);
   serialization.push_back(ghost_mode);
+  serialization.push_back(close_to_npc);
   /*********** serializacion del equipamiento **********/
   uint8_t items_equiped = h->equipment->count();
   serialization.push_back(items_equiped);
@@ -270,6 +272,7 @@ void Serializer::debug_deserialize_v3(
       uint16_t current_xp = ntohs(extract<uint16_t>(serialization, j));
       int meditating = extract<uint8_t>(serialization, j);
       int ghost_mode = extract<uint8_t>(serialization, j);
+      int close_to_npc = extract<uint8_t>(serialization, j);
       int items_equiped = extract<uint8_t>(serialization, j);
       // std::cout << "@@@Hero stats@@@" << std::endl
       //           << "max_hp: " << max_hp << " max_mana " << mana_max << "

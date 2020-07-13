@@ -10,6 +10,7 @@
 #include "attack_command_dto.h"
 #include "bank_gold_command_dto.h"
 #include "bank_item_command_dto.h"
+#include "buy_item_command_dto.h"
 #include "change_game_room_dto.h"
 #include "drop_item_command_dto.h"
 #include "get_banked_items_command_dto.h"
@@ -18,6 +19,7 @@
 #include "pick_up_command_dto.h"
 #include "private_message_dto.h"
 #include "quit_command_dto.h"
+#include "sell_item_command_dto.h"
 #include "unbank_gold_command_dto.h"
 #include "unbank_item_command_dto.h"
 #include "use_item_command_dto.h"
@@ -103,6 +105,18 @@ UnbankGoldCommandDTO* receive_unbank_gold_command(const Socket& socket) {
   return new UnbankGoldCommandDTO(ammount);
 }
 
+BuyItemCommandDTO* receive_buy_command(const Socket& socket) {
+  uint8_t item = 0;
+  socket.recv(&item, 1);
+  return new BuyItemCommandDTO(item);
+}
+
+SellItemCommandDTO* receive_sell_command(const Socket& socket) {
+  uint8_t item = 0;
+  socket.recv(&item, 1);
+  return new SellItemCommandDTO(item);
+}
+
 CommandDTO* Protocol::receive_command(const Socket& socket) {
   uint8_t command_id;
   int bytes_rcv = socket.recv(&command_id, ID_LENGTH);
@@ -137,6 +151,11 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_unbank_gold_command(socket);
     case GET_BANKED_ITEMS_COMMAND:
       return new GetBankedItemsCommandDTO();
+    case BUY_ITEM_COMMAND:
+      return receive_buy_command(socket);
+    case SELL_ITEM_COMMAND:
+      return receive_sell_command(socket);
+
     default:
       return nullptr;
   }
@@ -254,6 +273,20 @@ void send_get_banked_items_command(const Socket& socket,
   socket.send(&command_id, ID_LENGTH);
 }
 
+void send_buy_command(const Socket& socket, BuyItemCommandDTO* commandDTO) {
+  uint8_t command_id = BUY_ITEM_COMMAND;
+  uint8_t item = commandDTO->item;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, 1);
+}
+
+void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
+  uint8_t command_id = SELL_ITEM_COMMAND;
+  uint8_t item = commandDTO->item;
+  socket.send(&command_id, ID_LENGTH);
+  socket.send(&item, 1);
+}
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
@@ -312,6 +345,12 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case GET_BANKED_ITEMS_COMMAND:
       send_get_banked_items_command(
           socket, dynamic_cast<GetBankedItemsCommandDTO*>(commandDTO));
+      break;
+    case BUY_ITEM_COMMAND:
+      send_buy_command(socket, dynamic_cast<BuyItemCommandDTO*>(commandDTO));
+      break;
+    case SELL_ITEM_COMMAND:
+      send_sell_command(socket, dynamic_cast<SellItemCommandDTO*>(commandDTO));
       break;
 
     default:
