@@ -266,6 +266,9 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, input_text.length(), MSG_LIST) == 0) {
     std::cout << "COMANDO LISTAR" << std::endl;
+    GetBankedItemsCommandDTO* bank_item_command =
+        new GetBankedItemsCommandDTO();
+    commands_queue.push(bank_item_command);
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, strlen(MSG_BUY), MSG_BUY) == 0) {
