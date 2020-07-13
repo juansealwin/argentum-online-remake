@@ -10,7 +10,7 @@ void MessageCenter::add_player(std::string player_name, BlockingThreadSafeQueue<
 }
 void MessageCenter::remove_player(std::string player_name) {
   std::unique_lock<std::mutex> lock(mutex);
-  if (players_notification_queues.count(player_name) < 0) return;
+  if (players_notification_queues.count(player_name) < 1) return;
   players_notification_queues.erase(player_name);
   
 }
@@ -35,9 +35,9 @@ void MessageCenter::send_message(std::string dst, std::string message) {
 
 void MessageCenter::notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string message = "Damage received: " + std::to_string(dmg) + " from " + attacker;
+  std::string message = "Has recibido " + std::to_string(dmg) + " de daño de: " + attacker;
   if (dmg == 0) {
-   message = "Blocked attack from " + attacker + "!";
+   message = "Has bloqueado el ataque de " + attacker + "!";
   }
   send_message(attacked, message);
 }
@@ -61,8 +61,8 @@ void MessageCenter::send_not_enough_gold_message(std::string dst, unsigned int p
   
 void MessageCenter::notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string message = "Damage done: " + std::to_string(dmg) + " to " + attacked;
-  if (dmg == 0) message = attacker + " blocked your attack!";
+  std::string message = "Has causado " + std::to_string(dmg) + " de daño a " + attacked;
+  if (dmg == 0) message = attacker + " ha bloqueado tu ataque!";
   send_message(attacker, message);
 
 }
