@@ -40,6 +40,25 @@
 #define MSG_SELL "/vender "
 #define MSG_TAKE "/tomar"
 #define MSG_DROP "/tirar"
+#define STR_TURTLE_SHIELD "escudo de tortuga"
+#define STR_IRON_SHIELD "escudo de hierro"
+#define STR_HOOD "capucha"
+#define STR_IRON_HELMET "casco de hierro"
+#define STR_MAGIC_HAT "sombrero magico"
+#define STR_LEATHER_ARMOR "armadura de cuero"
+#define STR_PLATE_ARMOR "armadura de plata"
+#define STR_BLUE_TUNIC "tunica azul"
+#define STR_HP_POTION "pocion de vida"
+#define STR_MANA_POTION "pocion de mana"
+#define STR_SWORD "espada"
+#define STR_AXE "hacha"
+#define STR_HAMMER "martillo"
+#define STR_SIMPLE_BOW "arco simple"
+#define STR_COMPOUND_BOW "arco compuesto"
+#define STR_ASH_STICK "vara de fresno"
+#define STR_GNARLED_STAFF "baculo nudoso"
+#define STR_CRIMP_STAFF "baculo engarzado"
+#define STR_ELVEN_ELUDE "laud elfico"
 
 class EventHandler {
  private:
@@ -57,6 +76,7 @@ class EventHandler {
   void get_events();
   void check_inpunt_send_command(std::string);
   item_t get_item_t(id_texture_t);
+  item_t get_item_t(std::string);
 };
 
 #endif

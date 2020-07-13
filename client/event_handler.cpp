@@ -208,7 +208,6 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere depositar algún item en el banco
   else if (input_text.compare(0, strlen(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
     std::cout << "COMANDO DESPOSITAR" << std::endl;
-    std::string item = input_text;
     std::string deposit = input_text.erase(0, strlen(MSG_DEPOSIT));
     int i = 0;
 
@@ -225,14 +224,44 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
             new BankGoldCommandDTO(std::stoi(deposit));
         commands_queue.push(bank_item_command);
       }
+      // Se quiere depositar un item
     } else {
-      BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
-            commands_queue.push(bank_item_command);
+      item_t item_required = get_item_t(deposit);
+      if (item_required != DUMMY_ITEM) {
+        BankItemCommandDTO* bank_item_command =
+            new BankItemCommandDTO(item_required);
+        commands_queue.push(bank_item_command);
+      }
     }
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, strlen(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
     std::cout << "COMANDO RETIRAR" << std::endl;
+    std::string withdrawal = input_text.erase(0, strlen(MSG_WITHDRAW));
+    int i = 0;
+
+    // Chequeo si se quiere depositar oro o un item
+    if (std::isdigit(withdrawal[i])) {
+      for (i = 1; i < withdrawal.size(); i++) {
+        if (!std::isdigit(withdrawal[i])) {
+          break;
+        }
+      }
+      // Si todos los caracteres fueron numeros se intenta depositar el oro
+      if (i == withdrawal.size()) {
+        UnbankGoldCommandDTO* bank_item_command =
+            new UnbankGoldCommandDTO(std::stoi(withdrawal));
+        commands_queue.push(bank_item_command);
+      }
+      // Se quiere retirar un item
+    } else {
+      item_t item_required = get_item_t(withdrawal);
+      if (item_required != DUMMY_ITEM) {
+        UnbankItemCommandDTO* bank_item_command =
+            new UnbankItemCommandDTO(item_required);
+        commands_queue.push(bank_item_command);
+      }
+    }
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, input_text.length(), MSG_LIST) == 0) {
@@ -249,10 +278,18 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, input_text.length(), MSG_TAKE) == 0) {
     std::cout << "COMANDO TOMAR" << std::endl;
+    PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
+    commands_queue.push(pick_up_item_command);
   }
   // Chequeamos si el usuario quiere retirar algún item del banco
   else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
+    std::string drop = input_text.erase(0, strlen(MSG_DROP));
+    item_t item_required = get_item_t(drop);
+    if (item_required != DUMMY_ITEM) {
+      DropItemCommandDTO* change_game_room_command = new DropItemCommandDTO(6);
+      commands_queue.push(change_game_room_command);
+    }
   }
   // Chequeamos si se ingreso un mensaje privado
   else if (input_text[0] == PRIVATE_MSG) {
@@ -271,6 +308,54 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
 }
 
 bool EventHandler::is_up() { return is_running; }
+
+item_t EventHandler::get_item_t(std::string item) {
+  item_t item_required;
+  size_t length = item.length();
+
+  if (item.compare(0, length, STR_TURTLE_SHIELD) == 0)
+    item_required = TURTLE_SHIELD;
+  else if (item.compare(0, length, STR_IRON_SHIELD) == 0)
+    item_required = IRON_SHIELD;
+  else if (item.compare(0, length, STR_HOOD) == 0)
+    item_required = HOOD;
+  else if (item.compare(0, length, STR_IRON_HELMET) == 0)
+    item_required = IRON_HELMET;
+  else if (item.compare(0, length, STR_MAGIC_HAT) == 0)
+    item_required = MAGIC_HAT;
+  else if (item.compare(0, length, STR_LEATHER_ARMOR) == 0)
+    item_required = LEATHER_ARMOR;
+  else if (item.compare(0, length, STR_PLATE_ARMOR) == 0)
+    item_required = PLATE_ARMOR;
+  else if (item.compare(0, length, STR_BLUE_TUNIC) == 0)
+    item_required = BLUE_TUNIC;
+  else if (item.compare(0, length, STR_HP_POTION) == 0)
+    item_required = HP_POTION;
+  else if (item.compare(0, length, STR_MANA_POTION) == 0)
+    item_required = MANA_POTION;
+  else if (item.compare(0, length, STR_SWORD) == 0)
+    item_required = SWORD;
+  else if (item.compare(0, length, STR_AXE) == 0)
+    item_required = AXE;
+  else if (item.compare(0, length, STR_HAMMER) == 0)
+    item_required = HAMMER;
+  else if (item.compare(0, length, STR_SIMPLE_BOW) == 0)
+    item_required = SIMPLE_BOW;
+  else if (item.compare(0, length, STR_COMPOUND_BOW) == 0)
+    item_required = COMPOUND_BOW;
+  else if (item.compare(0, length, STR_ASH_STICK) == 0)
+    item_required = ASH_STICK;
+  else if (item.compare(0, length, STR_GNARLED_STAFF) == 0)
+    item_required = GNARLED_STAFF;
+  else if (item.compare(0, length, STR_CRIMP_STAFF) == 0)
+    item_required = CRIMP_STAFF;
+  else if (item.compare(0, length, STR_ELVEN_ELUDE) == 0)
+    item_required = ELVEN_FLUTE;
+  else
+    item_required = DUMMY_ITEM;
+
+  return item_required;
+}
 
 item_t EventHandler::get_item_t(id_texture_t texture) {
   item_t item;
@@ -333,7 +418,7 @@ item_t EventHandler::get_item_t(id_texture_t texture) {
       break;
 
     case ID_COMPOUND_BOW:
-      item = COMPUND_BOW;
+      item = COMPOUND_BOW;
       break;
 
     case ID_ASH_STICK:

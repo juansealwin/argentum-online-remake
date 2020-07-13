@@ -13,7 +13,7 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
 
   padding = 2;
 
-  font = TTF_OpenFont("alagard.ttf", height);
+  font = TTF_OpenFont("vinque.ttf", height);
 }
 
 TextBox::~TextBox() { TTF_CloseFont(font); }
@@ -80,7 +80,7 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case INPUT_TEXT:
       x = 15;
-      y = 114;
+      y = 110;
       height = 16;
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
@@ -106,19 +106,19 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case GOLD_QUANTITY:
       x = 665;
-      y = 376;
+      y = 364;
       height = 15;
       break;
 
     case HEALTH:
       x = 660;
-      y = 411;
+      y = 390;
       height = 15;
       break;
 
     case MANA:
       x = 660;
-      y = 436;
+      y = 415;
       height = 15;
       break;
   }
