@@ -33,6 +33,7 @@ Hero::Hero(
       experience(0),
       meditating(false),
       ghost_mode(false),
+      close_to_npc(false),
       name(name),
       critical_damage_multiplier(critical_damage_multiplier),
       critical_damage_probability(critical_damage_probability),
@@ -206,6 +207,15 @@ void Hero::bank_gold(unsigned int ammount) {
     throw ModelException("Inventory doesn't have that ammount of gold!", "5");
   bank->add_gold(inventory->remove_gold(ammount));
 }
+
+bool Hero::has_gold(unsigned int q) {
+  return (inventory->current_gold() >= q);
+}
+
+void Hero::remove_gold(unsigned int q) {
+  inventory->remove_gold(q);
+}
+
 
 void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
@@ -401,4 +411,8 @@ unsigned int Hero::remove_excess_gold() {
     // gold = max_safe_gold;
   }
   return excess_gold;
+}
+
+void Hero::set_close_to_npc(bool val) {
+  close_to_npc = val;
 }

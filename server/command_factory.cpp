@@ -37,9 +37,20 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
           dynamic_cast<UnbankGoldCommandDTO*>(command_dto), player_id);
     case GET_BANKED_ITEMS_COMMAND:
       return new GetBankedItemsCommand(player_id);
+    case BUY_ITEM_COMMAND:
+      return buy_item_command(dynamic_cast<BuyItemCommandDTO*>(command_dto), player_id);
+    case SELL_ITEM_COMMAND:
+      return sell_item_command(dynamic_cast<SellItemCommandDTO*>(command_dto), player_id);
     default:
       return nullptr;
   }
+}
+
+BuyItemCommand* CommandFactory::buy_item_command(BuyItemCommandDTO* command_dto, unsigned int player_id) {
+  return new BuyItemCommand(player_id, command_dto->item);
+}
+SellItemCommand* CommandFactory::sell_item_command(SellItemCommandDTO* command_dto, unsigned int player_id) {
+  return new SellItemCommand(player_id, command_dto->item);
 }
 
 BankItemCommand* CommandFactory::bank_item_command(BankItemCommandDTO* command_dto,

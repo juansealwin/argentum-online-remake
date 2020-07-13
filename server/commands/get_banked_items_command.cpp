@@ -4,7 +4,7 @@ GetBankedItemsCommand::GetBankedItemsCommand(const unsigned int uid)
     : Command(uid) {}
 
 void GetBankedItemsCommand::execute(ArgentumGame *game) {
-  game->hero_get_banked_items(uid);
+  game->hero_get_closest_npc_info(uid);
 }
 
 GetBankedItemsCommand::~GetBankedItemsCommand() {}

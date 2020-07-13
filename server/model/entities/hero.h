@@ -77,6 +77,7 @@ class Hero : public BaseCharacter {
   void pick_up_drop(Drop *drop);
   // devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
+  bool has_gold(unsigned int q);
   void meditate();
   virtual ~Hero();
   Hero(const Hero &) = delete;
@@ -86,6 +87,8 @@ class Hero : public BaseCharacter {
   void consume(unsigned int item_id);
   void revive();
   unsigned int remove_excess_gold();
+  void remove_gold(unsigned int q);
+  void set_close_to_npc(bool val);
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;
@@ -99,13 +102,14 @@ class Hero : public BaseCharacter {
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
       class_id, experience;
 
-  bool meditating, ghost_mode;
+  bool meditating, ghost_mode, close_to_npc;
 
   std::string name;
   // config
   float critical_damage_multiplier, critical_damage_probability,
       evasion_probability, max_safe_gold_multiplier, level_up_limit_power,
       starting_xp_cap;
+
   // calculados
   unsigned int next_level_xp_limit, max_safe_gold;
   Equipment *equipment;

@@ -3,8 +3,8 @@
 
 #include "argentum_game.h"
 #include "command.h"
-// class Command; forward declaration x si llego a necesitar
-
+//TO DO: Renombrar a esta clase, tambien se usa para
+//obtener informacion de lo que venda un npc
 class GetBankedItemsCommand : public Command {
  public:
   GetBankedItemsCommand(const unsigned int uid);
