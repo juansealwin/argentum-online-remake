@@ -25,6 +25,7 @@ class EventsQueue {
   int append_character(char c);
   int delete_character();
   std::string read_message();
+  std::string flush_message();
 };
 
 #endif

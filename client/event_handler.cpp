@@ -115,8 +115,9 @@ void EventHandler::get_events() {
             commands_queue.push(bank_item_command);
           }
         }
-        // Eventos de mouse
 
+        // Eventos de mouse
+        // Eventos sobre el inventario
         else if (event.type == SDL_MOUSEBUTTONDOWN) {
           int x, y;
           SDL_GetMouseState(&x, &y);
@@ -135,6 +136,8 @@ void EventHandler::get_events() {
               commands_queue.push(use_item_command);
             }
           }
+
+          // Eventos sobre la caja de chat
           // Chequeamos si el mouse hizo click dentro de la caja de texto
           else if (text_box.mouse_click_in(x, y)) {
             SDL_Event event_chat;
@@ -152,6 +155,16 @@ void EventHandler::get_events() {
                          event_chat.key.keysym.sym == SDLK_BACKSPACE) {
                   if (msg_length) {
                     msg_length = events_queue.delete_character();
+                    events_queue.push(EVENT_MESSAGE);
+                  }
+                }
+
+                // Chequeamos si el usuario apreto "enter" para enviar mensaje
+                else if (event_chat.type == SDL_KEYDOWN &&
+                         event_chat.key.keysym.sym == SDLK_RETURN) {
+                  if (msg_length) {
+                    check_inpunt_send_command(events_queue.flush_message());
+                    msg_length = 0;
                     events_queue.push(EVENT_MESSAGE);
                   }
                 }
@@ -180,6 +193,59 @@ void EventHandler::get_events() {
     }
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
+  }
+}
+
+void EventHandler::check_inpunt_send_command(std::string input_text) {
+  // Chequeamos si el usuario quiere meditar
+  if (input_text.compare(0, sizeof(input_text), MSG_MEDITATE) == 0) {
+    std::cout << "COMANDO MEDITAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere curarse
+  else if (input_text.compare(0, sizeof(input_text), MSG_HEAL) == 0) {
+    std::cout << "COMANDO CURAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere depositar algún item en el banco
+  else if (input_text.compare(0, sizeof(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
+    std::cout << "COMANDO DESPOSITAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
+    std::cout << "COMANDO RETIRAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(input_text), MSG_LIST) == 0) {
+    std::cout << "COMANDO LISTAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(MSG_BUY), MSG_BUY) == 0) {
+    std::cout << "COMANDO COMPRAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(MSG_SELL), MSG_SELL) == 0) {
+    std::cout << "COMANDO VENDER" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(input_text), MSG_TAKE) == 0) {
+    std::cout << "COMANDO TOMAR" << std::endl;
+  }
+  // Chequeamos si el usuario quiere retirar algún item del banco
+  else if (input_text.compare(0, sizeof(input_text), MSG_DROP) == 0) {
+    std::cout << "COMANDO TIRAR" << std::endl;
+  }
+  // Chequeamos si se ingreso un mensaje privado
+  else if (input_text[0] == PRIVATE_MSG) {
+    size_t pos = input_text.find(" ");
+    std::string receiver = input_text.substr(1, pos-1);
+    std::string message = input_text.substr(pos+1);
+
+    PrivateMessageDTO* private_message_command =
+        new PrivateMessageDTO(receiver, message);
+    commands_queue.push(private_message_command);
+  }
+  // En otro caso es un comando inválido
+  else {
+    std::cout << "COMANDO INVALIDO" << std::endl;
   }
 }
 

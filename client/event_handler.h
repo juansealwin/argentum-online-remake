@@ -3,6 +3,7 @@
 #include <SDL2/SDL.h>
 
 #include <vector>
+#include <string>
 
 #include "attack_command_dto.h"
 #include "character.h"
@@ -28,6 +29,17 @@
 #include "get_banked_items_command_dto.h"
 
 #define MAX_MSG_LENGTH 65
+#define PRIVATE_MSG '@'
+#define MSG_MEDITATE "/meditar"
+#define MSG_REVIVE "/revivir"
+#define MSG_HEAL "/curar"
+#define MSG_DEPOSIT "/depositar "
+#define MSG_WITHDRAW "/retirar "
+#define MSG_LIST "/listar"
+#define MSG_BUY "/comprar "
+#define MSG_SELL "/vender "
+#define MSG_TAKE "/tomar"
+#define MSG_DROP "/tirar"
 
 class EventHandler {
  private:
@@ -43,6 +55,7 @@ class EventHandler {
   ~EventHandler();
   bool is_up();
   void get_events();
+  void check_inpunt_send_command(std::string);
   item_t get_item_t(id_texture_t);
 };
 
