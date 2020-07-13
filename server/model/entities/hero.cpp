@@ -33,6 +33,7 @@ Hero::Hero(
       experience(0),
       meditating(false),
       ghost_mode(false),
+      close_to_npc(false),
       name(name),
       critical_damage_multiplier(critical_damage_multiplier),
       critical_damage_probability(critical_damage_probability),
@@ -410,4 +411,8 @@ unsigned int Hero::remove_excess_gold() {
     // gold = max_safe_gold;
   }
   return excess_gold;
+}
+
+void Hero::set_close_to_npc(bool val) {
+  close_to_npc = val;
 }

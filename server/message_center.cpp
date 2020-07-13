@@ -16,7 +16,7 @@ void MessageCenter::remove_player(std::string player_name) {
 }
   //Agrega el nombre del origen al mensaje y crea una notificacion de mensaje a ser enviada a player_dst
 void MessageCenter::send_message(std::string dst, std::string message) {
-  if(players_notification_queues.count(dst) < 0) return;
+  try {
   BlockingThreadSafeQueue<Notification *> *q = players_notification_queues.at(dst);
   if(!q) return;
   std::vector<unsigned char> notification;
@@ -27,6 +27,10 @@ void MessageCenter::send_message(std::string dst, std::string message) {
   notification.insert(notification.end(), message.begin(), message.end());
   MessageNotification *message_notification = new MessageNotification(notification);
   q->push(message_notification);
+  }
+  catch(const std::out_of_range& oor) {
+    std::cout<< "out of range at message center " << dst << std::endl;
+  }
 }
 
 void MessageCenter::notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker) {

@@ -21,6 +21,7 @@
 #define MAP_CHANGING_NOTIFICATION 3
 #define MESSAGE_NOTIFICATION 4
 #define BANKED_ITEMS_NOTIFICATION 5
+#define SALE_ITEMS_NOTIFICATION 6
 
 class GameUpdater : public Thread {
  private:
