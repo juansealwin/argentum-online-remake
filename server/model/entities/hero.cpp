@@ -207,6 +207,15 @@ void Hero::bank_gold(unsigned int ammount) {
   bank->add_gold(inventory->remove_gold(ammount));
 }
 
+bool Hero::has_gold(unsigned int q) {
+  return (inventory->current_gold() >= q);
+}
+
+void Hero::remove_gold(unsigned int q) {
+  inventory->remove_gold(q);
+}
+
+
 void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
     throw ModelException("Ghosts can't add items to inventory!", "5");

@@ -23,7 +23,8 @@ class MessageCenter {
   void notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked);
   void notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker);
   void send_private_message(std::string src, std::string dst, std::string message);
-
+  void send_inventory_is_full_message(std::string dst);
+  void send_not_enough_gold_message(std::string dst, unsigned int price);
  private:
   // mapea nombre del jugador con su cola
   void send_message(std::string dst, std::string message);

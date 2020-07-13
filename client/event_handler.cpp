@@ -105,6 +105,16 @@ void EventHandler::get_events() {
             GetBankedItemsCommandDTO* bank_item_command = new GetBankedItemsCommandDTO();
             commands_queue.push(bank_item_command);
           }
+          if (event.key.keysym.sym == SDLK_9) {
+            std::cout << "sending buy item command" << std::endl;
+            BuyItemCommandDTO* bank_item_command = new BuyItemCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+          if (event.key.keysym.sym == SDLK_0) {
+            SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
+            commands_queue.push(bank_item_command);
+          }
+
 
 
 

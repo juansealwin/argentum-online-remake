@@ -53,6 +53,16 @@ void MessageCenter::send_private_message(std::string src, std::string dst, std::
   send_message(dst, msg);
 }
 
+void MessageCenter::send_inventory_is_full_message(std::string dst) {
+  std::string msg = "Inventario lleno!";
+  send_message(dst, msg);
+}
+
+void MessageCenter::send_not_enough_gold_message(std::string dst, unsigned int price) {
+  std::string msg = "Dinero insuficiente! El costo del objeto es " + std::to_string(price) + " monedas";
+  send_message(dst, msg);
+}
+
   
 void MessageCenter::notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked) {
   std::unique_lock<std::mutex> lock(mutex);

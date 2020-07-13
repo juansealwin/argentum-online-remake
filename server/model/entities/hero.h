@@ -77,6 +77,7 @@ class Hero : public BaseCharacter {
   void pick_up_drop(Drop *drop);
   // devuelve cuantas mas monedas puede guardar el heroe
   unsigned int gold_space_remaining();
+  bool has_gold(unsigned int q);
   void meditate();
   virtual ~Hero();
   Hero(const Hero &) = delete;
@@ -86,6 +87,7 @@ class Hero : public BaseCharacter {
   void consume(unsigned int item_id);
   void revive();
   unsigned int remove_excess_gold();
+  void remove_gold(unsigned int q);
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;

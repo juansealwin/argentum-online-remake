@@ -114,6 +114,47 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    // ENVIAR MENSAJE inventario lleno0
+    if (hero->inventory->is_full()){
+      message_center.send_inventory_is_full_message(hero->name);
+      return;
+    } 
+    unsigned int item_price =
+        ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
+    // ENVIAR MENSAJE oro insuficiente
+    if (!hero->has_gold(item_price)) {
+      message_center.send_not_enough_gold_message(hero->name, item_price);
+      return;
+    }
+    hero->remove_gold(item_price);
+    Item *i = ItemFactory::create_item(entities_cfg["items"], (item_t)item_id);
+    hero->add_item(i);
+    // if (!is_banker_close(hero->x_position, hero->y_position)) return;
+    // hero->bank_item(item_id);
+    // std::cout << "banked item: " << item_id << std::endl;
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
+void ArgentumGame::hero_sell_item(int entity_id, int item_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    // ENVIAR MENSAJE oro en inventario completo
+    unsigned int item_price =
+        ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
+    if (hero->gold_space_remaining() < item_price) return;
+    Item *i = hero->remove_item(item_id);
+    hero->add_gold(item_price);
+    delete i;
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
@@ -538,21 +579,17 @@ BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {
 bool ArgentumGame::is_banker_close(int x, int y) {
   using namespace std;
   vector<tuple<int, int>> possible_spots = {
-    tuple<int, int>(x + 1, y),
-    tuple<int, int>(x - 1, y),
-    tuple<int, int>(x, y + 1),
-    tuple<int, int>(x, y - 1)
-  };
+      tuple<int, int>(x + 1, y), tuple<int, int>(x - 1, y),
+      tuple<int, int>(x, y + 1), tuple<int, int>(x, y - 1)};
   for (int j = 0; j < possible_spots.size(); j++) {
     int curr_x = get<0>(possible_spots.at(j));
     int curr_y = get<1>(possible_spots.at(j));
     tuple<int, int> pos = tuple<int, int>(curr_x, curr_y);
-    if(npc_positions.count(pos) > 0) {
+    if (npc_positions.count(pos) > 0) {
       if (npc_positions.at(pos) == BANKER) {
         return true;
       }
     }
-    }
-    return false;
   }
-
+  return false;
+}
