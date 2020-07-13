@@ -22,9 +22,10 @@ class EventsQueue {
   bool push(event_t, id_texture_t&, int&, bool&);
   event_t pop(int&);
   void write_inventory(std::map<int, std::pair<id_texture_t, bool>>);
-  void append_character(char c);
-  void delete_character();
+  int append_character(char c);
+  int delete_character();
   std::string read_message();
+  std::string flush_message();
 };
 
 #endif

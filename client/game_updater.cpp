@@ -319,7 +319,7 @@ id_texture_t GameUpdater::get_item_texture(int new_item) const {
       item = ID_SIMPLE_BOW;
       break;
 
-    case COMPUND_BOW:
+    case COMPOUND_BOW:
       item = ID_COMPOUND_BOW;
       break;
 
@@ -370,7 +370,7 @@ equipped_t GameUpdater::get_type_equipped(int new_item) {
     case AXE:
     case HAMMER:
     case SIMPLE_BOW:
-    case COMPUND_BOW:
+    case COMPOUND_BOW:
     case ASH_STICK:
     case GNARLED_STAFF:
     case CRIMP_STAFF:

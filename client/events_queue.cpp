@@ -43,18 +43,28 @@ void EventsQueue::write_inventory(
   inventory_status = inventory_updated;
 }
 
-void EventsQueue::append_character(char c) {
+int EventsQueue::append_character(char c) {
   std::unique_lock<std::mutex> lock(block_queue);
   message += c;
+  return message.size();
 }
 
-void EventsQueue::delete_character() {
+int EventsQueue::delete_character() {
   std::unique_lock<std::mutex> lock(block_queue);
-  if(message.size())
-    message.pop_back();
+  if (message.size()) message.pop_back();
+
+  return message.size();
 }
 
 std::string EventsQueue::read_message() {
   std::unique_lock<std::mutex> lock(block_queue);
   return message;
+}
+
+std::string EventsQueue::flush_message() {
+  std::unique_lock<std::mutex> lock(block_queue);
+  std::string temp = message;
+  message.clear();
+
+  return temp;
 }

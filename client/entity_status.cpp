@@ -130,7 +130,7 @@ void EntityStatus::set_spellbound(int affected_by) {
     case AXE:
     case HAMMER:
     case SIMPLE_BOW:
-    case COMPUND_BOW:
+    case COMPOUND_BOW:
       spellbound = ID_BLEEDING;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_BLEEDING;
       break;
