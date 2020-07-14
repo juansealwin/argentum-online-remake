@@ -58,25 +58,32 @@ void GameUpdater::run() {
         chat_message_3 = chat_message_4;
         chat_message_4 = message;
         continue;
+
+        // Chequeamos si se abrio el banco
       } else if (type_of_notification == BANKED_ITEMS_NOTIFICATION) {
+        std::cout << "ABRIENDO BANCO" << std::endl;
         int bank_size = extract<uint8_t>(status_serialized, j);
         // std::cout << "bank size is " << bank_size << std::endl;
         for (int x = 0; x < bank_size; x++) {
           int item = extract<uint8_t>(status_serialized, j);
-          //std::cout << "item in bank: " << item << std::endl;; 
+          next_ui_status.add_item(BANK, get_item_texture(item));
+          // std::cout << "item in bank: " << item << std::endl;;
         }
         uint16_t gold = extract<uint16_t>(status_serialized, j);
-        //std::cout << "gold in bnak: " << gold << std::endl;
+        // std::cout << "gold in bnak: " << gold << std::endl;
         continue;
       }
 
+      // Chequeamos si se abrió el mercado
       else if (type_of_notification == SALE_ITEMS_NOTIFICATION) {
+        std::cout << "ABRIENDO MERCADO" << std::endl;
         int items_quantiy = extract<uint8_t>(status_serialized, j);
-        //std::cout << "received sale items notif" << std::endl;
+        // std::cout << "received sale items notif" << std::endl;
         // std::cout << "bank size is " << bank_size << std::endl;
         for (int x = 0; x < items_quantiy; x++) {
           int item = extract<uint8_t>(status_serialized, j);
-          //std::cout << "item for sale: " << item << std::endl;
+          next_ui_status.add_item(MARKET, get_item_texture(item));
+          // std::cout << "item for sale: " << item << std::endl;
         }
 
         continue;
@@ -86,6 +93,10 @@ void GameUpdater::run() {
       else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
         break;
       }
+
+      /*if (!open_store) {
+        next_ui_status.close_shops();
+      }*/
 
       // Cargamos los mensajes en el mini chat
       next_ui_status.charge_messages(chat_message_1, chat_message_2,
@@ -128,8 +139,8 @@ void GameUpdater::deserialize_status(unsigned int& j) {
   // Declaramos las variables necesarias para extraer la informacion int para
   // las de 1 byte y uint16_t para las de 2 bytes
   int entity_type, y, x, k, orientation, items_in_drop, drop_has_coins,
-      affected_by, name_size, class_id, meditating, ghost_mode, close_to_npc, items_equiped,
-      items_inventory;
+      affected_by, name_size, class_id, meditating, ghost_mode, close_to_npc,
+      items_equiped, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
       intelligence, agility, constitution, gold, xp_limit, current_xp;
 
@@ -198,13 +209,16 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       current_xp = ntohs(extract<uint16_t>(status_serialized, j));
       meditating = extract<uint8_t>(status_serialized, j);
       ghost_mode = extract<uint8_t>(status_serialized, j);
-      close_to_npc = extract<uint8_t>(status_serialized, j);
+
+      // para chequear cuando tenemos que dejar de visualizar el mercado/banco
+      open_store = extract<uint8_t>(status_serialized, j);
 
       // Si son los datos del cliente lo cargamos en la UI
       // Cargamos a los datos visibles de la próxima interfaz
       if (id == id_hero)
-        next_ui_status = UIStatus(name, level, max_hp, current_hp, mana_max,
-                                  curr_mana, xp_limit, current_xp, gold);
+        next_ui_status.set_ui_messages(name, level, max_hp, current_hp,
+                                       mana_max, curr_mana, xp_limit,
+                                       current_xp, gold);
 
       // Agregamos los items equipados
       items_equiped = extract<uint8_t>(status_serialized, j);
@@ -229,7 +243,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(get_item_texture(current_item_id),
+          next_ui_status.add_item(INVENTORY, get_item_texture(current_item_id),
                                   current_item_slot);
       }
 
@@ -242,7 +256,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
         int current_item_id = extract<uint8_t>(status_serialized, j);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(get_item_texture(current_item_id));
+          next_ui_status.add_item(INVENTORY, get_item_texture(current_item_id));
       }
       // Agregamos la entidad "personaje jugable"
       next_status[(int)id] =

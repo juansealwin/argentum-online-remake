@@ -32,6 +32,7 @@ class GameUpdater : public Thread {
   bool& is_running;
   Socket& read_socket;
   std::vector<unsigned char> status_serialized;
+  bool open_store;
 
  public:
   GameUpdater(int, ProtectedMap&, Socket&, bool&);

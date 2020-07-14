@@ -2,11 +2,27 @@
 
 UIStatus::UIStatus() {
   inventory = Inventory();
+  bank = Inventory();
+  market = Inventory();
   text_messages.clear();
+  second_inventory = false;
 }
 
-UIStatus::UIStatus(std::string name, int lvl, int max_hp, int hp, int max_mn,
-                   int mn, int goal_xp, int xp, int gold) {
+UIStatus::~UIStatus() {}
+
+UIStatus& UIStatus::operator=(const UIStatus& other_status) {
+  inventory = other_status.inventory;
+  bank = other_status.bank;
+  market = other_status.market;
+  bank_or_market = other_status.bank_or_market;
+  second_inventory = other_status.second_inventory;
+  text_messages = other_status.text_messages;
+  return *this;
+}
+
+void UIStatus::set_ui_messages(std::string name, int lvl, int max_hp, int hp,
+                               int max_mn, int mn, int goal_xp, int xp,
+                               int gold) {
   // Vaciamos el inventario anterior
   inventory = Inventory();
 
@@ -39,19 +55,44 @@ UIStatus::UIStatus(std::string name, int lvl, int max_hp, int hp, int max_mn,
   text_messages[MANA] = mana_oss.str();
 }
 
-UIStatus::~UIStatus() {}
+void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item, int slot) {
+  switch (inv_type) {
+    case INVENTORY:
+      inventory.add_item(new_item, slot);
+      break;
 
-UIStatus& UIStatus::operator=(const UIStatus& other_status) {
-  inventory = other_status.inventory;
-  text_messages = other_status.text_messages;
-  return *this;
+    // Los casos de abajo nunca van a ocurrir
+    case BANK:
+      bank.add_item(new_item, slot);
+      second_inventory = true;
+      break;
+
+    case MARKET:
+      market.add_item(new_item, slot);
+      second_inventory = true;
+      break;
+  }
 }
 
-void UIStatus::add_item(id_texture_t new_item, int slot) {
-  inventory.add_item(new_item, slot);
-}
+void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item) {
+  switch (inv_type) {
+    case INVENTORY:
+      inventory.add_item(new_item);
+      break;
 
-void UIStatus::add_item(id_texture_t new_item) { inventory.add_item(new_item); }
+    case BANK:
+      bank.add_item(new_item);
+      second_inventory = true;
+      bank_or_market = BANK;
+      break;
+
+    case MARKET:
+      market.add_item(new_item);
+      second_inventory = true;
+      bank_or_market = MARKET;
+      break;
+  }
+}
 
 void UIStatus::charge_messages(std::string msg1, std::string msg2,
                                std::string msg3, std::string msg4) {
@@ -68,6 +109,16 @@ void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
 
   // Renderizamos los items del inventario
   inventory.render(renderer, is_selected, index);
+
+  // Chequeamos si esta el mercado o banco abierto
+  if (second_inventory) {
+    std::cout << "RENDERIZANDO SHOP" << std::endl;
+    std::cout << "second inventory: " << second_inventory << std::endl;
+    if (bank_or_market == BANK)
+      bank.render(renderer);
+    else
+      market.render(renderer);
+  }
 
   // Creamos las nuevas cajas de texto con los mensajes/textos actualizados
   TextBox message1(MESSAGE_1, text_messages[MESSAGE_1]);
@@ -111,4 +162,10 @@ void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
 
 std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_items() {
   return inventory.get_items();
+}
+
+void UIStatus::close_shops() {
+  bank = Inventory();
+  market = Inventory();
+  second_inventory = false;
 }

@@ -20,7 +20,7 @@ TextBox::~TextBox() { TTF_CloseFont(font); }
 
 void TextBox::set_texture(SDL_Renderer* renderer) {
   text_texture.load_from_rendered_text(renderer, font, text, text_color);
-  width = text_texture.get_width() + padding * 2;
+  if (width == 0) width = text_texture.get_width() + padding * 2;
 }
 
 void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
@@ -31,7 +31,7 @@ void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // background_color.b, background_color.a);
 
   // No quiero que rellene el text_box
-  // SDL_RenderFillRect(renderer, &background_rect);
+  //SDL_RenderFillRect(renderer, &background_rect);
 
   // Render text
   text_texture.render(renderer, x + padding - x_rel, y + padding - y_rel);

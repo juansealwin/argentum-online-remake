@@ -108,6 +108,8 @@ void GameRenderer::run() {
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_inventory(ui.get_items());
 
+      // Actualizamos el mercado/banco
+
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
 

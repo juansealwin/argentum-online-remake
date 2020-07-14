@@ -1,7 +1,7 @@
 #include "inventory.h"
 
 Inventory::Inventory() {
-  for (int i = 0; i < MAX_ITEMS; i++) {
+  for (int i = 0; i < MAX_ITEMS_INVENTORY; i++) {
     items[i].first = ID_NULL;
     items[i].second = false;
   }
@@ -44,11 +44,30 @@ id_texture_t Inventory::drop_item(int index) {
   return temp;
 }
 
+void Inventory::render(SDL_Renderer* renderer) {
+  int j = X_SHOP;
+  int k = Y_SHOP;
+
+  for (int i = 0; i < MAX_ITEMS_SHOP; i++) {
+    if (items[i].first != ID_NULL)
+      texture_manager.get_texture(items[i].first).render(renderer, NULL, j, k);
+
+    // Dejamos 2px de espacio horizontal entre items
+    j += ITEM_SIZE + X_PADDING;
+    // Si ya se renderizaron 4 items se pasa a la siguiente fila
+    if (((i + 1) % 4) == 0) {
+      j = X_INVENTORY;
+      // Dejamos 3px de espacio vertical entre items
+      k += ITEM_SIZE + Y_PADDING;
+    }
+  }
+}
+
 void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
   int j = X_INVENTORY;
   int k = Y_INVENTORY;
 
-  for (int i = 0; i < MAX_ITEMS; i++) {
+  for (int i = 0; i < MAX_ITEMS_INVENTORY; i++) {
     if (items[i].first != ID_NULL)
       texture_manager.get_texture(items[i].first).render(renderer, NULL, j, k);
 
@@ -62,12 +81,12 @@ void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
       texture_manager.get_texture(ID_SELECTOR).render(renderer, NULL, j, k);
 
     // Dejamos 2px de espacio horizontal entre items
-    j += ITEM_SIZE + ESPACIO_HORIZONTAL;
+    j += ITEM_SIZE + X_PADDING;
     // Si ya se renderizaron 4 items se pasa a la siguiente fila
     if (((i + 1) % 4) == 0) {
       j = X_INVENTORY;
       // Dejamos 3px de espacio vertical entre items
-      k += ITEM_SIZE + ESPACIO_VERTICAL;
+      k += ITEM_SIZE + Y_PADDING;
     }
   }
 }
