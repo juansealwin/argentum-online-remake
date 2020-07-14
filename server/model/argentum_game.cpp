@@ -114,6 +114,16 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_use_special(int entity_id) {
+  std::cout << "in use special" << std::endl;
+}
+void ArgentumGame::hero_revive(int entity_id) {
+  std::cout << "in revive" << std::endl;
+}
+void ArgentumGame::hero_heal(int entity_id) {
+  std::cout << "in heal" << std::endl;
+}
+
 void ArgentumGame::hero_meditate(int entity_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));

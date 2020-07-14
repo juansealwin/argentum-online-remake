@@ -49,6 +49,9 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void hero_dequip_item(int entity_id, int item_id);
   // equipa o usa una pocion
+  void hero_use_special(int entity_id);
+  void hero_revive(int entity_id);
+  void hero_heal(int entity_id);
   void hero_buy_item(int entity_id, int item_id);
   void hero_sell_item(int entity_id, int item_id);
   void hero_use_item(int entity_id, int item_id);
