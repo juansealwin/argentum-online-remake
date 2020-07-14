@@ -6,9 +6,11 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
   // Seteamos las dimensiones de la "caja" de inventario
-  inventory = InteractiveBox(640, 168, 139, 183);
+  inventory = InteractiveBox(640, 168, 139, 183, 5, 4);
   // Seteamos las dimensiones de la "caja" para escribir en el minichat
-  text_box = InteractiveBox(10, 112, 544, 20);
+  text_box = InteractiveBox(10, 112, 544, 20, 1, 1);
+  // Seteamos las dimensiones de la "caja" para la tienda
+  shop_box = InteractiveBox(640, 451, 139, 138, 4 ,4);
 }
 
 void EventHandler::get_events() {
@@ -139,6 +141,23 @@ void EventHandler::get_events() {
           if (inventory.mouse_click_in(x, y)) {
             // Chequeamos que parte del inventario se clickeo
             int item_slot = inventory.get_item_clicked(x, y);
+            bool is_equipped = false;
+            id_texture_t item;
+            // Chequeamos si hay item en el slot y si ademas esta equipado o no
+            if (events_queue.push(EVENT_SELECT_ITEM, item, item_slot,
+                                  is_equipped)) {
+              UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
+                  get_item_t(item), item_slot, is_equipped);
+              commands_queue.push(use_item_command);
+            }
+          }
+
+          // Chequeamos si el mouse hizo click dentro del banco/mercado
+          if (shop_box.mouse_click_in(x, y)) {
+            // Chequeamos que parte del inventario se clickeo
+            int item_slot = shop_box.get_item_clicked(x, y);
+            
+            // cambiar de aca para abajo
             bool is_equipped = false;
             id_texture_t item;
             // Chequeamos si hay item en el slot y si ademas esta equipado o no

@@ -70,6 +70,7 @@ class EventHandler {
   SoundEffect background_music;
   InteractiveBox inventory;
   InteractiveBox text_box;
+  InteractiveBox shop_box;
 
  public:
   EventHandler(CommandsBlockingQueue& commands_queue, EventsQueue&, bool&);
