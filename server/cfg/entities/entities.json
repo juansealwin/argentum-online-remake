@@ -226,10 +226,10 @@
     },
     "warrior": {
       "strength": 15,
-      "intelligence": 15,
+      "intelligence": 0,
       "agility": 15,
-      "fClassHp": 0,
-      "fClassMana": 400,
+      "fClassHp": 2,
+      "fClassMana": 10,
       "fClassMeditation": 0,
       "level": 0,
       "id": 24

@@ -28,7 +28,6 @@ Hero::Hero(
       f_race_mana(f_race_mana),
       f_class_mana(f_class_mana),
       f_class_meditation(f_class_meditation),
-      // gold(gold),
       class_id(class_id),
       experience(0),
       respawn_x(0),

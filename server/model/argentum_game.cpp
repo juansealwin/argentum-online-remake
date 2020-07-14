@@ -318,11 +318,11 @@ void ArgentumGame::throw_projectile(int attacker_id) {
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
     Attack attack_info = hero->attack();
+    if (attack_info.attacker_weapon_range == 0) return;
     std::tuple<unsigned int, unsigned int> projectile_position =
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
-
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -543,8 +543,6 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
-  std::cout << class_stats << std::endl;
-  std::cout << race_stats << std::endl;
   Hero *hero = new Hero(
       entities_ids, x, y, race_stats["id"].asUInt(), 'h',
       class_stats["level"].asUInt(),
