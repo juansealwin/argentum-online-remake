@@ -6,9 +6,11 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
   // Seteamos las dimensiones de la "caja" de inventario
-  inventory = InteractiveBox(640, 168, 139, 183);
+  inventory = InteractiveBox(640, 168, 139, 183, 5, 4);
   // Seteamos las dimensiones de la "caja" para escribir en el minichat
-  text_box = InteractiveBox(10, 112, 544, 20);
+  text_box = InteractiveBox(10, 112, 544, 20, 1, 1);
+  // Seteamos las dimensiones de la "caja" para la tienda
+  shop_box = InteractiveBox(640, 451, 139, 138, 4, 4);
 }
 
 void EventHandler::get_events() {
@@ -124,9 +126,6 @@ void EventHandler::get_events() {
             commands_queue.push(bank_item_command);
           }
 
-
-
-
         }
 
         // Eventos de mouse
@@ -147,6 +146,30 @@ void EventHandler::get_events() {
               UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
                   get_item_t(item), item_slot, is_equipped);
               commands_queue.push(use_item_command);
+            }
+          }
+
+          // Chequeamos si el mouse hizo click dentro del banco/mercado
+          if (shop_box.mouse_click_in(x, y)) {
+            // Chequeamos que parte del inventario se clickeo
+            int item_slot = shop_box.get_item_clicked(x, y);
+            id_texture_t item;
+            inventory_t type_of_shop;
+            // Chequeamos si hay item en el slot y si ademas esta equipado o no
+            if (events_queue.get_item(type_of_shop, item, item_slot)) {
+              // Chequeamos si el usuario quiere retirar un item del banco
+              if (type_of_shop == BANK) {
+                UnbankItemCommandDTO* bank_item_command =
+                    new UnbankItemCommandDTO(get_item_t(item));
+                commands_queue.push(bank_item_command);
+                
+                // Listamos para actualizar el inventario
+                GetBankedItemsCommandDTO* list_command =
+                    new GetBankedItemsCommandDTO();
+                commands_queue.push(list_command);
+                // O bien quiere comprar un item en el mercado
+              } else if (type_of_shop == MARKET) {
+              }
             }
           }
 
@@ -236,6 +259,10 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
         BankGoldCommandDTO* bank_item_command =
             new BankGoldCommandDTO(std::stoi(deposit));
         commands_queue.push(bank_item_command);
+
+        // Listamos para que se actualice el banco
+        GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
+        commands_queue.push(list_command);
       }
       // Se quiere depositar un item
     } else {
@@ -244,6 +271,10 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
         BankItemCommandDTO* bank_item_command =
             new BankItemCommandDTO(item_required);
         commands_queue.push(bank_item_command);
+
+        // Listamos para que se actualice el banco
+        GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
+        commands_queue.push(list_command);
       }
     }
   }
@@ -265,7 +296,12 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
         UnbankGoldCommandDTO* bank_item_command =
             new UnbankGoldCommandDTO(std::stoi(withdrawal));
         commands_queue.push(bank_item_command);
+
+        // Listamos para que se actualice el banco
+        GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
+        commands_queue.push(list_command);
       }
+
       // Se quiere retirar un item
     } else {
       item_t item_required = get_item_t(withdrawal);
@@ -273,6 +309,10 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
         UnbankItemCommandDTO* bank_item_command =
             new UnbankItemCommandDTO(item_required);
         commands_queue.push(bank_item_command);
+
+        // Listamos para que se actualice el banco
+        GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
+        commands_queue.push(list_command);
       }
     }
   }

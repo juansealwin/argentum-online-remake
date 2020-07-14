@@ -1,6 +1,8 @@
 #include "events_queue.h"
 
-EventsQueue::EventsQueue() {}
+EventsQueue::EventsQueue() {
+  open_shop = false;
+}
 
 EventsQueue::~EventsQueue() {}
 
@@ -24,6 +26,18 @@ bool EventsQueue::push(event_t event, id_texture_t& item, int& i,
   return false;
 }
 
+bool EventsQueue::get_item(inventory_t& type, id_texture_t& item, int& i) {
+  std::unique_lock<std::mutex> lock(block_queue);
+  //std::cout<<"ITEM: "<< shop_status[i].first<<std::endl;
+  // Si no hay items no hay nada que seleccionar
+  if (shop_status[i].first != ID_NULL && open_shop) {
+    item = shop_status[i].first;
+    type = shop_type;
+    return true;
+  }
+  return false;
+}
+
 event_t EventsQueue::pop(int& i) {
   std::unique_lock<std::mutex> lock(block_queue);
   if (queue.empty()) {
@@ -37,10 +51,15 @@ event_t EventsQueue::pop(int& i) {
   return last_event;
 }
 
-void EventsQueue::write_inventory(
-    std::map<int, std::pair<id_texture_t, bool>> inventory_updated) {
+void EventsQueue::write_status(UIStatus& ui) {
   std::unique_lock<std::mutex> lock(block_queue);
-  inventory_status = inventory_updated;
+  inventory_status = ui.get_items();
+  open_shop = ui.is_shop_open(shop_type);
+  shop_status.clear();
+  if(open_shop)
+    shop_status = ui.get_shop();
+  /*else 
+    shop_status.clear();*/
 }
 
 int EventsQueue::append_character(char c) {

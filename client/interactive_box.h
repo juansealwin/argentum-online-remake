@@ -6,11 +6,13 @@
 class InteractiveBox {
  private:
   SDL_Rect box_dimensions;
+  int rows;
+  int cols;
 
  public:
   InteractiveBox();
-  // Constructor: x, y, ancho y alto
-  InteractiveBox(int, int, int, int);
+  // Constructor: x, y, ancho y alto, filas y columnas
+  InteractiveBox(int, int, int, int, int, int);
   ~InteractiveBox();
   bool mouse_click_in(int, int);
   int get_item_clicked(int, int);
