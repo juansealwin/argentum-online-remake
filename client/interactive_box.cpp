@@ -23,7 +23,8 @@ int InteractiveBox::get_item_clicked(int m_x, int m_y) {
   int item = 0;
 
   // Chequeamos en que columna esta
-  for (int i = box_dimensions.x; i < m_x; i += box_dimensions.w / cols) {
+  for (int i = box_dimensions.x + box_dimensions.w / cols; i < m_x;
+       i += box_dimensions.w / cols) {
     item++;
   }
 

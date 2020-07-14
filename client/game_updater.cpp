@@ -61,22 +61,26 @@ void GameUpdater::run() {
 
         // Chequeamos si se abrio el banco
       } else if (type_of_notification == BANKED_ITEMS_NOTIFICATION) {
-        std::cout << "ABRIENDO BANCO" << std::endl;
+        // Reinicio el mercado y el banco antes de cargarlos
+        next_ui_status.close_shops();
         int bank_size = extract<uint8_t>(status_serialized, j);
         // std::cout << "bank size is " << bank_size << std::endl;
         for (int x = 0; x < bank_size; x++) {
           int item = extract<uint8_t>(status_serialized, j);
           next_ui_status.add_item(BANK, get_item_texture(item));
-          // std::cout << "item in bank: " << item << std::endl;;
+          std::cout << "item in bank: " << get_item_texture(item) << std::endl;;
         }
+        
         uint16_t gold = extract<uint16_t>(status_serialized, j);
         // std::cout << "gold in bnak: " << gold << std::endl;
+        next_ui_status.open_shop(BANK);
         continue;
       }
 
       // Chequeamos si se abrió el mercado
       else if (type_of_notification == SALE_ITEMS_NOTIFICATION) {
-        std::cout << "ABRIENDO MERCADO" << std::endl;
+        // Reinicio el mercado y el banco antes de cargarlos
+        next_ui_status.close_shops();
         int items_quantiy = extract<uint8_t>(status_serialized, j);
         // std::cout << "received sale items notif" << std::endl;
         // std::cout << "bank size is " << bank_size << std::endl;
@@ -85,6 +89,7 @@ void GameUpdater::run() {
           next_ui_status.add_item(MARKET, get_item_texture(item));
           // std::cout << "item for sale: " << item << std::endl;
         }
+        next_ui_status.open_shop(MARKET);
 
         continue;
       }
@@ -94,9 +99,9 @@ void GameUpdater::run() {
         break;
       }
 
-      /*if (!open_store) {
+      if (!open_store) {
         next_ui_status.close_shops();
-      }*/
+      }
 
       // Cargamos los mensajes en el mini chat
       next_ui_status.charge_messages(chat_message_1, chat_message_2,

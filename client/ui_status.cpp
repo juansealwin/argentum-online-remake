@@ -64,12 +64,10 @@ void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item, int slot) {
     // Los casos de abajo nunca van a ocurrir
     case BANK:
       bank.add_item(new_item, slot);
-      second_inventory = true;
       break;
 
     case MARKET:
       market.add_item(new_item, slot);
-      second_inventory = true;
       break;
   }
 }
@@ -82,14 +80,10 @@ void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item) {
 
     case BANK:
       bank.add_item(new_item);
-      second_inventory = true;
-      bank_or_market = BANK;
       break;
 
     case MARKET:
       market.add_item(new_item);
-      second_inventory = true;
-      bank_or_market = MARKET;
       break;
   }
 }
@@ -112,8 +106,6 @@ void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
 
   // Chequeamos si esta el mercado o banco abierto
   if (second_inventory) {
-    std::cout << "RENDERIZANDO SHOP" << std::endl;
-    std::cout << "second inventory: " << second_inventory << std::endl;
     if (bank_or_market == BANK)
       bank.render(renderer);
     else
@@ -162,6 +154,27 @@ void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
 
 std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_items() {
   return inventory.get_items();
+}
+
+std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_shop() {
+  if (bank_or_market == BANK) return bank.get_items();
+  if (bank_or_market == MARKET) return market.get_items();
+}
+
+bool UIStatus::is_shop_open(inventory_t& type) {
+  type = bank_or_market;
+  /*if (second_inventory == 0)
+    std::cout << "NO ESTA ABIERTO" << std::endl;
+  else if (second_inventory == 1)
+    std::cout << " ESTA ABIERTO" << std::endl;
+  else
+    std::cout << "HAY BASURA" << std::endl;*/
+  return second_inventory;
+}
+
+void UIStatus::open_shop(inventory_t type) {
+  bank_or_market = type;
+  second_inventory = true;
 }
 
 void UIStatus::close_shops() {

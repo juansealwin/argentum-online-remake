@@ -1,5 +1,4 @@
 #include "client.h"
-#include "helper_functions.h"
 
 template <typename T>
 T extract(const std::vector<unsigned char>& v, int pos) {
