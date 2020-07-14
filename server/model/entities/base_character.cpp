@@ -22,10 +22,10 @@ BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
       name(name) {}
 
 void BaseCharacter::move(int next_x, int next_y) {
+  change_orientation(x_position, y_position, next_x, next_y);
   if (map->can_ocupy_cell(next_x, next_y)) {
     map->ocupy_cell(next_x, next_y, unique_id);
     map->empty_cell(x_position, y_position);
-    change_orientation(x_position, y_position, next_x, next_y);
     x_position = next_x;
     y_position = next_y;
   }
@@ -56,7 +56,6 @@ void BaseCharacter::set_position(int x, int y) {
 
 void BaseCharacter::set_map(Map *map) {
   this->map = map;
-  //map->debug_print();
 }
 
 std::string BaseCharacter::get_name(){

@@ -35,13 +35,22 @@ void ProjectileManager::manage_collision(
   unsigned int damage_done = 0;
   BaseCharacter *attacked, *attacker = nullptr;
   attacked = get_hero_or_monster(attacked_id, heroes, monsters);
+  int attacker_id = projectile->get_attacker_id();
+  attacker = get_hero_or_monster(attacker_id, heroes, monsters);
+  //chequeo niveles
+  if (dynamic_cast<Hero *>(attacker) && dynamic_cast<Hero *>(attacked)) {
+    if ((HelperFunctions::difference(attacker->level, attacked->level) >= 10)
+    || attacked->level < 10) {
+      message_center.notify_cant_attack_low_levels(attacker->get_name(), attacked->get_name(), attacked->level);
+      projectile->kill();
+      return;
+    }
+  }
   if (attacked) {
     if (!attacked->is_death()) {
       damage_done =
           attacked->receive_damage(projectile->get_damage(),
                                    projectile->is_critical(), projectile->type);
-      int attacker_id = projectile->get_attacker_id();
-      attacker = get_hero_or_monster(attacker_id, heroes, monsters);
       if (attacker) {
         attacker->notify_damage_done(attacked, damage_done);
       }
@@ -52,13 +61,9 @@ void ProjectileManager::manage_collision(
     Hero *h = dynamic_cast<Hero *>(attacker);
     message_center.notify_damage_done(h->get_name(), damage_done,
                                       attacked->get_name());
-    // message_center.send_message("", dynamic_cast<Hero
-    // *>(attacker)->get_name(),
-    //                             message);
   }
   if (dynamic_cast<Hero *>(attacked)) {
     Hero *h = dynamic_cast<Hero *>(attacked);
-    std::cout << "calling message center damage received!!!" << std::endl;
     message_center.notify_damage_received(h->get_name(), damage_done,
                                           attacker->get_name());
   }
