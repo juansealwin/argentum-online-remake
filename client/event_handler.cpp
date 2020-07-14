@@ -20,7 +20,7 @@ void EventHandler::get_events() {
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {
         // El usuario cierra la ventana
-        
+
         if (event.type == SDL_QUIT) {
           is_running = false;
           QuitCommandDTO* quit_command = new QuitCommandDTO();
@@ -90,12 +90,20 @@ void EventHandler::get_events() {
                 new UseItemSpecialCommandDTO();
             commands_queue.push(use_item_special_command);
           }
-          // borrar todos estos if, son de prueba
-          if (event.key.keysym.sym == SDLK_h) {
-            DropItemCommandDTO* change_game_room_command =
-                new DropItemCommandDTO(6);
-            commands_queue.push(change_game_room_command);
+          if (event.key.keysym.sym == SDLK_r) {
+            ReviveCommandDTO* revive_command = new ReviveCommandDTO();
+            commands_queue.push(revive_command);
           }
+          if (event.key.keysym.sym == SDLK_h) {
+            HealCommandDTO* heal_command = new HealCommandDTO();
+            commands_queue.push(heal_command);
+          }
+          // borrar todos estos if, son de prueba
+          // if (event.key.keysym.sym == SDLK_h) {
+          //   DropItemCommandDTO* change_game_room_command =
+          //       new DropItemCommandDTO(6);
+          //   commands_queue.push(change_game_room_command);
+          // }
           if (event.key.keysym.sym == SDLK_3) {
             PrivateMessageDTO* private_message_command =
                 new PrivateMessageDTO("test", "hello");

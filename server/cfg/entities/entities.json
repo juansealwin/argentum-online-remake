@@ -25,7 +25,9 @@
       "id": 32
     },
     "priest": {
-      "id": 33
+      "id": 33,
+      "manaRegen" : 100,
+      "hpRegen" : 100
     },
     "merchant": {
       "id": 34

@@ -271,7 +271,7 @@ void Serializer::debug_deserialize_v3(
       uint16_t xp_limit = ntohs(extract<uint16_t>(serialization, j));
       uint16_t current_xp = ntohs(extract<uint16_t>(serialization, j));
       int meditating = extract<uint8_t>(serialization, j);
-      std::cout << "meditating? " << meditating << std::endl;
+      //std::cout << "meditating? " << meditating << std::endl;
       int ghost_mode = extract<uint8_t>(serialization, j);
       int close_to_npc = extract<uint8_t>(serialization, j);
       int items_equiped = extract<uint8_t>(serialization, j);

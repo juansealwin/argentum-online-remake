@@ -30,8 +30,10 @@ class Hero : public BaseCharacter {
        const float max_safe_gold_multiplier, const float level_up_limit_power,
        const float starting_xp_cap, const unsigned int bank_size);
   // Hero(Hero* h, Map &map);
-  // devuelve el dano causado
   void regenerate();
+  //
+  void heal(unsigned int hp, unsigned int mana);
+  // devuelve el dano causado
   const Attack attack();
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
@@ -41,6 +43,7 @@ class Hero : public BaseCharacter {
                                   unsigned int damage_done) override;
   // PRE: Se llama a unequip_x antes de equip_x para que lo guarde en
   // inventario.
+
   void equip_weapon(unsigned int weapon_id);
   void equip_staff(unsigned int staff_id);
   void equip_shield(unsigned int shield_id);
@@ -121,5 +124,7 @@ class Hero : public BaseCharacter {
   // actualiza la experiencia, sube niveles
   void update_experience(unsigned int dmg_done, BaseCharacter *other);
   void level_up();
+  void set_hp(unsigned int hp);
+  void set_mana(unsigned int mana);
 };
 #endif  // HERO_H

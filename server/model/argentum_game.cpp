@@ -121,7 +121,13 @@ void ArgentumGame::hero_revive(int entity_id) {
   std::cout << "in revive" << std::endl;
 }
 void ArgentumGame::hero_heal(int entity_id) {
-  std::cout << "in heal" << std::endl;
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->heal(entities_cfg["npcs"]["priest"]["hpRegen"].asUInt(),
+               entities_cfg["npcs"]["priest"]["manaRegen"].asUInt());
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
 }
 
 void ArgentumGame::hero_meditate(int entity_id) {

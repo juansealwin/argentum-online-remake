@@ -81,12 +81,28 @@ Hero::Hero(
 
 void Hero::regenerate() {
   if (ghost_mode) return;
-  current_hp = std::min(current_hp + f_race_recovery, max_hp);
-  if (!meditating)
-    current_mana = std::min(current_mana + f_race_recovery, max_mana);
+  set_hp(current_hp + f_race_recovery);
+  // current_hp = std::min(current_hp + f_race_recovery, max_hp);
+  if (!meditating) set_mana(current_mana + f_race_recovery);
+  // current_mana = std::min(current_mana + f_race_recovery, max_mana);
   else
-    current_mana =
-        std::min(current_mana + (f_class_meditation * intelligence), max_mana);
+    set_mana(current_mana + (f_class_meditation * intelligence));
+
+  //    current_mana =
+  //  std::min(current_mana + (f_class_meditation * intelligence), max_mana);
+}
+
+void Hero::heal(unsigned int hp, unsigned int mana) {
+  set_hp(current_hp + hp);
+  set_mana(current_mana + mana);
+}
+
+void Hero::set_hp(unsigned int hp) {
+  current_hp = std::min(hp, max_hp);
+}
+
+void Hero::set_mana(unsigned int mana) {
+  current_mana = std::min(mana, max_mana);
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
@@ -208,14 +224,9 @@ void Hero::bank_gold(unsigned int ammount) {
   bank->add_gold(inventory->remove_gold(ammount));
 }
 
-bool Hero::has_gold(unsigned int q) {
-  return (inventory->current_gold() >= q);
-}
+bool Hero::has_gold(unsigned int q) { return (inventory->current_gold() >= q); }
 
-void Hero::remove_gold(unsigned int q) {
-  inventory->remove_gold(q);
-}
-
+void Hero::remove_gold(unsigned int q) { inventory->remove_gold(q); }
 
 void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
@@ -413,6 +424,4 @@ unsigned int Hero::remove_excess_gold() {
   return excess_gold;
 }
 
-void Hero::set_close_to_npc(bool val) {
-  close_to_npc = val;
-}
+void Hero::set_close_to_npc(bool val) { close_to_npc = val; }
