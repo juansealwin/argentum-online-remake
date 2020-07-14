@@ -12,12 +12,13 @@ void HeroesManager::update(std::map<unsigned int, Hero *> &heroes) {
   // 4 actrualizaciones por segundo para los heroes (vida-mana regen)
 
   for (auto &hero : heroes) {
-    //if esta meditando deberia ser mas rapido
+    hero.second->try_to_unblock();
     if (time_difference.count() >= 5000000000) {
       hero.second->regenerate();
       last_update_time = actual_time;
     }
     hero.second->clear_effects();
+    
   }
 }
 

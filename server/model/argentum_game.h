@@ -131,7 +131,7 @@ class ArgentumGame : public Thread {
   SaleInfoNotification* get_sale_info(npc_t npc);
   //devuelve true si hay un banker a 1 de distancia
   bool is_npc_close(int x, int y, npc_t npc);
-  //void place_monster(unsigned int x, unsigned int y);
+  std::tuple<int, int> get_npc_pos(npc_t npc); 
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;

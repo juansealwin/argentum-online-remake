@@ -50,6 +50,7 @@ class Hero : public BaseCharacter {
   void equip_helmet(unsigned int helmet_id);
   void equip_armour(unsigned int armour_id);
   void use_item(unsigned int item_id);
+  void use_special_staff();
   void unequip(unsigned int item_id);
   void unequip_weapon();
   void unequip_staff();
@@ -92,6 +93,10 @@ class Hero : public BaseCharacter {
   unsigned int remove_excess_gold();
   void remove_gold(unsigned int q);
   void set_close_to_npc(bool val);
+  void try_to_unblock();
+  // bloquea a un heroe durante x segundos, una vez que paso el tiempo, es
+  // revivido en la posicion x, y
+  void block(unsigned int seconds, int x, int y);
   friend class Staff;
   friend class Serializer;
   friend class DropsManager;
@@ -103,9 +108,9 @@ class Hero : public BaseCharacter {
   // inicializados en member initialization list
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
-      class_id, experience;
+      class_id, experience,  respawn_x, respawn_y;
 
-  bool meditating, ghost_mode, close_to_npc;
+  bool meditating, ghost_mode, close_to_npc, blocked;
 
   std::string name;
   // config
@@ -118,6 +123,9 @@ class Hero : public BaseCharacter {
   Equipment *equipment;
   Inventory *inventory;
   Inventory *bank;
+  std::chrono::time_point<std::chrono::high_resolution_clock>
+      wait_starting_time;
+  unsigned blocked_seconds_duration;
 
   // metodos privados
   unsigned int calculate_damage();

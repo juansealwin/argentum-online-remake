@@ -14,6 +14,19 @@ void MessageCenter::remove_player(std::string player_name) {
   players_notification_queues.erase(player_name);
   
 }
+
+void MessageCenter::notify_error(std::string player, std::string error) {
+  std::unique_lock<std::mutex> lock(mutex);
+  if (players_notification_queues.count(player) < 1) return;
+  send_message(player, error);
+}
+
+void MessageCenter::notify_waiting_time_to_revive(std::string dst, unsigned int seconds) {
+  std::unique_lock<std::mutex> lock(mutex);
+  std::string msg = "Por favor, espera " + std::to_string(seconds) + " para revivir.";
+  send_message(dst, msg);
+}
+
   //Agrega el nombre del origen al mensaje y crea una notificacion de mensaje a ser enviada a player_dst
 void MessageCenter::send_message(std::string dst, std::string message) {
   try {
@@ -35,9 +48,9 @@ void MessageCenter::send_message(std::string dst, std::string message) {
 
 void MessageCenter::notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string message = "Has recibido " + std::to_string(dmg) + " de daño de: " + attacker;
+  std::string message = "Recibiste " + std::to_string(dmg) + " de daño de: " + attacker;
   if (dmg == 0) {
-   message = "Has bloqueado el ataque de " + attacker + "!";
+   message = "Bloqueaste el ataque de " + attacker + "!";
   }
   send_message(attacked, message);
 }

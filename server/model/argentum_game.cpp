@@ -115,15 +115,32 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 /*********************** Acciones personajes *************************/
 
 void ArgentumGame::hero_use_special(int entity_id) {
-  std::cout << "in use special" << std::endl;
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  try {
+    hero->use_special_staff();
+  } catch (ModelException &e) {
+    message_center.notify_error(hero->name, e.what());
+  }
 }
 void ArgentumGame::hero_revive(int entity_id) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-    if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) return;
-    hero->revive();
+    if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
+      std::tuple<unsigned int, unsigned int> pos = get_npc_pos(PRIEST);
+      int x = std::get<0>(pos);
+      int y = std::get<1>(pos);
+      if (x == -1) {
+        message_center.notify_error(hero->name, "Tenes que moverte a un mapa con un cura!");
+        return;
+      }
+      int distance = HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
+      int seconds_blocked = (distance/3) + 10;
+      hero->block(seconds_blocked, x + 1, y);
+      message_center.notify_waiting_time_to_revive(hero->name, seconds_blocked);
+    } else
+      hero->revive();
   } catch (ModelException &e) {
-    std::cout << "Exception occured: " << e.what() << std::endl;
+    message_center.notify_error(hero->name, e.what());
   }
 }
 void ArgentumGame::hero_heal(int entity_id) {
@@ -490,6 +507,13 @@ void ArgentumGame::clean_notifications_queues() {
 
 /********************* metodos privados *****************************/
 
+std::tuple<int, int> ArgentumGame::get_npc_pos(npc_t npc) {
+  for (auto it = npc_positions.begin(); it != npc_positions.end(); ++it)
+    if (it->second == npc)
+        return it->first;
+  return std::tuple<int, int>(-1, -1);
+}
+
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
     BaseCharacter *character) {
   unsigned int x_pos = character->x_position;
@@ -519,6 +543,8 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
+  std::cout << class_stats << std::endl;
+  std::cout << race_stats << std::endl;
   Hero *hero = new Hero(
       entities_ids, x, y, race_stats["id"].asUInt(), 'h',
       class_stats["level"].asUInt(),
@@ -549,7 +575,9 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->equip_shield(2);
   // hero->add_item(new Weapon(24, 25, 10, 15));
   hero->add_item(new Weapon(17, 4, 8, 5));
-  hero->equip_weapon(17);
+  hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
+  // hero->equip_weapon(17);
+  hero->equip_staff(19);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
@@ -638,30 +666,6 @@ bool ArgentumGame::is_npc_close(int x, int y, npc_t npc) {
   }
   return false;
 }
-
-// typedef enum {
-//   turtle_shield = 1,
-//   iron_shield,
-//   hood,
-//   iron_helmet,
-//   magic_hat,
-//   leather_armour,
-//   plate_armour,
-//   blue_tunic,
-//   hp_potion,
-//   mana_potion,
-//   sword,
-//   axe,
-//   hammer,
-//   simple_bow,
-//   compound_bow,
-//   ash_stick,
-//   gnarled_staff,
-//   crimp_staff,
-//   elven_flute,
-//   //Actualizar esto si se agregan mas items!
-//   first_item_id = turtle_shield,
-//   last_ite
 
 SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
   uint8_t notification_id = 6;

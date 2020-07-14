@@ -31,65 +31,56 @@ Hero::Hero(
       // gold(gold),
       class_id(class_id),
       experience(0),
+      respawn_x(0),
+      respawn_y(0),
       meditating(false),
       ghost_mode(false),
       close_to_npc(false),
+      blocked(false),
       name(name),
       critical_damage_multiplier(critical_damage_multiplier),
       critical_damage_probability(critical_damage_probability),
       evasion_probability(evasion_probability),
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
-      starting_xp_cap(starting_xp_cap) {
+      starting_xp_cap(starting_xp_cap),
+      blocked_seconds_duration(0) {
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
   bank = new Inventory(bank_size, 0);
 }
 
-// Hero::Hero(Hero *h, Map &map)
-//     : BaseCharacter(h->unique_id, h->x_position, h->y_position, h->type, 'h',
-//                     h->level, map),
-//       strength(h->strength),
-//       intelligence(h->intelligence),
-//       agility(h->agility),
-//       constitution(h->constitution),
-//       f_class_hp(h->f_class_hp),
-//       f_race_hp(h->f_race_hp),
-//       f_race_recovery(h->f_race_recovery),
-//       f_race_mana(h->f_race_mana),
-//       f_class_mana(h->f_class_mana),
-//       f_class_meditation(h->f_class_meditation),
-//       gold(h->gold),
-//       class_id(h->class_id),
-//       experience(h->experience),
-//       meditating(h->meditating),
-//       ghost_mode(h->ghost_mode),
-//       name(h->name),
-//       critical_damage_multiplier(h->critical_damage_multiplier),
-//       inventory_size(h->inventory_size),
-//       critical_damage_probability(h->critical_damage_probability),
-//       evasion_probability(h->evasion_probability),
-//       max_safe_gold_multiplier(h->max_safe_gold_multiplier),
-//       inventory(h->inventory),
-//       equipment(h->equipment),
-//       level_up_limit_power(h->level_up_limit_power),
-//       starting_xp_cap(h->starting_xp_cap) {
-//         h->inventory = nullptr;
-//         h->equipment = nullptr;
-//       }
+void Hero::try_to_unblock() {
+  if (!blocked) return;
+  auto current_time = std::chrono::high_resolution_clock::now();
+  auto diff = std::chrono::duration_cast<std::chrono::seconds>(
+      current_time - wait_starting_time);
+  if (diff.count() >= blocked_seconds_duration) {
+    blocked = false;
+    revive();
+    move(respawn_x, respawn_y);
+    respawn_x = 0;
+    respawn_y = 0;
+  }
+}
+
+void Hero::block(unsigned int seconds, int x, int y) {
+  if (!ghost_mode) throw ModelException("Estas vivo!", "6");
+  blocked = true;
+  blocked_seconds_duration = seconds;
+  wait_starting_time = std::chrono::high_resolution_clock::now();
+  respawn_x = x;
+  respawn_y = y;
+}
 
 void Hero::regenerate() {
   if (ghost_mode) return;
   set_hp(current_hp + f_race_recovery);
-  // current_hp = std::min(current_hp + f_race_recovery, max_hp);
-  if (!meditating) set_mana(current_mana + f_race_recovery);
-  // current_mana = std::min(current_mana + f_race_recovery, max_mana);
+  if (!meditating)
+    set_mana(current_mana + f_race_recovery);
   else
     set_mana(current_mana + (f_class_meditation * intelligence));
-
-  //    current_mana =
-  //  std::min(current_mana + (f_class_meditation * intelligence), max_mana);
 }
 
 void Hero::heal(unsigned int hp, unsigned int mana) {
@@ -202,6 +193,16 @@ void Hero::use_item(unsigned int item_id) {
   meditating = false;
   Item *i = inventory->item_with_id(item_id);
   i->use(this);
+}
+void Hero::use_special_staff() {
+  if (ghost_mode)
+    throw ModelException("Los fantasmas no pueden utilizar ataques especiales!",
+                         "5");
+  Staff *s = equipment->staff;
+  if (s)
+    s->special_use(this);
+  else
+    throw ModelException("No tienes equipada una vara!", "5");
 }
 
 void Hero::unbank_gold(unsigned int ammount) {
@@ -367,14 +368,11 @@ void Hero::meditate() {
 
 bool Hero::is_death() { return ghost_mode; }
 
-// void Hero::consume(unsigned int item_id) {
-//   Item *consumable = inventory->remove_item(item_id);
-//   consumable->use(this);
-//   delete consumable;
-// }
-
-void Hero::revive() { set_hp(round(max_hp/2));
-set_mana(round(max_mana/2)); ghost_mode = false; }
+void Hero::revive() {
+  set_hp(round(max_hp / 2));
+  set_mana(round(max_mana / 2));
+  ghost_mode = false;
+}
 
 Hero::~Hero() {
   if (inventory) delete inventory;
@@ -407,6 +405,9 @@ void Hero::level_up() {
   level++;
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
+  std::cout << "level: " << level << " int: " << intelligence
+            << " f_class_mana " << f_class_mana << " f_race_mana "
+            << f_race_mana << std::endl;
   next_level_xp_limit =
       starting_xp_cap * floor(pow(level, level_up_limit_power));
   max_safe_gold = max_safe_gold_multiplier * level;
