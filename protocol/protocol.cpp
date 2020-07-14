@@ -14,15 +14,19 @@
 #include "change_game_room_dto.h"
 #include "drop_item_command_dto.h"
 #include "get_banked_items_command_dto.h"
+#include "heal_command_dto.h"
 #include "login_command_dto.h"
+#include "meditate_command_dto.h"
 #include "move_command_dto.h"
 #include "pick_up_command_dto.h"
 #include "private_message_dto.h"
 #include "quit_command_dto.h"
+#include "revive_command_dto.h"
 #include "sell_item_command_dto.h"
 #include "unbank_gold_command_dto.h"
 #include "unbank_item_command_dto.h"
 #include "use_item_command_dto.h"
+#include "use_item_special_command_dto.h"
 #define ID_LENGTH 1
 
 /********************** COMANDOS ***********************************/
@@ -155,7 +159,14 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
       return receive_buy_command(socket);
     case SELL_ITEM_COMMAND:
       return receive_sell_command(socket);
-
+    case MEDITATE_COMMAND:
+      return new MeditateCommandDTO();
+    case USE_ITEM_SPECIAL_COMMAND:
+      return new UseItemSpecialCommandDTO();
+    case HEAL_COMMAND:
+      return new HealCommandDTO();
+    case REVIVE_COMMAND:
+      return new ReviveCommandDTO();
     default:
       return nullptr;
   }
@@ -287,6 +298,31 @@ void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
   socket.send(&item, 1);
 }
 
+void send_revive_command(const Socket& socket,
+                           ReviveCommandDTO* commandDTO) {
+  uint8_t command_id = REVIVE_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
+void send_heal_command(const Socket& socket,
+                           HealCommandDTO* commandDTO) {
+  uint8_t command_id = HEAL_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
+void send_use_special_command(const Socket& socket,
+                           UseItemSpecialCommandDTO* commandDTO) {
+  uint8_t command_id = USE_ITEM_SPECIAL_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
+void send_meditate_command(const Socket& socket,
+                           MeditateCommandDTO* commandDTO) {
+  uint8_t command_id = MEDITATE_COMMAND;
+  socket.send(&command_id, ID_LENGTH);
+}
+
+
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
@@ -352,7 +388,22 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case SELL_ITEM_COMMAND:
       send_sell_command(socket, dynamic_cast<SellItemCommandDTO*>(commandDTO));
       break;
-
+    case MEDITATE_COMMAND:
+      send_meditate_command(socket,
+                            dynamic_cast<MeditateCommandDTO*>(commandDTO));
+      break;
+    case REVIVE_COMMAND:
+      send_revive_command(socket,
+                            dynamic_cast<ReviveCommandDTO*>(commandDTO));
+      break;
+    case HEAL_COMMAND:
+      send_heal_command(socket,
+                            dynamic_cast<HealCommandDTO*>(commandDTO));
+      break;
+    case USE_ITEM_SPECIAL_COMMAND:
+      send_use_special_command(socket,
+                            dynamic_cast<UseItemSpecialCommandDTO*>(commandDTO));
+      break;
     default:
       break;
   }

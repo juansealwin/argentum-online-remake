@@ -36,6 +36,8 @@ class Map {
   x2,y2 ocupada. Se debe llamar a empty_cell con el lugar anterior.
     */
   bool ocupy_cell(int x, int y, unsigned int entity_id);
+  void put_projectile(int x, int y);
+  void empty_projectile(int x, int y);
   Map(const Map &) = delete;
   bool tile_is_safe(int x, int y);
   std::tuple<int, int> get_random_free_space();

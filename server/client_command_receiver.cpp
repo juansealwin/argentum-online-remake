@@ -46,7 +46,7 @@ void ClientCommandReceiver::run() {
       delete command_dto;
     }
   }
- // std::cout << "stopping command receiver" << std::endl;
+ //std::cout << "stopping command receiver" << std::endl;
 }
 
 void ClientCommandReceiver::send_close_connection() {

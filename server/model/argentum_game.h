@@ -49,6 +49,9 @@ class ArgentumGame : public Thread {
   void print_debug_map();
   void hero_dequip_item(int entity_id, int item_id);
   // equipa o usa una pocion
+  void hero_use_special(int entity_id);
+  void hero_revive(int entity_id);
+  void hero_heal(int entity_id);
   void hero_buy_item(int entity_id, int item_id);
   void hero_sell_item(int entity_id, int item_id);
   void hero_use_item(int entity_id, int item_id);
@@ -57,6 +60,7 @@ class ArgentumGame : public Thread {
   void hero_unbank_item(int entity_id, int item_id);
   void hero_bank_gold(int entity_id, int ammount);
   void hero_unbank_gold(int entity_id, int ammount);
+  void hero_meditate(int entity_id);
   //envia una notificacion al cliente del estado del banco o
   //de lo que venda el merchant/priest mas cercano
   void hero_get_closest_npc_info(int entity_id);
@@ -127,7 +131,7 @@ class ArgentumGame : public Thread {
   SaleInfoNotification* get_sale_info(npc_t npc);
   //devuelve true si hay un banker a 1 de distancia
   bool is_npc_close(int x, int y, npc_t npc);
-  //void place_monster(unsigned int x, unsigned int y);
+  std::tuple<int, int> get_npc_pos(npc_t npc); 
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;

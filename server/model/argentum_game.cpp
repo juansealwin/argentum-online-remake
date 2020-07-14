@@ -114,6 +114,55 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 
 /*********************** Acciones personajes *************************/
 
+void ArgentumGame::hero_use_special(int entity_id) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  try {
+    hero->use_special_staff();
+  } catch (ModelException &e) {
+    message_center.notify_error(hero->name, e.what());
+  }
+}
+void ArgentumGame::hero_revive(int entity_id) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  try {
+    if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
+      std::tuple<unsigned int, unsigned int> pos = get_npc_pos(PRIEST);
+      int x = std::get<0>(pos);
+      int y = std::get<1>(pos);
+      if (x == -1) {
+        message_center.notify_error(hero->name, "Tenes que moverte a un mapa con un cura!");
+        return;
+      }
+      int distance = HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
+      int seconds_blocked = (distance/3) + 10;
+      hero->block(seconds_blocked, x + 1, y);
+      message_center.notify_waiting_time_to_revive(hero->name, seconds_blocked);
+    } else
+      hero->revive();
+  } catch (ModelException &e) {
+    message_center.notify_error(hero->name, e.what());
+  }
+}
+void ArgentumGame::hero_heal(int entity_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) return;
+    hero->heal(entities_cfg["npcs"]["priest"]["hpRegen"].asUInt(),
+               entities_cfg["npcs"]["priest"]["manaRegen"].asUInt());
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
+void ArgentumGame::hero_meditate(int entity_id) {
+  try {
+    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    hero->meditate();
+  } catch (ModelException &e) {
+    std::cout << "Exception occured: " << e.what() << std::endl;
+  }
+}
+
 void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
   try {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
@@ -121,14 +170,12 @@ void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
         1)
       return;
-    // ENVIAR MENSAJE inventario lleno0
     if (hero->inventory->is_full()) {
       message_center.send_inventory_is_full_message(hero->name);
       return;
     }
     unsigned int item_price =
         ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
-    // ENVIAR MENSAJE oro insuficiente
     if (!hero->has_gold(item_price)) {
       message_center.send_not_enough_gold_message(hero->name, item_price);
       return;
@@ -258,10 +305,10 @@ void ArgentumGame::hero_use_item(int entity_id, int item_id) {
 }
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  Hero *character =
-      dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *character = dynamic_cast<Hero *>(heroes.at(entity_id));
   character->move(character->x_position + x, character->y_position + y);
   character->set_close_to_npc(false);
+  character->meditating = false;
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
@@ -271,11 +318,12 @@ void ArgentumGame::throw_projectile(int attacker_id) {
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
     Attack attack_info = hero->attack();
+    if (attack_info.attacker_weapon_range == 0) return;
     std::tuple<unsigned int, unsigned int> projectile_position =
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
-
+    std::cout << "creating projectile" << std::endl;
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -460,6 +508,13 @@ void ArgentumGame::clean_notifications_queues() {
 
 /********************* metodos privados *****************************/
 
+std::tuple<int, int> ArgentumGame::get_npc_pos(npc_t npc) {
+  for (auto it = npc_positions.begin(); it != npc_positions.end(); ++it)
+    if (it->second == npc)
+        return it->first;
+  return std::tuple<int, int>(-1, -1);
+}
+
 std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
     BaseCharacter *character) {
   unsigned int x_pos = character->x_position;
@@ -518,8 +573,10 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->add_item(new DefensiveItem(2, 7, 7));
   hero->equip_shield(2);
   // hero->add_item(new Weapon(24, 25, 10, 15));
-  hero->add_item(new Weapon(17, 4, 8, 5));
-  hero->equip_weapon(17);
+  hero->add_item(new Weapon(17, 1, 1, 5));
+  hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
+  // hero->equip_weapon(17);
+  hero->equip_staff(19);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
@@ -609,30 +666,6 @@ bool ArgentumGame::is_npc_close(int x, int y, npc_t npc) {
   return false;
 }
 
-// typedef enum {
-//   turtle_shield = 1,
-//   iron_shield,
-//   hood,
-//   iron_helmet,
-//   magic_hat,
-//   leather_armour,
-//   plate_armour,
-//   blue_tunic,
-//   hp_potion,
-//   mana_potion,
-//   sword,
-//   axe,
-//   hammer,
-//   simple_bow,
-//   compound_bow,
-//   ash_stick,
-//   gnarled_staff,
-//   crimp_staff,
-//   elven_flute,
-//   //Actualizar esto si se agregan mas items!
-//   first_item_id = turtle_shield,
-//   last_ite
-
 SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
   uint8_t notification_id = 6;
   std::vector<unsigned char> notification;
@@ -644,8 +677,8 @@ SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
         leather_armour, plate_armour, blue_tunic,  sword,       axe,
         hammer,         simple_bow,   compound_bow};
   } else if (npc == PRIEST) {
-    sale_items = {
-        hp_potion, mana_potion, ash_stick, gnarled_staff, crimp_staff, elven_flute};
+    sale_items = {hp_potion,     mana_potion, ash_stick,
+                  gnarled_staff, crimp_staff, elven_flute};
   }
   notification.push_back(sale_items.size());
   notification.insert(notification.end(), sale_items.begin(), sale_items.end());

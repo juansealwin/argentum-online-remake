@@ -25,7 +25,9 @@
       "id": 32
     },
     "priest": {
-      "id": 33
+      "id": 33,
+      "manaRegen" : 100,
+      "hpRegen" : 100
     },
     "merchant": {
       "id": 34
@@ -227,7 +229,7 @@
       "intelligence": 0,
       "agility": 15,
       "fClassHp": 2,
-      "fClassMana": 0,
+      "fClassMana": 10,
       "fClassMeditation": 0,
       "level": 0,
       "id": 24
