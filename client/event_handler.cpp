@@ -85,6 +85,11 @@ void EventHandler::get_events() {
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
+          if (event.key.keysym.sym == SDLK_s) {
+            UseItemSpecialCommandDTO* use_item_special_command =
+                new UseItemSpecialCommandDTO();
+            commands_queue.push(use_item_special_command);
+          }
           // borrar todos estos if, son de prueba
           if (event.key.keysym.sym == SDLK_h) {
             DropItemCommandDTO* change_game_room_command =
@@ -220,6 +225,14 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere curarse
   else if (input_text.compare(0, input_text.length(), MSG_HEAL) == 0) {
     std::cout << "COMANDO CURAR" << std::endl;
+    HealCommandDTO* heal_command = new HealCommandDTO();
+    commands_queue.push(heal_command);
+  }
+  // Chequeamos si el usuario quiere revivir
+  else if (input_text.compare(0, input_text.length(), MSG_REVIVE) == 0) {
+    std::cout << "COMANDO REVIVIR" << std::endl;
+    ReviveCommandDTO* revive_command = new ReviveCommandDTO();
+    commands_queue.push(revive_command);
   }
   // Chequeamos si el usuario quiere depositar algún item en el banco
   else if (input_text.compare(0, strlen(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {

@@ -1,9 +1,9 @@
 #include "use_item_special_command.h"
 #include <iostream>
-UseItemSpecial::UseItemSpecial(const unsigned int uid) : Command(uid) {}
+UseItemSpecialCommand::UseItemSpecialCommand(const unsigned int uid) : Command(uid) {}
 
-UseItemSpecial::~UseItemSpecial() {}
+UseItemSpecialCommand::~UseItemSpecialCommand() {}
 
-void UseItemSpecial::execute(ArgentumGame *game) {
+void UseItemSpecialCommand::execute(ArgentumGame *game) {
   game->hero_use_special(uid);
 }

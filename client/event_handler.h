@@ -30,6 +30,9 @@
 #include "buy_item_command_dto.h"
 #include "sell_item_command_dto.h"
 #include "meditate_command_dto.h"
+#include "heal_command_dto.h"
+#include "revive_command_dto.h"
+#include "use_item_special_command_dto.h"
 
 #define MAX_MSG_LENGTH 65
 #define PRIVATE_MSG '@'

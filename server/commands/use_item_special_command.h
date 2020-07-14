@@ -5,11 +5,11 @@
 #include "command.h"
 // class Command; forward declaration x si llego a necesitar
 
-class UseItemSpecial : public Command {
+class UseItemSpecialCommand : public Command {
  public:
-  UseItemSpecial(const unsigned int uid);
-  UseItemSpecial(const UseItemSpecial &) = delete;
-  ~UseItemSpecial();
+  UseItemSpecialCommand(const unsigned int uid);
+  UseItemSpecialCommand(const UseItemSpecialCommand &) = delete;
+  ~UseItemSpecialCommand();
   // Ejecuta cambios en el juego segun
   virtual void execute(ArgentumGame *game);
 

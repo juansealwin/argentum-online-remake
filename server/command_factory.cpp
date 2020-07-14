@@ -43,6 +43,12 @@ Command* CommandFactory::create_command(CommandDTO* command_dto,
       return sell_item_command(dynamic_cast<SellItemCommandDTO*>(command_dto), player_id);
     case MEDITATE_COMMAND:
       return new MeditateCommand(player_id);
+    case USE_ITEM_SPECIAL_COMMAND:
+      return new UseItemSpecialCommand(player_id);
+    case HEAL_COMMAND:
+      return new HealCommand(player_id);
+    case REVIVE_COMMAND:
+      return new ReviveCommand(player_id);
     default:
       return nullptr;
   }
