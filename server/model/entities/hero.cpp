@@ -97,9 +97,7 @@ void Hero::heal(unsigned int hp, unsigned int mana) {
   set_mana(current_mana + mana);
 }
 
-void Hero::set_hp(unsigned int hp) {
-  current_hp = std::min(hp, max_hp);
-}
+void Hero::set_hp(unsigned int hp) { current_hp = std::min(hp, max_hp); }
 
 void Hero::set_mana(unsigned int mana) {
   current_mana = std::min(mana, max_mana);
@@ -375,7 +373,8 @@ bool Hero::is_death() { return ghost_mode; }
 //   delete consumable;
 // }
 
-void Hero::revive() { ghost_mode = false; }
+void Hero::revive() { set_hp(round(max_hp/2));
+set_mana(round(max_mana/2)); ghost_mode = false; }
 
 Hero::~Hero() {
   if (inventory) delete inventory;
