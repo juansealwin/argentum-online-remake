@@ -305,8 +305,10 @@ void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
 const Attack Hero::attack() {
   if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
   // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
-  if (!equipment->can_use_primary_weapon(this))
-    throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
+  if (equipment->has_weapon() || equipment->has_staff()) {
+    if (!equipment->can_use_primary_weapon(this))
+      throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
+  }
   meditating = false;
   // mover a json!
   bool critical = false;

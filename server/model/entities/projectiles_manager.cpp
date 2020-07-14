@@ -84,7 +84,7 @@ void ProjectileManager::remove_death_projectiles(
     if (it->second->alive == false) {
       int x_pos = it->second->x_position;
       int y_pos = it->second->y_position;
-      map->empty_cell(x_pos, y_pos);
+      map->empty_projectile(x_pos, y_pos);
       delete it->second;
       it = projectiles.erase(it++);
     } else {

@@ -323,6 +323,7 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
+    std::cout << "creating projectile" << std::endl;
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -572,7 +573,7 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->add_item(new DefensiveItem(2, 7, 7));
   hero->equip_shield(2);
   // hero->add_item(new Weapon(24, 25, 10, 15));
-  hero->add_item(new Weapon(17, 4, 8, 5));
+  hero->add_item(new Weapon(17, 1, 1, 5));
   hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
   // hero->equip_weapon(17);
   hero->equip_staff(19);

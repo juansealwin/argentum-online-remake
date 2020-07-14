@@ -23,7 +23,7 @@ Equipment::~Equipment() {
 }
 
 unsigned int Equipment::get_attack_bonus() {
-  unsigned int bonus = 0;
+  unsigned int bonus = 1;
   if (weapon) {
     bonus = rand() % (weapon->max_damage - weapon->min_damage + 1) +
             weapon->min_damage;
@@ -155,7 +155,7 @@ DefensiveItem *Equipment::unequip_armour() {
 }
 
 unsigned int Equipment::primary_weapon_id() {
-  unsigned int id = 0;
+  unsigned int id = fist;
   if (weapon)
     id = weapon->id;
   else if (staff)

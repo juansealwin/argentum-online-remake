@@ -21,7 +21,7 @@ typedef enum {
   gnarled_staff,
   crimp_staff,
   elven_flute,
-  //Actualizar esto si se agregan mas items!
+  fist = sword,
   first_item_id = turtle_shield,
   last_item_id = elven_flute
 } item_t;
