@@ -41,37 +41,59 @@ void ProjectileManager::manage_collision(
   unsigned int newbie_level_cap = game_cfg["newbieLevelCap"].asUInt();
   unsigned int pvp_level_diff_allowed =
       game_cfg["pvpLevelDifferenceAllowed"].asUInt();
+  // std::cout << "afuera primer if" << std::endl;
+  if (!attacker || !attacked) {
+    projectile->kill();
+    return;
+  }
   if (dynamic_cast<Hero *>(attacker) && dynamic_cast<Hero *>(attacked)) {
+    // std::cout << "adentro primer if" << std::endl;
     if ((HelperFunctions::difference(attacker->level, attacked->level) >=
          newbie_level_cap) ||
         attacked->level < pvp_level_diff_allowed) {
+      // std::cout << "adentro if chequeo levels" << std::endl;
+
       message_center.notify_cant_attack_low_levels(
-          attacker->get_name(), attacked->get_name(), attacked->level, newbie_level_cap);
+          attacker->get_name(), attacked->get_name(), attacked->level,
+          newbie_level_cap);
       projectile->kill();
       return;
     }
   }
+  // std::cout << "antes de if (attacked0" << std::endl;
   if (attacked) {
+    // std::cout << "adentro if attacked chequeo levels" << std::endl;
+
     if (!attacked->is_death()) {
+      // std::cout << "adentro if attacked !attackd is death" << std::endl;
+
       damage_done =
           attacked->receive_damage(projectile->get_damage(),
                                    projectile->is_critical(), projectile->type);
       if (attacker) {
+        // std::cout << "adentro if attacker " << std::endl;
+
         attacker->notify_damage_done(attacked, damage_done);
       }
     }
   }
+  // std::cout << "antes de if attacker" << std::endl;
 
   if (dynamic_cast<Hero *>(attacker)) {
+    // std::cout << "dentro de if attacker" << std::endl;
+
     Hero *h = dynamic_cast<Hero *>(attacker);
     message_center.notify_damage_done(h->get_name(), damage_done,
                                       attacked->get_name());
   }
   if (dynamic_cast<Hero *>(attacked)) {
+    // std::cout << "dentro de if attacked2" << std::endl;
+
     Hero *h = dynamic_cast<Hero *>(attacked);
     message_center.notify_damage_received(h->get_name(), damage_done,
                                           attacker->get_name());
   }
+  // std::cout << "matando proyectil" << std::endl;
   projectile->kill();
 }
 

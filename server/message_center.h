@@ -31,6 +31,7 @@ class MessageCenter {
   void notify_waiting_time_to_revive(std::string dst, unsigned int seconds);
   void notify_cant_attack_low_levels(std::string attacker, std::string attacked,
                                      int attacked_level, int newbie_level_cap);
+  void notify_cant_change_map(std::string player);
 
  private:
   // mapea nombre del jugador con su cola

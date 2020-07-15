@@ -308,6 +308,7 @@ void ArgentumGame::hero_use_item(int entity_id, int item_id) {
 
 void ArgentumGame::move_entity(int entity_id, int x, int y) {
   Hero *character = dynamic_cast<Hero *>(heroes.at(entity_id));
+  if (character->blocked) return;
   character->move(character->x_position + x, character->y_position + y);
   character->set_close_to_npc(false);
   character->meditating = false;
@@ -361,8 +362,12 @@ void ArgentumGame::send_message(unsigned int player_id, std::string dst,
 }
 
 void ArgentumGame::kill_player(unsigned int player_id) {
-  Hero *hero = heroes.at(player_id);
-  hero->alive = false;
+  // bloque try por si crashea cliente
+  try {
+    Hero *hero = heroes.at(player_id);
+    hero->alive = false;
+  } catch (const std::exception &ex) {
+  }
 }
 
 /*********************** Fin acciones personajes *********************/
@@ -487,10 +492,6 @@ void ArgentumGame::add_notification_queue(
 }
 
 ThreadSafeQueue<Command *> *ArgentumGame::get_commands_queue() {
-  // std::cout << "Currently in game room: " << room << " getting command queue
-  // "
-  //           << std::endl;
-
   return commands_queue;
 }
 
@@ -540,9 +541,6 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
                                       std::string hero_class,
                                       std::string hero_name, unsigned int x,
                                       unsigned int y) {
-  // std::cout << "placing hero at position (" << x << ", " << y << ")"
-  //           << std::endl;
-  // std::cout << "new hero id will be " << entities_ids << std::endl;
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(
@@ -573,10 +571,8 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(2, 7, 7));
   hero->equip_shield(2);
-  // hero->add_item(new Weapon(24, 25, 10, 15));
-  hero->add_item(new Weapon(17, 1, 1, 5));
+  hero->add_item(new Weapon(17, 10, 25, 5));
   hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
-  // hero->equip_weapon(17);
   hero->equip_staff(19);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
@@ -616,7 +612,10 @@ ArgentumGame::~ArgentumGame() {
 }
 
 void ArgentumGame::stop_notification_queue(int player_id) {
-  queues_notifications.at(player_id)->close();
+  try {
+    queues_notifications.at(player_id)->close();
+  } catch (const std::exception &ex) {
+  }
 }
 
 BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {

@@ -26,7 +26,7 @@ void MessageCenter::notify_waiting_time_to_revive(std::string dst,
                                                   unsigned int seconds) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string msg =
-      "Por favor, espera " + std::to_string(seconds) + " para revivir.";
+      "Por favor, espera " + std::to_string(seconds) + " segundos para revivir.";
   send_message(dst, msg);
 }
 
@@ -91,6 +91,12 @@ void MessageCenter::send_inventory_is_full_message(std::string dst) {
   std::string msg = "Inventario lleno!";
   send_message(dst, msg);
 }
+
+void MessageCenter::notify_cant_change_map(std::string player) {
+  std::string msg = "Espera unos segundos para poder volver a cambiar de mapa!";
+  send_message(player, msg);
+}
+
 
 void MessageCenter::send_not_enough_gold_message(std::string dst,
                                                  unsigned int price) {

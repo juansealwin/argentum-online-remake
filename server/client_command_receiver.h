@@ -37,7 +37,7 @@ class ClientCommandReceiver : public Thread {
   unsigned int current_game_room;
   ThreadSafeQueue<Command *> *commands_queue;
   unsigned int hero_id;
-  bool alive;
+  bool alive, correct_close;
   std::vector<ArgentumGame *> game_rooms;
   std::string player_name;
   MessageCenter &message_center;

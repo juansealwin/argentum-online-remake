@@ -86,7 +86,7 @@ void ClientListener::run() {
     else player_name = "test2";
     pc++;
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
-        "human", "warrior", player_name);
+        "elf", "mage", player_name);
     message_center.add_player(player_name, notifications_queue);
     game_rooms[login_command->room_number]->add_notification_queue(
         notifications_queue, hero_id);
