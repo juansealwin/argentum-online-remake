@@ -14,6 +14,7 @@ ClientCommandReceiver::ClientCommandReceiver(
       commands_queue(commands_queue),
       hero_id(hero_id),
       alive(true),
+      sent_quit(false),
       game_rooms(game_rooms),
       player_name(player_name),
       message_center(message_center) {}
@@ -45,11 +46,15 @@ void ClientCommandReceiver::run() {
         send_close_connection();
         message_center.remove_player(player_name);
         alive = false;
+        sent_quit = true;
       }
       delete command_dto;
+    } else if (!sent_quit) {
+      alive = false;
+      sent_quit = true;
+      commands_queue->push(new QuitCommand(hero_id));
     }
   }
-  // std::cout << "stopping command receiver" << std::endl;
 }
 
 void ClientCommandReceiver::send_close_connection() {
