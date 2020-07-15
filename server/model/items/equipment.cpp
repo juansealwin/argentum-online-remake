@@ -25,11 +25,9 @@ Equipment::~Equipment() {
 unsigned int Equipment::get_attack_bonus() {
   unsigned int bonus = 1;
   if (weapon) {
-    bonus = rand() % (weapon->max_damage - weapon->min_damage + 1) +
-            weapon->min_damage;
+    bonus = HelperFunctions::random_int(weapon->min_damage, weapon->max_damage);
   } else if (staff) {
-    bonus = rand() % (staff->max_damage - staff->min_damage + 1) +
-            staff->min_damage;
+    bonus = HelperFunctions::random_int(staff->min_damage, staff->max_damage);
   }
   return bonus;
 }
@@ -37,16 +35,13 @@ unsigned int Equipment::get_attack_bonus() {
 unsigned int Equipment::get_defense_bonus() {
   unsigned int bonus = 0;
   if (helmet) {
-    bonus += rand() % (helmet->max_defense - helmet->min_defense + 1) +
-             helmet->min_defense;
+    bonus = HelperFunctions::random_int(helmet->min_defense, helmet->max_defense);
   }
   if (armour) {
-    bonus += rand() % (armour->max_defense - armour->min_defense + 1) +
-             armour->min_defense;
+    bonus = HelperFunctions::random_int(armour->min_defense, armour->max_defense);
   }
   if (shield) {
-    bonus += rand() % (shield->max_defense - shield->min_defense + 1) +
-             shield->min_defense;
+    bonus = HelperFunctions::random_int(shield->min_defense, shield->max_defense);
   }
   return bonus;
 }

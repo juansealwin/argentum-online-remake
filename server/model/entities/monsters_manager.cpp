@@ -14,15 +14,17 @@ void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
   auto time_difference = actual_time - last_update_time;
 
   for (auto &monster : monsters) {
+    bool attacked_or_moved_to_hero = false;
     if (time_difference.count() >= 800000000) {
       last_update_time = actual_time;
       for (auto &hero : heroes) {
         if (!hero.second->is_death()) {
-          if (!attack_or_move_to_hero(monster.second, hero.second,
-                                      message_center))
-            monster.second->auto_move();
+          attacked_or_moved_to_hero = attack_or_move_to_hero(monster.second, hero.second,
+                                      message_center);
+          if (attacked_or_moved_to_hero) break;
         }
       }
+      if(!attacked_or_moved_to_hero) monster.second->auto_move();
     }
     monster.second->clear_effects();
   }

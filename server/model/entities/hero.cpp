@@ -353,7 +353,10 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
   }
 
   current_hp -= actual_damage;
-  if (current_hp <= 0) ghost_mode = true;
+  if (current_hp <= 0) {
+    current_hp = 0;
+    ghost_mode = true;
+  }
   // std::cout << "Updated status!! HP: " << current_hp << "ghost? " <<
   // ghost_mode
   //           << std::endl;

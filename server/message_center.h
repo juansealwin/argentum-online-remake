@@ -6,9 +6,9 @@
 #include <mutex>
 #include <string>
 #include <vector>
-#include "message_notification.h"
 
 #include "../util/thread_safe_queue.h"
+#include "message_notification.h"
 
 class MessageCenter {
  public:
@@ -20,13 +20,19 @@ class MessageCenter {
   // Agrega el nombre del origen al mensaje y crea una notificacion de mensaje a
   // ser enviada a player_dst
   void notify_error(std::string player, std::string error);
-  void notify_damage_done(std::string attacker, unsigned int dmg, std::string attacked);
-  void notify_damage_received(std::string attacked, unsigned int dmg, std::string attacker);
-  void send_private_message(std::string src, std::string dst, std::string message);
+  void notify_damage_done(std::string attacker, unsigned int dmg,
+                          std::string attacked);
+  void notify_damage_received(std::string attacked, unsigned int dmg,
+                              std::string attacker);
+  void send_private_message(std::string src, std::string dst,
+                            std::string message);
   void send_inventory_is_full_message(std::string dst);
   void send_not_enough_gold_message(std::string dst, unsigned int price);
   void notify_waiting_time_to_revive(std::string dst, unsigned int seconds);
-  
+  void notify_cant_attack_low_levels(std::string attacker, std::string attacked,
+                                     int attacked_level, int newbie_level_cap);
+  void notify_cant_change_map(std::string player);
+
  private:
   // mapea nombre del jugador con su cola
   void send_message(std::string dst, std::string message);
