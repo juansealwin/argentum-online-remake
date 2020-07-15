@@ -31,8 +31,9 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y)
   weapon = ID_NULL;
 }
 
-EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
-    : x(new_x), y(new_y) {
+EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
+                           int affected_by)
+    : x(new_x), y(new_y), orientation((move_t)orient) {
   // poner los id que usa el server
   switch (type_ent) {
     case 29:
@@ -50,18 +51,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
     case 32:
       type_entity = ZOMBIE;
       break;
-
-    case 33:
-      type_entity = PRIEST;
-      break;
-
-    case 34:
-      type_entity = MERCHANT;
-      break;
-
-    case 35:
-      type_entity = BANKER;
-      break;
   }
   set_spellbound(affected_by);
   helmet = ID_NULL;
@@ -70,12 +59,13 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int affected_by)
   weapon = ID_NULL;
 }
 
-EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int ghost_mod,
-                           int affected_by, id_texture_t new_helmet,
-                           id_texture_t new_armor, id_texture_t new_shield,
-                           id_texture_t new_weapon)
+EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
+                           int ghost_mod, int affected_by,
+                           id_texture_t new_helmet, id_texture_t new_armor,
+                           id_texture_t new_shield, id_texture_t new_weapon)
     : x(new_x),
       y(new_y),
+      orientation((move_t)orient),
       is_alive(ghost_mod),
       helmet(new_helmet),
       armor(new_armor),
@@ -107,6 +97,7 @@ EntityStatus& EntityStatus::operator=(const EntityStatus& other_status) {
   type_entity = other_status.type_entity;
   x = other_status.x;
   y = other_status.y;
+  orientation = other_status.orientation;
   is_alive = other_status.is_alive;
   spellbound = other_status.spellbound;
   item = other_status.item;
@@ -161,7 +152,8 @@ bool EntityStatus::is_equal(EntityStatus other_status) {
   return (type_entity == other_status.type_entity && x == other_status.x &&
           y == other_status.y && is_alive == other_status.is_alive &&
           helmet == other_status.helmet && armor == other_status.armor &&
-          shield == other_status.shield && weapon == other_status.weapon);
+          shield == other_status.shield && weapon == other_status.weapon &&
+          orientation == other_status.orientation);
 }
 
 entity_t EntityStatus::get_type_entity() const { return type_entity; }
@@ -177,6 +169,8 @@ int EntityStatus::get_life_time() const { return lifetime; }
 bool EntityStatus::is_ghost() const { return is_alive; }
 
 id_texture_t EntityStatus::get_item() const { return item; }
+
+move_t EntityStatus::get_orientation() const { return orientation; }
 
 id_texture_t EntityStatus::get_equipped(equipped_t type_item) {
   if (type_item == HELMET)

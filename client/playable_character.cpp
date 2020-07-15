@@ -1,12 +1,14 @@
 #include "playable_character.h"
 
 PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
-                                     bool ghost_mod, id_texture_t new_helmet,
+                                     move_t orient, bool ghost_mod,
+                                     id_texture_t new_helmet,
                                      id_texture_t new_armor,
                                      id_texture_t new_shield,
                                      id_texture_t new_weapon) {
   x = new_x;
   y = new_y;
+  orientation = orient;
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
@@ -24,6 +26,7 @@ PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
   /** Copiamos la parte de Character **/
   type_character = other_pc.type_character;
   animation_move = other_pc.animation_move;
+  orientation = other_pc.orientation;
   body_rect = other_pc.body_rect;
   walk = other_pc.walk;
   spellbound = other_pc.spellbound;
@@ -68,6 +71,7 @@ PlayableCharacter& PlayableCharacter::operator=(
 
   /** Copiamos la parte de Character **/
   type_character = other_pc.type_character;
+  orientation = other_pc.orientation;
   animation_move = other_pc.animation_move;
   body_rect = other_pc.body_rect;
   walk = other_pc.walk;

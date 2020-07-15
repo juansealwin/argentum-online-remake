@@ -63,7 +63,8 @@ void GameRenderer::run() {
     int frame_start;
     int frame_time;
     // Leemos la primera instancia que nos manda el server
-    Game current_game = protected_map.map_reader(ui);
+    Game current_game;
+    protected_map.map_reader(current_game, ui);
     event_t local_event;
     int index;
     bool is_selected = false;
@@ -103,7 +104,7 @@ void GameRenderer::run() {
       }
 
       // Leemos las actualizaciones mandadas desde el server
-      current_game = protected_map.map_reader(ui);
+      protected_map.map_reader(current_game, ui);
 
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_status(ui);

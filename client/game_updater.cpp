@@ -68,9 +68,9 @@ void GameUpdater::run() {
         for (int x = 0; x < bank_size; x++) {
           int item = extract<uint8_t>(status_serialized, j);
           next_ui_status.add_item(BANK, get_item_texture(item));
-          std::cout << "item in bank: " << get_item_texture(item) << std::endl;;
+          // std::cout << "item in bank: " << item << std::endl;;
         }
-        
+
         uint16_t gold = extract<uint16_t>(status_serialized, j);
         // std::cout << "gold in bnak: " << gold << std::endl;
         next_ui_status.open_shop(BANK);
@@ -161,6 +161,8 @@ void GameUpdater::deserialize_status(unsigned int& j) {
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
     // Dejamos afuera a los npc de compra y venta
+
+    /************************* DROPS *************************/
     if (is_drop(entity_type)) {
       items_in_drop = extract<uint8_t>(status_serialized, j);
       // std::cout << "ES DROP "<<std::endl;
@@ -177,6 +179,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       // Agregamos la entidad "Item"
       next_status[(int)id] = EntityStatus(get_item_texture(entity_type), x, y);
 
+      /************************* NPCS ATACABLES *************************/
     } else if (is_hero(entity_type) || is_monster(entity_type)) {
       // std::cout << "ES HERO "<<std::endl;
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
@@ -188,8 +191,13 @@ void GameUpdater::deserialize_status(unsigned int& j) {
 
       // Agregamos la entidad "monstruo"
       if (is_monster(entity_type))
-        next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
+        next_status[(int)id] =
+            EntityStatus(entity_type, x, y, orientation, affected_by);
+    } else {
+      /************************* NPC NO ATACABLES *************************/
+      next_status[(int)id] = EntityStatus(entity_type, x, y);
     }
+    /************************* PERSONAJES JUGABLES *************************/
     if (is_hero(entity_type)) {
       int name_size = extract<uint8_t>(status_serialized, j);
       std::string name;
@@ -265,11 +273,8 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       }
       // Agregamos la entidad "personaje jugable"
       next_status[(int)id] =
-          EntityStatus(entity_type, x, y, ghost_mode, affected_by, helmet,
-                       armor, shield, weapon);
-    } else {
-      // Es un NPC interactivo
-      next_status[(int)id] = EntityStatus(entity_type, x, y, affected_by);
+          EntityStatus(entity_type, x, y, orientation, ghost_mode, affected_by,
+                       helmet, armor, shield, weapon);
     }
   }
 }

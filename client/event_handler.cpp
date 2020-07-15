@@ -179,7 +179,7 @@ void EventHandler::get_events() {
                 UnbankItemCommandDTO* bank_item_command =
                     new UnbankItemCommandDTO(get_item_t(item));
                 commands_queue.push(bank_item_command);
-                
+
                 // Listamos para actualizar el inventario
                 GetBankedItemsCommandDTO* list_command =
                     new GetBankedItemsCommandDTO();
@@ -283,9 +283,9 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
       }
       // Si todos los caracteres fueron numeros se intenta depositar el oro
       if (i == deposit.size()) {
-        BankGoldCommandDTO* bank_item_command =
+        BankGoldCommandDTO* bank_gold_command =
             new BankGoldCommandDTO(std::stoi(deposit));
-        commands_queue.push(bank_item_command);
+        commands_queue.push(bank_gold_command);
 
         // Listamos para que se actualice el banco
         GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
@@ -320,9 +320,9 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
       }
       // Si todos los caracteres fueron numeros se intenta depositar el oro
       if (i == withdrawal.size()) {
-        UnbankGoldCommandDTO* bank_item_command =
+        UnbankGoldCommandDTO* unbank_gold_command =
             new UnbankGoldCommandDTO(std::stoi(withdrawal));
-        commands_queue.push(bank_item_command);
+        commands_queue.push(unbank_gold_command);
 
         // Listamos para que se actualice el banco
         GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
@@ -333,9 +333,9 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     } else {
       item_t item_required = get_item_t(withdrawal);
       if (item_required != DUMMY_ITEM) {
-        UnbankItemCommandDTO* bank_item_command =
+        UnbankItemCommandDTO* unbank_item_command =
             new UnbankItemCommandDTO(item_required);
-        commands_queue.push(bank_item_command);
+        commands_queue.push(unbank_item_command);
 
         // Listamos para que se actualice el banco
         GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
@@ -343,35 +343,50 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
       }
     }
   }
-  // Chequeamos si el usuario quiere retirar algún item del banco
+  // Chequeamos si el usuario quiere listar un mercado o el banco
   else if (input_text.compare(0, input_text.length(), MSG_LIST) == 0) {
     std::cout << "COMANDO LISTAR" << std::endl;
-    GetBankedItemsCommandDTO* bank_item_command =
+    GetBankedItemsCommandDTO* list_command =
         new GetBankedItemsCommandDTO();
-    commands_queue.push(bank_item_command);
+    commands_queue.push(list_command);
   }
-  // Chequeamos si el usuario quiere retirar algún item del banco
+  // Chequeamos si el usuario quiere comprar items en el mercado
   else if (input_text.compare(0, strlen(MSG_BUY), MSG_BUY) == 0) {
     std::cout << "COMANDO COMPRAR" << std::endl;
+    std::string buy = input_text.erase(0, strlen(MSG_BUY));
+    item_t item_required = get_item_t(buy);
+    if (item_required != DUMMY_ITEM) {
+      BuyItemCommandDTO* buy_item_command =
+          new BuyItemCommandDTO(item_required);
+      commands_queue.push(buy_item_command);
+    }
   }
-  // Chequeamos si el usuario quiere retirar algún item del banco
+  // Chequeamos si el usuario quiere vender items en el mercado
   else if (input_text.compare(0, strlen(MSG_SELL), MSG_SELL) == 0) {
     std::cout << "COMANDO VENDER" << std::endl;
+    std::string sell = input_text.erase(0, strlen(MSG_BUY));
+    item_t item_required = get_item_t(sell);
+    if (item_required != DUMMY_ITEM) {
+      SellItemCommandDTO* sell_item_command =
+          new SellItemCommandDTO(item_required);
+      commands_queue.push(sell_item_command);
+    }
   }
-  // Chequeamos si el usuario quiere retirar algún item del banco
+  // Chequeamos si el usuario quiere tomar algun item del suelo
   else if (input_text.compare(0, input_text.length(), MSG_TAKE) == 0) {
     std::cout << "COMANDO TOMAR" << std::endl;
     PickUpCommandDTO* pick_up_item_command = new PickUpCommandDTO();
     commands_queue.push(pick_up_item_command);
   }
-  // Chequeamos si el usuario quiere retirar algún item del banco
+  // Chequeamos si el usuario quiere tirar algun item al suelo
   else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
     std::string drop = input_text.erase(0, strlen(MSG_DROP));
     item_t item_required = get_item_t(drop);
     if (item_required != DUMMY_ITEM) {
-      DropItemCommandDTO* change_game_room_command = new DropItemCommandDTO(6);
-      commands_queue.push(change_game_room_command);
+      DropItemCommandDTO* drop_command =
+          new DropItemCommandDTO(item_required);
+      commands_queue.push(drop_command);
     }
   }
   // Chequeamos si se ingreso un mensaje privado

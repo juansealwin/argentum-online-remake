@@ -5,7 +5,7 @@
 
 class Npc : public Character {
  public:
-  Npc(entity_t, int, int);
+  Npc(entity_t, int, int, move_t);
   Npc(const Npc&);
   ~Npc();
   Npc& operator=(const Npc&);
