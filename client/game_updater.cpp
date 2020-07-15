@@ -179,7 +179,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       // Agregamos la entidad "Item"
       next_status[(int)id] = EntityStatus(get_item_texture(entity_type), x, y);
 
-    /************************* NPCS ATACABLES *************************/
+      /************************* NPCS ATACABLES *************************/
     } else if (is_hero(entity_type) || is_monster(entity_type)) {
       // std::cout << "ES HERO "<<std::endl;
       max_hp = ntohs(extract<uint16_t>(status_serialized, j));
@@ -190,9 +190,12 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       //           << "current_hp" << current_hp << std::endl;
 
       // Agregamos la entidad "monstruo"
-      if (is_monster(entity_type)) 
+      if (is_monster(entity_type))
         next_status[(int)id] =
             EntityStatus(entity_type, x, y, orientation, affected_by);
+    } else {
+      /************************* NPC NO ATACABLES *************************/
+      next_status[(int)id] = EntityStatus(entity_type, x, y);
     }
     /************************* PERSONAJES JUGABLES *************************/
     if (is_hero(entity_type)) {
@@ -272,9 +275,6 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       next_status[(int)id] =
           EntityStatus(entity_type, x, y, orientation, ghost_mode, affected_by,
                        helmet, armor, shield, weapon);
-    } else {
-      /************************* NPC NO ATACABLES *************************/
-      next_status[(int)id] = EntityStatus(entity_type, x, y);
     }
   }
 }
