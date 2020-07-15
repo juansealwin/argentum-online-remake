@@ -1,8 +1,9 @@
 #include "npc.h"
 
-Npc::Npc(entity_t id_npc, int new_x, int new_y) {
+Npc::Npc(entity_t id_npc, int new_x, int new_y, move_t orient) {
   x = new_x;
   y = new_y;
+  orientation = orient;
   set_character_features(id_npc);
   animation_move = Animation(width, height, type_character);
 }
@@ -17,6 +18,7 @@ Npc::Npc(const Npc& other_npc) {
 
   /** Copiamos la parte de Character **/
   type_character = other_npc.type_character;
+  orientation = other_npc.orientation;
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
   walk = other_npc.walk;
@@ -33,6 +35,7 @@ Npc& Npc::operator=(const Npc& other_npc) {
 
   /** Copiamos la parte de Character **/
   type_character = other_npc.type_character;
+  orientation = other_npc.orientation;
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
   walk = other_npc.walk;

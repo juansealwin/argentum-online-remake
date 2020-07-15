@@ -17,8 +17,8 @@ typedef struct {
 
 class ProtectedMap {
  private:
-  Game* read_map;
-  Game* write_map;
+  std::unique_ptr<Game> read_map;
+  std::unique_ptr<Game> write_map;
   std::map<int, EntityStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
   UIStatus current_ui_status;
@@ -28,7 +28,7 @@ class ProtectedMap {
  public:
   ProtectedMap(int, int, int, int);
   ~ProtectedMap();
-  Game map_reader(UIStatus&);
+  void map_reader(Game&, UIStatus&);
   void copy_buffer(UIStatus&);
   void map_writer(std::map<int, EntityStatus>&, map_t&);
 };
