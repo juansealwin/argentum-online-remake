@@ -4,6 +4,13 @@
 #include <sstream>
 #include <vector>
 
+  // while (!commands_queue->is_empty()) {
+  //   Command *c = commands_queue->pop();
+  //   delete c;
+  //   if (commands_queue->is_closed()) break;
+  // }
+  // this->alive = false;
+
 ClientCommandReceiver::ClientCommandReceiver(
     Socket &peer_socket, unsigned int game_room,
     ThreadSafeQueue<Command *> *commands_queue, unsigned int hero_id,
@@ -49,7 +56,7 @@ void ClientCommandReceiver::run() {
         sent_quit = true;
       }
       delete command_dto;
-    } else if (!sent_quit) {
+    } else if (!sent_quit && !commands_queue->is_closed()) {
       alive = false;
       sent_quit = true;
       commands_queue->push(new QuitCommand(hero_id));
