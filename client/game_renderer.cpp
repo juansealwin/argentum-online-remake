@@ -106,7 +106,9 @@ void GameRenderer::run() {
       current_game = protected_map.map_reader(ui);
 
       // Actualizamos el estado del inventario para el EventHandler
-      events_queue.write_inventory(ui.get_items());
+      events_queue.write_status(ui);
+
+      // Actualizamos el mercado/banco
 
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
