@@ -24,17 +24,6 @@ void Map::load_terrain(Json::Value &map_json) {
       if (type2 != 0) {
         fixed = true;
         repr = 'b';
-        // if ((type2 >= TREE_1) && (type2 <= TREE_2)) {
-        //   if (type2 == TREE_ROOT) {
-        //     fixed = true;
-        //     repr = 'b';
-        //   } else {
-        //     fixed = false;
-        //   }
-        // } else {
-        //   fixed = true;
-        //   repr = 'b';
-        // }
       } else if (type != GROUND) {
         safe = true;
         repr = 'f';
@@ -115,6 +104,5 @@ void Map::debug_print() {
 }
 
 int Map::get_uid(int x, int y) {
-  
   return matrix[x][y].entity_id;
 }

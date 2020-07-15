@@ -35,8 +35,6 @@ void Projectile::impact_at_position(int x, int y) {
     kill();
     return;
   } else if (map->can_ocupy_cell(x, y)) {
-    //map->ocupy_cell(x, y, unique_id);
-    //map->empty_cell(x_position, y_position);
     map->empty_projectile(x_position, y_position);
     map->put_projectile(x, y);
     x_position = x;

@@ -2,10 +2,10 @@
 #define ENTITY_H
 
 typedef enum {
-  orientation_up,
-  orientation_right,
   orientation_down,
-  orientation_left
+  orientation_right,
+  orientation_left,
+  orientation_up
 } orientation_t;
 
 #include "model_exceptions.h"

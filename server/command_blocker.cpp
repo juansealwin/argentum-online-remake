@@ -1,7 +1,8 @@
 #include "command_blocker.h"
-
+#include <iostream>
 CommandBlocker::CommandBlocker() {
-  last_move_time = last_attack_time = std::chrono::high_resolution_clock::now();
+  last_move_time = last_attack_time = last_room_move =
+      std::chrono::high_resolution_clock::now();
 }
 
 CommandBlocker::~CommandBlocker() {}
@@ -13,9 +14,23 @@ bool CommandBlocker::can_process(CommandDTO* command_dto) {
       return can_process_move();
     case ATTACK_COMMAND:
       return can_process_attack();
+    case CHANGE_GAME_ROOM_COMMAND:
+      return can_process_room_change();
     default:
       return true;
   }
+}
+
+bool CommandBlocker::can_process_room_change() {
+  auto actual_time = std::chrono::high_resolution_clock::now();
+  auto time_difference = std::chrono::duration_cast<std::chrono::seconds>(
+      actual_time - last_room_move);
+  const int seconds_restriction = 7;
+  if (time_difference.count() >= seconds_restriction) {
+    last_room_move = actual_time;
+    return true;
+  }
+  return false;
 }
 
 bool CommandBlocker::can_process_move() {
