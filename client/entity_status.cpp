@@ -33,7 +33,7 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y)
 
 EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
                            int affected_by)
-    : x(new_x), y(new_y) {
+    : x(new_x), y(new_y), orientation((move_t)orient) {
   // poner los id que usa el server
   switch (type_ent) {
     case 29:
@@ -52,23 +52,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
       type_entity = ZOMBIE;
       break;
   }
-  switch (orient) {
-    case 0:
-      orientation = MOVE_UP;
-      break;
-
-    case 1:
-      orientation = MOVE_RIGHT;
-      break;
-
-    case 2:
-      orientation = MOVE_DOWN;
-      break;
-
-    case 3:
-      orientation = MOVE_LEFT;
-      break;
-  }
   set_spellbound(affected_by);
   helmet = ID_NULL;
   armor = ID_NULL;
@@ -82,6 +65,7 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
                            id_texture_t new_shield, id_texture_t new_weapon)
     : x(new_x),
       y(new_y),
+      orientation((move_t)orient),
       is_alive(ghost_mod),
       helmet(new_helmet),
       armor(new_armor),
@@ -102,24 +86,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
 
     case 28:
       type_entity = GNOME;
-      break;
-  }
-
-  switch (orient) {
-    case 0:
-      orientation = MOVE_UP;
-      break;
-
-    case 1:
-      orientation = MOVE_RIGHT;
-      break;
-
-    case 2:
-      orientation = MOVE_DOWN;
-      break;
-
-    case 3:
-      orientation = MOVE_LEFT;
       break;
   }
   set_spellbound(affected_by);
