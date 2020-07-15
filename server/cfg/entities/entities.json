@@ -289,6 +289,8 @@
   "maxSafeGoldMultiplier": 400,
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
-  "ups": 30.0,
+  "ups": 60.0,
+  "newbieLevelCap": 10,
+  "pvpLevelDifferenceAllowed":5,
   "lastId": 37
 }

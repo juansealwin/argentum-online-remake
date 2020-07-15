@@ -130,11 +130,13 @@ void ArgentumGame::hero_revive(int entity_id) {
       int x = std::get<0>(pos);
       int y = std::get<1>(pos);
       if (x == -1) {
-        message_center.notify_error(hero->name, "Tenes que moverte a un mapa con un cura!");
+        message_center.notify_error(hero->name,
+                                    "Tenes que moverte a un mapa con un cura!");
         return;
       }
-      int distance = HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
-      int seconds_blocked = (distance/3) + 10;
+      int distance =
+          HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
+      int seconds_blocked = (distance / 3) + 10;
       hero->block(seconds_blocked, x + 1, y);
       message_center.notify_waiting_time_to_revive(hero->name, seconds_blocked);
     } else
@@ -323,7 +325,6 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         get_contiguous_position(hero);
     unsigned int x = std::get<0>(projectile_position);
     unsigned int y = std::get<1>(projectile_position);
-    std::cout << "creating projectile" << std::endl;
     Projectile *projectile = new Projectile(
         entities_ids, x, y, attack_info.attacker_weapon_id, 'p',
         attack_info.damage, attack_info.critical, attacker_id,
@@ -427,7 +428,8 @@ void ArgentumGame::update() {
   heroes_manager.update(std::ref(heroes));
 
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
-                            std::ref(projectiles), message_center);
+                            std::ref(projectiles), message_center,
+                            entities_cfg);
   projectile_manager.remove_death_projectiles(std::ref(projectiles), map);
 }
 
@@ -510,8 +512,7 @@ void ArgentumGame::clean_notifications_queues() {
 
 std::tuple<int, int> ArgentumGame::get_npc_pos(npc_t npc) {
   for (auto it = npc_positions.begin(); it != npc_positions.end(); ++it)
-    if (it->second == npc)
-        return it->first;
+    if (it->second == npc) return it->first;
   return std::tuple<int, int>(-1, -1);
 }
 
@@ -581,16 +582,6 @@ unsigned int ArgentumGame::place_hero(std::string hero_race,
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
 }
-
-// void ArgentumGame::place_monster(unsigned int x, unsigned int y) {
-//   Json::Value entity = entities_cfg["npcs"]["goblin"];
-//   Monster *e = new Monster(entities_ids, x, y, entity["id"].asInt(), 'g',
-//                            entity["maxHp"].asInt(), entity["level"].asInt(),
-//                            entity["dps"].asInt(), std::ref(map));
-//   map->ocupy_cell(x, y, entities_ids);
-
-//   monsters.emplace(entities_ids++, e);
-// }
 
 void ArgentumGame::print_debug_map() {
   std::unique_lock<std::mutex> lock(mutex);

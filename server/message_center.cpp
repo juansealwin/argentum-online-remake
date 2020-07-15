@@ -72,15 +72,17 @@ void MessageCenter::send_private_message(std::string src, std::string dst,
 
 void MessageCenter::notify_cant_attack_low_levels(std::string attacker,
                                                   std::string attacked,
-                                                  int attacked_level) {
+                                                  int attacked_level,
+                                                  int newbie_level_cap) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string msg;
-  if (attacked_level < 10) {
+  if (attacked_level < newbie_level_cap) {
     msg = "No podes atacar a jugadores inferiores a nivel 10, " + attacked +
           " es nivel " + std::to_string(attacked_level);
   } else {
-    msg = "La diferencia de niveles entre vos y " + attacked +
-          " es mayor a 10. No podes atacarlo.";
+    msg = "Hay mucha diferencia de niveles entre vos y " + attacked +
+          ", es nivel " + std::to_string(attacked_level) +
+          ". No podes hacerle daño.";
   }
   send_message(attacker, msg);
 }

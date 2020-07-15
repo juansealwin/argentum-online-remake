@@ -30,7 +30,7 @@ class MessageCenter {
   void send_not_enough_gold_message(std::string dst, unsigned int price);
   void notify_waiting_time_to_revive(std::string dst, unsigned int seconds);
   void notify_cant_attack_low_levels(std::string attacker, std::string attacked,
-                                     int attacked_level);
+                                     int attacked_level, int newbie_level_cap);
 
  private:
   // mapea nombre del jugador con su cola

@@ -10,7 +10,7 @@ void ProjectileManager::update(
     std::map<unsigned int, Hero *> &heroes,
     std::map<unsigned int, Monster *> &monsters,
     std::map<unsigned int, Projectile *> &projectiles,
-    MessageCenter &message_center) {
+    MessageCenter &message_center, Json::Value &game_cfg) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
   // 4 movimientos por segundo para los proyectiles
@@ -19,7 +19,7 @@ void ProjectileManager::update(
       Projectile *p = projectile.second;
       p->auto_move();
       if (p->collided) {
-        manage_collision(p, heroes, monsters, message_center);
+        manage_collision(p, heroes, monsters, message_center, game_cfg);
       }
     }
     last_update_time = actual_time;
@@ -28,8 +28,8 @@ void ProjectileManager::update(
 
 void ProjectileManager::manage_collision(
     Projectile *projectile, std::map<unsigned int, Hero *> &heroes,
-    std::map<unsigned int, Monster *> &monsters,
-    MessageCenter &message_center) {
+    std::map<unsigned int, Monster *> &monsters, MessageCenter &message_center,
+    Json::Value &game_cfg) {
   int attacked_id = projectile->get_collided_entity();
 
   unsigned int damage_done = 0;
@@ -37,11 +37,16 @@ void ProjectileManager::manage_collision(
   attacked = get_hero_or_monster(attacked_id, heroes, monsters);
   int attacker_id = projectile->get_attacker_id();
   attacker = get_hero_or_monster(attacker_id, heroes, monsters);
-  //chequeo niveles
+  // chequeo niveles
+  unsigned int newbie_level_cap = game_cfg["newbieLevelCap"].asUInt();
+  unsigned int pvp_level_diff_allowed =
+      game_cfg["pvpLevelDifferenceAllowed"].asUInt();
   if (dynamic_cast<Hero *>(attacker) && dynamic_cast<Hero *>(attacked)) {
-    if ((HelperFunctions::difference(attacker->level, attacked->level) >= 10)
-    || attacked->level < 10) {
-      message_center.notify_cant_attack_low_levels(attacker->get_name(), attacked->get_name(), attacked->level);
+    if ((HelperFunctions::difference(attacker->level, attacked->level) >=
+         newbie_level_cap) ||
+        attacked->level < pvp_level_diff_allowed) {
+      message_center.notify_cant_attack_low_levels(
+          attacker->get_name(), attacked->get_name(), attacked->level, newbie_level_cap);
       projectile->kill();
       return;
     }
