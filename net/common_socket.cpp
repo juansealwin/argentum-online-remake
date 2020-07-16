@@ -50,7 +50,7 @@ void Socket::close() {
   ::close(this->fd);
 }
 
-void Socket::send(const void *msg, const size_t length) const {
+int Socket::send(const void *msg, const size_t length) const {
   if (length == 0) return;
   uint remaining_bytes = length;
   uint total_bytes_sent = 0;
@@ -62,6 +62,7 @@ void Socket::send(const void *msg, const size_t length) const {
     total_bytes_sent += bytes;
     remaining_bytes -= bytes;
   } while (total_bytes_sent < length && bytes > 0);
+  return bytes;
 }
 
 int Socket::recv(void *response, const size_t length) const {
