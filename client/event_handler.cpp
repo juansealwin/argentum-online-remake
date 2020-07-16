@@ -379,7 +379,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     commands_queue.push(pick_up_item_command);
   }
   // Chequeamos si el usuario quiere tirar algun item al suelo
-  else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
+  else if (input_text.compare(0, strlen(MSG_DROP), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
     std::string drop = input_text.erase(0, strlen(MSG_DROP));
     item_t item_required = get_item_t(drop);
