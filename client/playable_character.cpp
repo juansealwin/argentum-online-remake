@@ -199,7 +199,8 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     // Si esta meditando renderizamos la meditación
     if (zen_mode)
       texture_manager.get_texture(ID_MEDITATION)
-          .render(renderer, &meditating_frame, x - x_rel, y - y_rel);
+          .render(renderer, &meditating_frame, x - x_rel,
+                  y - height - y_rel);
   }
 }
 
@@ -297,8 +298,8 @@ void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
     // Seteamos si el personaje esta meditando
     if (meditating && !zen_mode) {
       zen_mode = meditating;
-      meditating_animation = Animation(ZEN_WIDTH, GHOST_HEIGHT, ID_MEDITATION);
-      meditating_frame = {0, 0, ZEN_WIDTH, GHOST_HEIGHT};
+      meditating_animation = Animation(ZEN_WIDTH, ZEN_HEIGHT, ID_MEDITATION);
+      meditating_frame = {0, 0, ZEN_WIDTH, ZEN_HEIGHT};
     }
 
     // Chequeamos si dejo de meditar
@@ -306,9 +307,9 @@ void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
       zen_mode = meditating;
 
     // Chequeamos si sigue meditando
-    else if (zen_mode && meditating)
+    else if (zen_mode && meditating) 
       meditating_frame = meditating_animation.get_next_clip();
-
+    
     // Chequeamos si cambio el caso
     if (new_helmet == ID_NULL && helmet != ID_NULL)
       unequip_item(HELMET);

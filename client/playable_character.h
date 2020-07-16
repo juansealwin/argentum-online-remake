@@ -7,8 +7,8 @@
 
 #define GHOST_WIDTH 29
 #define GHOST_HEIGHT 32
-#define ZEN_WIDTH 30
-#define ZEN_HEIGHT 40
+#define ZEN_WIDTH 31
+#define ZEN_HEIGHT 68
 
 class PlayableCharacter : public Character {
  protected:

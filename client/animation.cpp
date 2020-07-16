@@ -65,7 +65,7 @@ SDL_Rect Animation::get_next_clip() {
                          character_height * current_clip[CLIP_DOWN],
                          character_width, character_height};
   // mientras sea menor a la cantidad de columnas le sumo a x
-  if (current_clip[CLIP_UP] < clips_up_down) {
+  if (current_clip[CLIP_UP] < clips_up_down - 1) {
     current_clip[CLIP_UP]++;
   } else {
     current_clip[CLIP_UP] = 0;
