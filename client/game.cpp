@@ -14,8 +14,7 @@ Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
 
 Game::~Game() {
   if (!characters.empty()) {
-    // clean_all_characters(false);
-    characters.clear();
+    clean_all_characters(false);
   }
 }
 
@@ -29,7 +28,7 @@ Game::Game(const Game& other_game) {
   viewport = other_game.viewport;
 
   if (!characters.empty()) {
-    characters.clear();
+    clean_all_characters(false);
   }
 
   std::map<int, Character*>::const_iterator it;
@@ -73,9 +72,9 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
-                            move_t orientation, bool ghost, bool meditating, id_texture_t helmet,
-                            id_texture_t armor, id_texture_t shield,
-                            id_texture_t weapon) {
+                            move_t orientation, bool ghost, bool meditating,
+                            id_texture_t helmet, id_texture_t armor,
+                            id_texture_t shield, id_texture_t weapon) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
