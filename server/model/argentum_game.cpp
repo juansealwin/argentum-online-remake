@@ -170,12 +170,20 @@ void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
-        1)
+        1) {
+      message_center.notify_need_to_be_close_to_npc_to_buy_or_sell(hero->name);
       return;
+    }
+
     if (hero->inventory->is_full()) {
       message_center.send_inventory_is_full_message(hero->name);
       return;
     }
+    if (!closest_npcs_sells_or_buys_item(hero->x_position, hero->y_position,
+                                         (item_t)item_id)) {
+      message_center.notify_no_npc_to_buy_item(hero->name);
+      return;
+    };
     unsigned int item_price =
         ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
     if (!hero->has_gold(item_price)) {
@@ -195,9 +203,19 @@ void ArgentumGame::hero_sell_item(int entity_id, int item_id) {
     Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
     if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
-        1)
+        1) {
+      message_center.notify_need_to_be_close_to_npc_to_buy_or_sell(hero->name);
       return;
-    // ENVIAR MENSAJE oro en inventario completo
+    }
+    if (!hero->inventory->has_item(item_id)) {
+      message_center.notify_cant_sell_not_existing_item(hero->name);
+      return;
+    }
+    if (!closest_npcs_sells_or_buys_item(hero->x_position, hero->y_position,
+                                         (item_t)item_id)) {
+      message_center.notify_no_npc_to_sell_item(hero->name);
+      return;
+    };
     unsigned int item_price =
         ItemFactory::get_item_price(entities_cfg["items"], (item_t)item_id);
     if (hero->gold_space_remaining() < item_price) return;
@@ -662,15 +680,23 @@ SaleInfoNotification *ArgentumGame::get_sale_info(npc_t npc) {
   notification.push_back(notification_id);
   std::vector<item_t> sale_items;
   if (npc == MERCHANT) {
-    sale_items = {
-        turtle_shield,  iron_shield,  hood,        iron_helmet, magic_hat,
-        leather_armour, plate_armour, blue_tunic,  sword,       axe,
-        hammer,         simple_bow,   compound_bow};
+    sale_items = merchant_sale_items;
   } else if (npc == PRIEST) {
-    sale_items = {hp_potion,     mana_potion, ash_stick,
-                  gnarled_staff, crimp_staff, elven_flute};
+    sale_items = priest_sale_items;
   }
   notification.push_back(sale_items.size());
   notification.insert(notification.end(), sale_items.begin(), sale_items.end());
   return new SaleInfoNotification(notification);
+}
+
+bool ArgentumGame::closest_npcs_sells_or_buys_item(int x, int y, item_t item) {
+  if (is_npc_close(x, y, PRIEST)) {
+    if ((std::count(priest_sale_items.begin(), priest_sale_items.end(), item)))
+      return true;
+  }
+  if (is_npc_close(x, y, MERCHANT)) {
+    if ((std::count(merchant_sale_items.begin(), merchant_sale_items.end(),
+                    item)))
+      return true;
+  }
 }

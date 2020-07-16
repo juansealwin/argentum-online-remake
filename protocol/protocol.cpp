@@ -116,6 +116,7 @@ BuyItemCommandDTO* receive_buy_command(const Socket& socket) {
 }
 
 SellItemCommandDTO* receive_sell_command(const Socket& socket) {
+  std::cout << "receiving sel command" << std::endl;
   uint8_t item = 0;
   socket.recv(&item, 1);
   return new SellItemCommandDTO(item);
@@ -172,46 +173,46 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   }
 }
 
-void send_login(const Socket& socket, const LoginCommandDTO* login_command) {
-  uint8_t command_id = LOGIN_COMMAND;
+void send_login(const Socket& socket, LoginCommandDTO* login_command) {
+  uint8_t command_id = login_command->get_id();
   uint8_t room_number = login_command->room_number;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&room_number, 1);
 }
 
 void send_change_game_room(const Socket& socket,
-                           const ChangeGameRoomDTO* change_game_room) {
-  uint8_t command_id = CHANGE_GAME_ROOM_COMMAND;
+                           ChangeGameRoomDTO* change_game_room) {
+  uint8_t command_id = change_game_room->get_id();
   uint8_t room_number = change_game_room->room_number;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&room_number, 1);
 }
 
-void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
-  uint8_t command_id = QUIT_COMMAND;
+void send_quit(const Socket& socket, QuitCommandDTO* quit_command) {
+  uint8_t command_id = quit_command->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
-  uint8_t command_id = MOVE_COMMAND;
+void send_move(const Socket& socket, MoveCommandDTO* move_command) {
+  uint8_t command_id = move_command->get_id();
   uint8_t move_type = move_command->movement_type;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&move_type, 1);
 }
 
-void send_attack(const Socket& socket, const AttackCommandDTO* attack_command) {
-  uint8_t command_id = ATTACK_COMMAND;
+void send_attack(const Socket& socket, AttackCommandDTO* attack_command) {
+  uint8_t command_id = attack_command->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_pick_up_item(const Socket& socket,
-                       const PickUpCommandDTO* pick_up_command) {
-  uint8_t command_id = PICK_UP_ITEM_COMMAND;
+                       PickUpCommandDTO* pick_up_command) {
+  uint8_t command_id = pick_up_command->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
-  uint8_t command_id = USE_ITEM_COMMAND;
+void send_use_item(const Socket& socket, UseItemCommandDTO* use_command) {
+  uint8_t command_id = use_command->get_id();
   uint8_t item = use_command->item;
   uint8_t item_slot = use_command->item_slot;
   uint8_t is_equipped = use_command->equipped;
@@ -222,8 +223,8 @@ void send_use_item(const Socket& socket, const UseItemCommandDTO* use_command) {
 }
 
 void send_drop_item(const Socket& socket,
-                    const DropItemCommandDTO* drop_command) {
-  uint8_t command_id = DROP_ITEM_COMMAND;
+                    DropItemCommandDTO* drop_command) {
+  uint8_t command_id = drop_command->get_id();
   uint8_t item = drop_command->item_id;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, ID_LENGTH);
@@ -240,7 +241,7 @@ void send_string(const Socket& socket, std::string str) {
 
 void send_private_message(const Socket& socket,
                           PrivateMessageDTO* msg_command) {
-  uint8_t command_id = PRIVATE_MESSAGE_COMMAND;
+  uint8_t command_id = msg_command->get_id();
   socket.send(&command_id, ID_LENGTH);
   send_string(socket, msg_command->get_dst());
   send_string(socket, msg_command->get_msg());
@@ -248,7 +249,7 @@ void send_private_message(const Socket& socket,
 
 void send_bank_item_command(const Socket& socket,
                             BankItemCommandDTO* commandDTO) {
-  uint8_t command_id = BANK_ITEM_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   uint8_t item = commandDTO->item;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, 1);
@@ -256,7 +257,7 @@ void send_bank_item_command(const Socket& socket,
 
 void send_unbank_item_command(const Socket& socket,
                               UnbankItemCommandDTO* commandDTO) {
-  uint8_t command_id = UNBANK_ITEM_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   uint8_t item = commandDTO->item;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, 1);
@@ -264,7 +265,7 @@ void send_unbank_item_command(const Socket& socket,
 
 void send_bank_gold_command(const Socket& socket,
                             BankGoldCommandDTO* commandDTO) {
-  uint8_t command_id = BANK_GOLD_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   uint16_t ammount = commandDTO->ammount;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&ammount, 2);
@@ -272,27 +273,28 @@ void send_bank_gold_command(const Socket& socket,
 
 void send_unbank_gold_command(const Socket& socket,
                               UnbankGoldCommandDTO* commandDTO) {
-  uint8_t command_id = UNBANK_GOLD_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   uint16_t ammount = commandDTO->ammount;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&ammount, 2);
 }
 
 void send_get_banked_items_command(const Socket& socket,
-                                   GetBankedItemsCommandDTO*) {
-  uint8_t command_id = GET_BANKED_ITEMS_COMMAND;
+                                   GetBankedItemsCommandDTO* commandDTO) {
+  uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_buy_command(const Socket& socket, BuyItemCommandDTO* commandDTO) {
-  uint8_t command_id = BUY_ITEM_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   uint8_t item = commandDTO->item;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, 1);
 }
 
 void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
-  uint8_t command_id = SELL_ITEM_COMMAND;
+  std::cout << "sending sell command " << std::endl;
+  uint8_t command_id = commandDTO->get_id();
   uint8_t item = commandDTO->item;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, 1);
@@ -300,30 +302,31 @@ void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
 
 void send_revive_command(const Socket& socket,
                            ReviveCommandDTO* commandDTO) {
-  uint8_t command_id = REVIVE_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_heal_command(const Socket& socket,
                            HealCommandDTO* commandDTO) {
-  uint8_t command_id = HEAL_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_use_special_command(const Socket& socket,
                            UseItemSpecialCommandDTO* commandDTO) {
-  uint8_t command_id = USE_ITEM_SPECIAL_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_meditate_command(const Socket& socket,
                            MeditateCommandDTO* commandDTO) {
-  uint8_t command_id = MEDITATE_COMMAND;
+  uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
+  std::cout << "Sending command " << commandDTO->get_id() << std::endl;
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
       send_login(socket, dynamic_cast<LoginCommandDTO*>(commandDTO));

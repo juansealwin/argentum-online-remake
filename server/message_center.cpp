@@ -25,8 +25,8 @@ void MessageCenter::notify_error(std::string player, std::string error) {
 void MessageCenter::notify_waiting_time_to_revive(std::string dst,
                                                   unsigned int seconds) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string msg =
-      "Por favor, espera " + std::to_string(seconds) + " segundos para revivir.";
+  std::string msg = "Por favor, espera " + std::to_string(seconds) +
+                    " segundos para revivir.";
   send_message(dst, msg);
 }
 
@@ -97,6 +97,24 @@ void MessageCenter::notify_cant_change_map(std::string player) {
   send_message(player, msg);
 }
 
+void MessageCenter::notify_need_to_be_close_to_npc_to_buy_or_sell(std::string player) {
+  std::string msg = "Para hacer eso tenes que estar cerca de un sacerdote o un comerciante!";
+  send_message(player, msg);
+}
+void MessageCenter::notify_no_npc_to_sell_item(std::string player) {
+  std::string msg = "No podes vender ese item a este NPC!";
+  send_message(player, msg);
+}
+
+void MessageCenter::notify_no_npc_to_buy_item(std::string player) {
+  std::string msg = "No podes comprar ese item a este NPC!";
+  send_message(player, msg);
+}
+
+void MessageCenter::notify_cant_sell_not_existing_item(std::string player) {
+  std::string msg = "No podes vender un item que no tengas en tu inventario!";
+  send_message(player, msg);
+}
 
 void MessageCenter::send_not_enough_gold_message(std::string dst,
                                                  unsigned int price) {

@@ -51,7 +51,7 @@ void Socket::close() {
 }
 
 int Socket::send(const void *msg, const size_t length) const {
-  if (length == 0) return;
+  if (length == 0) return 0;
   uint remaining_bytes = length;
   uint total_bytes_sent = 0;
   ssize_t bytes = 0;
