@@ -12,6 +12,7 @@ class Staff : public Weapon {
   virtual bool can_be_used_by(Hero *hero);
   //No deberia llamarse a use() si can_be_used_by devolvio false
   virtual void use(Hero *hero) override;
+  virtual void attack_use(Hero *hero) override;
   void special_use(Hero *hero);
   Staff(const Staff &) = delete;
 

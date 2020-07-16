@@ -67,8 +67,16 @@ void Equipment::use_primary_weapon(Hero *hero) {
   if (weapon)
     weapon->use(hero);
   else if (staff)
-    weapon->use(hero);
+    staff->use(hero);
 }
+
+void Equipment::attack_use_primary_weapon(Hero *hero) {
+  if (weapon)
+    weapon->attack_use(hero);
+  else if (staff)
+    staff->attack_use(hero);
+}
+
 
 void Equipment::equip_weapon(Weapon *weapon) {
   if (staff)

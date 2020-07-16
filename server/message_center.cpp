@@ -97,8 +97,10 @@ void MessageCenter::notify_cant_change_map(std::string player) {
   send_message(player, msg);
 }
 
-void MessageCenter::notify_need_to_be_close_to_npc_to_buy_or_sell(std::string player) {
-  std::string msg = "Para hacer eso tenes que estar cerca de un sacerdote o un comerciante!";
+void MessageCenter::notify_need_to_be_close_to_npc_to_buy_or_sell(
+    std::string player) {
+  std::string msg =
+      "Para hacer eso tenes que estar cerca de un sacerdote o un comerciante!";
   send_message(player, msg);
 }
 void MessageCenter::notify_no_npc_to_sell_item(std::string player) {
@@ -106,13 +108,29 @@ void MessageCenter::notify_no_npc_to_sell_item(std::string player) {
   send_message(player, msg);
 }
 
+// void MessageCenter::notify_must_be_close_to_banker(std::string player) {
+//   std::string msg = "Tenes que estar cerca de un banquero para ejecutar este comando!";
+//   send_message(player, msg);
+// }
+
 void MessageCenter::notify_no_npc_to_buy_item(std::string player) {
   std::string msg = "No podes comprar ese item a este NPC!";
   send_message(player, msg);
 }
 
+void MessageCenter::notify_need_to_be_close_to_npc(std::string player) {
+  std::string msg =
+      "Tenes que estar cerca del NPC para ejecutar este comando!";
+  send_message(player, msg);
+}
+
 void MessageCenter::notify_cant_sell_not_existing_item(std::string player) {
   std::string msg = "No podes vender un item que no tengas en tu inventario!";
+  send_message(player, msg);
+}
+
+void MessageCenter::notify_ghosts_cant_buy_items(std::string player) {
+  std::string msg = "Los fantasmas no pueden comprar ni vender items!";
   send_message(player, msg);
 }
 

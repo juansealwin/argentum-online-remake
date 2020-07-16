@@ -31,7 +31,9 @@ class Equipment {
   // devuelve distancia a la cual puede llegar a atacar
   unsigned int range();
   bool can_use_primary_weapon(Hero *hero);
+  //este usar es llamado para equipar/desequipar
   void use_primary_weapon(Hero *hero);
+  void attack_use_primary_weapon(Hero *hero);
   Weapon *unequip_weapon();
   Staff *unequip_staff();
   DefensiveItem *unequip_shield();

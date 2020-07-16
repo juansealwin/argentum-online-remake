@@ -206,19 +206,19 @@ void Hero::use_special_staff() {
 
 void Hero::unbank_gold(unsigned int ammount) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't add gold to inventory!", "5");
+    throw ModelException("Los fantasmas no pueden utilizar el banco!", "5");
   meditating = false;
   if (bank->current_gold() < ammount)
-    throw ModelException("Bank doesn't have that ammount of gold!", "5");
+    throw ModelException("No tenes esa cantidad de monedas en tu banco!", "5");
   if (gold_space_remaining() < ammount)
-    throw ModelException("Can't hold that ammount of gold in inventory!", "5");
+    throw ModelException("No podes guardar esa cantidad de monedas en tu inventario!", "5");
   inventory->add_gold(bank->remove_gold(ammount));
 }
 void Hero::bank_gold(unsigned int ammount) {
-  if (ghost_mode) throw ModelException("Ghosts can't add gold to bank!", "5");
+  if (ghost_mode) throw ModelException("Los fantasmas no pueden utilizar el banco!", "5");
   meditating = false;
   if (inventory->current_gold() < ammount)
-    throw ModelException("Inventory doesn't have that ammount of gold!", "5");
+    throw ModelException("No tenes esa cantidad de dinero en tu inventario!", "5");
   bank->add_gold(inventory->remove_gold(ammount));
 }
 
@@ -228,26 +228,26 @@ void Hero::remove_gold(unsigned int q) { inventory->remove_gold(q); }
 
 void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't add items to inventory!", "5");
+    throw ModelException("Los fantasmas no pueden utilizar el banco!", "5");
   meditating = false;
-  if (inventory->is_full()) throw ModelException("Inventory is full!", "5");
+  if (inventory->is_full()) throw ModelException("Tu inventario esta lleno, no podes retirar mas items!", "5");
   Item *i = bank->remove_item(item_id);
-  if (!i) throw ModelException("Bank doesn't have that item!", "5");
+  if (!i) throw ModelException("No tenes ese item en tu banco!", "5");
   inventory->add_item(i);
 }
 void Hero::bank_item(unsigned int item_id) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't transfer items to bank!", "5");
+    throw ModelException("Los fantasmas no pueden utilizar el banco!", "5");
   meditating = false;
-  if (bank->is_full()) throw ModelException("Bank is full!", "5");
+  if (bank->is_full()) throw ModelException("El banco esta lleno, ya no podes depositar mas items!", "5");
   Item *i = inventory->remove_item(item_id);
-  if (!i) throw ModelException("Inventory doesn't have that item!", "5");
+  if (!i) throw ModelException("No tenes ese item en tu inventario!", "5");
   bank->add_item(i);
 }
 
 Item *Hero::remove_item(unsigned int item_id) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't add items to inventory!", "5");
+    throw ModelException("Los fantasmas no pueden remover items de su inventario!", "5");
   meditating = false;
   Item *i = inventory->remove_item(item_id);
   return i;
@@ -255,7 +255,7 @@ Item *Hero::remove_item(unsigned int item_id) {
 
 void Hero::add_item(Item *item) {
   if (ghost_mode)
-    throw ModelException("Ghosts can't add items to inventory!", "4");
+    throw ModelException("Los fantasmas no pueden agregar items a su inventario!", "4");
   meditating = false;
   inventory->add_item(item);
 }
@@ -270,7 +270,7 @@ void Hero::add_gold(unsigned int gold) {
 }
 
 void Hero::pick_up_drop(Drop *drop) {
-  if (ghost_mode) throw ModelException("Ghosts can't pick up drops!", "4");
+  if (ghost_mode) throw ModelException("Los fantasmas no pueden agarrar cosas del suelo!", "4");
   if ((drop->size() > 0) && (this->has_free_space())) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());
@@ -303,11 +303,10 @@ void Hero::notify_damage_done(BaseCharacter *other, unsigned int damage_done) {
 }
 
 const Attack Hero::attack() {
-  if (ghost_mode) throw ModelException("Ghosts can't attack!", "3");
-  // if (!close_enough(other)) throw ModelException("Too far to attack!", "7");
+  if (ghost_mode) throw ModelException("Los fantasmas no pueden atacar!", "3");
   if (equipment->has_weapon() || equipment->has_staff()) {
     if (!equipment->can_use_primary_weapon(this))
-      throw ModelException("Cant use primary weapon! (not enough mana?)", "8");
+      throw ModelException("Mana insuficiente!", "8");
   }
   meditating = false;
   // mover a json!
@@ -317,6 +316,7 @@ const Attack Hero::attack() {
   if (p < critical_damage_probability) critical = true;
   Attack attack = {dmg, critical, equipment->primary_weapon_id(),
                    equipment->range()};
+  equipment->attack_use_primary_weapon(this);
   return std::move(attack);
 }
 
@@ -324,7 +324,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
                                   unsigned int weapon_origin) {
   // std::cout << "Received damage!! " << damage << " is critical? " << critical
   //           << std::endl;
-  if (ghost_mode) throw ModelException("Can't attack ghosts!", "2");
+  if (ghost_mode) throw ModelException("Los fantasmas no son atacables!", "2");
   meditating = false;
   // meter en json!
   // std::cout << "@@@Damage al ingresar receive damage: " << damage <<
@@ -365,7 +365,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
 }
 
 void Hero::meditate() {
-  if (ghost_mode) throw ModelException("Can't meditate death!", "2");
+  if (ghost_mode) throw ModelException("No se puede meditar si estas muerto!", "2");
   ;
   meditating = true;
 }

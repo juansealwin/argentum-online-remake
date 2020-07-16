@@ -116,7 +116,6 @@ BuyItemCommandDTO* receive_buy_command(const Socket& socket) {
 }
 
 SellItemCommandDTO* receive_sell_command(const Socket& socket) {
-  std::cout << "receiving sel command" << std::endl;
   uint8_t item = 0;
   socket.recv(&item, 1);
   return new SellItemCommandDTO(item);
@@ -293,7 +292,6 @@ void send_buy_command(const Socket& socket, BuyItemCommandDTO* commandDTO) {
 }
 
 void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
-  std::cout << "sending sell command " << std::endl;
   uint8_t command_id = commandDTO->get_id();
   uint8_t item = commandDTO->item;
   socket.send(&command_id, ID_LENGTH);
@@ -326,7 +324,6 @@ void send_meditate_command(const Socket& socket,
 
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
-  std::cout << "Sending command " << commandDTO->get_id() << std::endl;
   switch (commandDTO->get_id()) {
     case LOGIN_COMMAND:
       send_login(socket, dynamic_cast<LoginCommandDTO*>(commandDTO));
