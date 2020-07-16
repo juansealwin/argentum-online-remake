@@ -14,7 +14,7 @@ void Socket::connect(const char *host, const char *port) {
   struct addrinfo *addr = addrinfo_list;
   while (addr && !connected) {
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == -1) connected = true;
+    if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == 0) connected = true;
     addr = addr->ai_next;
   }
   this->fd = fd;
@@ -22,14 +22,14 @@ void Socket::connect(const char *host, const char *port) {
 }
 
 void Socket::bind_and_listen(const char *port) {
-  bool binded = false;
+  bool bound = false;
   struct addrinfo *addrinfo_list;
   addrinfo_list = getAddr(nullptr, port, SERVER_FLAGS);
   int fd = -1;
   struct addrinfo *addr = addrinfo_list;
-  while (addr && !binded) {
+  while (addr && !bound) {
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (::bind(fd, addr->ai_addr, addr->ai_addrlen) == -1) binded = true;
+    if (::bind(fd, addr->ai_addr, addr->ai_addrlen) == 0) bound = true;
     addr = addr->ai_next;
   }
   freeaddrinfo(addrinfo_list);
