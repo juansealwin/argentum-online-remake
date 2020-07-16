@@ -100,6 +100,9 @@ void GameRenderer::run() {
             // Para que no quede un string vacio ya que no se puede renderizar
             if (input_message.size() == 0) input_message = " ";
             break;
+
+          default:
+            break;
         }
       }
 

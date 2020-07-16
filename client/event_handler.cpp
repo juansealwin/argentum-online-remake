@@ -272,7 +272,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   else if (input_text.compare(0, strlen(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
     std::cout << "COMANDO DESPOSITAR" << std::endl;
     std::string deposit = input_text.erase(0, strlen(MSG_DEPOSIT));
-    int i = 0;
+    size_t i = 0;
 
     // Chequeo si se quiere depositar oro o un item
     if (std::isdigit(deposit[i])) {
@@ -309,7 +309,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   else if (input_text.compare(0, strlen(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
     std::cout << "COMANDO RETIRAR" << std::endl;
     std::string withdrawal = input_text.erase(0, strlen(MSG_WITHDRAW));
-    int i = 0;
+    size_t i = 0;
 
     // Chequeo si se quiere depositar oro o un item
     if (std::isdigit(withdrawal[i])) {
@@ -533,6 +533,10 @@ item_t EventHandler::get_item_t(id_texture_t texture) {
 
     case ID_ELVEN_ELUDE:
       item = ELVEN_FLUTE;
+      break;
+
+    default:
+      item = DUMMY_ITEM;
       break;
   }
   return item;

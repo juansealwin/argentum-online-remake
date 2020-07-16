@@ -11,17 +11,15 @@ Animation::Animation(int char_width, int char_height, id_texture_t id_character)
   current_clip[CLIP_RIGHT] = 0;
 }
 
-Animation::Animation(int char_width, int char_height/*, size_t current_clip_down,
-                     size_t current_clip_up, size_t current_clip_left,
-                     size_t current_clip_right*/)
+Animation::Animation(int char_width, int char_height)
     : character_width(char_width), character_height(char_height) {
   // Todos los items equipables(menos cascos) tienen esta cantidad de frames
   clips_up_down = 5;
   clips_left_right = 4;
-  current_clip[CLIP_DOWN] = 0;   // current_clip_down;
-  current_clip[CLIP_UP] = 0;     // current_clip_up;
-  current_clip[CLIP_LEFT] = 0;   // current_clip_left;
-  current_clip[CLIP_RIGHT] = 0;  // current_clip_right;
+  current_clip[CLIP_DOWN] = 0;   
+  current_clip[CLIP_UP] = 0;     
+  current_clip[CLIP_LEFT] = 0;   
+  current_clip[CLIP_RIGHT] = 0;  
 }
 
 Animation::Animation(const Animation& other_animation) {
@@ -36,23 +34,50 @@ Animation::Animation(const Animation& other_animation) {
 Animation::~Animation() {}
 
 SDL_Rect Animation::get_next_clip(move_t move_type) {
+  SDL_Rect next_frame;
+
   switch (move_type) {
     case MOVE_DOWN:
-      return next_clip_move_down();
+      next_frame = next_clip_move_down();
       break;
 
     case MOVE_UP:
-      return next_clip_move_up();
+      next_frame = next_clip_move_up();
       break;
 
     case MOVE_LEFT:
-      return next_clip_move_left();
+      next_frame = next_clip_move_left();
       break;
 
     case MOVE_RIGHT:
-      return next_clip_move_right();
+      next_frame = next_clip_move_right();
+      break;
+
+    default:
       break;
   }
+  return next_frame;
+}
+
+// Esta función es puntualmente para meditar
+SDL_Rect Animation::get_next_clip() {
+  SDL_Rect next_frame = {character_width * current_clip[CLIP_UP],
+                         character_height * current_clip[CLIP_DOWN],
+                         character_width, character_height};
+  // mientras sea menor a la cantidad de columnas le sumo a x
+  if (current_clip[CLIP_UP] < clips_up_down) {
+    current_clip[CLIP_UP]++;
+  } else {
+    current_clip[CLIP_UP] = 0;
+    // Para saber en que fila esta
+    if(current_clip[CLIP_DOWN])
+      current_clip[CLIP_DOWN] = 0;
+    else 
+      current_clip[CLIP_DOWN] = 1;
+  } 
+
+
+  return next_frame;
 }
 
 SDL_Rect Animation::get_next_clip(int lifetime, int max_lifetime) {
@@ -60,7 +85,7 @@ SDL_Rect Animation::get_next_clip(int lifetime, int max_lifetime) {
   int j = 0;
   int k = 0;
 
-  for (size_t i = 1; i <= total_clips + 1; i++) {
+  for (int i = 1; i <= total_clips + 1; i++) {
     if (lifetime > (max_lifetime - FRAMES_PER_TEXTURE * i))
       break;
     else
@@ -125,11 +150,18 @@ SDL_Rect Animation::next_clip_move_right() {
   return next_clip;
 }
 
-int Animation::set_total_clips(id_texture_t id) {
+void Animation::set_total_clips(id_texture_t id) {
   // Seteamos el total de clips -1, ya que el 0 lo cuenta
   switch (id) {
     case ID_CORPSE:
       clips_up_down = 2;
+      clips_left_right = 2;
+      break;
+
+    case ID_MEDITATION:
+      // Columnas de clips
+      clips_up_down = 5;
+      // Filas de clips
       clips_left_right = 2;
       break;
 
@@ -188,6 +220,11 @@ int Animation::set_total_clips(id_texture_t id) {
       clips_up_down = 5;
       // Filas de clips
       clips_left_right = 2;
+      break;
+
+    default:
+      clips_up_down = 0;
+      clips_left_right = 0;
       break;
   }
 }

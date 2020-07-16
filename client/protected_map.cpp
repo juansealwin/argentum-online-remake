@@ -69,9 +69,9 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
         write_map->update_character(
             it->first, it->second.get_type_entity(), it->second.get_x(),
             it->second.get_y(), it->second.get_orientation(),
-            it->second.is_ghost(), it->second.get_equipped(HELMET),
-            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
-            it->second.get_equipped(WEAPON));
+            it->second.is_ghost(), it->second.is_meditating(),
+            it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
+            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
       }
     } else {
       // Como no existe la creamos

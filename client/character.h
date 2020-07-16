@@ -23,7 +23,7 @@ class Character : public Drawable {
   virtual void render(SDL_Renderer*, int, int);
   virtual void move(move_t);
   virtual void update_position(int, int, move_t);
-  virtual int set_character_features(entity_t);
+  virtual void set_character_features(entity_t);
   virtual void sound_walk();
   virtual void set_spell(id_texture_t, int);
   virtual bool change_position(int, int, move_t);

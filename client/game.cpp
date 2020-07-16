@@ -73,7 +73,7 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
-                            move_t orientation, bool ghost, id_texture_t helmet,
+                            move_t orientation, bool ghost, bool meditating, id_texture_t helmet,
                             id_texture_t armor, id_texture_t shield,
                             id_texture_t weapon) {
   // Necesitamos traducir las posiciones de tiles a pixeles
@@ -102,7 +102,7 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF)
     dynamic_cast<PlayableCharacter*>(characters[id])
-        ->update_equipment(ghost, helmet, armor, shield, weapon);
+        ->update_equipment(ghost, meditating, helmet, armor, shield, weapon);
 }
 
 void Game::update_map(int new_x, int new_y) {
@@ -228,6 +228,9 @@ void Game::change_map(map_t new_map) {
     case DESERT_MAP:
       background = ID_MAP_DESERT_BACKGROUND;
       static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+
+    default:
       break;
   }
 }

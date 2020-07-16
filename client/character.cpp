@@ -35,7 +35,7 @@ void Character::update_position(int new_x, int new_y, move_t orient) {
   move(orient);
 }
 
-int Character::set_character_features(entity_t id) {
+void Character::set_character_features(entity_t id) {
   // Lo seteamos de antemano porque en algunos personajes cambia
   body_rect.x = 0;
   body_rect.y = 0;
@@ -117,6 +117,9 @@ int Character::set_character_features(entity_t id) {
       width = 25;
       height = 46;
       type_character = ID_BANKER;
+      break;
+
+    default:
       break;
   }
   // Seteamos las dimensiones de la porcion a renderizar

@@ -25,13 +25,13 @@ void TextBox::set_texture(SDL_Renderer* renderer) {
 
 void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Background rect
-  SDL_Rect background_rect = {x - x_rel, y - y_rel, width, height};
+  //SDL_Rect background_rect = {x - x_rel, y - y_rel, width, height};
 
   // SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
   // background_color.b, background_color.a);
 
   // No quiero que rellene el text_box
-  //SDL_RenderFillRect(renderer, &background_rect);
+  // SDL_RenderFillRect(renderer, &background_rect);
 
   // Render text
   text_texture.render(renderer, x + padding - x_rel, y + padding - y_rel);
@@ -120,6 +120,9 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       x = 660;
       y = 415;
       height = 15;
+      break;
+
+    default:
       break;
   }
 }
