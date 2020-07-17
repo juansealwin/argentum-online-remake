@@ -14,7 +14,6 @@ class Spell : public Drawable {
   Animation animation_cast;
   SDL_Rect animation_frame;
   bool one_texture_animation;
-  sound_t cast_sound;
 
  public:
   Spell();

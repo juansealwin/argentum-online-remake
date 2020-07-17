@@ -56,7 +56,7 @@ void MessageCenter::notify_damage_received(std::string attacked,
                                            std::string attacker) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string message =
-      "Recibiste " + std::to_string(dmg) + " de daño de: " + attacker;
+      "Recibiste " + std::to_string(dmg) + " de da"+(char)241+"o de: " + attacker;
   if (dmg == 0) {
     message = "Bloqueaste el ataque de " + attacker + "!";
   }
