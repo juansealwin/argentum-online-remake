@@ -29,8 +29,15 @@ void Staff::attack_use(Hero *hero) {
 }
 
 void Staff::use(Hero *hero) {
-  hero->unequip_staff();
+    Item *equipped_item = nullptr;
+  if(hero->equipment->has_staff()) {
+    equipped_item = hero->equipment->unequip_staff();
+  } else if (hero->equipment->has_weapon()) {
+    equipped_item = hero->equipment->unequip_weapon();
+  }
+
+  //hero->unequip_staff();
+  //hero->unequip_weapon();
   hero->equip_staff(this->id);
-  // hero->current_hp = std::min(hero->current_hp + hp_regen, hero->max_hp);
-  // hero->current_mana -= mana_consumption;
+  if(equipped_item) hero->add_item(equipped_item);
 }
