@@ -74,7 +74,8 @@ Game& Game::operator=(const Game& other_game) {
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
                             move_t orientation, bool ghost, bool meditating,
                             id_texture_t helmet, id_texture_t armor,
-                            id_texture_t shield, id_texture_t weapon, std::vector<sound_t>& incoming_sounds) {
+                            id_texture_t shield, id_texture_t weapon,
+                            std::vector<sound_t>& incoming_sounds) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
@@ -101,7 +102,8 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF)
     dynamic_cast<PlayableCharacter*>(characters[id])
-        ->update_equipment(ghost, meditating, helmet, armor, shield, weapon);
+        ->update_equipment(ghost, meditating, helmet, armor, shield, weapon,
+                           incoming_sounds);
 }
 
 void Game::update_map(int new_x, int new_y) {

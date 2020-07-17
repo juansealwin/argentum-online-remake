@@ -12,8 +12,9 @@ PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
+  std::vector<sound_t>borr;
   update_equipment(ghost_mod, false, new_helmet, new_armor, new_shield,
-                   new_weapon);
+                   new_weapon, borr);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -199,8 +200,7 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     // Si esta meditando renderizamos la meditación
     if (zen_mode)
       texture_manager.get_texture(ID_MEDITATION)
-          .render(renderer, &meditating_frame, x - x_rel,
-                  y - height - y_rel);
+          .render(renderer, &meditating_frame, x - x_rel, y - height - y_rel);
   }
 }
 
@@ -285,15 +285,20 @@ void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
                                          id_texture_t new_helmet,
                                          id_texture_t new_armor,
                                          id_texture_t new_shield,
-                                         id_texture_t new_weapon) {
+                                         id_texture_t new_weapon,
+                                         std::vector<sound_t>& next_sounds) {
   // Chequeamos si el personaje murió
   if (!ghost && ghost_mod) {
     ghost = ghost_mod;
     ghost_frame = Animation(GHOST_WIDTH, GHOST_HEIGHT, ID_CORPSE);
     ghost_body = {0, 0, GHOST_WIDTH, GHOST_HEIGHT};
+    next_sounds.push_back(DEAD_PC);
   } else {
     // Chequeamos si revivio
-    if (ghost && !ghost_mod) ghost = ghost_mod;
+    if (ghost && !ghost_mod) {
+      ghost = ghost_mod;
+      next_sounds.push_back(CAST_REVIVE);
+    }
 
     // Seteamos si el personaje esta meditando
     if (meditating && !zen_mode) {
@@ -309,7 +314,9 @@ void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
     // Chequeamos si sigue meditando
     else if (zen_mode && meditating) {
       meditating_frame = meditating_animation.get_next_clip();
+      next_sounds.push_back(CAST_MEDITATION);
     }
+
     // Chequeamos si cambio el caso
     if (new_helmet == ID_NULL && helmet != ID_NULL)
       unequip_item(HELMET);

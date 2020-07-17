@@ -46,7 +46,7 @@ class PlayableCharacter : public Character {
   void unequip_item(equipped_t);
   void set_head_dimensions(entity_t);
   void update_equipment(bool, bool, id_texture_t, id_texture_t, id_texture_t,
-                        id_texture_t);
+                        id_texture_t, std::vector<sound_t>&);
   void set_item_dimensions(id_texture_t id);
   int get_head_w() const;
   int get_head_h() const;
