@@ -15,7 +15,7 @@ class Character : public Drawable {
   move_t orientation;
   Animation animation_move;
   SDL_Rect body_rect;
-  SoundEffect walk;
+  sound_t walk;
   Spell spellbound;
 
  public:
@@ -24,7 +24,7 @@ class Character : public Drawable {
   virtual void move(move_t);
   virtual void update_position(int, int, move_t);
   virtual void set_character_features(entity_t);
-  virtual void sound_walk();
+  virtual sound_t sound_walk();
   virtual void set_spell(id_texture_t, int);
   virtual bool change_position(int, int, move_t);
 };

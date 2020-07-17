@@ -9,7 +9,7 @@ class Npc : public Character {
   Npc(const Npc&);
   ~Npc();
   Npc& operator=(const Npc&);
-  virtual void sound_walk() override;
+  virtual sound_t sound_walk() override;
 };
 
 #endif

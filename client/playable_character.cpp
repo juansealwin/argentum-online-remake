@@ -307,9 +307,9 @@ void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
       zen_mode = meditating;
 
     // Chequeamos si sigue meditando
-    else if (zen_mode && meditating) 
+    else if (zen_mode && meditating) {
       meditating_frame = meditating_animation.get_next_clip();
-    
+    }
     // Chequeamos si cambio el caso
     if (new_helmet == ID_NULL && helmet != ID_NULL)
       unequip_item(HELMET);

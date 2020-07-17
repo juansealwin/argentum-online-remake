@@ -14,8 +14,8 @@ SoundEffect::SoundEffect() {
 }
 
 SoundEffect::~SoundEffect() {
-  //free_sound();
-  //free_music();
+  free_sound();
+  free_music();
 }
 
 void SoundEffect::free_sound() {

@@ -21,7 +21,6 @@ Npc::Npc(const Npc& other_npc) {
   orientation = other_npc.orientation;
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
-  walk = other_npc.walk;
   spellbound = other_npc.spellbound;
 }
 
@@ -38,13 +37,12 @@ Npc& Npc::operator=(const Npc& other_npc) {
   orientation = other_npc.orientation;
   animation_move = other_npc.animation_move;
   body_rect = other_npc.body_rect;
-  walk = other_npc.walk;
   spellbound = other_npc.spellbound;
   return *this;
 }
 
 Npc::~Npc() {}
 
-void Npc::sound_walk() {
-  if ((rand() % 100) < 20) walk.play_sound(0);
+sound_t Npc::sound_walk() {
+  if ((rand() % 100) < 20) return walk;
 }

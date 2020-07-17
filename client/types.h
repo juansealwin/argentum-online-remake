@@ -192,4 +192,13 @@ typedef enum {
 
 typedef enum { INVENTORY, BANK, MARKET } inventory_t;
 
+typedef enum {
+  BG_MUSIC_1,
+  WALK_PC,
+  WALK_SPIDER,
+  WALK_SKELETON,
+  WALK_GOBLIN,
+  WALK_ZOMBIE
+} sound_t;
+
 #endif
