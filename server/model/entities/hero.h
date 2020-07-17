@@ -98,6 +98,8 @@ class Hero : public BaseCharacter {
   // revivido en la posicion x, y
   void block(unsigned int seconds, int x, int y);
   friend class Staff;
+  friend class Weapon;
+  friend class DefensiveItem;
   friend class Serializer;
   friend class DropsManager;
   friend class ArgentumGame;

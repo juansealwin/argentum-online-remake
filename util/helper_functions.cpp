@@ -10,6 +10,6 @@ double HelperFunctions::distance(double x1, double x2, double y1, double y2) {
   return sqrt(pow(x1 - x2, 2) + pow(y1 - y2, 2));
 }
 
-int HelperFunctions::difference(int x, int y) {
-  return abs(x - y);
+unsigned int HelperFunctions::difference(int x, int y) {
+  return (unsigned int)abs(x - y);
 }

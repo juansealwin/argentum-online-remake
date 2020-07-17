@@ -10,6 +10,7 @@
 #include "../util/json/json.h"
 #include "../util/thread.h"
 #include "../util/thread_safe_queue.h"
+#include "bank_status_notification.h"
 #include "banker.h"
 #include "base_character.h"
 #include "command.h"  //<- guarda con esto y dependencias circulares
@@ -20,17 +21,16 @@
 #include "heroes_manager.h"
 #include "map.h"
 #include "merchant.h"
+#include "message_center.h"
 #include "monster.h"
 #include "monsters_manager.h"
 #include "move_command.h"
 #include "priest.h"
 #include "projectile.h"
 #include "projectiles_manager.h"
-#include "serializer.h"
-#include "message_center.h"
-#include "bank_status_notification.h"
 #include "sale_info_notification.h"
-typedef enum {PRIEST=33, MERCHANT, BANKER} npc_t;
+#include "serializer.h"
+typedef enum { PRIEST = 33, MERCHANT, BANKER } npc_t;
 // #define PRIEST 33
 // #define MERCHANT 34
 // #define BANKER 35
@@ -61,15 +61,15 @@ class ArgentumGame : public Thread {
   void hero_bank_gold(int entity_id, int ammount);
   void hero_unbank_gold(int entity_id, int ammount);
   void hero_meditate(int entity_id);
-  //envia una notificacion al cliente del estado del banco o
-  //de lo que venda el merchant/priest mas cercano
+  // envia una notificacion al cliente del estado del banco o
+  // de lo que venda el merchant/priest mas cercano
   void hero_get_closest_npc_info(int entity_id);
   void move_entity(int entity_id, int x, int y);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);
   // Settea a un jugador como muerto para que sea removido durante el update()
   void kill_player(unsigned int player_id);
-  
+
   // devuelve el id auto-generado
   unsigned int add_new_hero(std::string hero_race, std::string hero_class,
                             std::string hero_name);
@@ -82,7 +82,7 @@ class ArgentumGame : public Thread {
   std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>
   remove_hero_and_notification_queue(int player_id);
   friend class Serializer;
-  ThreadSafeQueue<Command *> * get_commands_queue();
+  ThreadSafeQueue<Command *> *get_commands_queue();
   void stop_notification_queue(int player_id);
   void send_message(unsigned int player_id, std::string dst, std::string msg);
 
@@ -113,7 +113,6 @@ class ArgentumGame : public Thread {
   std::map<std::tuple<unsigned int, unsigned int>, Drop *> drops;
   std::map<std::tuple<unsigned int, unsigned int>, int> npc_positions;
 
-
   void send_game_status();
   Json::Value entities_cfg;
   std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>
@@ -127,15 +126,24 @@ class ArgentumGame : public Thread {
   void tests_proyectiles();
   void tests_drops();
   npc_t find_closest_npc();
-  BankStatusNotification * get_bank_status(Hero *h);
-  SaleInfoNotification* get_sale_info(npc_t npc);
-  //devuelve true si hay un banker a 1 de distancia
+  BankStatusNotification *get_bank_status(Hero *h);
+  SaleInfoNotification *get_sale_info(npc_t npc);
+  // devuelve true si hay un banker a 1 de distancia
   bool is_npc_close(int x, int y, npc_t npc);
-  std::tuple<int, int> get_npc_pos(npc_t npc); 
+  std::tuple<int, int> get_npc_pos(npc_t npc);
+  bool closest_npcs_sells_or_buys_item(int x, int y, item_t item);
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;
   DropsManager drops_manager;
+  std::vector<item_t> merchant_sale_items = {
+      turtle_shield,  iron_shield,  hood,        iron_helmet, magic_hat,
+      leather_armour, plate_armour, blue_tunic,  sword,       axe,
+      hammer,         simple_bow,   compound_bow};
+
+  std::vector<item_t> priest_sale_items = {
+      hp_potion,     mana_potion, ash_stick,
+      gnarled_staff, crimp_staff, elven_flute};
 };
 
 #endif  // ARGENTUMGAME_H

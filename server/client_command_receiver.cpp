@@ -38,6 +38,7 @@ void ClientCommandReceiver::run() {
     }
     CommandDTO *command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
+      std::cout << "received new command!" << std::endl;
       ChangeGameRoomDTO *cgrDTO =
           dynamic_cast<ChangeGameRoomDTO *>(command_dto);
       if (cgrDTO) {

@@ -87,10 +87,12 @@ bool Map::ocupy_cell(int x, int y, unsigned int entity_id) {
 }
 
 void Map::put_projectile(int x, int y) {
+  if (x >= rows || y >= cols || x < 0 || y < 0) return;
   matrix[x][y].fill_with_projectile();
 }
 
 void Map::empty_projectile(int x, int y){
+  if (x >= rows || y >= cols || x < 0 || y < 0) return;
   matrix[x][y].clean_projectile();
 }
 

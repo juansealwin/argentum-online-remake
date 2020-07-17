@@ -70,8 +70,6 @@ void DropsManager::add_heroes_drops(
 void DropsManager::remove_old_and_empty_drops(
     std::map<std::tuple<unsigned int, unsigned int>, Drop *> &drops) {
   // TO DO: Chequear hace cuanto fueron creados los drops y eliminarlos
-  std::map<std::tuple<unsigned int, unsigned int>, Drop *>::iterator it =
-      drops.begin();
   for (auto it = drops.cbegin(); it != drops.cend();) {
     if (it->second->is_empty()) {
       delete it->second;

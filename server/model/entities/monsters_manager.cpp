@@ -70,5 +70,6 @@ void MonstersManager::respawn_monsters(
     Monster *random_monster =
         MonstersFactory::create_random_monster(monsters_cfg, entities_ids, map);
     monsters.emplace(entities_ids++, random_monster);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 }
