@@ -69,6 +69,9 @@ void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item, int slot) {
     case MARKET:
       market.add_item(new_item, slot);
       break;
+
+    default:
+      break;
   }
 }
 
@@ -84,6 +87,9 @@ void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item) {
 
     case MARKET:
       market.add_item(new_item);
+      break;
+
+    default:
       break;
   }
 }
@@ -157,8 +163,7 @@ std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_items() {
 }
 
 std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_shop() {
-  if (bank_or_market == BANK) return bank.get_items();
-  if (bank_or_market == MARKET) return market.get_items();
+  return (bank_or_market == BANK) ? bank.get_items() : market.get_items();
 }
 
 bool UIStatus::is_shop_open(inventory_t& type) {

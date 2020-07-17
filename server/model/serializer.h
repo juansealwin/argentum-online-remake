@@ -9,14 +9,14 @@
 #define GOLD_ID 36
 class Serializer {
  public:
-  static std::vector<unsigned char> serialize_game_status_v3(ArgentumGame *game);
+  static std::vector<unsigned char> serialize_game_status(ArgentumGame *game);
 
-  static void debug_deserialize_v3(std::vector<unsigned char> serialization);
+  //static void debug_deserialize_v3(std::vector<unsigned char> serialization);
 
 
  private:
   //  //deben coincidir con los config del json
-  static void serialize_common_fields_v2(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
+  static void serialize_common_fields(std::vector<unsigned char> &serialization, uint16_t uid, Entity *entity);
   static void serialize_drop();
   static bool is_hero(uint8_t t);
   static bool is_drop(uint8_t t);

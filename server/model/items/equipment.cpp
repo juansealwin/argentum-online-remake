@@ -71,22 +71,22 @@ void Equipment::use_primary_weapon(Hero *hero) {
 }
 
 void Equipment::attack_use_primary_weapon(Hero *hero) {
-  if (weapon)
-    weapon->attack_use(hero);
-  else if (staff)
+  // if (weapon)
+  //   weapon->attack_use(hero);
+  if (staff)
     staff->attack_use(hero);
 }
 
 
 void Equipment::equip_weapon(Weapon *weapon) {
   if (staff)
-    throw ModelException("Can't equip weapon if you are using a staff!", "10");
+    throw ModelException("Can't equip weapon if you are using a staff!");
   this->weapon = weapon;
 }
 
 void Equipment::equip_staff(Staff *staff) {
   if (weapon)
-    throw ModelException("Can't equip staff if you are using a weapon!", "10");
+    throw ModelException("Can't equip staff if you are using a weapon!");
   this->staff = staff;
 }
 

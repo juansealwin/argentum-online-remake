@@ -5,8 +5,8 @@
 
 #include <map>
 
-#include "entity_status.h"
 #include "common_socket.h"
+#include "entity_status.h"
 #include "exception_messages.h"
 #include "game.h"
 #include "protected_map.h"
@@ -27,10 +27,10 @@ class GameUpdater : public Thread {
  private:
   int id_hero;
   ProtectedMap& protected_map;
+  Socket& read_socket;
+  bool& is_running;
   std::map<int, EntityStatus> next_status;
   UIStatus next_ui_status;
-  bool& is_running;
-  Socket& read_socket;
   std::vector<unsigned char> status_serialized;
   bool open_store;
 
@@ -39,7 +39,7 @@ class GameUpdater : public Thread {
   ~GameUpdater();
   void run();
   void deserialize_status(unsigned int&);
-  id_texture_t get_item_texture(int) const; 
+  id_texture_t get_item_texture(int) const;
   equipped_t get_type_equipped(int);
   map_t get_new_map(int);
 };

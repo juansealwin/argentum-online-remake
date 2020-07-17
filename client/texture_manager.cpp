@@ -20,6 +20,7 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_ITEM_EQUIPPED] = new Texture("opcion_equipado.png", renderer);
 
   /* PLAYABLE CHARACTER TEXTURES */
+  map[ID_MEDITATION] = new Texture("meditar.png", renderer);
   map[ID_CORPSE] = new Texture("muerto_cuerpo.png", renderer);
   map[ID_CORPSE_HEAD] = new Texture("muerto_cabeza.png", renderer);
   map[ID_HUMAN] = new Texture("humano.png", renderer);
@@ -259,6 +260,9 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
         id_frame = (id_texture_t)(id + 19);
       else
         id_frame = (id_texture_t)(id + 20);
+      break;
+
+    default:
       break;
   }
 

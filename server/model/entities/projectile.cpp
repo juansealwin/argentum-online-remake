@@ -20,7 +20,7 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
 
 void Projectile::auto_move() {
   if (collided) return;
-  if (range == 0) ModelException("Projectile cant move any more!", "11");
+  if (range == 0) ModelException("El proyectil ya no puede moverse!");
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
   impact_at_position(next_x, next_y);

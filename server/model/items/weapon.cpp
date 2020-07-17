@@ -9,6 +9,6 @@ void Weapon::use(Hero *hero) {
   hero->equip_weapon(this->id);
 }
 
-void Weapon::attack_use(Hero *hero) {}
+//void Weapon::attack_use(Hero *hero) {}
 
 Weapon::~Weapon() {}

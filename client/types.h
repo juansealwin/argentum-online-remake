@@ -13,6 +13,7 @@ typedef enum {
   ID_UI,
   ID_SELECTOR,
   ID_ITEM_EQUIPPED,
+  ID_MEDITATION,
   ID_CORPSE,
   ID_CORPSE_HEAD,
   ID_HUMAN,
@@ -190,5 +191,22 @@ typedef enum {
 } text_box_t;
 
 typedef enum { INVENTORY, BANK, MARKET } inventory_t;
+
+typedef enum {
+  BG_MUSIC_1,
+  WALK_PC,
+  WALK_SPIDER,
+  WALK_SKELETON,
+  WALK_GOBLIN,
+  WALK_ZOMBIE,
+  CAST_BLEEDING,
+  CAST_MAGIC_ARROW,
+  CAST_HEAL,
+  CAST_ELECTRIC_SHOCK,
+  CAST_EXPLOSION,
+  CAST_REVIVE,
+  CAST_MEDITATION,
+  DEAD_PC
+} sound_t;
 
 #endif

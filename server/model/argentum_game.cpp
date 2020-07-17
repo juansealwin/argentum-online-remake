@@ -519,7 +519,7 @@ void ArgentumGame::send_game_status() {
   if (heroes.size() == 0) return;
   std::unique_lock<std::mutex> lock(mutex);
   std::vector<unsigned char> game_status =
-      Serializer::serialize_game_status_v3(this);
+      Serializer::serialize_game_status(this);
 
   std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>::iterator
       it;
@@ -669,7 +669,7 @@ BankStatusNotification *ArgentumGame::get_bank_status(Hero *h) {
   uint8_t notification_id = 5;
   notification.push_back(notification_id);
   notification.push_back(bank_size);
-  for (int i = 0; i < items.size(); i++) {
+  for (unsigned int i = 0; i < items.size(); i++) {
     uint8_t item_id = items.at(i)->id;
     notification.push_back(item_id);
   }
@@ -687,7 +687,7 @@ bool ArgentumGame::is_npc_close(int x, int y, npc_t npc) {
   vector<tuple<int, int>> possible_spots = {
       tuple<int, int>(x + 1, y), tuple<int, int>(x - 1, y),
       tuple<int, int>(x, y + 1), tuple<int, int>(x, y - 1)};
-  for (int j = 0; j < possible_spots.size(); j++) {
+  for (unsigned int j = 0; j < possible_spots.size(); j++) {
     int curr_x = get<0>(possible_spots.at(j));
     int curr_y = get<1>(possible_spots.at(j));
     tuple<int, int> pos = tuple<int, int>(curr_x, curr_y);
@@ -725,4 +725,5 @@ bool ArgentumGame::closest_npcs_sells_or_buys_item(int x, int y, item_t item) {
                     item)))
       return true;
   }
+  return false;
 }

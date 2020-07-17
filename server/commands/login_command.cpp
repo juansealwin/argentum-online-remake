@@ -6,6 +6,6 @@ LoginCommand::LoginCommand(const unsigned int room_number) : room_number(room_nu
 
 LoginCommand::~LoginCommand() {}
 
-void LoginCommand::execute(ArgentumGame *game) {
-  // TODO
-}
+// void LoginCommand::execute(ArgentumGame *game) {
+//   // TODO
+// }

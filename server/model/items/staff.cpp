@@ -15,14 +15,14 @@ bool Staff::can_be_used_by(Hero *hero) {
 
 void Staff::special_use(Hero *hero) {
   if (hero->current_mana < mana_consumption)
-    throw ModelException("Mana insuficiente para utilizar la especial!", "10");
+    throw ModelException("Mana insuficiente para utilizar la especial!");
   hero->set_hp(hero->current_hp + hp_regen);
   hero->set_mana(hero->current_mana - mana_consumption);
 }
 
 void Staff::attack_use(Hero *hero) {
   if (hero->current_mana < mana_consumption)
-    throw ModelException("Mana insuficiente!", "10");
+    throw ModelException("Mana insuficiente!");
   hero->set_hp(hero->current_hp + hp_regen);
   hero->set_mana(hero->current_mana - mana_consumption);
   //hero->current_mana -= mana_consumption;
