@@ -48,6 +48,8 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
       new Texture("mapa_desierto_fondo.png", renderer);
   map[ID_MAP_DESERT_OBJECTS] =
       new Texture("mapa_desierto_objetos.png", renderer);
+  map[ID_MAP_ARGAL_BACKGROUND] = new Texture("mapa_argal_fondo.png", renderer);
+  map[ID_MAP_ARGAL_OBJECTS] = new Texture("mapa_argal_objetos.png", renderer);
 
   /* HELMETS AND HATS TEXTURES*/
   map[ID_MAGIC_HAT] = new Texture("sombrero_magico.png", renderer);

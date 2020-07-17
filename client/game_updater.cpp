@@ -255,8 +255,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(get_item_texture(current_item_id),
-                                  true);
+          next_ui_status.add_item(get_item_texture(current_item_id), true);
       }
 
       // Agregamos los items del inventario
@@ -422,6 +421,10 @@ map_t GameUpdater::get_new_map(int map) {
 
     case 1:
       new_map = DESERT_MAP;
+      break;
+
+    case 2:
+      new_map = ARGAL_MAP;
       break;
 
     default:
