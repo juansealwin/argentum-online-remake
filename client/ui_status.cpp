@@ -55,38 +55,18 @@ void UIStatus::set_ui_messages(std::string name, int lvl, int max_hp, int hp,
   text_messages[MANA] = mana_oss.str();
 }
 
-void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item, int slot) {
-  switch (inv_type) {
-    case INVENTORY:
-      inventory.add_item(new_item, slot);
-      break;
-
-    // Los casos de abajo nunca van a ocurrir
-    case BANK:
-      bank.add_item(new_item, slot);
-      break;
-
-    case MARKET:
-      market.add_item(new_item, slot);
-      break;
-
-    default:
-      break;
-  }
+void UIStatus::add_item(id_texture_t new_item, bool equipped) {
+  inventory.add_item(new_item, equipped);
 }
 
 void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item) {
   switch (inv_type) {
-    case INVENTORY:
-      inventory.add_item(new_item);
-      break;
-
     case BANK:
-      bank.add_item(new_item);
+      bank.add_item(new_item, false);
       break;
 
     case MARKET:
-      market.add_item(new_item);
+      market.add_item(new_item, false);
       break;
 
     default:

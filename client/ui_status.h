@@ -27,7 +27,7 @@ class UIStatus {
   void set_ui_messages(std::string, int, int, int, int, int, int, int, int);
   void render(SDL_Renderer*, std::string, bool, int);
   void add_item(inventory_t, id_texture_t);
-  void add_item(inventory_t, id_texture_t, int);
+  void add_item(id_texture_t, bool);
   void close_shops();
   bool is_shop_open(inventory_t&);
   void charge_messages(std::string, std::string, std::string, std::string);

@@ -255,8 +255,8 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(INVENTORY, get_item_texture(current_item_id),
-                                  current_item_slot);
+          next_ui_status.add_item(get_item_texture(current_item_id),
+                                  true);
       }
 
       // Agregamos los items del inventario
@@ -268,7 +268,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
         int current_item_id = extract<uint8_t>(status_serialized, j);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
-          next_ui_status.add_item(INVENTORY, get_item_texture(current_item_id));
+          next_ui_status.add_item(get_item_texture(current_item_id), false);
       }
       // Agregamos la entidad "personaje jugable"
       next_status[(int)id] =

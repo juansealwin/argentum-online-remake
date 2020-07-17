@@ -19,19 +19,22 @@ Inventory& Inventory::operator=(const Inventory& other_inv) {
   return *this;
 }
 
-void Inventory::add_item(id_texture_t new_item) {
+void Inventory::add_item(id_texture_t new_item, bool equipped) {
   int i = 0;
   while ((items[i].first != ID_NULL)) {
     i++;
   }
   items[i].first = new_item;
-  items[i].second = false;
+  items[i].second = equipped;
 }
 
+// Probablemente ya no haya que usarla
+/*
 void Inventory::add_item(id_texture_t new_item, int i) {
   items[i].first = new_item;
   items[i].second = true;
 }
+*/
 
 id_texture_t Inventory::drop_item(int index) {
   id_texture_t temp = ID_NULL;
