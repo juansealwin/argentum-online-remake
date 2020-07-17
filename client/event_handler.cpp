@@ -31,7 +31,7 @@ void EventHandler::get_events() {
         }
 
         // Eventos de tecla presionada
-        else if (event.type == SDL_KEYDOWN) {
+        else if (event.type == SDL_KEYDOWN && event.key.repeat == 0) {
           // Dependiendo que tecla presiona cambia el evento que sucede
           if (event.key.keysym.sym == SDLK_UP) {
             MoveCommandDTO* move_command = new MoveCommandDTO(move_up);
@@ -145,6 +145,15 @@ void EventHandler::get_events() {
             commands_queue.push(bank_item_command);
           }
 
+        // Chequeamos si el usuario quiere dejar de moverse
+        } else if (event.type == SDL_KEYUP) {
+          if (event.key.keysym.sym == SDLK_UP ||
+              event.key.keysym.sym == SDLK_DOWN ||
+              event.key.keysym.sym == SDLK_LEFT ||
+              event.key.keysym.sym == SDLK_RIGHT) {
+            MoveCommandDTO* move_command = new MoveCommandDTO(stop_move);
+            commands_queue.push(move_command);
+          }
         }
 
         // Eventos de mouse
@@ -371,7 +380,9 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
       SellItemCommandDTO* sell_item_command =
           new SellItemCommandDTO(item_required);
       commands_queue.push(sell_item_command);
-    } else { std::cout << "item required is dummy item" << std::endl;}
+    } else {
+      std::cout << "item required is dummy item" << std::endl;
+    }
   }
   // Chequeamos si el usuario quiere tomar algun item del suelo
   else if (input_text.compare(0, input_text.length(), MSG_TAKE) == 0) {

@@ -3,7 +3,13 @@
 
 #include "command_dto.h"
 
-typedef enum { move_down, move_up, move_left, move_right } movement_t;
+typedef enum {
+  move_down,
+  move_up,
+  move_left,
+  move_right,
+  stop_move
+} movement_t;
 
 class MoveCommandDTO : public CommandDTO {
  public:
