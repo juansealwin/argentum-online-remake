@@ -1,5 +1,8 @@
 #include "game_updater.h"
 
+GameUpdater::GameUpdater(int id, ProtectedMap& map, Socket& socket, bool& run)
+    : id_hero(id), protected_map(map), read_socket(socket), is_running(run) {}
+
 template <typename T>
 T extract(const std::vector<unsigned char>& v, unsigned int& pos) {
   T value;
@@ -7,9 +10,6 @@ T extract(const std::vector<unsigned char>& v, unsigned int& pos) {
   pos += sizeof(T);
   return value;
 }
-
-GameUpdater::GameUpdater(int id, ProtectedMap& map, Socket& socket, bool& run)
-    : protected_map(map), read_socket(socket), is_running(run), id_hero(id) {}
 
 GameUpdater::~GameUpdater() {}
 
@@ -71,7 +71,7 @@ void GameUpdater::run() {
           // std::cout << "item in bank: " << item << std::endl;;
         }
 
-        uint16_t gold = extract<uint16_t>(status_serialized, j);
+        // uint16_t gold = ntohs(extract<uint16_t>(status_serialized, j));
         // std::cout << "gold in bnak: " << gold << std::endl;
         next_ui_status.open_shop(BANK);
         continue;
@@ -143,7 +143,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
 
   // Declaramos las variables necesarias para extraer la informacion int para
   // las de 1 byte y uint16_t para las de 2 bytes
-  int entity_type, y, x, k, orientation, items_in_drop, drop_has_coins,
+  int entity_type, y, x, orientation, items_in_drop, drop_has_coins,
       affected_by, name_size, class_id, meditating, ghost_mode, close_to_npc,
       items_equiped, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
@@ -222,7 +222,6 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       current_xp = ntohs(extract<uint16_t>(status_serialized, j));
       meditating = extract<uint8_t>(status_serialized, j);
       ghost_mode = extract<uint8_t>(status_serialized, j);
-
       // para chequear cuando tenemos que dejar de visualizar el mercado/banco
       open_store = extract<uint8_t>(status_serialized, j);
 
@@ -274,7 +273,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       // Agregamos la entidad "personaje jugable"
       next_status[(int)id] =
           EntityStatus(entity_type, x, y, orientation, ghost_mode, affected_by,
-                       helmet, armor, shield, weapon);
+                       meditating, helmet, armor, shield, weapon);
     }
   }
 }
@@ -365,6 +364,11 @@ id_texture_t GameUpdater::get_item_texture(int new_item) const {
 
     case GOLD:
       item = ID_GOLD;
+      break;
+
+    default:
+      item = ID_NULL;
+      break;
   }
   return item;
 }
@@ -401,6 +405,9 @@ equipped_t GameUpdater::get_type_equipped(int new_item) {
     case ELVEN_FLUTE:
       type_equipped = WEAPON;
       break;
+
+    default:
+      break;
   }
   return type_equipped;
 }
@@ -412,8 +419,12 @@ map_t GameUpdater::get_new_map(int map) {
     case 0:
       new_map = GRASS_MAP;
       break;
+
     case 1:
       new_map = DESERT_MAP;
+      break;
+
+    default:
       break;
   }
 

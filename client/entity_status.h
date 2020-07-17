@@ -8,13 +8,14 @@
 class EntityStatus {
  private:
   entity_t type_entity;
+  id_texture_t item;
   int x;
   int y;
   move_t orientation;
   bool is_alive;
   id_texture_t spellbound;
-  id_texture_t item;
   int lifetime;
+  bool meditating;
   id_texture_t helmet;
   id_texture_t armor;
   id_texture_t shield;
@@ -29,7 +30,7 @@ class EntityStatus {
   // Constructor para npcs atacables
   EntityStatus(int, int, int, int, int);
   // Constructor para personajes jugables
-  EntityStatus(int, int, int, int, int, int, id_texture_t, id_texture_t,
+  EntityStatus(int, int, int, int, int, int, int, id_texture_t, id_texture_t,
                id_texture_t, id_texture_t);
   ~EntityStatus();
   EntityStatus& operator=(const EntityStatus&);
@@ -42,8 +43,10 @@ class EntityStatus {
   id_texture_t get_item() const;
   bool is_ghost() const;
   void set_spellbound(int);
+  bool is_meditating() const;
   id_texture_t get_equipped(equipped_t);
   move_t get_orientation() const;
+  sound_t get_cast_sound();
 };
 
 #endif

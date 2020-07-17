@@ -187,7 +187,7 @@ void send_change_game_room(const Socket& socket,
   socket.send(&room_number, 1);
 }
 
-void send_quit(const Socket& socket, const QuitCommandDTO* quit_command) {
+void send_quit(const Socket& socket) {
   uint8_t command_id = QUIT_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
@@ -199,13 +199,12 @@ void send_move(const Socket& socket, const MoveCommandDTO* move_command) {
   socket.send(&move_type, 1);
 }
 
-void send_attack(const Socket& socket, const AttackCommandDTO* attack_command) {
+void send_attack(const Socket& socket) {
   uint8_t command_id = ATTACK_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_pick_up_item(const Socket& socket,
-                       const PickUpCommandDTO* pick_up_command) {
+void send_pick_up_item(const Socket& socket) {
   uint8_t command_id = PICK_UP_ITEM_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
@@ -298,26 +297,22 @@ void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
   socket.send(&item, 1);
 }
 
-void send_revive_command(const Socket& socket,
-                           ReviveCommandDTO* commandDTO) {
+void send_revive_command(const Socket& socket) {
   uint8_t command_id = REVIVE_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_heal_command(const Socket& socket,
-                           HealCommandDTO* commandDTO) {
+void send_heal_command(const Socket& socket) {
   uint8_t command_id = HEAL_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_use_special_command(const Socket& socket,
-                           UseItemSpecialCommandDTO* commandDTO) {
+void send_use_special_command(const Socket& socket) {
   uint8_t command_id = USE_ITEM_SPECIAL_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_meditate_command(const Socket& socket,
-                           MeditateCommandDTO* commandDTO) {
+void send_meditate_command(const Socket& socket) {
   uint8_t command_id = MEDITATE_COMMAND;
   socket.send(&command_id, ID_LENGTH);
 }
@@ -330,7 +325,7 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       break;
 
     case QUIT_COMMAND:
-      send_quit(socket, dynamic_cast<QuitCommandDTO*>(commandDTO));
+      send_quit(socket);
       break;
 
     case MOVE_COMMAND:
@@ -338,21 +333,26 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       break;
 
     case ATTACK_COMMAND:
-      send_attack(socket, dynamic_cast<AttackCommandDTO*>(commandDTO));
+      send_attack(socket);
       break;
+    
     case PICK_UP_ITEM_COMMAND:
-      send_pick_up_item(socket, dynamic_cast<PickUpCommandDTO*>(commandDTO));
+      send_pick_up_item(socket);
       break;
+    
     case USE_ITEM_COMMAND:
       send_use_item(socket, dynamic_cast<UseItemCommandDTO*>(commandDTO));
       break;
+    
     case CHANGE_GAME_ROOM_COMMAND:
       send_change_game_room(socket,
                             dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
       break;
+    
     case DROP_ITEM_COMMAND:
       send_drop_item(socket, dynamic_cast<DropItemCommandDTO*>(commandDTO));
       break;
+    
     case PRIVATE_MESSAGE_COMMAND:
       send_private_message(socket,
                            dynamic_cast<PrivateMessageDTO*>(commandDTO));
@@ -382,28 +382,31 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       send_get_banked_items_command(
           socket, dynamic_cast<GetBankedItemsCommandDTO*>(commandDTO));
       break;
+    
     case BUY_ITEM_COMMAND:
       send_buy_command(socket, dynamic_cast<BuyItemCommandDTO*>(commandDTO));
       break;
+
     case SELL_ITEM_COMMAND:
       send_sell_command(socket, dynamic_cast<SellItemCommandDTO*>(commandDTO));
       break;
+
     case MEDITATE_COMMAND:
-      send_meditate_command(socket,
-                            dynamic_cast<MeditateCommandDTO*>(commandDTO));
+      send_meditate_command(socket);
       break;
+
     case REVIVE_COMMAND:
-      send_revive_command(socket,
-                            dynamic_cast<ReviveCommandDTO*>(commandDTO));
+      send_revive_command(socket);
       break;
+
     case HEAL_COMMAND:
-      send_heal_command(socket,
-                            dynamic_cast<HealCommandDTO*>(commandDTO));
+      send_heal_command(socket);
       break;
+
     case USE_ITEM_SPECIAL_COMMAND:
-      send_use_special_command(socket,
-                            dynamic_cast<UseItemSpecialCommandDTO*>(commandDTO));
+      send_use_special_command(socket);
       break;
+
     default:
       break;
   }

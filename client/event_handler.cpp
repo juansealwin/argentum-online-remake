@@ -15,9 +15,6 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
 
 void EventHandler::get_events() {
   try {
-    background_music.set_music("musica_lobby.mp3");
-    background_music.play_music();
-    background_music.decrease_music_volume(90);
     SDL_Event event;
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {
@@ -272,7 +269,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   else if (input_text.compare(0, strlen(MSG_DEPOSIT), MSG_DEPOSIT) == 0) {
     std::cout << "COMANDO DESPOSITAR" << std::endl;
     std::string deposit = input_text.erase(0, strlen(MSG_DEPOSIT));
-    int i = 0;
+    size_t i = 0;
 
     // Chequeo si se quiere depositar oro o un item
     if (std::isdigit(deposit[i])) {
@@ -309,7 +306,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   else if (input_text.compare(0, strlen(MSG_WITHDRAW), MSG_WITHDRAW) == 0) {
     std::cout << "COMANDO RETIRAR" << std::endl;
     std::string withdrawal = input_text.erase(0, strlen(MSG_WITHDRAW));
-    int i = 0;
+    size_t i = 0;
 
     // Chequeo si se quiere depositar oro o un item
     if (std::isdigit(withdrawal[i])) {
@@ -379,7 +376,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     commands_queue.push(pick_up_item_command);
   }
   // Chequeamos si el usuario quiere tirar algun item al suelo
-  else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
+  else if (input_text.compare(0, strlen(MSG_DROP), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
     std::string drop = input_text.erase(0, strlen(MSG_DROP));
     item_t item_required = get_item_t(drop);
@@ -533,6 +530,10 @@ item_t EventHandler::get_item_t(id_texture_t texture) {
 
     case ID_ELVEN_ELUDE:
       item = ELVEN_FLUTE;
+      break;
+
+    default:
+      item = DUMMY_ITEM;
       break;
   }
   return item;

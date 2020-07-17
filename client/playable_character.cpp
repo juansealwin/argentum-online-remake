@@ -12,7 +12,9 @@ PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
-  update_equipment(ghost_mod, new_helmet, new_armor, new_shield, new_weapon);
+  std::vector<sound_t>borr;
+  update_equipment(ghost_mod, false, new_helmet, new_armor, new_shield,
+                   new_weapon, borr);
 }
 
 PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
@@ -35,6 +37,11 @@ PlayableCharacter::PlayableCharacter(const PlayableCharacter& other_pc) {
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
+  zen_mode = other_pc.zen_mode;
+  if (zen_mode) {
+    meditating_frame = other_pc.meditating_frame;
+    meditating_animation = other_pc.meditating_animation;
+  }
   ghost = other_pc.ghost;
   if (ghost) {
     ghost_body = other_pc.ghost_body;
@@ -81,6 +88,11 @@ PlayableCharacter& PlayableCharacter::operator=(
   // Colocamos las dimensiones de su cabeza
   type_head = other_pc.type_head;
   head_rect = other_pc.head_rect;
+  zen_mode = other_pc.zen_mode;
+  if (zen_mode) {
+    meditating_frame = other_pc.meditating_frame;
+    meditating_animation = other_pc.meditating_animation;
+  }
   ghost = other_pc.ghost;
   if (ghost) {
     ghost_body = other_pc.ghost_body;
@@ -184,10 +196,15 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     // Si esta afectado por algún hechizo lo renderizamos
     if (spellbound.spell_alive())
       spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
+
+    // Si esta meditando renderizamos la meditación
+    if (zen_mode)
+      texture_manager.get_texture(ID_MEDITATION)
+          .render(renderer, &meditating_frame, x - x_rel, y - height - y_rel);
   }
 }
 
-int PlayableCharacter::set_head_dimensions(entity_t id) {
+void PlayableCharacter::set_head_dimensions(entity_t id) {
   switch (id) {
     case HUMAN:
       head_rect = {0, 0, 17, 16};
@@ -207,6 +224,11 @@ int PlayableCharacter::set_head_dimensions(entity_t id) {
     case DWARF:
       head_rect = {0, 0, 17, 17};
       type_head = ID_DWARF_HEAD;
+      break;
+
+    default:
+      head_rect = {0, 0, 0, 0};
+      type_head = ID_NULL;
       break;
   }
 }
@@ -229,6 +251,9 @@ void PlayableCharacter::unequip_item(equipped_t item) {
     case WEAPON:
       weapon = ID_NULL;
       break;
+
+    default:
+      break;
   }
 }
 
@@ -250,22 +275,47 @@ void PlayableCharacter::equip_item(equipped_t item, id_texture_t id) {
     case WEAPON:
       set_item_dimensions(id);
       break;
+
+    default:
+      break;
   }
 }
 
-void PlayableCharacter::update_equipment(bool ghost_mod,
+void PlayableCharacter::update_equipment(bool ghost_mod, bool meditating,
                                          id_texture_t new_helmet,
                                          id_texture_t new_armor,
                                          id_texture_t new_shield,
-                                         id_texture_t new_weapon) {
+                                         id_texture_t new_weapon,
+                                         std::vector<sound_t>& next_sounds) {
   // Chequeamos si el personaje murió
   if (!ghost && ghost_mod) {
     ghost = ghost_mod;
     ghost_frame = Animation(GHOST_WIDTH, GHOST_HEIGHT, ID_CORPSE);
     ghost_body = {0, 0, GHOST_WIDTH, GHOST_HEIGHT};
+    next_sounds.push_back(DEAD_PC);
   } else {
     // Chequeamos si revivio
-    if (ghost && !ghost_mod) ghost = ghost_mod;
+    if (ghost && !ghost_mod) {
+      ghost = ghost_mod;
+      next_sounds.push_back(CAST_REVIVE);
+    }
+
+    // Seteamos si el personaje esta meditando
+    if (meditating && !zen_mode) {
+      zen_mode = meditating;
+      meditating_animation = Animation(ZEN_WIDTH, ZEN_HEIGHT, ID_MEDITATION);
+      meditating_frame = {0, 0, ZEN_WIDTH, ZEN_HEIGHT};
+    }
+
+    // Chequeamos si dejo de meditar
+    else if (!meditating && zen_mode)
+      zen_mode = meditating;
+
+    // Chequeamos si sigue meditando
+    else if (zen_mode && meditating) {
+      meditating_frame = meditating_animation.get_next_clip();
+      next_sounds.push_back(CAST_MEDITATION);
+    }
 
     // Chequeamos si cambio el caso
     if (new_helmet == ID_NULL && helmet != ID_NULL)
@@ -412,6 +462,10 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       frame_equipped_a = {body_rect.x, body_rect.y, 25, 45};
       armor_animation = Animation(frame_equipped_a.w, frame_equipped_a.h);
       armor = ID_BLUE_TUNIC_EQUIPPED;
+      break;
+
+    default:
+      armor = ID_NULL;
       break;
   }
 }

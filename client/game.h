@@ -45,8 +45,9 @@ class Game {
   ~Game();
   void render(SDL_Renderer*);
   void update_map(int, int);
-  void update_character(int, entity_t, int, int, move_t, bool, id_texture_t,
-                        id_texture_t, id_texture_t, id_texture_t);
+  void update_character(int, entity_t, int, int, move_t, bool, bool,
+                        id_texture_t, id_texture_t, id_texture_t, id_texture_t,
+                        std::vector<sound_t>&);
   void update_spellbound(int, id_texture_t, int);
   void change_map(map_t);
   void load_character(int, entity_t, int, int, move_t, bool, id_texture_t,

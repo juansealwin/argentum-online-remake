@@ -53,8 +53,6 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     texture_manager.get_texture(spell_type, life_time)
         .render(renderer, NULL, x_rel - width / 2, y_rel - height);
   }
-  //if (life_time = max_life_time)
-    //cast_sound.play_sound(0);
 }
 
 void Spell::set_features(id_texture_t type) {
@@ -67,7 +65,7 @@ void Spell::set_features(id_texture_t type) {
       width = 10;
       height = 0;
       one_texture_animation = false;
-      cast_sound.set_sound("sangrado.mp3");
+      cast_sound = CAST_BLEEDING;
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -77,7 +75,7 @@ void Spell::set_features(id_texture_t type) {
       width = 15;
       height = 15;
       one_texture_animation = true;
-      cast_sound.set_sound("sangrado.mp3");
+      cast_sound = CAST_MAGIC_ARROW;
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -85,7 +83,7 @@ void Spell::set_features(id_texture_t type) {
       width = 80;
       height = 85;
       one_texture_animation = true;
-      cast_sound.set_sound("sangrado.mp3");
+      cast_sound = CAST_HEAL;
       max_life_time = FRAMES_HEAL * FRAMES_PER_TEXTURE;
       break;
 
@@ -93,7 +91,7 @@ void Spell::set_features(id_texture_t type) {
       width = 107;
       height = 75;
       one_texture_animation = false;
-      cast_sound.set_sound("descarga_electrica.wav");
+      cast_sound = CAST_ELECTRIC_SHOCK;
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
       break;
 
@@ -101,8 +99,11 @@ void Spell::set_features(id_texture_t type) {
       width = 120;
       height = 90;
       one_texture_animation = false;
-      cast_sound.set_sound("explosion.wav");
+      cast_sound = CAST_EXPLOSION;
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
+      break;
+
+    default:
       break;
   }
 }

@@ -14,8 +14,7 @@ Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
 
 Game::~Game() {
   if (!characters.empty()) {
-    // clean_all_characters(false);
-    characters.clear();
+    clean_all_characters(false);
   }
 }
 
@@ -29,7 +28,7 @@ Game::Game(const Game& other_game) {
   viewport = other_game.viewport;
 
   if (!characters.empty()) {
-    characters.clear();
+    clean_all_characters(false);
   }
 
   std::map<int, Character*>::const_iterator it;
@@ -73,9 +72,10 @@ Game& Game::operator=(const Game& other_game) {
 }
 
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
-                            move_t orientation, bool ghost, id_texture_t helmet,
-                            id_texture_t armor, id_texture_t shield,
-                            id_texture_t weapon) {
+                            move_t orientation, bool ghost, bool meditating,
+                            id_texture_t helmet, id_texture_t armor,
+                            id_texture_t shield, id_texture_t weapon,
+                            std::vector<sound_t>& incoming_sounds) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
@@ -93,7 +93,7 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
         (x_render_scale < map_piece.x + screen_width))
       if ((map_piece.y < y_render_scale) &&
           (y_render_scale < map_piece.y + screen_width))
-        characters[id]->sound_walk();
+        incoming_sounds.push_back(characters[id]->sound_walk());
 
     // Actualizamos la posición
     characters[id]->update_position(new_x, new_y, orientation);
@@ -102,7 +102,8 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF)
     dynamic_cast<PlayableCharacter*>(characters[id])
-        ->update_equipment(ghost, helmet, armor, shield, weapon);
+        ->update_equipment(ghost, meditating, helmet, armor, shield, weapon,
+                           incoming_sounds);
 }
 
 void Game::update_map(int new_x, int new_y) {
@@ -228,6 +229,9 @@ void Game::change_map(map_t new_map) {
     case DESERT_MAP:
       background = ID_MAP_DESERT_BACKGROUND;
       static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+
+    default:
       break;
   }
 }
