@@ -14,7 +14,7 @@ void Socket::connect(const char *host, const char *port) {
   struct addrinfo *addr = addrinfo_list;
   while (addr && !connected) {
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == -1) connected = true;
+    if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == 0) connected = true;
     addr = addr->ai_next;
   }
   this->fd = fd;
@@ -22,14 +22,14 @@ void Socket::connect(const char *host, const char *port) {
 }
 
 void Socket::bind_and_listen(const char *port) {
-  bool binded = false;
+  bool bound = false;
   struct addrinfo *addrinfo_list;
   addrinfo_list = getAddr(nullptr, port, SERVER_FLAGS);
   int fd = -1;
   struct addrinfo *addr = addrinfo_list;
-  while (addr && !binded) {
+  while (addr && !bound) {
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (::bind(fd, addr->ai_addr, addr->ai_addrlen) == -1) binded = true;
+    if (::bind(fd, addr->ai_addr, addr->ai_addrlen) == 0) bound = true;
     addr = addr->ai_next;
   }
   freeaddrinfo(addrinfo_list);
@@ -50,8 +50,8 @@ void Socket::close() {
   ::close(this->fd);
 }
 
-void Socket::send(const void *msg, const size_t length) const {
-  if (length == 0) return;
+int Socket::send(const void *msg, const size_t length) const {
+  if (length == 0) return 0;
   uint remaining_bytes = length;
   uint total_bytes_sent = 0;
   ssize_t bytes = 0;
@@ -62,6 +62,7 @@ void Socket::send(const void *msg, const size_t length) const {
     total_bytes_sent += bytes;
     remaining_bytes -= bytes;
   } while (total_bytes_sent < length && bytes > 0);
+  return bytes;
 }
 
 int Socket::recv(void *response, const size_t length) const {

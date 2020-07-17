@@ -32,6 +32,13 @@ class MessageCenter {
   void notify_cant_attack_low_levels(std::string attacker, std::string attacked,
                                      int attacked_level, int newbie_level_cap);
   void notify_cant_change_map(std::string player);
+  void notify_cant_sell_not_existing_item(std::string player);
+  void notify_need_to_be_close_to_npc_to_buy_or_sell(std::string player);
+  void notify_need_to_be_close_to_npc(std::string player);
+  void notify_no_npc_to_sell_item(std::string player);
+  void notify_no_npc_to_buy_item(std::string player);
+  void notify_ghosts_cant_buy_items(std::string player);
+  //void notify_must_be_close_to_banker(std::string player);
 
  private:
   // mapea nombre del jugador con su cola

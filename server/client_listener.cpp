@@ -7,9 +7,9 @@
 
 ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
-  Socket server_socket;
+  //Socket server_socket;
   server_socket.bind_and_listen(port);
-  this->server_socket = std::move(server_socket);
+  //this->server_socket = std::move(server_socket);
   std::ifstream entities_file_aux(entities_cfg_file);
   Json::Value entities_cfg;
   entities_file_aux >> entities_cfg;

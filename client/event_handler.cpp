@@ -365,13 +365,13 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere vender items en el mercado
   else if (input_text.compare(0, strlen(MSG_SELL), MSG_SELL) == 0) {
     std::cout << "COMANDO VENDER" << std::endl;
-    std::string sell = input_text.erase(0, strlen(MSG_BUY));
+    std::string sell = input_text.erase(0, strlen(MSG_SELL));
     item_t item_required = get_item_t(sell);
     if (item_required != DUMMY_ITEM) {
       SellItemCommandDTO* sell_item_command =
           new SellItemCommandDTO(item_required);
       commands_queue.push(sell_item_command);
-    }
+    } else { std::cout << "item required is dummy item" << std::endl;}
   }
   // Chequeamos si el usuario quiere tomar algun item del suelo
   else if (input_text.compare(0, input_text.length(), MSG_TAKE) == 0) {

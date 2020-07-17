@@ -16,11 +16,15 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
       map(map),
       collided_entity(-1) {
   impact_at_position(x, y);
+  this->range--;
 }
 
 void Projectile::auto_move() {
-  if (collided) return;
-  if (range == 0) ModelException("Projectile cant move any more!", "11");
+  if (this->range == 0) {
+    this->alive = false;
+  }
+  if (collided || !alive) return;
+  if (range == 0) ModelException("El proyectil ya no puede moverse!");
   int next_x = x_position + get_next_x();
   int next_y = y_position + get_next_y();
   impact_at_position(next_x, next_y);
@@ -31,6 +35,7 @@ void Projectile::auto_move() {
 }
 
 void Projectile::impact_at_position(int x, int y) {
+  std::cout << "calling impact at possition!" << std::endl;
   if (map->tile_is_safe(x, y)) {
     kill();
     return;
@@ -75,7 +80,7 @@ bool Projectile::is_critical() { return critical; }
 unsigned int Projectile::get_attacker_id() { return attacker_id; }
 
 void Projectile::kill() {
-  //map->empty_cell(x_position, y_position);
+  // map->empty_cell(x_position, y_position);
   map->empty_projectile(x_position, y_position);
   alive = false;
 }

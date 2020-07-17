@@ -22,8 +22,8 @@ class Socket {
   void connect(const char *host, const char *port);
 
   Socket accept();
-
-  void send(const void *msg, const size_t length) const;
+  //retorna -1 en caso de error.
+  int send(const void *msg, const size_t length) const;
 
   int recv(void *response, const size_t length) const;
 

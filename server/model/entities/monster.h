@@ -24,7 +24,7 @@ class Monster : public BaseCharacter {
   bool is_close_to(int other_x, int other_y);
   void move_closer_to(int other_x, int other_y);
  private:
-  int dps;
+  unsigned int dps;
   std::string name;
   std::vector<std::tuple<int, int>> moves;
   std::size_t current_move = 0;

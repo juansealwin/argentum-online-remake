@@ -5,6 +5,7 @@
 #include "monster.h"
 #include "monsters_factory.h"
 #include "message_center.h"
+#include <thread>
 class Hero;
 class MonstersManager {
  public:
