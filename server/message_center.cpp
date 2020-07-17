@@ -56,7 +56,7 @@ void MessageCenter::notify_damage_received(std::string attacked,
                                            std::string attacker) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string message =
-      "Recibiste " + std::to_string(dmg) + " de daño de: " + attacker;
+      "Recibiste " + std::to_string(dmg) + " de da"+(char)241+"o de: " + attacker;
   if (dmg == 0) {
     message = "Bloqueaste el ataque de " + attacker + "!";
   }
@@ -82,7 +82,7 @@ void MessageCenter::notify_cant_attack_low_levels(std::string attacker,
   } else {
     msg = "Hay mucha diferencia de niveles entre vos y " + attacked +
           ", es nivel " + std::to_string(attacked_level) +
-          ". No podes hacerle daño.";
+          ". No podes hacerle da"+(char)241+"o.";
   }
   send_message(attacker, msg);
 }
@@ -145,7 +145,7 @@ void MessageCenter::notify_damage_done(std::string attacker, unsigned int dmg,
                                        std::string attacked) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string message =
-      "Has causado " + std::to_string(dmg) + " de daño a " + attacked;
+      "Has causado " + std::to_string(dmg) + " de da"+(char)241+"o a " + attacked;
   if (dmg == 0) message = attacker + " ha bloqueado tu ataque!";
   send_message(attacker, message);
 }

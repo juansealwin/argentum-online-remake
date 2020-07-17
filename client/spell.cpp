@@ -19,7 +19,6 @@ Spell::Spell(const Spell& other_spell) {
     animation_cast = other_spell.animation_cast;
     animation_frame = other_spell.animation_frame;
   }
-  cast_sound = other_spell.cast_sound;
   max_life_time = other_spell.max_life_time;
 }
 
@@ -37,7 +36,6 @@ Spell& Spell::operator=(const Spell& other_spell) {
     animation_cast = other_spell.animation_cast;
     animation_frame = other_spell.animation_frame;
   }
-  cast_sound = other_spell.cast_sound;
   max_life_time = other_spell.max_life_time;
   return *this;
 }
@@ -65,7 +63,6 @@ void Spell::set_features(id_texture_t type) {
       width = 10;
       height = 0;
       one_texture_animation = false;
-      cast_sound = CAST_BLEEDING;
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -75,7 +72,6 @@ void Spell::set_features(id_texture_t type) {
       width = 15;
       height = 15;
       one_texture_animation = true;
-      cast_sound = CAST_MAGIC_ARROW;
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -83,7 +79,6 @@ void Spell::set_features(id_texture_t type) {
       width = 80;
       height = 85;
       one_texture_animation = true;
-      cast_sound = CAST_HEAL;
       max_life_time = FRAMES_HEAL * FRAMES_PER_TEXTURE;
       break;
 
@@ -91,7 +86,6 @@ void Spell::set_features(id_texture_t type) {
       width = 107;
       height = 75;
       one_texture_animation = false;
-      cast_sound = CAST_ELECTRIC_SHOCK;
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
       break;
 
@@ -99,7 +93,6 @@ void Spell::set_features(id_texture_t type) {
       width = 120;
       height = 90;
       one_texture_animation = false;
-      cast_sound = CAST_EXPLOSION;
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
       break;
 

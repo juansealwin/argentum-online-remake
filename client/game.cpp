@@ -231,6 +231,11 @@ void Game::change_map(map_t new_map) {
       static_objects = ID_MAP_DESERT_OBJECTS;
       break;
 
+    case ARGAL_MAP:
+      background = ID_MAP_DESERT_BACKGROUND;
+      static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+
     default:
       break;
   }

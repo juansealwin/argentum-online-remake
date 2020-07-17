@@ -84,6 +84,11 @@ void EventHandler::get_events() {
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
+          if (event.key.keysym.sym == SDLK_3) {
+            ChangeGameRoomDTO* change_game_room_command =
+                new ChangeGameRoomDTO(3);
+            commands_queue.push(change_game_room_command);
+          }
           if (event.key.keysym.sym == SDLK_s) {
             UseItemSpecialCommandDTO* use_item_special_command =
                 new UseItemSpecialCommandDTO();
@@ -343,8 +348,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
   // Chequeamos si el usuario quiere listar un mercado o el banco
   else if (input_text.compare(0, input_text.length(), MSG_LIST) == 0) {
     std::cout << "COMANDO LISTAR" << std::endl;
-    GetBankedItemsCommandDTO* list_command =
-        new GetBankedItemsCommandDTO();
+    GetBankedItemsCommandDTO* list_command = new GetBankedItemsCommandDTO();
     commands_queue.push(list_command);
   }
   // Chequeamos si el usuario quiere comprar items en el mercado
@@ -381,8 +385,7 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     std::string drop = input_text.erase(0, strlen(MSG_DROP));
     item_t item_required = get_item_t(drop);
     if (item_required != DUMMY_ITEM) {
-      DropItemCommandDTO* drop_command =
-          new DropItemCommandDTO(item_required);
+      DropItemCommandDTO* drop_command = new DropItemCommandDTO(item_required);
       commands_queue.push(drop_command);
     }
   }
