@@ -496,7 +496,6 @@ void ArgentumGame::run() {
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
-    // print_debug_map();
     send_game_status();
     remove_death_entities();
     long time_step = 1000 / entities_cfg["ups"].asFloat();
