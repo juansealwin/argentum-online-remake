@@ -16,10 +16,12 @@ ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height,
 
 ProtectedMap::~ProtectedMap() {}
 
-void ProtectedMap::map_reader(Game& game, UIStatus& renderer_ui) {
+void ProtectedMap::map_reader(Game& game, UIStatus& renderer_ui, std::vector<sound_t>& current_sounds) {
   std::unique_lock<std::mutex> lock(block_maps);
   renderer_ui = current_ui_status;
   game = *read_map;
+  current_sounds = incomin_sounds;
+  incomin_sounds.clear();
 }
 
 void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
@@ -71,7 +73,7 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
             it->second.get_y(), it->second.get_orientation(),
             it->second.is_ghost(), it->second.is_meditating(),
             it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
-            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
+            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON), incomin_sounds);
       }
     } else {
       // Como no existe la creamos

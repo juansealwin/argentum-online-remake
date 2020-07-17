@@ -74,7 +74,7 @@ Game& Game::operator=(const Game& other_game) {
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
                             move_t orientation, bool ghost, bool meditating,
                             id_texture_t helmet, id_texture_t armor,
-                            id_texture_t shield, id_texture_t weapon) {
+                            id_texture_t shield, id_texture_t weapon, std::vector<sound_t>& incoming_sounds) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
@@ -92,7 +92,7 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
         (x_render_scale < map_piece.x + screen_width))
       if ((map_piece.y < y_render_scale) &&
           (y_render_scale < map_piece.y + screen_width))
-        characters[id]->sound_walk();
+        incoming_sounds.push_back(characters[id]->sound_walk());
 
     // Actualizamos la posición
     characters[id]->update_position(new_x, new_y, orientation);

@@ -44,5 +44,5 @@ Npc& Npc::operator=(const Npc& other_npc) {
 Npc::~Npc() {}
 
 sound_t Npc::sound_walk() {
-  if ((rand() % 100) < 20) return walk;
+  /*if ((rand() % 100) < 20)*/ return walk;
 }

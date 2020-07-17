@@ -64,7 +64,9 @@ void GameRenderer::run() {
     int frame_time;
     // Leemos la primera instancia que nos manda el server
     Game current_game;
-    protected_map.map_reader(current_game, ui);
+    protected_map.map_reader(current_game, ui, current_sounds);
+    SoundManager sound_manager;
+    sound_manager.play_music(BG_MUSIC_1);
     event_t local_event;
     int index;
     bool is_selected = false;
@@ -107,7 +109,7 @@ void GameRenderer::run() {
       }
 
       // Leemos las actualizaciones mandadas desde el server
-      protected_map.map_reader(current_game, ui);
+      protected_map.map_reader(current_game, ui, current_sounds);
 
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_status(ui);
@@ -123,7 +125,11 @@ void GameRenderer::run() {
       // Renderizamos la UI con sus valores actualizados
       ui.render(renderer, input_message, is_selected, item_selected);
 
+      // Renderizamos todo lo de esta pasada
       SDL_RenderPresent(renderer);
+
+      // Reproducimos los sonidos que fueron agregados al vector
+      sound_manager.play_sound_effects(current_sounds);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.
       frame_time = SDL_GetTicks() - frame_start;

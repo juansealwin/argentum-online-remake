@@ -15,9 +15,6 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
 
 void EventHandler::get_events() {
   try {
-    background_music.set_music("musica_lobby.mp3");
-    background_music.play_music();
-    background_music.decrease_music_volume(90);
     SDL_Event event;
     while (is_running) {
       while (SDL_PollEvent(&event) != 0) {

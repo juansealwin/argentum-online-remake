@@ -22,13 +22,14 @@ class ProtectedMap {
   std::map<int, EntityStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
   UIStatus current_ui_status;
+  std::vector<sound_t> incomin_sounds;
   std::mutex block_maps;
   std::condition_variable cv;
 
  public:
   ProtectedMap(int, int, int, int);
   ~ProtectedMap();
-  void map_reader(Game&, UIStatus&);
+  void map_reader(Game&, UIStatus&, std::vector<sound_t>&);
   void copy_buffer(UIStatus&);
   void map_writer(std::map<int, EntityStatus>&, map_t&);
 };

@@ -2,7 +2,7 @@
 #define SOUND_MANAGER_H
 
 #include <unordered_map>
-
+#include <vector>
 #include "sound_effect.h"
 #include "types.h"
 
@@ -15,6 +15,8 @@ class SoundManager {
   SoundManager();
   ~SoundManager();
   void charge_sound_music();
+  void play_music(sound_t);
+  void play_sound_effects(std::vector<sound_t>&);
 };
 
 #endif
