@@ -46,6 +46,7 @@ class EntityStatus {
   bool is_meditating() const;
   id_texture_t get_equipped(equipped_t);
   move_t get_orientation() const;
+  sound_t get_cast_sound();
 };
 
 #endif

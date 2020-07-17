@@ -22,7 +22,7 @@ class ProtectedMap {
   std::map<int, EntityStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
   UIStatus current_ui_status;
-  std::vector<sound_t> incomin_sounds;
+  std::vector<sound_t> incoming_sounds;
   std::mutex block_maps;
   std::condition_variable cv;
 

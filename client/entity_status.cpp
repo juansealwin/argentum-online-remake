@@ -168,8 +168,7 @@ void EntityStatus::set_spellbound(int affected_by) {
 bool EntityStatus::is_equal(EntityStatus other_status) {
   return (type_entity == other_status.type_entity && x == other_status.x &&
           y == other_status.y && is_alive == other_status.is_alive &&
-          meditating == other_status.meditating && 
-          !other_status.meditating &&
+          meditating == other_status.meditating && !other_status.meditating &&
           helmet == other_status.helmet && armor == other_status.armor &&
           shield == other_status.shield && weapon == other_status.weapon &&
           orientation == other_status.orientation);
@@ -206,4 +205,21 @@ id_texture_t EntityStatus::get_equipped(equipped_t type_item) {
     item = weapon;
 
   return item;
+}
+
+sound_t EntityStatus::get_cast_sound() {
+  sound_t cast_sound;
+
+  if (spellbound == ID_BLEEDING)
+    cast_sound = CAST_BLEEDING;
+  else if (spellbound == ID_MAGIC_ARROW)
+    cast_sound = CAST_MAGIC_ARROW;
+  else if (spellbound == ID_HEAL)
+    cast_sound = CAST_HEAL;
+  else if (spellbound == ID_ELECTRIC_SHOCK)
+    cast_sound = CAST_ELECTRIC_SHOCK;
+  else if (spellbound == ID_EXPLOSION)
+    cast_sound = CAST_EXPLOSION;
+
+  return cast_sound;
 }
