@@ -18,6 +18,7 @@
 #include "login_command_dto.h"
 #include "protocol.h"
 #include "texture.h"
+#include "helper_functions.h"
 
 class Client {
  private:

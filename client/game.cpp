@@ -1,5 +1,7 @@
 #include "game.h"
 
+Game::Game() {}
+
 // 620 ancho y 465 de alto el viewport
 Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
     : id_hero(id_player),
@@ -8,6 +10,12 @@ Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
   change_map(new_map);
   map_piece = {0, 0, screen_width, screen_height};
   viewport = {0, HEIGHT_UI, screen_width, screen_height};
+}
+
+Game::~Game() {
+  if (!characters.empty()) {
+    clean_all_characters(false);
+  }
 }
 
 Game::Game(const Game& other_game) {
@@ -19,7 +27,9 @@ Game::Game(const Game& other_game) {
   map_piece = other_game.map_piece;
   viewport = other_game.viewport;
 
-  if (!characters.empty()) characters.clear();
+  if (!characters.empty()) {
+    clean_all_characters(false);
+  }
 
   std::map<int, Character*>::const_iterator it;
   for (it = other_game.characters.begin(); it != other_game.characters.end();
@@ -61,22 +71,18 @@ Game& Game::operator=(const Game& other_game) {
   return *this;
 }
 
-Game::~Game() {
-  if (!characters.empty()) {
-    // clean_all_characters(true);
-    characters.clear();
-  }
-}
-
 void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
-                            bool ghost, id_texture_t helmet, id_texture_t armor,
-                            id_texture_t shield, id_texture_t weapon) {
+                            move_t orientation, bool ghost, bool meditating,
+                            id_texture_t helmet, id_texture_t armor,
+                            id_texture_t shield, id_texture_t weapon,
+                            std::vector<sound_t>& incoming_sounds) {
   // Necesitamos traducir las posiciones de tiles a pixeles
   int x_render_scale = new_x * TILE_SIZE;
   int y_render_scale = new_y * TILE_SIZE;
 
   // Chequeamos si hubo un cambio de posicion
-  if (characters[id]->change_position(x_render_scale, y_render_scale)) {
+  if (characters[id]->change_position(x_render_scale, y_render_scale,
+                                      orientation)) {
     // Si se actualiza el heroe la camara lo tiene que seguir
     if (id == id_hero)
       update_map(x_render_scale - characters[id]->get_x(),
@@ -87,16 +93,17 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
         (x_render_scale < map_piece.x + screen_width))
       if ((map_piece.y < y_render_scale) &&
           (y_render_scale < map_piece.y + screen_width))
-        characters[id]->sound_walk();
+        incoming_sounds.push_back(characters[id]->sound_walk());
 
     // Actualizamos la posición
-    characters[id]->update_position(new_x, new_y);
+    characters[id]->update_position(new_x, new_y, orientation);
   }
   // En caso de que sea un personaje jugable actualizamos su equipamiento
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF)
     dynamic_cast<PlayableCharacter*>(characters[id])
-        ->update_equipment(ghost, helmet, armor, shield, weapon);
+        ->update_equipment(ghost, meditating, helmet, armor, shield, weapon,
+                           incoming_sounds);
 }
 
 void Game::update_map(int new_x, int new_y) {
@@ -157,23 +164,25 @@ void Game::render(SDL_Renderer* renderer) {
 }
 
 void Game::load_character(int id, entity_t entity_type, int x, int y,
-                          bool alive, id_texture_t helmet, id_texture_t armor,
-                          id_texture_t shield, id_texture_t weapon) {
+                          move_t orientation, bool alive, id_texture_t helmet,
+                          id_texture_t armor, id_texture_t shield,
+                          id_texture_t weapon) {
   int x_render_scale = x * TILE_SIZE;
   int y_render_scale = y * TILE_SIZE;
   if (entity_type == HUMAN || entity_type == ELF || entity_type == GNOME ||
       entity_type == DWARF) {
-    characters[id] =
-        new PlayableCharacter(entity_type, x_render_scale, y_render_scale,
-                              alive, helmet, armor, shield, weapon);
+    characters[id] = new PlayableCharacter(entity_type, x_render_scale,
+                                           y_render_scale, orientation, alive,
+                                           helmet, armor, shield, weapon);
     // Si cargamos a hero por primera vez ubicamos la parte del mapa que
     // queremos ver
-    if (id == id_hero) 
+    if (id == id_hero)
       update_map(x_render_scale - screen_width / 2,
                  y_render_scale - screen_height / 2);
-    
+
   } else {
-    characters[id] = new Npc(entity_type, x_render_scale, y_render_scale);
+    characters[id] =
+        new Npc(entity_type, x_render_scale, y_render_scale, orientation);
   }
 }
 
@@ -221,6 +230,14 @@ void Game::change_map(map_t new_map) {
       background = ID_MAP_DESERT_BACKGROUND;
       static_objects = ID_MAP_DESERT_OBJECTS;
       break;
+
+    case ARGAL_MAP:
+      background = ID_MAP_DESERT_BACKGROUND;
+      static_objects = ID_MAP_DESERT_OBJECTS;
+      break;
+
+    default:
+      break;
   }
 }
 
@@ -235,10 +252,12 @@ void Game::clean_entity(int i, entity_t type_entity) {
 
 void Game::clean_all_characters(bool also_hero) {
   std::map<int, Character*>::iterator it;
-  for (it = characters.begin(); it != characters.end(); it++) {
+  for (it = characters.begin(); it != characters.end();) {
     if (it->first != id_hero || also_hero) {
       delete it->second;
-      characters.erase(it);
+      it = characters.erase(it);
+    } else {
+      it++;
     }
   }
   items.clear();

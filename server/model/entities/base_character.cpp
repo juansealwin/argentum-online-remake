@@ -3,27 +3,20 @@
 
 BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
                              unsigned int type, char repr, unsigned int max_hp,
-                             unsigned int level, Map *map)
-    : Entity(unique_id, x, y, type, repr),
+                             unsigned int level, Map *map, const std::string &name)
+    : Entity(unique_id, x, y, type, repr, orientation_down),
       current_hp(max_hp),
       max_hp(max_hp),
       level(level),
       affected_by(0),
-      map(map) {}
-
-BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
-                             unsigned int type, char repr, unsigned int level,
-                             Map *map)
-    : Entity(unique_id, x, y, type, repr),
-      level(level),
-      affected_by(0),
-      map(map) {}
+      map(map),
+      name(name) {}
 
 void BaseCharacter::move(int next_x, int next_y) {
+  change_orientation(x_position, y_position, next_x, next_y);
   if (map->can_ocupy_cell(next_x, next_y)) {
     map->ocupy_cell(next_x, next_y, unique_id);
     map->empty_cell(x_position, y_position);
-    change_orientation(x_position, y_position, next_x, next_y);
     x_position = next_x;
     y_position = next_y;
   }
@@ -54,7 +47,10 @@ void BaseCharacter::set_position(int x, int y) {
 
 void BaseCharacter::set_map(Map *map) {
   this->map = map;
-  //map->debug_print();
+}
+
+std::string BaseCharacter::get_name(){
+  return name;
 }
 
 BaseCharacter::~BaseCharacter() {}

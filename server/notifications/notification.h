@@ -3,7 +3,7 @@
 #include <vector>
 class Notification {
  public:
-  Notification(std::vector<unsigned char> &notification);
+  explicit Notification(std::vector<unsigned char> &notification);
   virtual ~Notification();
   std::vector<unsigned char> vector;
 

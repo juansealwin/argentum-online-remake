@@ -19,9 +19,8 @@ ClientNotificationSender::~ClientNotificationSender() {
 
 void ClientNotificationSender::stop() {
   notifications_queue->close();
-  Notification* n;
   while (!notifications_queue->is_empty()) {
-    n = notifications_queue->pop();
+    Notification* n = notifications_queue->pop();
     delete n;
   }
 

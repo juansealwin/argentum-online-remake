@@ -17,6 +17,10 @@
 #include "texture.h"
 #include "texture_manager.h"
 #include "thread.h"
+#include "text_box.h"
+#include "sound_manager.h"
+
+// 10 FPS
 #define FRAME_DELAY 100
 
 class GameRenderer : public Thread {
@@ -29,7 +33,7 @@ class GameRenderer : public Thread {
   UIStatus ui;
   ProtectedMap& protected_map;
   EventsQueue& events_queue;
-  SoundEffect background_music;
+  std::vector<sound_t> current_sounds;
 
  public:
   GameRenderer(int, int, ProtectedMap&, EventsQueue&);

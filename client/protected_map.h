@@ -17,20 +17,21 @@ typedef struct {
 
 class ProtectedMap {
  private:
-  Game* read_map;
-  Game* write_map;
+  std::unique_ptr<Game> read_map;
+  std::unique_ptr<Game> write_map;
   std::map<int, EntityStatus> current_status;
   std::map<int, spellbound_t> characters_afected;
   UIStatus current_ui_status;
+  std::vector<sound_t> incoming_sounds;
   std::mutex block_maps;
   std::condition_variable cv;
 
  public:
-  ProtectedMap(int, int, int);
+  ProtectedMap(int, int, int, int);
   ~ProtectedMap();
-  Game map_reader(UIStatus&);
+  void map_reader(Game&, UIStatus&, std::vector<sound_t>&);
   void copy_buffer(UIStatus&);
-  void map_writer(std::map<int, EntityStatus>&, map_t);
+  void map_writer(std::map<int, EntityStatus>&, map_t&);
 };
 
 #endif

@@ -8,29 +8,35 @@ MonstersManager::MonstersManager() {
 MonstersManager::~MonstersManager() {}
 
 void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
-                             std::map<unsigned int, Hero *> heroes) {
+                             std::map<unsigned int, Hero *> heroes,
+                             MessageCenter &message_center) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
 
   for (auto &monster : monsters) {
     if (time_difference.count() >= 800000000) {
+      bool attacked_or_moved_to_hero = false;
       last_update_time = actual_time;
       for (auto &hero : heroes) {
         if (!hero.second->is_death()) {
-          if (!attack_or_move_to_hero(monster.second, hero.second))
-            monster.second->auto_move();
+          attacked_or_moved_to_hero = attack_or_move_to_hero(
+              monster.second, hero.second, message_center);
+          if (attacked_or_moved_to_hero) break;
         }
       }
+      if (!attacked_or_moved_to_hero) monster.second->auto_move();
     }
     monster.second->clear_effects();
   }
 }
 
-bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h) {
+bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h,
+                                             MessageCenter &message_center) {
   if (m->is_next_to(h->x_position, h->y_position)) {
     const Attack att = m->attack();
-    h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
-    // atacar
+    unsigned int dmg =
+        h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
+    message_center.notify_damage_received(h->get_name(), dmg, m->get_name());
     return true;
   } else if (m->is_close_to(h->x_position, h->y_position)) {
     m->move_closer_to(h->x_position, h->y_position);
@@ -62,5 +68,6 @@ void MonstersManager::respawn_monsters(
     Monster *random_monster =
         MonstersFactory::create_random_monster(monsters_cfg, entities_ids, map);
     monsters.emplace(entities_ids++, random_monster);
+    std::this_thread::sleep_for(std::chrono::milliseconds(1));
   }
 }

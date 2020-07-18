@@ -1,21 +1,28 @@
 #include "protected_map.h"
 
-ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height) {
-  read_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
-  write_map = new Game(id_player, screen_width, screen_height, GRASS_MAP);
+ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height,
+                           int initial_map) {
+  /*read_map =
+      new Game(id_player, screen_width, screen_height, map_t(initial_map));
+  write_map =
+      new Game(id_player, screen_width, screen_height, map_t(initial_map));*/
+  read_map = std::unique_ptr<Game>(
+      new Game(id_player, screen_width, screen_height, map_t(initial_map)));
+  write_map = std::unique_ptr<Game>(
+      new Game(id_player, screen_width, screen_height, map_t(initial_map)));
   current_status.clear();
   characters_afected.clear();
 }
 
-ProtectedMap::~ProtectedMap() {
-  delete read_map;
-  delete write_map;
-}
+ProtectedMap::~ProtectedMap() {}
 
-Game ProtectedMap::map_reader(UIStatus& renderer_ui) {
+void ProtectedMap::map_reader(Game& game, UIStatus& renderer_ui,
+                              std::vector<sound_t>& current_sounds) {
   std::unique_lock<std::mutex> lock(block_maps);
   renderer_ui = current_ui_status;
-  return *read_map;
+  game = *read_map;
+  current_sounds = incoming_sounds;
+  incoming_sounds.clear();
 }
 
 void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
@@ -25,7 +32,7 @@ void ProtectedMap::copy_buffer(UIStatus& next_ui_status) {
 }
 
 void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
-                              map_t new_map) {
+                              map_t& new_map) {
   std::map<int, EntityStatus>::iterator it;
   std::map<int, EntityStatus>::iterator it2;
   std::map<int, spellbound_t>::iterator it_afected;
@@ -40,18 +47,24 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
 
     // Cambiamos el nuevo mapa
     write_map->change_map(new_map);
+
+    // Ahora el nuevo mapa es el mapa actual
+    new_map = CURRENT_MAP;
   }
 
   // Hacemos updates de las entidades que aun estan y creamos las nuevas
   for (it = next_status.begin(); it != next_status.end(); it++) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna
     // animación en curso de otro hechizo
-    if (it->second.is_afected() != ID_NULL)
+    if (it->second.is_afected() != ID_NULL) {
       if (characters_afected[it->first].lifetime == 0) {
+        // Seteo los valores de animación del hechizo que afecta al personaje
         characters_afected[it->first].type_spell = it->second.is_afected();
         characters_afected[it->first].lifetime = it->second.get_life_time();
+        // Encolo el sonido de casteo del hechizo
+        incoming_sounds.push_back(it->second.get_cast_sound());
       }
-
+    }
     // Chequeamos si dicha entidad ya existia dentro del mapa
     it2 = current_status.find(it->first);
 
@@ -61,9 +74,11 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
         // Si cambio hacemos un update del personaje
         write_map->update_character(
             it->first, it->second.get_type_entity(), it->second.get_x(),
-            it->second.get_y(), it->second.is_ghost(),
+            it->second.get_y(), it->second.get_orientation(),
+            it->second.is_ghost(), it->second.is_meditating(),
             it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
-            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
+            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON),
+            incoming_sounds);
       }
     } else {
       // Como no existe la creamos
@@ -74,9 +89,10 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
       else
         write_map->load_character(
             it->first, it->second.get_type_entity(), it->second.get_x(),
-            it->second.get_y(), it->second.is_ghost(),
-            it->second.get_equipped(HELMET), it->second.get_equipped(ARMOR),
-            it->second.get_equipped(SHIELD), it->second.get_equipped(WEAPON));
+            it->second.get_y(), it->second.get_orientation(),
+            it->second.is_ghost(), it->second.get_equipped(HELMET),
+            it->second.get_equipped(ARMOR), it->second.get_equipped(SHIELD),
+            it->second.get_equipped(WEAPON));
     }
 
     // Mofificamos/creamos el status para la proxima pasada
@@ -99,14 +115,16 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
   }
 
   // Comprobamos si hay entidades que no están más en el mapa
-  for (it = current_status.begin(); it != current_status.end(); it++) {
+  for (it = current_status.begin(); it != current_status.end();) {
     it2 = next_status.find(it->first);
     it_afected = characters_afected.find(it->first);
     // Si no están y además no tienen una animación en curso encima, las
     // borramos del current status y del mapa
     if (it2 == next_status.end() && it_afected == characters_afected.end()) {
-      current_status.erase(it->first);
       write_map->clean_entity(it->first, it->second.get_type_entity());
+      it = current_status.erase(it);
+    } else {
+      it++;
     }
   }
 }

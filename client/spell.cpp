@@ -19,7 +19,6 @@ Spell::Spell(const Spell& other_spell) {
     animation_cast = other_spell.animation_cast;
     animation_frame = other_spell.animation_frame;
   }
-  cast_sound = other_spell.cast_sound;
   max_life_time = other_spell.max_life_time;
 }
 
@@ -37,7 +36,6 @@ Spell& Spell::operator=(const Spell& other_spell) {
     animation_cast = other_spell.animation_cast;
     animation_frame = other_spell.animation_frame;
   }
-  cast_sound = other_spell.cast_sound;
   max_life_time = other_spell.max_life_time;
   return *this;
 }
@@ -53,8 +51,6 @@ void Spell::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     texture_manager.get_texture(spell_type, life_time)
         .render(renderer, NULL, x_rel - width / 2, y_rel - height);
   }
-  //if (life_time = max_life_time)
-    //cast_sound.play_sound(0);
 }
 
 void Spell::set_features(id_texture_t type) {
@@ -67,7 +63,6 @@ void Spell::set_features(id_texture_t type) {
       width = 10;
       height = 0;
       one_texture_animation = false;
-      cast_sound.set_sound("sangrado.mp3");
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -77,7 +72,6 @@ void Spell::set_features(id_texture_t type) {
       width = 15;
       height = 15;
       one_texture_animation = true;
-      cast_sound.set_sound("sangrado.mp3");
       max_life_time = FRAMES_BLEEDING * FRAMES_PER_TEXTURE;
       break;
 
@@ -85,7 +79,6 @@ void Spell::set_features(id_texture_t type) {
       width = 80;
       height = 85;
       one_texture_animation = true;
-      cast_sound.set_sound("sangrado.mp3");
       max_life_time = FRAMES_HEAL * FRAMES_PER_TEXTURE;
       break;
 
@@ -93,7 +86,6 @@ void Spell::set_features(id_texture_t type) {
       width = 107;
       height = 75;
       one_texture_animation = false;
-      cast_sound.set_sound("descarga_electrica.wav");
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
       break;
 
@@ -101,8 +93,10 @@ void Spell::set_features(id_texture_t type) {
       width = 120;
       height = 90;
       one_texture_animation = false;
-      cast_sound.set_sound("explosion.wav");
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
+      break;
+
+    default:
       break;
   }
 }

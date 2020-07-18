@@ -13,6 +13,7 @@ typedef enum {
   ID_UI,
   ID_SELECTOR,
   ID_ITEM_EQUIPPED,
+  ID_MEDITATION,
   ID_CORPSE,
   ID_CORPSE_HEAD,
   ID_HUMAN,
@@ -34,6 +35,8 @@ typedef enum {
   ID_MAP_GRASS_OBJECTS,
   ID_MAP_DESERT_BACKGROUND,
   ID_MAP_DESERT_OBJECTS,
+  ID_MAP_ARGAL_BACKGROUND,
+  ID_MAP_ARGAL_OBJECTS,
   ID_GOLD,
   ID_HP_POTION,
   ID_MANA_POTION,
@@ -140,7 +143,12 @@ typedef enum {
   MOVE_RIGHT = 1
 } move_t;
 
-typedef enum { EVENT_NONE = 0, EVENT_QUIT, EVENT_SELECT_ITEM } event_t;
+typedef enum {
+  EVENT_NONE = 0,
+  EVENT_QUIT,
+  EVENT_SELECT_ITEM,
+  EVENT_MESSAGE
+} event_t;
 
 typedef enum {
   DUMMY_ITEM,
@@ -158,16 +166,49 @@ typedef enum {
   AXE,
   HAMMER,
   SIMPLE_BOW,
-  COMPUND_BOW,
+  COMPOUND_BOW,
   ASH_STICK,
   GNARLED_STAFF,
   CRIMP_STAFF,
   ELVEN_FLUTE,
-  GOLD
+  GOLD = 36
 } item_t;
 
-typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP } map_t;
+typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP, ARGAL_MAP } map_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
+
+typedef enum {
+  MESSAGE_1,
+  MESSAGE_2,
+  MESSAGE_3,
+  MESSAGE_4,
+  INPUT_TEXT,
+  NAME,
+  LEVEL,
+  EXP,
+  GOLD_QUANTITY,
+  HEALTH,
+  MANA
+} text_box_t;
+
+typedef enum { INVENTORY, BANK, MARKET } inventory_t;
+
+typedef enum {
+  BG_MUSIC_1,
+  WALK_PC,
+  WALK_SPIDER,
+  WALK_SKELETON,
+  WALK_GOBLIN,
+  WALK_ZOMBIE,
+  CAST_BLEEDING,
+  CAST_MAGIC_ARROW,
+  CAST_HEAL,
+  CAST_ELECTRIC_SHOCK,
+  CAST_EXPLOSION,
+  CAST_REVIVE,
+  CAST_MEDITATION,
+  DEAD_PC
+} sound_t;
 
 #endif

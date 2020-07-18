@@ -2,8 +2,8 @@
 
 #include <iostream>
 Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
-                 int hp, int level, int dps, Map *map)
-    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map), dps(dps) {
+                 int hp, int level, int dps, Map *map, const std::string &name)
+    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map, name), dps(dps) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
   std::tuple<int, int> third_move = std::tuple<int, int>(0, -1);
@@ -16,8 +16,6 @@ Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
 
 void Monster::auto_move() {
   if (!alive) return;
-
-  //-------- Movimiento -----------//
   int x_step = std::get<0>(moves.at(current_move));
   int y_step = std::get<1>(moves.at(current_move));
   current_move++;
@@ -25,9 +23,6 @@ void Monster::auto_move() {
   int next_x_pos = x_position + x_step;
   int next_y_pos = y_position + y_step;
   try_to_move_to_position(next_x_pos, next_y_pos);
-  // if (!map.tile_is_safe(next_x_pos, next_y_pos)) {
-  //   move(next_x_pos, next_y_pos);
-  // }
   if (current_move >= moves.size()) current_move = 0;
 }
 
@@ -39,25 +34,22 @@ void Monster::try_to_move_to_position(int x, int y) {
 
 unsigned int Monster::receive_damage(unsigned int damage, bool critical,
                                      unsigned int weapon_origin) {
-  // std::cout << "Monster received damage!!" << std::endl;
-  if (!alive) throw ModelException("Monster is already death!", "6");
+  if (!alive) throw ModelException("El monstruo ya ha muerto!");
   int last_hp = current_hp;
-  current_hp = std::max(current_hp - (int)damage, 0);
+  int actual_damage = damage;
+  if (critical) {
+    // Usar criticalDamageMultiplier de CFG
+    actual_damage *= 2;
+  }
+  current_hp = std::max(current_hp - actual_damage, 0);
   if (current_hp == 0) alive = false;
-  // std::cout << "Monster is alive? " << alive << std::endl;
-  // std::cout << "Returning" << last_hp - current_hp << std::endl;
-  // std::cout << "last hp: " << last_hp << " current_hp " << current_hp
-  //           << std::endl;
-  //std::cout << "Monster got affected by weapon!. is alive? " << alive;
   affected_by = weapon_origin;
-  //std::cout << "changed monster affected by: " << affected_by << std::endl;
-
   return last_hp - current_hp;
 }
 
 const Attack Monster::attack() {
-  Attack attack = {dps, false, 128, //poner un id que reciba por parametro de la config
-                   0};
+  // Usar id de sword de la CFG
+  Attack attack = {dps, false, 11, 0};
   return std::move(attack);
 }
 
@@ -77,7 +69,7 @@ void Monster::move_closer_to(int other_x, int other_y) {
   tuple<int, int> best_move = possible_moves.at(0);
   int best_distance = HelperFunctions::distance(other_x, get<0>(best_move),
                                                 other_y, get<1>(best_move));
-  for (int j = 1; j < possible_moves.size(); j++) {
+  for (unsigned int j = 1; j < possible_moves.size(); j++) {
     int curr_x = get<0>(possible_moves.at(j));
     int curr_y = get<1>(possible_moves.at(j));
     int current_distance =
@@ -94,7 +86,7 @@ void Monster::move_closer_to(int other_x, int other_y) {
 
 std::vector<std::tuple<int, int>> Monster::get_possible_next_moves() {
   using namespace std;
-  //solo es posible moverse un casillero
+  // solo es posible moverse un casillero
   return {tuple<int, int>(x_position + 1, y_position),
           tuple<int, int>(x_position - 1, y_position),
           tuple<int, int>(x_position, y_position + 1),
@@ -103,7 +95,8 @@ std::vector<std::tuple<int, int>> Monster::get_possible_next_moves() {
 
 void Monster::notify_damage_done(BaseCharacter *other,
                                  unsigned int damage_done) {
-  // subirlo de nivel?
+  if (damage_done == 0) return;
+  dps += other->level / damage_done;
 }
 
 bool Monster::is_death() { return !alive; }

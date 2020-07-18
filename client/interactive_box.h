@@ -2,16 +2,17 @@
 #define INTERACTIVE_BOX_H
 
 #include "SDL2/SDL.h"
-//borrame
-#include <iostream>
 
 class InteractiveBox {
  private:
   SDL_Rect box_dimensions;
+  int rows;
+  int cols;
 
  public:
   InteractiveBox();
-  InteractiveBox(int, int, int, int);
+  // Constructor: x, y, ancho y alto, filas y columnas
+  InteractiveBox(int, int, int, int, int, int);
   ~InteractiveBox();
   bool mouse_click_in(int, int);
   int get_item_clicked(int, int);

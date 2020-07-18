@@ -10,6 +10,8 @@ class Tile {
   // Tile(const Tile &) = delete;
   char char_representation();
   void fill_cell(unsigned int uid);
+  void fill_with_projectile();
+  void clean_projectile();
   void empty_cell();
   int entity_id;
 
@@ -19,6 +21,7 @@ class Tile {
   bool safe;
   bool fixed;
   bool free;
+  bool has_projectile;
   // id de la entidad que esta ocupando la celda (o -1 si no tiene)
   friend class Map;
 };

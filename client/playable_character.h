@@ -6,12 +6,17 @@
 #include "spell.h"
 
 #define GHOST_WIDTH 29
-#define GHOST_HEIGHT 32 
+#define GHOST_HEIGHT 32
+#define ZEN_WIDTH 31
+#define ZEN_HEIGHT 68
 
 class PlayableCharacter : public Character {
  protected:
   id_texture_t type_head;
   SDL_Rect head_rect;
+  bool zen_mode;
+  SDL_Rect meditating_frame;
+  Animation meditating_animation;
   bool ghost;
   SDL_Rect ghost_body;
   Animation ghost_frame;
@@ -28,8 +33,8 @@ class PlayableCharacter : public Character {
   SDL_Rect frame_equipped_w;
 
  public:
-  PlayableCharacter(entity_t, int, int, bool, id_texture_t, id_texture_t,
-                    id_texture_t, id_texture_t);
+  PlayableCharacter(entity_t, int, int, move_t, bool, id_texture_t,
+                    id_texture_t, id_texture_t, id_texture_t);
   PlayableCharacter(const PlayableCharacter&);
   PlayableCharacter& operator=(const PlayableCharacter&);
   ~PlayableCharacter();
@@ -39,8 +44,9 @@ class PlayableCharacter : public Character {
   void render_as_hero(SDL_Renderer*);
   void equip_item(equipped_t, id_texture_t);
   void unequip_item(equipped_t);
-  int set_head_dimensions(entity_t);
-  void update_equipment(bool, id_texture_t, id_texture_t, id_texture_t, id_texture_t);
+  void set_head_dimensions(entity_t);
+  void update_equipment(bool, bool, id_texture_t, id_texture_t, id_texture_t,
+                        id_texture_t, std::vector<sound_t>&);
   void set_item_dimensions(id_texture_t id);
   int get_head_w() const;
   int get_head_h() const;

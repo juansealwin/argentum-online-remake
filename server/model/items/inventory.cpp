@@ -1,8 +1,8 @@
 #include "inventory.h"
 
 #include <iostream>
-Inventory::Inventory(std::size_t size) {
-  //std::cout << "new inventory of size " << size << std::endl;
+Inventory::Inventory(std::size_t size, unsigned int gold) : gold(gold) {
+  // std::cout << "new inventory of size " << size << std::endl;
   items.reserve(size);
 }
 
@@ -14,15 +14,17 @@ Inventory::~Inventory() {
   }
 }
 
-bool Inventory::is_empty() {
-  return (items.size() == 0);
+unsigned int Inventory::current_gold() {
+  return gold;
 }
+
+bool Inventory::is_empty() { return (items.size() == 0); }
 
 void Inventory::add_item(Item* item) {
   // std::cout << "adding new item, inventory size is " << items.size()
   //           << " capacitiy is " << items.capacity() << std::endl;
   if ((items.size() - items.capacity()) == 0)
-    throw ModelException("Inventory is full", "1");
+    throw ModelException("Inventory is full");
   items.push_back(item);
 }
 
@@ -56,4 +58,13 @@ Item* Inventory::remove_item(unsigned int id) {
     }
   }
   return nullptr;
+}
+
+unsigned int Inventory::remove_gold(unsigned int quantity) {
+  gold -= quantity;
+  return quantity;
+}
+
+void Inventory::add_gold(unsigned int quantity) {
+  gold += quantity;
 }

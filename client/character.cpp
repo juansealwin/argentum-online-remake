@@ -15,30 +15,27 @@ void Character::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
     spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
 }
 
-void Character::update_position(int new_x, int new_y) {
-  move_t move_type;
+void Character::update_position(int new_x, int new_y, move_t orient) {
+  orientation = orient;
+
   while (x / TILE_SIZE != new_x) {
     if (x / TILE_SIZE < new_x) {
       x += TILE_SIZE;
-      move_type = MOVE_RIGHT;
     } else {
       x -= TILE_SIZE;
-      move_type = MOVE_LEFT;
     }
   }
   while (y / TILE_SIZE != new_y) {
     if (y / TILE_SIZE < new_y) {
       y += TILE_SIZE;
-      move_type = MOVE_DOWN;
     } else {
       y -= TILE_SIZE;
-      move_type = MOVE_UP;
     }
   }
-  move(move_type);
+  move(orient);
 }
 
-int Character::set_character_features(entity_t id) {
+void Character::set_character_features(entity_t id) {
   // Lo seteamos de antemano porque en algunos personajes cambia
   body_rect.x = 0;
   body_rect.y = 0;
@@ -48,14 +45,14 @@ int Character::set_character_features(entity_t id) {
       width = 25;
       height = 45;
       type_character = ID_HUMAN;
-      walk.set_sound("caminar.wav");
+      walk = WALK_PC;
       break;
 
     case ELF:
       width = 25;
       height = 45;
       type_character = ID_ELF;
-      walk.set_sound("caminar.wav");
+      walk = WALK_PC;
       break;
 
     case GNOME:
@@ -64,7 +61,7 @@ int Character::set_character_features(entity_t id) {
       // Esto se debe a que el grafico es distinto
       body_rect.y = 10;
       type_character = ID_GNOME;
-      walk.set_sound("caminar.wav");
+      walk = WALK_PC;
       break;
 
     case DWARF:
@@ -73,35 +70,35 @@ int Character::set_character_features(entity_t id) {
       // Esto se debe a que el grafico es distinto
       body_rect.y = 10;
       type_character = ID_DWARF;
-      walk.set_sound("caminar.wav");
+      walk = WALK_PC;
       break;
 
     case SPIDER:
       width = 53;
       height = 33;
       type_character = ID_SPIDER;
-      walk.set_sound("caminar_araña.wav");
+      walk = WALK_SPIDER;
       break;
 
     case SKELETON:
       width = 25;
       height = 52;
       type_character = ID_SKELETON;
-      walk.set_sound("caminar_esqueleto.wav");
+      walk = WALK_SKELETON;
       break;
 
     case GOBLIN:
       width = 24;
       height = 33;
       type_character = ID_GOBLIN;
-      walk.set_sound("caminar_goblin.wav");
+      walk = WALK_GOBLIN;
       break;
 
     case ZOMBIE:
       width = 25;
       height = 47;
       type_character = ID_ZOMBIE;
-      walk.set_sound("caminar_zombie.wav");
+      walk = WALK_ZOMBIE;
       break;
 
     case PRIEST:
@@ -121,13 +118,16 @@ int Character::set_character_features(entity_t id) {
       height = 46;
       type_character = ID_BANKER;
       break;
+
+    default:
+      break;
   }
   // Seteamos las dimensiones de la porcion a renderizar
   body_rect.w = width;
   body_rect.h = height;
 }
 
-void Character::sound_walk() { walk.play_sound(0); }
+sound_t Character::sound_walk() { return walk; }
 
 void Character::set_spell(id_texture_t id_spell, int lifetime) {
   if (lifetime == 0)
@@ -136,6 +136,6 @@ void Character::set_spell(id_texture_t id_spell, int lifetime) {
     spellbound = Spell(id_spell, lifetime);
 }
 
-bool Character::change_position(int new_x, int new_y) {
-  return !(x == new_x && y == new_y);
+bool Character::change_position(int new_x, int new_y, move_t orient) {
+  return !(x == new_x && y == new_y && orientation == orient);
 }

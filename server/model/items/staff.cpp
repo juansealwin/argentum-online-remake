@@ -13,9 +13,31 @@ bool Staff::can_be_used_by(Hero *hero) {
   return hero->current_mana >= mana_consumption;
 }
 
+void Staff::special_use(Hero *hero) {
+  if (hero->current_mana < mana_consumption)
+    throw ModelException("Mana insuficiente para utilizar la especial!");
+  hero->set_hp(hero->current_hp + hp_regen);
+  hero->set_mana(hero->current_mana - mana_consumption);
+}
+
+void Staff::attack_use(Hero *hero) {
+  if (hero->current_mana < mana_consumption)
+    throw ModelException("Mana insuficiente!");
+  hero->set_hp(hero->current_hp + hp_regen);
+  hero->set_mana(hero->current_mana - mana_consumption);
+  //hero->current_mana -= mana_consumption;
+}
+
 void Staff::use(Hero *hero) {
-  hero->unequip_staff();
+    Item *equipped_item = nullptr;
+  if(hero->equipment->has_staff()) {
+    equipped_item = hero->equipment->unequip_staff();
+  } else if (hero->equipment->has_weapon()) {
+    equipped_item = hero->equipment->unequip_weapon();
+  }
+
+  //hero->unequip_staff();
+  //hero->unequip_weapon();
   hero->equip_staff(this->id);
-  // hero->current_hp = std::min(hero->current_hp + hp_regen, hero->max_hp);
-  // hero->current_mana -= mana_consumption;
+  if(equipped_item) hero->add_item(equipped_item);
 }

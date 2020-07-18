@@ -9,7 +9,6 @@ Map::Map(Json::Value &map_json)
 }
 
 void Map::load_terrain(Json::Value &map_json) {
-  int curr_row = 0;
   int i = 0;  // para iterar sobre la data de json (lista)
   for (auto &it : matrix) {
     it.reserve(cols);
@@ -24,17 +23,6 @@ void Map::load_terrain(Json::Value &map_json) {
       if (type2 != 0) {
         fixed = true;
         repr = 'b';
-        // if ((type2 >= TREE_1) && (type2 <= TREE_2)) {
-        //   if (type2 == TREE_ROOT) {
-        //     fixed = true;
-        //     repr = 'b';
-        //   } else {
-        //     fixed = false;
-        //   }
-        // } else {
-        //   fixed = true;
-        //   repr = 'b';
-        // }
       } else if (type != GROUND) {
         safe = true;
         repr = 'f';
@@ -43,7 +31,6 @@ void Map::load_terrain(Json::Value &map_json) {
       it.push_back(std::ref(tile));
       i++;
     }
-    curr_row++;
   }
 }
 
@@ -54,7 +41,7 @@ std::tuple<int, int> Map::get_random_free_space() {
   while (true) {
     int x = HelperFunctions::random_int(0, rows - 1);
     int y = HelperFunctions::random_int(0, cols - 1);
-    if (matrix[x][y].free && !matrix[x][y].fixed) {
+    if (matrix[x][y].free && !matrix[x][y].has_projectile && !matrix[x][y].fixed) {
       return std::tuple<int, int>(x, y);
     }
   }
@@ -64,7 +51,7 @@ std::tuple<int, int> Map::get_random_free_unsafe_space() {
   while (true) {
     int x = HelperFunctions::random_int(0, rows - 1);
     int y = HelperFunctions::random_int(0, cols - 1);
-    if (matrix[x][y].free && !matrix[x][y].fixed && !matrix[x][y].safe) {
+    if (matrix[x][y].free && !matrix[x][y].fixed && !matrix[x][y].has_projectile && !matrix[x][y].safe) {
       return std::tuple<int, int>(x, y);
     }
   }
@@ -87,7 +74,7 @@ bool Map::tile_is_safe(int x, int y) {
 
 bool Map::can_ocupy_cell(int x, int y) {
   if (x >= rows || y >= cols || x < 0 || y < 0) return false;
-  if (matrix[x][y].fixed || !matrix[x][y].free) return false;
+  if (matrix[x][y].fixed || !matrix[x][y].free || matrix[x][y].has_projectile) return false;
   return true;
 }
 
@@ -95,6 +82,16 @@ bool Map::ocupy_cell(int x, int y, unsigned int entity_id) {
   if (!can_ocupy_cell(x, y)) return false;
   matrix[x][y].fill_cell(entity_id);
   return true;
+}
+
+void Map::put_projectile(int x, int y) {
+  if (x >= rows || y >= cols || x < 0 || y < 0) return;
+  matrix[x][y].fill_with_projectile();
+}
+
+void Map::empty_projectile(int x, int y){
+  if (x >= rows || y >= cols || x < 0 || y < 0) return;
+  matrix[x][y].clean_projectile();
 }
 
 void Map::debug_print() {
@@ -107,6 +104,5 @@ void Map::debug_print() {
 }
 
 int Map::get_uid(int x, int y) {
-  
   return matrix[x][y].entity_id;
 }

@@ -44,14 +44,21 @@ void DefensiveItem::use(Hero *hero) {
 /******************** metodos privados *******************************/
 
 void DefensiveItem::equip_on_shield_slot(Hero *hero) {
-  hero->unequip_shield();
+  DefensiveItem *i = hero->equipment->unequip_shield();
+  // hero->unequip_shield();
   hero->equip_shield(this->id);
+  if (i) hero->add_item(i);
 }
 void DefensiveItem::equip_on_helmet_slot(Hero *hero) {
-  hero->unequip_helmet();
+  DefensiveItem *i = hero->equipment->unequip_helmet();
+
+  // hero->unequip_helmet();
   hero->equip_helmet(this->id);
+  if (i) hero->add_item(i);
 }
 void DefensiveItem::equip_on_armour_slot(Hero *hero) {
-  hero->unequip_armour();
+  DefensiveItem *i = hero->equipment->unequip_armour();
+  // hero->unequip_armour();
   hero->equip_armour(this->id);
+  if (i) hero->add_item(i);
 }

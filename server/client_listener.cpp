@@ -7,9 +7,9 @@
 
 ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
-  Socket server_socket;
+  //Socket server_socket;
   server_socket.bind_and_listen(port);
-  this->server_socket = std::move(server_socket);
+  //this->server_socket = std::move(server_socket);
   std::ifstream entities_file_aux(entities_cfg_file);
   Json::Value entities_cfg;
   entities_file_aux >> entities_cfg;
@@ -26,7 +26,7 @@ ClientListener::ClientListener(const char *port,
     map_file >> map_cfg;
     ArgentumGame *game =
         new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
-                         std::ref(entities_ids));
+                         std::ref(entities_ids), std::ref(message_center));
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
@@ -52,18 +52,24 @@ void ClientListener::stop_listening() {
 }
 
 StartingInfoNotification *ClientListener::create_start_notification(
-    unsigned int hero_id) {
+    unsigned int hero_id, unsigned int initial_map) {
   std::vector<unsigned char> notification;
   // mover a la clase
   uint8_t notification_id = 2;
   hero_id = htons(hero_id);
+
+  initial_map = htons(initial_map);
+
   notification.push_back(notification_id);
-  notification.resize(notification.size() + sizeof(uint16_t));
+  notification.resize(notification.size() + sizeof(uint16_t) +
+                      sizeof(uint16_t));
   memcpy(notification.data() + 1, &hero_id, sizeof(uint16_t));
+  memcpy(notification.data() + 3, &initial_map, sizeof(uint16_t));
   return new StartingInfoNotification(notification);
 }
 
 void ClientListener::run() {
+  int pc = 0;
   while (true) {
     Socket client_socket;
     try {
@@ -75,23 +81,24 @@ void ClientListener::run() {
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
-    // aca a game pasarle la cola de notificaciones para que la agregue de
-    // manera segura (con locks) a el vector de notificaciones, si no puede
-    // haber race conditions
+        std::string player_name;
+    if (pc == 0) player_name = "test";
+    else player_name = "test2";
+    pc++;
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
-        "human", "warrior", "test_name1");
+        "elf", "mage", player_name);
+    message_center.add_player(player_name, notifications_queue);
     game_rooms[login_command->room_number]->add_notification_queue(
         notifications_queue, hero_id);
 
     StartingInfoNotification *starting_info =
-        create_start_notification(hero_id);
+        create_start_notification(hero_id, login_command->room_number + 1);
     Protocol::send_notification(client_socket, starting_info);
     delete starting_info;
-    // Protocol::send_notification();
-    ClientHandler *client =
-        new ClientHandler(std::move(client_socket), login_command->room_number,
-                          queues_commands[login_command->room_number],
-                          notifications_queue, hero_id, std::ref(game_rooms));
+    ClientHandler *client = new ClientHandler(
+        std::move(client_socket), login_command->room_number,
+        queues_commands[login_command->room_number], notifications_queue,
+        hero_id, std::ref(game_rooms), player_name, std::ref(message_center));
 
     clients.push_back(client);
     // client->start();
@@ -107,7 +114,7 @@ void ClientListener::garbage_collector() {
       delete *it;
       it = clients.erase(it);
     } else {
-      it++;
+      ++it;
     }
   }
 }

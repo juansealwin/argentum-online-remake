@@ -63,11 +63,15 @@ void GameRenderer::run() {
     int frame_start;
     int frame_time;
     // Leemos la primera instancia que nos manda el server
-    Game current_game = protected_map.map_reader(ui);
+    Game current_game;
+    protected_map.map_reader(current_game, ui, current_sounds);
+    SoundManager sound_manager;
+    sound_manager.play_music(BG_MUSIC_1);
     event_t local_event;
     int index;
     bool is_selected = false;
     int item_selected = 20;
+    std::string input_message = " ";
 
     while (is_running) {
       frame_start = SDL_GetTicks();
@@ -92,14 +96,25 @@ void GameRenderer::run() {
               is_selected = true;
             }
             break;
+
+          case EVENT_MESSAGE:
+            input_message = events_queue.read_message();
+            // Para que no quede un string vacio ya que no se puede renderizar
+            if (input_message.size() == 0) input_message = " ";
+            break;
+
+          default:
+            break;
         }
       }
 
       // Leemos las actualizaciones mandadas desde el server
-      current_game = protected_map.map_reader(ui);
+      protected_map.map_reader(current_game, ui, current_sounds);
 
       // Actualizamos el estado del inventario para el EventHandler
-      events_queue.write_inventory(ui.get_items());
+      events_queue.write_status(ui);
+
+      // Actualizamos el mercado/banco
 
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
@@ -108,9 +123,13 @@ void GameRenderer::run() {
       current_game.render(renderer);
 
       // Renderizamos la UI con sus valores actualizados
-      ui.render(renderer, is_selected, item_selected);
+      ui.render(renderer, input_message, is_selected, item_selected);
 
+      // Renderizamos todo lo de esta pasada
       SDL_RenderPresent(renderer);
+
+      // Reproducimos los sonidos que fueron agregados al vector
+      sound_manager.play_sound_effects(current_sounds);
 
       // Vemos si el hilo debe dormirse para que el frame rate se mantenga cte.
       frame_time = SDL_GetTicks() - frame_start;
