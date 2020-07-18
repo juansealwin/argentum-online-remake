@@ -31,10 +31,27 @@
 
 /********************** COMANDOS ***********************************/
 
+std::string receive_string(const Socket& socket) {
+  std::vector<unsigned char> vector;
+  std::string str;
+  uint8_t size = 0;
+  socket.recv(&size, 1);
+  unsigned char* buffer = new unsigned char[size];
+  socket.recv(buffer, size);
+  vector = std::vector<unsigned char>(buffer, buffer + size);
+  for (auto letter : vector) str += letter;
+  delete[] buffer;
+  return str;
+}
+
 LoginCommandDTO* receive_login(const Socket& socket) {
   uint8_t room_number;
   socket.recv(&room_number, 1);
-  return new LoginCommandDTO(room_number);
+  std::string player_name = receive_string(socket);
+  std::string hero_race = receive_string(socket);
+  std::string hero_class = receive_string(socket);
+
+  return new LoginCommandDTO(room_number, player_name, hero_race, hero_class);
 }
 
 MoveCommandDTO* receive_move(const Socket& socket) {
@@ -63,19 +80,6 @@ DropItemCommandDTO* receive_drop_item(const Socket& socket) {
   uint8_t item_id;
   socket.recv(&item_id, 1);
   return new DropItemCommandDTO(item_id);
-}
-
-std::string receive_string(const Socket& socket) {
-  std::vector<unsigned char> vector;
-  std::string str;
-  uint8_t size = 0;
-  socket.recv(&size, 1);
-  unsigned char* buffer = new unsigned char[size];
-  socket.recv(buffer, size);
-  vector = std::vector<unsigned char>(buffer, buffer + size);
-  for (auto letter : vector) str += letter;
-  delete[] buffer;
-  return str;
 }
 
 PrivateMessageDTO* receive_private_message(const Socket& socket) {
@@ -172,11 +176,23 @@ CommandDTO* Protocol::receive_command(const Socket& socket) {
   }
 }
 
+void send_string(const Socket& socket, std::string str) {
+  // std::cout << "Sending msg: " << str << std::endl;
+  std::vector<unsigned char> message;
+  message.insert(message.end(), str.begin(), str.end());
+  uint8_t msg_size = message.size();
+  socket.send(&msg_size, 1);
+  socket.send(message.data(), message.size());
+}
+
 void send_login(const Socket& socket, LoginCommandDTO* login_command) {
   uint8_t command_id = login_command->get_id();
   uint8_t room_number = login_command->room_number;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&room_number, 1);
+  send_string(socket, login_command->player_name);
+  send_string(socket, login_command->hero_race);
+  send_string(socket, login_command->hero_class);
 }
 
 void send_change_game_room(const Socket& socket,
@@ -221,21 +237,11 @@ void send_use_item(const Socket& socket, UseItemCommandDTO* use_command) {
   socket.send(&is_equipped, ID_LENGTH);
 }
 
-void send_drop_item(const Socket& socket,
-                    DropItemCommandDTO* drop_command) {
+void send_drop_item(const Socket& socket, DropItemCommandDTO* drop_command) {
   uint8_t command_id = drop_command->get_id();
   uint8_t item = drop_command->item_id;
   socket.send(&command_id, ID_LENGTH);
   socket.send(&item, ID_LENGTH);
-}
-
-void send_string(const Socket& socket, std::string str) {
-  // std::cout << "Sending msg: " << str << std::endl;
-  std::vector<unsigned char> message;
-  message.insert(message.end(), str.begin(), str.end());
-  uint8_t msg_size = message.size();
-  socket.send(&msg_size, 1);
-  socket.send(message.data(), message.size());
 }
 
 void send_private_message(const Socket& socket,
@@ -298,20 +304,18 @@ void send_sell_command(const Socket& socket, SellItemCommandDTO* commandDTO) {
   socket.send(&item, 1);
 }
 
-void send_revive_command(const Socket& socket,
-                           ReviveCommandDTO* commandDTO) {
+void send_revive_command(const Socket& socket, ReviveCommandDTO* commandDTO) {
   uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
-void send_heal_command(const Socket& socket,
-                           HealCommandDTO* commandDTO) {
+void send_heal_command(const Socket& socket, HealCommandDTO* commandDTO) {
   uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
 
 void send_use_special_command(const Socket& socket,
-                           UseItemSpecialCommandDTO* commandDTO) {
+                              UseItemSpecialCommandDTO* commandDTO) {
   uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
@@ -321,7 +325,6 @@ void send_meditate_command(const Socket& socket,
   uint8_t command_id = commandDTO->get_id();
   socket.send(&command_id, ID_LENGTH);
 }
-
 
 void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
   switch (commandDTO->get_id()) {
@@ -340,24 +343,24 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
     case ATTACK_COMMAND:
       send_attack(socket, dynamic_cast<AttackCommandDTO*>(commandDTO));
       break;
-    
+
     case PICK_UP_ITEM_COMMAND:
       send_pick_up_item(socket, dynamic_cast<PickUpCommandDTO*>(commandDTO));
       break;
-    
+
     case USE_ITEM_COMMAND:
       send_use_item(socket, dynamic_cast<UseItemCommandDTO*>(commandDTO));
       break;
-    
+
     case CHANGE_GAME_ROOM_COMMAND:
       send_change_game_room(socket,
                             dynamic_cast<ChangeGameRoomDTO*>(commandDTO));
       break;
-    
+
     case DROP_ITEM_COMMAND:
       send_drop_item(socket, dynamic_cast<DropItemCommandDTO*>(commandDTO));
       break;
-    
+
     case PRIVATE_MESSAGE_COMMAND:
       send_private_message(socket,
                            dynamic_cast<PrivateMessageDTO*>(commandDTO));
@@ -387,7 +390,7 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       send_get_banked_items_command(
           socket, dynamic_cast<GetBankedItemsCommandDTO*>(commandDTO));
       break;
-    
+
     case BUY_ITEM_COMMAND:
       send_buy_command(socket, dynamic_cast<BuyItemCommandDTO*>(commandDTO));
       break;
@@ -397,7 +400,8 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       break;
 
     case MEDITATE_COMMAND:
-      send_meditate_command(socket, dynamic_cast<MeditateCommandDTO*>(commandDTO));
+      send_meditate_command(socket,
+                            dynamic_cast<MeditateCommandDTO*>(commandDTO));
       break;
 
     case REVIVE_COMMAND:
@@ -409,7 +413,8 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
       break;
 
     case USE_ITEM_SPECIAL_COMMAND:
-      send_use_special_command(socket, dynamic_cast<UseItemSpecialCommandDTO*>(commandDTO));
+      send_use_special_command(
+          socket, dynamic_cast<UseItemSpecialCommandDTO*>(commandDTO));
       break;
 
     default:

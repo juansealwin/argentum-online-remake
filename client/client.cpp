@@ -18,11 +18,15 @@ Client::~Client() {}
 
 void Client::play() {
   CommandsBlockingQueue commands_to_send;
-  // TODO: tambien hay que mandar el usuario
-  // TODO: usar el room que ingresa el cliente en lugar de uno al azar
   int initial_room = HelperFunctions::random_int(0, 1);
-  std::cout << "sala que entra el cliente: " << initial_room << std::endl;
-  LoginCommandDTO* login_command = new LoginCommandDTO(initial_room);
+
+  /* Esto no debería estar harcodeado sino que se elige en el lobby */
+  std::string player_name = "Federico";
+  std::string hero_race = "elf";
+  std::string hero_class = "mage";
+
+  LoginCommandDTO* login_command =
+      new LoginCommandDTO(initial_room, player_name, hero_race, hero_class);
   commands_to_send.push(login_command);
 
   CommandsSender sender(commands_to_send, socket);
