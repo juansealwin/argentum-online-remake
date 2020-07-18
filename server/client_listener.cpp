@@ -7,9 +7,9 @@
 
 ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
-  //Socket server_socket;
+  // Socket server_socket;
   server_socket.bind_and_listen(port);
-  //this->server_socket = std::move(server_socket);
+  // this->server_socket = std::move(server_socket);
   std::ifstream entities_file_aux(entities_cfg_file);
   Json::Value entities_cfg;
   entities_file_aux >> entities_cfg;
@@ -69,7 +69,6 @@ StartingInfoNotification *ClientListener::create_start_notification(
 }
 
 void ClientListener::run() {
-  int pc = 0;
   while (true) {
     Socket client_socket;
     try {
@@ -81,13 +80,10 @@ void ClientListener::run() {
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
-        std::string player_name;
-    if (pc == 0) player_name = "test";
-    else player_name = "test2";
-    pc++;
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
-        "elf", "mage", player_name);
-    message_center.add_player(player_name, notifications_queue);
+        login_command->hero_race, login_command->hero_class,
+        login_command->player_name);
+    message_center.add_player(login_command->player_name, notifications_queue);
     game_rooms[login_command->room_number]->add_notification_queue(
         notifications_queue, hero_id);
 
@@ -95,10 +91,11 @@ void ClientListener::run() {
         create_start_notification(hero_id, login_command->room_number + 1);
     Protocol::send_notification(client_socket, starting_info);
     delete starting_info;
-    ClientHandler *client = new ClientHandler(
-        std::move(client_socket), login_command->room_number,
-        queues_commands[login_command->room_number], notifications_queue,
-        hero_id, std::ref(game_rooms), player_name, std::ref(message_center));
+    ClientHandler *client =
+        new ClientHandler(std::move(client_socket), login_command->room_number,
+                          queues_commands[login_command->room_number],
+                          notifications_queue, hero_id, std::ref(game_rooms),
+                          login_command->player_name, std::ref(message_center));
 
     clients.push_back(client);
     // client->start();
