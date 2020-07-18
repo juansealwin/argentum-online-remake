@@ -7,12 +7,16 @@
 
 ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
-  // Socket server_socket;
   server_socket.bind_and_listen(port);
-  // this->server_socket = std::move(server_socket);
   std::ifstream entities_file_aux(entities_cfg_file);
   Json::Value entities_cfg;
   entities_file_aux >> entities_cfg;
+
+  seconds_for_proccesing_room_changes =
+      entities_cfg["secondsForProccesingRoomChanges"].asUInt();
+  nanoseconds_for_proccesing_attacks =
+      entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
+
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
     std::ifstream entities_file(entities_cfg_file);
@@ -91,11 +95,12 @@ void ClientListener::run() {
         create_start_notification(hero_id, login_command->room_number + 1);
     Protocol::send_notification(client_socket, starting_info);
     delete starting_info;
-    ClientHandler *client =
-        new ClientHandler(std::move(client_socket), login_command->room_number,
-                          queues_commands[login_command->room_number],
-                          notifications_queue, hero_id, std::ref(game_rooms),
-                          login_command->player_name, std::ref(message_center));
+    ClientHandler *client = new ClientHandler(
+        std::move(client_socket), login_command->room_number,
+        queues_commands[login_command->room_number], notifications_queue,
+        hero_id, std::ref(game_rooms), login_command->player_name,
+        std::ref(message_center), seconds_for_proccesing_room_changes,
+        nanoseconds_for_proccesing_attacks);
 
     clients.push_back(client);
     // client->start();

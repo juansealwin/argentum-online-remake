@@ -70,7 +70,7 @@ void GameRenderer::run() {
     event_t local_event;
     int index;
     bool is_selected = false;
-    int item_selected = 20;
+    int item_selected = 20; // TODO: aclarar que hace
     std::string input_message = " ";
 
     while (is_running) {

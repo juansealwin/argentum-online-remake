@@ -6,6 +6,5 @@ DropItemCommand::DropItemCommand(const unsigned int uid, const int item)
 DropItemCommand::~DropItemCommand() {}
 
 void DropItemCommand::execute(ArgentumGame *game) {
-
   game->hero_drop_item(uid, item);
 }

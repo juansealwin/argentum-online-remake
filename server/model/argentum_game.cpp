@@ -470,12 +470,16 @@ void ArgentumGame::update() {
   }
   // actualizar monstruos antes que heroes ya que pueden atacarlos y matarlos
   // creando drops
-  monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center);
+  monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center,
+                          entities_cfg);
   monsters_manager.respawn_monsters(std::ref(monsters), map, 20,
                                     std::ref(entities_cfg["npcs"]),
                                     entities_ids);
 
-  heroes_manager.update(std::ref(heroes));
+  heroes_manager.update(
+      std::ref(heroes),
+      entities_cfg["milisecondsForRegeneratingHero"].asUInt() * 1000000,
+      entities_cfg["milisecondsForAutomoveHero"].asUInt() * 1000000);
 
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles), message_center,
@@ -583,7 +587,8 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
 }
 unsigned int ArgentumGame::place_hero(const std::string &hero_race,
                                       const std::string &hero_class,
-                                      const std::string &hero_name, const unsigned int x,
+                                      const std::string &hero_name,
+                                      const unsigned int x,
                                       const unsigned int y) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
@@ -599,14 +604,14 @@ unsigned int ArgentumGame::place_hero(const std::string &hero_race,
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
       class_stats["id"].asUInt(), std::ref(map), hero_name,
-      entities_cfg["criticalDamageMiltiplier"].asFloat(),
+      entities_cfg["criticalDamageMultiplier"].asFloat(),
       entities_cfg["inventorySize"].asInt(),
       entities_cfg["criticalDamageProbability"].asFloat(),
       entities_cfg["evasionProbability"].asFloat(),
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
-      entities_cfg["startingXpCap"].asFloat(),
-      entities_cfg["bankSize"].asInt());
+      entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
+      entities_cfg["amountOfExperienceToUpdate"].asUInt());
   hero->add_item(new DefensiveItem(6, 7, 7));
   hero->add_item(new DefensiveItem(5, 8, 10));
   hero->equip_armour(6);

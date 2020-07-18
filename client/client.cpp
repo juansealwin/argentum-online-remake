@@ -32,7 +32,6 @@ void Client::play() {
   CommandsSender sender(commands_to_send, socket);
   sender.start();
 
-  // Esto probablmente quede mejor moverlo
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
   player_id = ntohs(extract<uint16_t>(starting_info, 1));
