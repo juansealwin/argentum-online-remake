@@ -23,7 +23,7 @@ class Map {
  public:
   // Map(int cols, int rows);
   // Crea un nuevo mapa a partir de un JSON
-  Map(Json::Value &map_json);
+  explicit Map(Json::Value &map_json);
   ~Map();
   void debug_print();
 

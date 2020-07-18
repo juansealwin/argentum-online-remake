@@ -25,7 +25,7 @@ class ClientCommandReceiver : public Thread {
                         ThreadSafeQueue<Command *> *commands_queue,
                         unsigned int hero_id,
                         std::vector<ArgentumGame *> &game_rooms,
-                        std::string player_name, MessageCenter &message_center);
+                        std::string &player_name, MessageCenter &message_center);
   ~ClientCommandReceiver() override;
   void run() override;
   bool is_alive();

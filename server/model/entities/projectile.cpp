@@ -6,13 +6,12 @@ Projectile::Projectile(unsigned int unique_id, int x, int y, int type,
                        const bool critical, const unsigned int attacker_id,
                        const unsigned int range,
                        const orientation_t orientation, Map *map)
-    : Entity(unique_id, x, y, type, repr),
+    : Entity(unique_id, x, y, type, repr, orientation),
       collided(false),
       damage(damage),
       critical(critical),
       attacker_id(attacker_id),
       range(range),
-      orientation(orientation),
       map(map),
       collided_entity(-1) {
   impact_at_position(x, y);

@@ -114,7 +114,7 @@ void ClientListener::garbage_collector() {
       delete *it;
       it = clients.erase(it);
     } else {
-      it++;
+      ++it;
     }
   }
 }

@@ -22,7 +22,7 @@ void DropsManager::add_monster_drops(
     if (it->second->is_death()) {
       randomly_add_drop(it->second, drops, items_config, entities_ids);
     }
-    it++;
+    ++it;
   }
 }
 
@@ -64,7 +64,7 @@ void DropsManager::add_heroes_drops(
         drops.emplace(drop_coordinates, drop);
       }
     }
-    it++;
+    ++it;
   }
 }
 void DropsManager::remove_old_and_empty_drops(

@@ -5,7 +5,7 @@ class CloseConnectionNotification : public Notification {
   // no cambia nada de la notificacion original, capaz no es necesaria, ver mas
   // adelante
  public:
-  CloseConnectionNotification(std::vector<unsigned char> &data);
+  explicit CloseConnectionNotification(std::vector<unsigned char> &data);
   virtual ~CloseConnectionNotification();
 };
 

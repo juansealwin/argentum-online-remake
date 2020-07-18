@@ -14,7 +14,7 @@
 ClientCommandReceiver::ClientCommandReceiver(
     Socket &peer_socket, unsigned int game_room,
     ThreadSafeQueue<Command *> *commands_queue, unsigned int hero_id,
-    std::vector<ArgentumGame *> &game_rooms, std::string player_name,
+    std::vector<ArgentumGame *> &game_rooms, std::string &player_name,
     MessageCenter &message_center)
     : peer_socket(peer_socket),
       current_game_room(game_room),

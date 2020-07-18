@@ -7,7 +7,7 @@
 
 class ReviveCommand : public Command {
  public:
-  ReviveCommand(const unsigned int uid);
+  explicit ReviveCommand(const unsigned int uid);
   ReviveCommand(const ReviveCommand &) = delete;
   ~ReviveCommand();
   // Ejecuta cambios en el juego segun

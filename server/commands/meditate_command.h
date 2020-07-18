@@ -7,7 +7,7 @@
 
 class MeditateCommand : public Command {
  public:
-  MeditateCommand(const unsigned int uid);
+  explicit MeditateCommand(const unsigned int uid);
   MeditateCommand(const MeditateCommand &) = delete;
   ~MeditateCommand();
   // Ejecuta cambios en el juego segun

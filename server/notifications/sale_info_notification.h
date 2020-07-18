@@ -5,7 +5,7 @@ class SaleInfoNotification : public Notification {
   // no cambia nada de la notificacion original, capaz no es necesaria, ver mas
   // adelante
  public:
-  SaleInfoNotification(std::vector<unsigned char> &data);
+  explicit SaleInfoNotification(std::vector<unsigned char> &data);
   virtual ~SaleInfoNotification();
 };
 

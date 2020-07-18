@@ -21,6 +21,7 @@ class ClientHandler {  //: public Thread {
                 BlockingThreadSafeQueue<Notification *> *notifications_queue,
                 unsigned int hero_id, std::vector<ArgentumGame *> &games,
                 std::string player_name, MessageCenter &message_center);
+  ClientHandler(const ClientHandler &c2) = delete;
   ~ClientHandler();
   // void run() override;
   // Devuelve True mientras el juego siga en curso

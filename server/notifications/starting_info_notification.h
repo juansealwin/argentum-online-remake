@@ -3,7 +3,7 @@
 #include "notification.h"
 class StartingInfoNotification : public Notification {
  public:
-  StartingInfoNotification(std::vector<unsigned char> &starting_info);
+  explicit StartingInfoNotification(std::vector<unsigned char> &starting_info);
   virtual ~StartingInfoNotification();
 };
 

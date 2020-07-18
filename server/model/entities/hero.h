@@ -23,7 +23,7 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map *map, std::string name,
+       unsigned int class_id, Map *map, const std::string &name,
        const float critical_damage_multiplier,
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
@@ -117,8 +117,6 @@ class Hero : public BaseCharacter {
       class_id, experience,  respawn_x, respawn_y;
   int speed_x, speed_y;
   bool meditating, ghost_mode, close_to_npc, blocked;
-
-  std::string name;
   // config
   float critical_damage_multiplier, critical_damage_probability,
       evasion_probability, max_safe_gold_multiplier, level_up_limit_power,

@@ -432,9 +432,9 @@ ArgentumGame::remove_hero_and_notification_queue(int player_id) {
   return std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *>(hero, q);
 }
 
-unsigned int ArgentumGame::add_new_hero(std::string hero_race,
-                                        std::string hero_class,
-                                        std::string hero_name) {
+unsigned int ArgentumGame::add_new_hero(const std::string &hero_race,
+                                        const std::string &hero_class,
+                                        const std::string &hero_name) {
   std::unique_lock<std::mutex> lock(mutex);
   std::tuple<int, int> free_tile = map->get_random_free_space();
   int x = std::get<0>(free_tile);
@@ -581,10 +581,10 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
   }
   return std::tuple<unsigned int, unsigned int>(x_pos, y_pos);
 }
-unsigned int ArgentumGame::place_hero(std::string hero_race,
-                                      std::string hero_class,
-                                      std::string hero_name, unsigned int x,
-                                      unsigned int y) {
+unsigned int ArgentumGame::place_hero(const std::string &hero_race,
+                                      const std::string &hero_class,
+                                      const std::string &hero_name, const unsigned int x,
+                                      const unsigned int y) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
   Hero *hero = new Hero(

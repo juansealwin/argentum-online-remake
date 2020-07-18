@@ -3,7 +3,7 @@
 #include "notification.h"
 class MapChangeNotification : public Notification {
  public:
-  MapChangeNotification(std::vector<unsigned char> &starting_info);
+  explicit MapChangeNotification(std::vector<unsigned char> &starting_info);
   virtual ~MapChangeNotification();
 };
 

@@ -3,19 +3,10 @@
 
 BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
                              unsigned int type, char repr, unsigned int max_hp,
-                             unsigned int level, Map *map, std::string name)
-    : Entity(unique_id, x, y, type, repr),
+                             unsigned int level, Map *map, const std::string &name)
+    : Entity(unique_id, x, y, type, repr, orientation_down),
       current_hp(max_hp),
       max_hp(max_hp),
-      level(level),
-      affected_by(0),
-      map(map),
-      name(name) {}
-
-BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
-                             unsigned int type, char repr, unsigned int level,
-                             Map *map, std::string name)
-    : Entity(unique_id, x, y, type, repr),
       level(level),
       affected_by(0),
       map(map),

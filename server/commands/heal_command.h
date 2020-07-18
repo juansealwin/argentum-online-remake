@@ -7,7 +7,7 @@
 
 class HealCommand : public Command {
  public:
-  HealCommand(const unsigned int uid);
+  explicit HealCommand(const unsigned int uid);
   HealCommand(const HealCommand &) = delete;
   ~HealCommand();
   // Ejecuta cambios en el juego segun

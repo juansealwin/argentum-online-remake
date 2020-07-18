@@ -71,8 +71,8 @@ class ArgentumGame : public Thread {
   void kill_player(unsigned int player_id);
 
   // devuelve el id auto-generado
-  unsigned int add_new_hero(std::string hero_race, std::string hero_class,
-                            std::string hero_name);
+  unsigned int add_new_hero(const std::string &hero_race, const std::string &hero_class,
+                            const std::string &hero_name);
   void add_existing_hero(Hero *hero, unsigned int id);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue,
                               unsigned int player_id);
@@ -120,9 +120,9 @@ class ArgentumGame : public Thread {
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);
   // agrega heroe en posicion x,y (los ejes estan invertidos)
-  unsigned int place_hero(std::string hero_race, std::string hero_class,
-                          std::string hero_name, unsigned int x,
-                          unsigned int y);
+  unsigned int place_hero(const std::string &hero_race, const std::string &hero_class,
+                          const std::string &hero_name, const unsigned int x,
+                          const unsigned int y);
   void tests_proyectiles();
   void tests_drops();
   npc_t find_closest_npc();

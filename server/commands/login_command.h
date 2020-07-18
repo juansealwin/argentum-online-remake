@@ -4,10 +4,9 @@
 #include "command.h"
 
 class ArgentumGame;
-// class Command; forward declaration x si llego a necesitar
-
 class LoginCommand {//: public Command {
  public:
+  //TO DO: Recibir nombre, clase y raza del jugador
   LoginCommand(const unsigned int room_number);
   LoginCommand(const LoginCommand &) = delete;
   ~LoginCommand();

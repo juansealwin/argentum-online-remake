@@ -8,7 +8,7 @@ class ArgentumGame;
 
 class AttackCommand : public Command {
  public:
-  AttackCommand(const unsigned int uid);
+  explicit AttackCommand(const unsigned int uid);
   AttackCommand(const AttackCommand &) = delete;
   ~AttackCommand();
   // Ejecuta cambios en el juego segun

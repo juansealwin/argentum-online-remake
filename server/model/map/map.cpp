@@ -9,7 +9,6 @@ Map::Map(Json::Value &map_json)
 }
 
 void Map::load_terrain(Json::Value &map_json) {
-  int curr_row = 0;
   int i = 0;  // para iterar sobre la data de json (lista)
   for (auto &it : matrix) {
     it.reserve(cols);
@@ -32,7 +31,6 @@ void Map::load_terrain(Json::Value &map_json) {
       it.push_back(std::ref(tile));
       i++;
     }
-    curr_row++;
   }
 }
 
