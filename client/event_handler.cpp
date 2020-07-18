@@ -151,8 +151,8 @@ void EventHandler::get_events() {
               event.key.keysym.sym == SDLK_DOWN ||
               event.key.keysym.sym == SDLK_LEFT ||
               event.key.keysym.sym == SDLK_RIGHT) {
-            /*MoveCommandDTO* move_command = new MoveCommandDTO(stop_move);
-            commands_queue.push(move_command);*/
+            MoveCommandDTO* move_command = new MoveCommandDTO(stop_move);
+            commands_queue.push(move_command);
           }
         }
 
