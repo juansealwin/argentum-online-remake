@@ -1,4 +1,8 @@
+#include <fstream>
 #include <iostream>
+
+#include "../util/json/json-forwards.h"
+#include "../util/json/json.h"
 #include "arguments_exceptions.h"
 #include "client.h"
 #include "client_arguments_validator.h"
@@ -7,11 +11,18 @@
 
 TextureManager& texture_manager = TextureManager::get_instance();
 
-int main(int argc, char *argv[]) {
+int main(int argc, char* argv[]) {
   try {
     ClientArgumentsValidator validator(argc, argv);
     validator.validate_arguments();
-    Client client(validator.get_ip(), validator.get_port());
+
+    std::ifstream config_file("../../server/cfg/entities/entities.json");
+    Json::Value config;
+    config_file >> config;
+
+    Client client(validator.get_ip(), validator.get_port(),
+                  config["screenWidth"].asUInt(),
+                  config["screenHeight"].asUInt());
     client.play();
     return EXIT_SUCCESS;
   } catch (ArgumentsException excep) {
