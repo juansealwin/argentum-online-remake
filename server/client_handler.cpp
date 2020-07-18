@@ -13,7 +13,7 @@ ClientHandler::ClientHandler(
     : notifications_queue(notifications_queue),
       commands_queue(commands_queue) {
   this->peer_socket = std::move(socket);
-  sender = new ClientNotificationSender(peer_socket, notifications_queue);
+  sender = new ClientNotificationSender(peer_socket, notifications_queue, std::ref(message_center),player_name);
   receiver = new ClientCommandReceiver(peer_socket, game_room, commands_queue,
                                        hero_id, std::ref(games), player_name,
                                        std::ref(message_center));

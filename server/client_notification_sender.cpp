@@ -6,10 +6,13 @@
 
 ClientNotificationSender::ClientNotificationSender(
     Socket& peer_socket,
-    BlockingThreadSafeQueue<Notification*>* notifications_queue)
+    BlockingThreadSafeQueue<Notification*>* notifications_queue,
+    MessageCenter& message_center, const std::string& player_name)
     : peer_socket(peer_socket),
       notifications_queue(notifications_queue),
-      alive(true) {}
+      alive(true),
+      message_center(message_center),
+      player_name(player_name) {}
 
 ClientNotificationSender::~ClientNotificationSender() {
   join();
@@ -38,6 +41,7 @@ void ClientNotificationSender::run() {
       delete n;
     }
   }
+  message_center.remove_player(player_name);
   std::cout << "notification sender stopped" << std::endl;
 }
 

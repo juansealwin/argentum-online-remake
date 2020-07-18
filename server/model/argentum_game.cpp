@@ -12,71 +12,15 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
-      // map(map_cfg),
       alive(true),
       entities_ids(entities_ids),
       message_center(message_center) {
   std::unique_lock<std::mutex> lock(mutex);
-  // Json::Value map_cfg;
-  // map_config >> map_cfg;
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
-  // this->map = Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  // tests_drops();
-}
-void ArgentumGame::tests_drops() {
-  // std::cout << "testing drops" << std::endl;
-  // Inventory *inventory = new Inventory(20);
-  // inventory->add_item(new Item(8));
-  // inventory->add_item(new Weapon(17, 4, 8, 5));
-  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
-  //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
-  // std::endl; Drop *drop = new Drop(34, inventory, 0); std::cout << "Is drop
-  // empty?" << drop->is_empty() << std::endl; std::cout << "Inventory has item
-  // 17? " << inventory->has_item(17)
-  //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
-  // std::endl; std::cout << "picking up first item" << std::endl; Item *item17
-  // = drop->take_item(drop->size()); std::cout << "picking up second item" <<
-  // std::endl; Item *item8 = drop->take_item(drop->size()); std::cout <<
-  // "picked up items " << item17->id << ", " << item8->id
-  //           << std::endl;
-  // Inventory *inventory2 = new Inventory(25);
-  // Drop *drop2 = new Drop(34, inventory2, 0);
-  // std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
-  // delete drop2;
-  // delete inventory2;
-  // delete inventory;
-  // delete drop;
-  // delete item17;
-  // delete item8;
-}
-void ArgentumGame::tests_proyectiles() {
-  // std::cout << "Running tests" << std::endl;
-  // place_hero("human", "warrior", "test_name1", 10, 23);
-  // throw_projectile(15);
-  // place_hero("human", "warrior", "test_name1", 0, 0);
-  // place_hero("human", "warrior", "test_name1", 1, 0);
-  // place_monster(2, 0);
-  // throw_projectile(17);
-  // throw_projectile(18);
-  // place_hero("human", "warrior", "test_name1", 0, 3);
-  // place_hero("human", "warrior", "test_name1", 5, 3);
-  // throw_projectile(22);
-  // throw_projectile(23);
-  // place_monster(10, 3);
-  // unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
-  // unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
-  // throw_projectile(hero1);
-  // throw_projectile(hero2);
-  // unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
-  // unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
-  // throw_projectile(hero3);
-  // throw_projectile(hero4);
 }
 
 void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
@@ -583,7 +527,8 @@ std::tuple<unsigned int, unsigned int> ArgentumGame::get_contiguous_position(
 }
 unsigned int ArgentumGame::place_hero(const std::string &hero_race,
                                       const std::string &hero_class,
-                                      const std::string &hero_name, const unsigned int x,
+                                      const std::string &hero_name,
+                                      const unsigned int x,
                                       const unsigned int y) {
   Json::Value race_stats = entities_cfg["races"][hero_race];
   Json::Value class_stats = entities_cfg["classes"][hero_class];
@@ -607,20 +552,86 @@ unsigned int ArgentumGame::place_hero(const std::string &hero_race,
       entities_cfg["levelUpLimitPower"].asFloat(),
       entities_cfg["startingXpCap"].asFloat(),
       entities_cfg["bankSize"].asInt());
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(5, 8, 10));
-  hero->equip_armour(6);
-  hero->equip_helmet(5);
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(2, 7, 7));
-  hero->equip_shield(2);
-  hero->add_item(new Weapon(17, 10, 25, 5));
-  hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
-  hero->equip_staff(19);
+  // hero->add_item(new DefensiveItem(6, 7, 7));
+  // hero->add_item(new DefensiveItem(5, 8, 10));
+  // hero->equip_armour(6);
+  // hero->equip_helmet(5);
+  // hero->add_item(new DefensiveItem(6, 7, 7));
+  // hero->add_item(new DefensiveItem(6, 7, 7));
+  // hero->add_item(new DefensiveItem(2, 7, 7));
+  // hero->equip_shield(2);
+  // hero->add_item(new Weapon(17, 10, 25, 5));
+  // hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
+  // hero->equip_staff(19);
+  setup_new_hero(hero);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
+}
+
+void ArgentumGame::setup_new_hero(Hero *h) {
+  std::vector<Item *> hero_items;
+  switch (h->get_class_id()) {
+    case mage:
+      hero_items = setup_new_mage();
+      break;
+
+    case paladin:
+      hero_items = setup_new_paladin();
+      break;
+
+    case warrior:
+      hero_items = setup_new_warrior();
+      break;
+
+    case cleric:
+      hero_items = setup_new_cleric();
+      break;
+    default:
+      hero_items = setup_new_warrior();
+      break;
+  }
+  for (auto &item : hero_items) {
+    h->add_item(item);
+  }
+}
+
+std::vector<Item *> ArgentumGame::setup_new_mage() {
+  std::vector<Item *> mage_items;
+  mage_items.push_back(
+      ItemFactory::create_gnarled_staff(entities_cfg["items"]));
+  mage_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
+  mage_items.push_back(ItemFactory::create_magic_hat(entities_cfg["items"]));
+  return mage_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_paladin() {
+  std::vector<Item *> paladin_items;
+  paladin_items.push_back(
+      ItemFactory::create_iron_shield(entities_cfg["items"]));
+  paladin_items.push_back(
+      ItemFactory::create_iron_helmet(entities_cfg["items"]));
+  paladin_items.push_back(
+      ItemFactory::create_plate_armour(entities_cfg["items"]));
+  paladin_items.push_back(ItemFactory::create_sword(entities_cfg["items"]));
+  return paladin_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_cleric() {
+  std::vector<Item *> cleric_items;
+  cleric_items.push_back(
+      ItemFactory::create_turtle_shield(entities_cfg["items"]));
+  cleric_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
+  cleric_items.push_back(ItemFactory::create_ash_stick(entities_cfg["items"]));
+  return cleric_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_warrior() {
+  std::vector<Item *> warrior_items;
+  warrior_items.push_back(
+      ItemFactory::create_turtle_shield(entities_cfg["items"]));
+  warrior_items.push_back(ItemFactory::create_hood(entities_cfg["items"]));
+  warrior_items.push_back(
+      ItemFactory::create_leather_armour(entities_cfg["items"]));
+  warrior_items.push_back(ItemFactory::create_axe(entities_cfg["items"]));
+  return warrior_items;
 }
 
 void ArgentumGame::print_debug_map() {
