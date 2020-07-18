@@ -32,6 +32,8 @@ Hero::Hero(
       experience(0),
       respawn_x(0),
       respawn_y(0),
+      speed_x(0),
+      speed_y(0),
       meditating(false),
       ghost_mode(false),
       close_to_npc(false),
@@ -48,6 +50,18 @@ Hero::Hero(
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
   bank = new Inventory(bank_size, 0);
+}
+
+void Hero::set_speed_x(int x) {
+  speed_x = x;
+}
+void Hero::set_speed_y(int y) {
+  speed_y = y;
+}
+
+void Hero::auto_move() {
+  if (blocked) return;
+  move(x_position + speed_x, y_position + speed_y);
 }
 
 void Hero::try_to_unblock() {

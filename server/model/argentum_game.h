@@ -64,7 +64,7 @@ class ArgentumGame : public Thread {
   // envia una notificacion al cliente del estado del banco o
   // de lo que venda el merchant/priest mas cercano
   void hero_get_closest_npc_info(int entity_id);
-  void move_entity(int entity_id, int x, int y);
+  void set_hero_speed(int entity_id, int speed_x, int speedy);
   void throw_projectile(int attacker_id);
   void pick_up_drop(unsigned int player_id);
   // Settea a un jugador como muerto para que sea removido durante el update()

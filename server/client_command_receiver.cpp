@@ -38,7 +38,7 @@ void ClientCommandReceiver::run() {
     }
     CommandDTO *command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
-      std::cout << "received new command!" << std::endl;
+      //std::cout << "received new command!" << std::endl;
       ChangeGameRoomDTO *cgrDTO =
           dynamic_cast<ChangeGameRoomDTO *>(command_dto);
       if (cgrDTO) {
@@ -82,7 +82,6 @@ bool ClientCommandReceiver::is_alive() { return this->alive; }
 
 void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
   if (current_game_room == new_game_room) return;
-  std::cout << "Changing to game game room: " << new_game_room << std::endl;
   std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *> hero_and_queue =
       game_rooms.at(current_game_room)
           ->remove_hero_and_notification_queue(hero_id);

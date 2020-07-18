@@ -31,9 +31,13 @@ class Hero : public BaseCharacter {
        const float starting_xp_cap, const unsigned int bank_size);
   // Hero(Hero* h, Map &map);
   void regenerate();
-  //
+  // curacion en cada update
   void heal(unsigned int hp, unsigned int mana);
+  // movimiento segun la velocidad en cada update
+  void auto_move();
   // devuelve el dano causado
+  void set_speed_x(int x);
+  void set_speed_y(int y);
   const Attack attack();
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
@@ -111,7 +115,7 @@ class Hero : public BaseCharacter {
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
       class_id, experience,  respawn_x, respawn_y;
-
+  int speed_x, speed_y;
   bool meditating, ghost_mode, close_to_npc, blocked;
 
   std::string name;

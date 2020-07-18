@@ -14,6 +14,7 @@ class HeroesManager {
 
  private:
   std::chrono::time_point<std::chrono::high_resolution_clock> last_update_time;
+  std::chrono::time_point<std::chrono::high_resolution_clock> last_move_time;
 };
 
 #endif  // HERO_MANAGER_H

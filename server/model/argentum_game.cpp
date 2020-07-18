@@ -349,12 +349,13 @@ void ArgentumGame::hero_use_item(int entity_id, int item_id) {
   }
 }
 
-void ArgentumGame::move_entity(int entity_id, int x, int y) {
-  Hero *character = dynamic_cast<Hero *>(heroes.at(entity_id));
-  if (character->blocked) return;
-  character->move(character->x_position + x, character->y_position + y);
-  character->set_close_to_npc(false);
-  character->meditating = false;
+void ArgentumGame::set_hero_speed(int entity_id, int speed_x, int speed_y) {
+  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  if (hero->blocked) return;
+  hero->set_speed_x(speed_x);
+  hero->set_speed_y(speed_y);
+  hero->set_close_to_npc(false);
+  hero->meditating = false;
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
