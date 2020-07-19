@@ -18,7 +18,7 @@ ClientListener::ClientListener(const char *port,
   nanoseconds_for_proccesing_attacks =
       entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
 
-  FilesHandler files_handler;
+  // FilesHandler files_handler;
 
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
@@ -33,7 +33,7 @@ ClientListener::ClientListener(const char *port,
     map_file >> map_cfg;
     ArgentumGame *game = new ArgentumGame(
         i, commands_queue, std::ref(map_cfg), entities_file,
-        std::ref(entities_ids), std::ref(message_center), files_handler);
+        std::ref(entities_ids), std::ref(message_center));
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);

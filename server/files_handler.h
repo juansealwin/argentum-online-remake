@@ -1,10 +1,14 @@
 #ifndef FILES_HANDLER_H
 #define FILES_HANDLER_H
 
+#include <fstream>
+#include <iostream>
 #include <mutex>
 #include <vector>
 
+#include "deserializer.h"
 #include "hero.h"
+#include "serializer.h"
 
 class FilesHandler {
  private:

@@ -1,11 +1,5 @@
 #include "files_handler.h"
 
-#include <fstream>
-#include <iostream>
-
-#include "serializer.h"
-#include "deserializer.h"
-
 FilesHandler::FilesHandler() : mutex() {}
 
 FilesHandler::~FilesHandler() {}
@@ -16,8 +10,8 @@ void FilesHandler::save_player_status(Hero* hero) {
   std::vector<unsigned char> player_serialization;
   uint8_t entity_type = hero->type;
   player_serialization.push_back(entity_type);
-  Serializer::serialize_hero(std::ref(player_serialization), hero, false);
-  Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
+  // Serializer::serialize_hero(std::ref(player_serialization), hero);
+  // Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
 
   std::ofstream players_status(
       "../../server/status/players_status",
@@ -54,7 +48,7 @@ Hero* FilesHandler::get_player_status(const std::string player_name) {
   players_status.seekg(0, std::ios_base::beg);
   players_status.read((char*)&player_serialization[0], fileSize);
 
-  Hero *hero = Deserializer::deserialize_hero(player_serialization);
+  Hero* hero = Deserializer::deserialize_hero(player_serialization);
   players_status.close();
 
   return hero;
