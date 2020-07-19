@@ -52,7 +52,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
   for (auto &entity : game->heroes) {
     serialize_common_fields(std::ref(serialization), entity.first,
                             entity.second);
-    serialize_hero(std::ref(serialization), entity.second, true);
+    serialize_hero(std::ref(serialization), entity.second);
     // std::cout << "serialized hero, his id is " << entity.second->unique_id <<
     // std::endl;
   }
@@ -117,25 +117,23 @@ void Serializer::serialize_monster(std::vector<unsigned char> &serialization,
 }
 
 void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
-                                Hero *h, const bool use_htons) {
+                                Hero *h) {
   /************** serializacion del estado del heroe ***************/
-  uint16_t max_hp = use_htons ? htons(h->max_hp) : h->max_hp;
-  uint16_t current_hp = use_htons ? htons(h->current_hp) : h->current_hp;
-  uint16_t level = use_htons ? htons(h->level) : h->level;
-  uint8_t affected_by_item = use_htons ? htons(h->affected_by) : h->affected_by;
-  uint8_t name_size = use_htons ? htons(h->name.size()) : h->name.size();
+  uint16_t max_hp = htons(h->max_hp);
+  uint16_t current_hp = htons(h->current_hp);
+  uint16_t level = htons(h->level);
+  uint8_t affected_by_item = h->affected_by;
+  uint8_t name_size = h->name.size();
   uint8_t class_id = h->class_id;
-  uint16_t mana_max = use_htons ? htons(h->max_mana) : h->max_mana;
-  uint16_t curr_mana = use_htons ? htons(h->current_mana) : h->current_mana;
-  uint16_t str = use_htons ? htons(h->strength) : h->strength;
-  uint16_t intelligence = use_htons ? htons(h->intelligence) : h->intelligence;
-  uint16_t agility = use_htons ? htons(h->agility) : h->agility;
-  uint16_t constitution = use_htons ? htons(h->constitution) : h->constitution;
-  uint16_t gold = use_htons ? htons(h->inventory->current_gold())
-                            : h->inventory->current_gold();
-  uint16_t xp_limit =
-      use_htons ? htons(h->next_level_xp_limit) : h->next_level_xp_limit;
-  uint16_t current_xp = use_htons ? htons(h->experience) : h->experience;
+  uint16_t mana_max = htons(h->max_mana);
+  uint16_t curr_mana = htons(h->current_mana);
+  uint16_t str = htons(h->strength);
+  uint16_t intelligence = htons(h->intelligence);
+  uint16_t agility = htons(h->agility);
+  uint16_t constitution = htons(h->constitution);
+  uint16_t gold = htons(h->inventory->current_gold());
+  uint16_t xp_limit = htons(h->next_level_xp_limit);
+  uint16_t current_xp = htons(h->experience);
   uint8_t meditating = (int)h->meditating;
   uint8_t ghost_mode = (int)h->ghost_mode;
   uint8_t close_to_npc = (int)h->close_to_npc;

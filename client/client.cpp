@@ -20,7 +20,7 @@ Client::~Client() {}
 
 void Client::play() {
   CommandsBlockingQueue commands_to_send;
-  int initial_room = HelperFunctions::random_int(0, 2);
+  int initial_room = HelperFunctions::random_int(0, 1);
 
   /* Esto no debería estar harcodeado sino que se elige en el lobby */
   std::string player_name = "Federico";
