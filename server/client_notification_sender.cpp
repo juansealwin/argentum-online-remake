@@ -42,7 +42,7 @@ void ClientNotificationSender::run() {
     }
   }
   message_center.remove_player(player_name);
-  std::cout << "notification sender stopped" << std::endl;
+  //std::cout << "notification sender stopped" << std::endl;
 }
 
 bool ClientNotificationSender::is_alive() { return this->alive; }

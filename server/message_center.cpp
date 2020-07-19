@@ -11,7 +11,7 @@ void MessageCenter::add_player(
   players_notification_queues.emplace(player_name, notification_queue);
 }
 void MessageCenter::remove_player(const std::string &player_name) {
-  std::cout << "called remove player" << std::endl;
+  //std::cout << "called remove player" << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   if (players_notification_queues.count(player_name) < 1) return;
   players_notification_queues.erase(player_name);
@@ -48,6 +48,7 @@ void MessageCenter::send_message(const std::string &dst, const std::string &mess
         new MessageNotification(notification);
     q->push(message_notification);
   } catch (const std::out_of_range &oor) {
+    std::cout << "dst was" << dst << std::endl;
     std::cout << "out of range at message center " << dst << std::endl;
   }
 }
