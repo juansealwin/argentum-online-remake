@@ -286,7 +286,7 @@
     "../../server/cfg/maps/desert_map.json",
     "../../server/cfg/maps/argal_map.json"
   ],
-  "criticalDamageMiltiplier": 2,
+  "criticalDamageMultiplier": 2,
   "inventorySize": 10,
   "bankSize": 10,
   "criticalDamageProbability": 0.125,
