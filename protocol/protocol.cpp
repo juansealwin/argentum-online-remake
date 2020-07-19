@@ -428,20 +428,20 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
 void Protocol::send_notification(const Socket& socket, Notification* n) {
   std::vector<unsigned char> serialization = n->vector;
   uint16_t size = htons(serialization.size());
-  std::cout << "sending notification of type: " << (int)serialization.at(0) << std::endl;
   socket.send(&size, 2);
   socket.send(serialization.data(), serialization.size());
 }
 
 // Definir que devuelve la clase (Puede moverse la notificacion que tengo en el
 // server a protocol/common y usar eso)
-void Protocol::receive_notification(const Socket& socket,
+int Protocol::receive_notification(const Socket& socket,
                                     std::vector<unsigned char>& vector) {
   uint16_t notification_size = 0;
   socket.recv(&notification_size, 2);
   notification_size = ntohs(notification_size);
   unsigned char* buffer = new unsigned char[notification_size];
-  socket.recv(buffer, notification_size);
+  int bytes_rcv = socket.recv(buffer, notification_size);
   vector = std::vector<unsigned char>(buffer, buffer + notification_size);
   delete[] buffer;
+  return bytes_rcv;
 }

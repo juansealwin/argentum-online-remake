@@ -1,6 +1,6 @@
 #include "helper_functions.h"
 int HelperFunctions::random_int(int a, int b) {
-  return rand()%(b-a + 1) + a;
+  return rand()%(b - a + 1) + a;
 }
 
 double HelperFunctions::distance(double x1, double x2, double y1, double y2) {

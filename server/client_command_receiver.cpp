@@ -73,7 +73,6 @@ void ClientCommandReceiver::run() {
 void ClientCommandReceiver::send_close_connection() {
   std::vector<unsigned char> notification;
   // mover a la clase
-  std::cout << "sending close connection" << std::endl;
   uint8_t notification_id = 0;
   notification.push_back(notification_id);
   CloseConnectionNotification *n =

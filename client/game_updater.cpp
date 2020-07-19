@@ -29,8 +29,8 @@ void GameUpdater::run() {
       // Recibimos las actualizaciones del mapa
       status_serialized.clear();
       status_serialized.resize(0);
-      Protocol::receive_notification(read_socket, status_serialized);
-
+      int bytes_rcv = Protocol::receive_notification(read_socket, status_serialized);
+      if (bytes_rcv == 0) break;
       // Extraemos el tipo de notificación
       type_of_notification = extract<uint8_t>(status_serialized, j);
       // Vemos si es una notificación de estado del mapa
