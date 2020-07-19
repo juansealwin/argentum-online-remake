@@ -7,12 +7,16 @@
 
 ClientListener::ClientListener(const char *port,
                                const char *entities_cfg_file) {
-  //Socket server_socket;
   server_socket.bind_and_listen(port);
-  //this->server_socket = std::move(server_socket);
   std::ifstream entities_file_aux(entities_cfg_file);
   Json::Value entities_cfg;
   entities_file_aux >> entities_cfg;
+
+  seconds_for_proccesing_room_changes =
+      entities_cfg["secondsForProccesingRoomChanges"].asUInt();
+  nanoseconds_for_proccesing_attacks =
+      entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
+
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
     std::ifstream entities_file(entities_cfg_file);
@@ -69,7 +73,6 @@ StartingInfoNotification *ClientListener::create_start_notification(
 }
 
 void ClientListener::run() {
-  int pc = 0;
   while (true) {
     Socket client_socket;
     try {
@@ -81,13 +84,10 @@ void ClientListener::run() {
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
         new BlockingThreadSafeQueue<Notification *>();
-        std::string player_name;
-    if (pc == 0) player_name = "test";
-    else player_name = "test2";
-    pc++;
     unsigned int hero_id = game_rooms[login_command->room_number]->add_new_hero(
-        "elf", "mage", player_name);
-    message_center.add_player(player_name, notifications_queue);
+        login_command->hero_race, login_command->hero_class,
+        login_command->player_name);
+    message_center.add_player(login_command->player_name, notifications_queue);
     game_rooms[login_command->room_number]->add_notification_queue(
         notifications_queue, hero_id);
 
@@ -98,7 +98,9 @@ void ClientListener::run() {
     ClientHandler *client = new ClientHandler(
         std::move(client_socket), login_command->room_number,
         queues_commands[login_command->room_number], notifications_queue,
-        hero_id, std::ref(game_rooms), player_name, std::ref(message_center));
+        hero_id, std::ref(game_rooms), login_command->player_name,
+        std::ref(message_center), seconds_for_proccesing_room_changes,
+        nanoseconds_for_proccesing_attacks);
 
     clients.push_back(client);
     // client->start();
@@ -114,7 +116,7 @@ void ClientListener::garbage_collector() {
       delete *it;
       it = clients.erase(it);
     } else {
-      it++;
+      ++it;
     }
   }
 }

@@ -5,8 +5,8 @@
 #include "command.h"
 class PrivateMessageCommand : public Command {
  public:
-  PrivateMessageCommand(const unsigned int uid, std::string dst,
-                        std::string msg);
+  PrivateMessageCommand(const unsigned int uid, const std::string &dst,
+                        const std::string &msg);
   PrivateMessageCommand(const PrivateMessageCommand &) = delete;
   ~PrivateMessageCommand();
   // Ejecuta cambios en el juego segun

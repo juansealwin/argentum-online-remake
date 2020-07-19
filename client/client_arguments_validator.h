@@ -4,34 +4,34 @@
 #include <string>
 
 #include "arguments_exceptions.h"
-#include "arguments_validator.h"
 #include "exception_messages.h"
 #define CLI_ARGS 3
 #define PORT_ARG 2
 #define IP_ARG 1
 
-class ClientArgumentsValidator : public ArgumentsValidator {
+class ClientArgumentsValidator {
  private:
   std::string ip;
+  int argc;
+  char** argv;
+  std::string port;
 
  public:
   ClientArgumentsValidator(int, char**);
-
   ~ClientArgumentsValidator();
-
-  /*
-   * @brief This is the polimoric function that ArgumentsValidator force * to
-   * implement. It validate the arguments on the client side.
-   *
-   */
   void validate_arguments();
-
   /*
    * @brief Get the Ip to know where we want to connect
    *
    * @return const char* that is the ip value
    */
   const char* get_ip();
+   /*
+   * @brief Get the Port object
+   *
+   * @return const char*
+   */
+  const char* get_port();
 };
 
 #endif

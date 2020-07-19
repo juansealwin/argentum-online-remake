@@ -7,17 +7,16 @@
 #include "../util/json/json.h"
 #include "argentum_game.h"
 #include "change_game_room_dto.h"
+#include "close_connection_notification.h"
 #include "command_blocker.h"
 #include "command_factory.h"
 #include "common_socket.h"
 #include "map_change_notification.h"
-#include "protocol.h"
-#include "thread.h"
-#include "change_game_room_dto.h"
-#include "quit_command_dto.h"
-#include "private_message_dto.h"
-#include "close_connection_notification.h"
 #include "message_center.h"
+#include "private_message_dto.h"
+#include "protocol.h"
+#include "quit_command_dto.h"
+#include "thread.h"
 class ClientCommandReceiver : public Thread {
  public:
   // Recibe los comandos del cliente y los encola para que el juego los procese
@@ -25,7 +24,9 @@ class ClientCommandReceiver : public Thread {
                         ThreadSafeQueue<Command *> *commands_queue,
                         unsigned int hero_id,
                         std::vector<ArgentumGame *> &game_rooms,
-                        std::string player_name, MessageCenter &message_center);
+                        std::string &player_name, MessageCenter &message_center,
+                        const int seconds_for_proccesing_room_changes,
+                        const int nanoseconds_for_proccesing_attacks);
   ~ClientCommandReceiver() override;
   void run() override;
   bool is_alive();
@@ -48,7 +49,6 @@ class ClientCommandReceiver : public Thread {
 
  private:
   MapChangeNotification *map_change_notification();
-  
 };
 
 #endif  // CLIENT_COMMAND_RECEIVER_H

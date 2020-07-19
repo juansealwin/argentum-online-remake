@@ -4,18 +4,20 @@
 #include <sstream>
 #include <vector>
 
-  // while (!commands_queue->is_empty()) {
-  //   Command *c = commands_queue->pop();
-  //   delete c;
-  //   if (commands_queue->is_closed()) break;
-  // }
-  // this->alive = false;
+// while (!commands_queue->is_empty()) {
+//   Command *c = commands_queue->pop();
+//   delete c;
+//   if (commands_queue->is_closed()) break;
+// }
+// this->alive = false;
 
 ClientCommandReceiver::ClientCommandReceiver(
     Socket &peer_socket, unsigned int game_room,
     ThreadSafeQueue<Command *> *commands_queue, unsigned int hero_id,
-    std::vector<ArgentumGame *> &game_rooms, std::string player_name,
-    MessageCenter &message_center)
+    std::vector<ArgentumGame *> &game_rooms, std::string &player_name,
+    MessageCenter &message_center,
+    const int seconds_for_proccesing_room_changes,
+    const int nanoseconds_for_proccesing_attacks)
     : peer_socket(peer_socket),
       current_game_room(game_room),
       commands_queue(commands_queue),
@@ -24,7 +26,9 @@ ClientCommandReceiver::ClientCommandReceiver(
       sent_quit(false),
       game_rooms(game_rooms),
       player_name(player_name),
-      message_center(message_center) {}
+      message_center(message_center),
+      command_blocker(seconds_for_proccesing_room_changes,
+                      nanoseconds_for_proccesing_attacks) {}
 
 ClientCommandReceiver::~ClientCommandReceiver() { join(); }
 
@@ -38,7 +42,7 @@ void ClientCommandReceiver::run() {
     }
     CommandDTO *command_dto = Protocol::receive_command(peer_socket);
     if (command_dto != nullptr) {
-      std::cout << "received new command!" << std::endl;
+      // std::cout << "received new command!" << std::endl;
       ChangeGameRoomDTO *cgrDTO =
           dynamic_cast<ChangeGameRoomDTO *>(command_dto);
       if (cgrDTO) {
@@ -82,7 +86,6 @@ bool ClientCommandReceiver::is_alive() { return this->alive; }
 
 void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
   if (current_game_room == new_game_room) return;
-  std::cout << "Changing to game game room: " << new_game_room << std::endl;
   std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *> hero_and_queue =
       game_rooms.at(current_game_room)
           ->remove_hero_and_notification_queue(hero_id);

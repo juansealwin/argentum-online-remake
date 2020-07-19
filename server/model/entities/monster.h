@@ -1,13 +1,15 @@
 #ifndef MONSTER_H
 #define MONSTER_H
 #include <vector>
-#include "helper_functions.h"
+
 #include "base_character.h"
+#include "helper_functions.h"
 #include "stdint.h"
 class Monster : public BaseCharacter {
  public:
   Monster(unsigned int unique_id, int x, int y, int id, char repr, int hp,
-          int level, int dps, Map *map, std::string name);
+          int level, int dps, Map *map, const std::string &name,
+          const float critical_damage_multiplier);
   Monster(const Monster &) = delete;
   // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
   // Atacar si hay enemigo cercano (crear proyectil)
@@ -23,12 +25,13 @@ class Monster : public BaseCharacter {
   bool is_next_to(int other_x, int other_y);
   bool is_close_to(int other_x, int other_y);
   void move_closer_to(int other_x, int other_y);
+
  private:
   unsigned int dps;
-  std::string name;
   std::vector<std::tuple<int, int>> moves;
   std::size_t current_move = 0;
   std::vector<std::tuple<int, int>> get_possible_next_moves();
+  float critical_damage_multiplier;
 };
 
 #endif  // MONSTER_H

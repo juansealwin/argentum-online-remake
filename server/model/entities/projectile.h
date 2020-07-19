@@ -27,7 +27,6 @@ class Projectile : public Entity {
   // para notificar, actualizar xp, etc
   unsigned int attacker_id;
   unsigned int range;
-  orientation_t orientation;
   Map *map;
   int collided_entity;
   int get_next_x();

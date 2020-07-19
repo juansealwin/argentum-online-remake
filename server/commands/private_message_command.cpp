@@ -2,7 +2,7 @@
 #include "private_message_command.h"
 
 PrivateMessageCommand::PrivateMessageCommand(const unsigned int uid,
-                                             std::string dst, std::string msg)
+                                             const std::string &dst, const std::string &msg)
     : Command(uid), dst(dst), msg(msg) {}
 
 PrivateMessageCommand::~PrivateMessageCommand() {}

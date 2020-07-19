@@ -11,7 +11,7 @@ typedef enum {
 #include "model_exceptions.h"
 class Entity {
  public:
-  Entity(unsigned int unique_id, int x, int y, int type, char repr);
+  Entity(unsigned int unique_id, int x, int y, int type, char repr, orientation_t orientation);
   Entity(const Entity &) = delete;
   virtual ~Entity();
   virtual char char_representation();

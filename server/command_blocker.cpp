@@ -1,8 +1,11 @@
 #include "command_blocker.h"
+
 #include <iostream>
-CommandBlocker::CommandBlocker() {
-  last_move_time = last_attack_time = last_room_move =
-      std::chrono::high_resolution_clock::now();
+CommandBlocker::CommandBlocker(const int seconds_for_proccesing_room_changes,
+                               const int nanoseconds_for_proccesing_attacks)
+    : seconds_for_proccesing_room_changes(seconds_for_proccesing_room_changes),
+      nanoseconds_for_proccesing_attacks(nanoseconds_for_proccesing_attacks) {
+  last_attack_time = last_room_move = std::chrono::high_resolution_clock::now();
 }
 
 CommandBlocker::~CommandBlocker() {}
@@ -10,8 +13,6 @@ CommandBlocker::~CommandBlocker() {}
 bool CommandBlocker::can_process(CommandDTO* command_dto) {
   int command_id = command_dto->get_id();
   switch (command_id) {
-    case MOVE_COMMAND:
-      return can_process_move();
     case ATTACK_COMMAND:
       return can_process_attack();
     case CHANGE_GAME_ROOM_COMMAND:
@@ -25,20 +26,8 @@ bool CommandBlocker::can_process_room_change() {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = std::chrono::duration_cast<std::chrono::seconds>(
       actual_time - last_room_move);
-  const int seconds_restriction = 7;
-  if (time_difference.count() >= seconds_restriction) {
+  if (time_difference.count() >= seconds_for_proccesing_room_changes) {
     last_room_move = actual_time;
-    return true;
-  }
-  return false;
-}
-
-bool CommandBlocker::can_process_move() {
-  auto actual_time = std::chrono::high_resolution_clock::now();
-  auto time_difference = actual_time - last_move_time;
-  const long long nanoseconds = 60000000;
-  if (time_difference.count() >= nanoseconds) {  // 62500000) {
-    last_move_time = actual_time;
     return true;
   }
   return false;
@@ -47,8 +36,7 @@ bool CommandBlocker::can_process_move() {
 bool CommandBlocker::can_process_attack() {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_attack_time;
-  const long long nanoseconds = 500000000;
-  if (time_difference.count() >= nanoseconds) {  // 62500000) {
+  if (time_difference.count() >= nanoseconds_for_proccesing_attacks) {
     last_attack_time = actual_time;
     return true;
   }

@@ -42,6 +42,8 @@ class ClientListener : public Thread {
   */
   void garbage_collector();
   unsigned int entities_ids = 0;
+  int seconds_for_proccesing_room_changes;
+  int nanoseconds_for_proccesing_attacks;
 };
 
 #endif  // CLIENTLISTENER_H

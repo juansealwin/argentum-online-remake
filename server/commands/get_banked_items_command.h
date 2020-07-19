@@ -7,7 +7,7 @@
 //obtener informacion de lo que venda un npc
 class GetBankedItemsCommand : public Command {
  public:
-  GetBankedItemsCommand(const unsigned int uid);
+  explicit GetBankedItemsCommand(const unsigned int uid);
   GetBankedItemsCommand(const GetBankedItemsCommand &) = delete;
   ~GetBankedItemsCommand();
   // Ejecuta cambios en el juego segun

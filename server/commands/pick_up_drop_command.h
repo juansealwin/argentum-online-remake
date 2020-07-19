@@ -5,7 +5,7 @@
 #include "argentum_game.h"
 class PickUpDropCommand : public Command {
  public:
-  PickUpDropCommand(const unsigned int uid);
+  explicit PickUpDropCommand(const unsigned int uid);
   PickUpDropCommand(const PickUpDropCommand &) = delete;
   ~PickUpDropCommand();
   // Ejecuta cambios en el juego segun

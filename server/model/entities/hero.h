@@ -10,7 +10,6 @@
 #include "monster.h"
 #include "stdint.h"
 
-// meter en el json!
 class Inventory;
 class Item;
 class Drop;
@@ -23,17 +22,22 @@ class Hero : public BaseCharacter {
        unsigned int f_race_hp, unsigned int f_race_recovery,
        unsigned int f_race_mana, unsigned int f_class_mana,
        unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, Map *map, std::string name,
+       unsigned int class_id, Map *map, const std::string &name,
        const float critical_damage_multiplier,
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap, const unsigned int bank_size);
+       const float starting_xp_cap, const unsigned int bank_size,
+       const int amount_of_experience_to_update);
   // Hero(Hero* h, Map &map);
   void regenerate();
-  //
+  // curacion en cada update
   void heal(unsigned int hp, unsigned int mana);
+  // movimiento segun la velocidad en cada update
+  void auto_move();
   // devuelve el dano causado
+  void set_speed_x(int x);
+  void set_speed_y(int y);
   const Attack attack();
   // devuelve el dano que efectivamente recibi
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
@@ -110,11 +114,9 @@ class Hero : public BaseCharacter {
   // inicializados en member initialization list
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
-      class_id, experience,  respawn_x, respawn_y;
-
+      class_id, experience, respawn_x, respawn_y;
+  int speed_x, speed_y;
   bool meditating, ghost_mode, close_to_npc, blocked;
-
-  std::string name;
   // config
   float critical_damage_multiplier, critical_damage_probability,
       evasion_probability, max_safe_gold_multiplier, level_up_limit_power,
@@ -128,6 +130,7 @@ class Hero : public BaseCharacter {
   std::chrono::time_point<std::chrono::high_resolution_clock>
       wait_starting_time;
   unsigned blocked_seconds_duration;
+  int amount_of_experience_to_update;
 
   // metodos privados
   unsigned int calculate_damage();

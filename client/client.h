@@ -15,20 +15,22 @@
 #include "game.h"
 #include "game_renderer.h"
 #include "game_updater.h"
+#include "helper_functions.h"
 #include "login_command_dto.h"
 #include "protocol.h"
 #include "texture.h"
-#include "helper_functions.h"
 
 class Client {
  private:
-  // Por ahora lo dejamos harcodeado
   int player_id;
   Socket socket;
   bool is_running;
+  int screen_width;
+  int screen_height;
 
  public:
-  Client(const char* host, const char* port);
+  Client(const char* host, const char* port, const int screen_width,
+         const int screen_height);
   ~Client();
   void play();
 };

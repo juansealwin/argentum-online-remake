@@ -15,7 +15,7 @@ class ModelException : public std::exception {
   std::string msg_error;
 
  public:
-  ModelException(const char*);
+  explicit ModelException(const char*);
 
   virtual ~ModelException() noexcept;
 

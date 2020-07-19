@@ -12,12 +12,14 @@ Hero::Hero(
     unsigned int f_race_hp, unsigned int f_race_recovery,
     unsigned int f_race_mana, unsigned int f_class_mana,
     unsigned int f_class_meditation, unsigned int gold, unsigned int class_id,
-    Map *map, std::string name, const float critical_damage_multiplier,
+    Map *map, const std::string &name, const float critical_damage_multiplier,
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap,
-    const unsigned int bank_size)
-    : BaseCharacter(unique_id, x, y, race_id, repr, level, map, name),
+    const unsigned int bank_size, const int amount_of_experience_to_update)
+    : BaseCharacter(unique_id, x, y, race_id, repr,
+                    constitution * f_class_hp * f_race_hp * level, level, map,
+                    name),
       strength(strength),
       intelligence(intelligence),
       agility(agility),
@@ -32,22 +34,32 @@ Hero::Hero(
       experience(0),
       respawn_x(0),
       respawn_y(0),
+      speed_x(0),
+      speed_y(0),
       meditating(false),
       ghost_mode(false),
       close_to_npc(false),
       blocked(false),
-      name(name),
       critical_damage_multiplier(critical_damage_multiplier),
       critical_damage_probability(critical_damage_probability),
       evasion_probability(evasion_probability),
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap),
-      blocked_seconds_duration(0) {
+      blocked_seconds_duration(0),
+      amount_of_experience_to_update(amount_of_experience_to_update) {
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
   bank = new Inventory(bank_size, 0);
+}
+
+void Hero::set_speed_x(int x) { speed_x = x; }
+void Hero::set_speed_y(int y) { speed_y = y; }
+
+void Hero::auto_move() {
+  if (blocked) return;
+  move(x_position + speed_x, y_position + speed_y);
 }
 
 void Hero::try_to_unblock() {
@@ -94,7 +106,9 @@ void Hero::set_mana(unsigned int mana) {
 }
 
 void Hero::equip_weapon(unsigned int weapon_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   meditating = false;
   if (inventory->has_item(weapon_id) && equipment->can_hold_weapon()) {
     Item *w = inventory->remove_item(weapon_id);
@@ -102,7 +116,9 @@ void Hero::equip_weapon(unsigned int weapon_id) {
   }
 }
 void Hero::equip_staff(unsigned int staff_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   meditating = false;
   if (inventory->has_item(staff_id) && equipment->can_hold_staff()) {
     Item *w = inventory->remove_item(staff_id);
@@ -110,7 +126,9 @@ void Hero::equip_staff(unsigned int staff_id) {
   }
 }
 void Hero::equip_shield(unsigned int shield_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   meditating = false;
   if (inventory->has_item(shield_id)) {
     Item *w = inventory->remove_item(shield_id);
@@ -118,7 +136,9 @@ void Hero::equip_shield(unsigned int shield_id) {
   }
 }
 void Hero::equip_helmet(unsigned int helmet_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   meditating = false;
   if (inventory->has_item(helmet_id)) {
     Item *w = inventory->remove_item(helmet_id);
@@ -126,7 +146,9 @@ void Hero::equip_helmet(unsigned int helmet_id) {
   }
 }
 void Hero::equip_armour(unsigned int armour_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   meditating = false;
   if (inventory->has_item(armour_id)) {
     Item *w = inventory->remove_item(armour_id);
@@ -135,17 +157,20 @@ void Hero::equip_armour(unsigned int armour_id) {
 }
 
 void Hero::unequip(unsigned int item_id) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full()) throw ModelException("El inventario esta lleno!");
   meditating = false;
   Item *item = equipment->unequip(item_id);
-  if (!item)
-    throw ModelException("No tenes ese item!");
+  if (!item) throw ModelException("No tenes ese item!");
   inventory->add_item(item);
 }
 
 void Hero::unequip_weapon() {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full() && equipment->has_weapon())
     throw ModelException("El inventario esta lleno!");
   meditating = false;
@@ -155,7 +180,9 @@ void Hero::unequip_weapon() {
   }
 }
 void Hero::unequip_staff() {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full() && equipment->has_staff())
     throw ModelException("El inventario esta lleno!");
   meditating = false;
@@ -163,7 +190,9 @@ void Hero::unequip_staff() {
   if (staff) inventory->add_item(staff);
 }
 void Hero::unequip_shield() {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full() && equipment->has_shield())
     throw ModelException("El inventario esta lleno!");
   meditating = false;
@@ -171,7 +200,9 @@ void Hero::unequip_shield() {
   if (shield) inventory->add_item(shield);
 }
 void Hero::unequip_helmet() {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full() && equipment->has_helmet())
     throw ModelException("El inventario esta lleno!");
   meditating = false;
@@ -179,7 +210,9 @@ void Hero::unequip_helmet() {
   if (helmet) inventory->add_item(helmet);
 }
 void Hero::unequip_armour() {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden equiparse o desequiparse items!");
+  if (ghost_mode)
+    throw ModelException(
+        "Los fantasmas no pueden equiparse o desequiparse items!");
   if (inventory->is_full() && equipment->has_armour())
     throw ModelException("El inventario esta lleno!");
   meditating = false;
@@ -195,7 +228,8 @@ void Hero::use_item(unsigned int item_id) {
 }
 void Hero::use_special_staff() {
   if (ghost_mode)
-    throw ModelException("Los fantasmas no pueden utilizar ataques especiales!");
+    throw ModelException(
+        "Los fantasmas no pueden utilizar ataques especiales!");
   Staff *s = equipment->staff;
   if (s)
     s->special_use(this);
@@ -210,11 +244,13 @@ void Hero::unbank_gold(unsigned int ammount) {
   if (bank->current_gold() < ammount)
     throw ModelException("No tenes esa cantidad de monedas en tu banco!");
   if (gold_space_remaining() < ammount)
-    throw ModelException("No podes guardar esa cantidad de monedas en tu inventario!");
+    throw ModelException(
+        "No podes guardar esa cantidad de monedas en tu inventario!");
   inventory->add_gold(bank->remove_gold(ammount));
 }
 void Hero::bank_gold(unsigned int ammount) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden utilizar el banco!");
+  if (ghost_mode)
+    throw ModelException("Los fantasmas no pueden utilizar el banco!");
   meditating = false;
   if (inventory->current_gold() < ammount)
     throw ModelException("No tenes esa cantidad de dinero en tu inventario!");
@@ -229,7 +265,9 @@ void Hero::unbank_item(unsigned int item_id) {
   if (ghost_mode)
     throw ModelException("Los fantasmas no pueden utilizar el banco!");
   meditating = false;
-  if (inventory->is_full()) throw ModelException("Tu inventario esta lleno, no podes retirar mas items!");
+  if (inventory->is_full())
+    throw ModelException(
+        "Tu inventario esta lleno, no podes retirar mas items!");
   Item *i = bank->remove_item(item_id);
   if (!i) throw ModelException("No tenes ese item en tu banco!");
   inventory->add_item(i);
@@ -238,7 +276,9 @@ void Hero::bank_item(unsigned int item_id) {
   if (ghost_mode)
     throw ModelException("Los fantasmas no pueden utilizar el banco!");
   meditating = false;
-  if (bank->is_full()) throw ModelException("El banco esta lleno, ya no podes depositar mas items!");
+  if (bank->is_full())
+    throw ModelException(
+        "El banco esta lleno, ya no podes depositar mas items!");
   Item *i = inventory->remove_item(item_id);
   if (!i) throw ModelException("No tenes ese item en tu inventario!");
   bank->add_item(i);
@@ -246,7 +286,8 @@ void Hero::bank_item(unsigned int item_id) {
 
 Item *Hero::remove_item(unsigned int item_id) {
   if (ghost_mode)
-    throw ModelException("Los fantasmas no pueden remover items de su inventario!");
+    throw ModelException(
+        "Los fantasmas no pueden remover items de su inventario!");
   meditating = false;
   Item *i = inventory->remove_item(item_id);
   return i;
@@ -254,7 +295,8 @@ Item *Hero::remove_item(unsigned int item_id) {
 
 void Hero::add_item(Item *item) {
   if (ghost_mode)
-    throw ModelException("Los fantasmas no pueden agregar items a su inventario!");
+    throw ModelException(
+        "Los fantasmas no pueden agregar items a su inventario!");
   meditating = false;
   inventory->add_item(item);
 }
@@ -263,13 +305,11 @@ bool Hero::has_free_space() { return (!inventory->is_full()); }
 
 bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
 
-void Hero::add_gold(unsigned int gold) {
-  inventory->add_gold(gold);
-  // this->gold += gold;
-}
+void Hero::add_gold(unsigned int gold) { inventory->add_gold(gold); }
 
 void Hero::pick_up_drop(Drop *drop) {
-  if (ghost_mode) throw ModelException("Los fantasmas no pueden agarrar cosas del suelo!");
+  if (ghost_mode)
+    throw ModelException("Los fantasmas no pueden agarrar cosas del suelo!");
   if ((drop->size() > 0) && (this->has_free_space())) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());
@@ -345,7 +385,6 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
 
 void Hero::meditate() {
   if (ghost_mode) throw ModelException("No se puede meditar si estas muerto!");
-  ;
   meditating = true;
 }
 
@@ -370,13 +409,15 @@ unsigned int Hero::calculate_damage() {
 }
 
 void Hero::update_experience(unsigned int dmg_done, BaseCharacter *other) {
-  experience += floor(
-      dmg_done * std::max((other->level - this->level) + 10, (unsigned int)0));
+  experience += floor(dmg_done * std::max((other->level - this->level) +
+                                              amount_of_experience_to_update,
+                                          (unsigned int)0));
   if (other->is_death()) {
     float p = rand() / double(RAND_MAX);
-    experience +=
-        floor(p * other->max_hp *
-              std::max((other->level - this->level) + 10, (unsigned int)0));
+    experience += floor(
+        p * other->max_hp *
+        std::max((other->level - this->level) + amount_of_experience_to_update,
+                 (unsigned int)0));
   }
   while (experience >= next_level_xp_limit) {
     experience -= next_level_xp_limit;
@@ -402,7 +443,6 @@ unsigned int Hero::remove_excess_gold() {
   if (inventory->current_gold() > max_safe_gold) {
     excess_gold = inventory->current_gold() - max_safe_gold;
     inventory->remove_gold(excess_gold);
-    // gold = max_safe_gold;
   }
   return excess_gold;
 }

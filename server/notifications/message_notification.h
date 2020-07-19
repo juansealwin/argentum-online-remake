@@ -3,7 +3,7 @@
 #include "notification.h"
 class MessageNotification : public Notification {
  public:
-  MessageNotification(std::vector<unsigned char> &message);
+  explicit MessageNotification(std::vector<unsigned char> &message);
   virtual ~MessageNotification();
 };
 

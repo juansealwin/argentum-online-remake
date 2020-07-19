@@ -10,5 +10,5 @@ MoveCommand::MoveCommand(const unsigned int uid, const int x_move, const int y_m
 MoveCommand::~MoveCommand() {}
 
 void MoveCommand::execute(ArgentumGame *game) {
-  game->move_entity(uid, x_move, y_move);
+  game->set_hero_speed(uid, x_move, y_move);
 }

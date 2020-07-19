@@ -1,24 +1,31 @@
 #include "heroes_manager.h"
 
 HeroesManager::HeroesManager() {
-  last_update_time = std::chrono::high_resolution_clock::now();
+  last_update_time = last_move_time = std::chrono::high_resolution_clock::now();
 }
 
 HeroesManager::~HeroesManager() {}
 
-void HeroesManager::update(std::map<unsigned int, Hero *> &heroes) {
+void HeroesManager::update(std::map<unsigned int, Hero *> &heroes,
+                           const int nanoseconds_for_regenerating_hero,
+                           const int nanoseconds_for_automove_hero) {
   auto actual_time = std::chrono::high_resolution_clock::now();
-  auto time_difference = actual_time - last_update_time;
-  // 4 actrualizaciones por segundo para los heroes (vida-mana regen)
+  auto update_time_diff = actual_time - last_update_time;
+  auto move_time_diff = actual_time - last_move_time;
+  // 4 actualizaciones por segundo para los heroes (vida-mana regen)
 
   for (auto &hero : heroes) {
     hero.second->try_to_unblock();
-    if (time_difference.count() >= 5000000000) {
+    if (update_time_diff.count() >= nanoseconds_for_regenerating_hero) {
       hero.second->regenerate();
       last_update_time = actual_time;
     }
+    if (move_time_diff.count() >= nanoseconds_for_automove_hero) {
+      hero.second->auto_move();
+      last_move_time = actual_time;
+    }
+
     hero.second->clear_effects();
-    
   }
 }
 

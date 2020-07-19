@@ -8,7 +8,7 @@ class Command {
  public:
   Command();
   //uid es el identificador unico del jugador
-  Command(const unsigned int uid);
+  explicit Command(const unsigned int uid);
   virtual ~Command();
   Command(const Command &) = delete;
   // Ejecuta cambios en el juego

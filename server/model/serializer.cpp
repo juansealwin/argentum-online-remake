@@ -40,7 +40,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     ArgentumGame *game) {
   std::vector<unsigned char> serialization;
   // mover a la clase
-  unsigned int monsters_serialized = 0;
+  //unsigned int monsters_serialized = 0;
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
   // std::cout << "@@@@@@@@@monsters size is@@@@@@@@@@ " <<
@@ -57,7 +57,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     // std::endl;
   }
   for (auto &entity : game->monsters) {
-    monsters_serialized++;
+    //monsters_serialized++;
     serialize_common_fields(std::ref(serialization), entity.first,
                             entity.second);
     serialize_monster(std::ref(serialization), entity.second);

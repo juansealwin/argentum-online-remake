@@ -7,7 +7,7 @@
 
 class UseItemSpecialCommand : public Command {
  public:
-  UseItemSpecialCommand(const unsigned int uid);
+  explicit UseItemSpecialCommand(const unsigned int uid);
   UseItemSpecialCommand(const UseItemSpecialCommand &) = delete;
   ~UseItemSpecialCommand();
   // Ejecuta cambios en el juego segun
