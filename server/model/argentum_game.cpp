@@ -8,13 +8,15 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            Json::Value &map_cfg, std::ifstream &entities_config,
                            unsigned int &entities_ids,
-                           MessageCenter &message_center)
+                           MessageCenter &message_center,
+                           FilesHandler &files_handler)
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
       alive(true),
       entities_ids(entities_ids),
-      message_center(message_center) {
+      message_center(message_center),
+      files_handler(files_handler) {
   std::unique_lock<std::mutex> lock(mutex);
   entities_config >> entities_cfg;
   map = new Map(map_cfg);

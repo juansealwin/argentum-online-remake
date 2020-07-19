@@ -2,7 +2,9 @@
 
 #include <stdint.h>
 
+#include <algorithm>
 #include <iostream>
+#include <map>
 #include <string>
 
 template <typename T>
@@ -15,11 +17,10 @@ T extract(const std::vector<unsigned char> &v, unsigned int &pos) {
   return value;
 }
 
-Hero *Deserializer::deserialize_hero(
-    std::vector<unsigned char> &serialization) {
-  int entity_type, y, x, orientation, items_in_drop, drop_has_coins, class_id,
-      affected_by, meditating, ghost_mode, close_to_npc, items_equiped,
-      items_inventory;
+Hero *deserialize_hero(std::vector<unsigned char> &serialization) {
+  int entity_type, y, x, orientation, items_in_drop, drop_has_coins, name_size,
+      class_id, affected_by, meditating, ghost_mode, close_to_npc,
+      items_equiped, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
       intelligence, agility, constitution, gold, xp_limit, current_xp;
 

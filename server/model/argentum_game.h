@@ -16,7 +16,7 @@
 #include "command.h"  //<- guarda con esto y dependencias circulares
 #include "drop.h"
 #include "drops_manager.h"
-// #include "files_handler.h"
+#include "files_handler.h"
 #include "game_status_notification.h"
 #include "hero.h"
 #include "heroes_manager.h"
@@ -37,15 +37,13 @@ typedef enum { PRIEST = 33, MERCHANT, BANKER } npc_t;
 // #define MERCHANT 34
 // #define BANKER 35
 
-// class FilesHandler;
-
 class ArgentumGame : public Thread {
  public:
   // Instancia una nueva sala de Argentum
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
                std::ifstream &entities_config, unsigned int &entities_ids,
-               MessageCenter &message_center);
+               MessageCenter &message_center, FilesHandler &files_handler);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -92,7 +90,7 @@ class ArgentumGame : public Thread {
   ThreadSafeQueue<Command *> *get_commands_queue();
   void stop_notification_queue(int player_id);
   void send_message(unsigned int player_id, std::string dst, std::string msg);
-  // FilesHandler &files_handler;
+  FilesHandler &files_handler;
   Hero *get_hero_by_id(const int id);
 
  private:
