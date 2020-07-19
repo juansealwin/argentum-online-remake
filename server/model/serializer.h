@@ -13,9 +13,9 @@ class Serializer {
  public:
   static std::vector<unsigned char> serialize_game_status(ArgentumGame *game);
   static void serialize_bank_of_hero(std::vector<unsigned char> &serialization,
-                              Hero *h);
-  static void serialize_hero(std::vector<unsigned char> &serialization,
-                             Hero *m);
+                                     Hero *h);
+  static void serialize_hero(std::vector<unsigned char> &serialization, Hero *m,
+                             const bool use_htons);
 
   // static void debug_deserialize_v3(std::vector<unsigned char>
   // serialization);
@@ -37,4 +37,4 @@ class Serializer {
       std::tuple<unsigned int, unsigned int> coordinates);
 };
 
-#endif  // ARGENTUMGAME_H
+#endif

@@ -13,7 +13,7 @@ void FilesHandler::save_player_status(Hero* hero) {
   std::unique_lock<std::mutex> lock(mutex);
 
   std::vector<unsigned char> player_serialization;
-  Serializer::serialize_hero(std::ref(player_serialization), hero);
+  Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
 
   std::ofstream players_status;
