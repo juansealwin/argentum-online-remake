@@ -9,6 +9,7 @@
 #include "argentum_game.h"
 #include "drop.h"
 #define GOLD_ID 36
+
 class Serializer {
  public:
   static std::vector<unsigned char> serialize_game_status(ArgentumGame *game);
@@ -16,6 +17,7 @@ class Serializer {
                                      Hero *h);
   static void serialize_hero(std::vector<unsigned char> &serialization, Hero *m,
                              const bool use_htons);
+  static Hero *deserialize_hero(std::vector<unsigned char> &serialization);
 
   // static void debug_deserialize_v3(std::vector<unsigned char>
   // serialization);

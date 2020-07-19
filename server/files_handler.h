@@ -2,7 +2,7 @@
 #define FILES_HANDLER_H
 
 #include <mutex>
-#include <vector>
+#include <string>
 
 #include "hero.h"
 

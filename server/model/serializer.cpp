@@ -2,6 +2,7 @@
 
 #include "defensive_item.h"
 #include "staff.h"
+
 template <typename T>
 // debe llamarse a este metodo si se necesita extraer del vector elementos de
 // mas de 1 byte
@@ -131,9 +132,11 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   uint16_t intelligence = use_htons ? htons(h->intelligence) : h->intelligence;
   uint16_t agility = use_htons ? htons(h->agility) : h->agility;
   uint16_t constitution = use_htons ? htons(h->constitution) : h->constitution;
-  uint16_t gold = use_htons ? htons(h->inventory->current_gold()) : h->inventory->current_gold();
-  uint16_t xp_limit = use_htons ? htons(h->next_level_xp_limit) : h->next_level_xp_limit;
-  uint16_t current_xp = use_htons ? htons(h->experience) : h-> experience;
+  uint16_t gold = use_htons ? htons(h->inventory->current_gold())
+                            : h->inventory->current_gold();
+  uint16_t xp_limit =
+      use_htons ? htons(h->next_level_xp_limit) : h->next_level_xp_limit;
+  uint16_t current_xp = use_htons ? htons(h->experience) : h->experience;
   uint8_t meditating = (int)h->meditating;
   uint8_t ghost_mode = (int)h->ghost_mode;
   uint8_t close_to_npc = (int)h->close_to_npc;
@@ -345,3 +348,87 @@ bool Serializer::is_monster(uint8_t t) {
 }
 
 bool Serializer::is_drop(uint8_t t) { return (t == 37); }
+
+// Al principio este método estaba en otra clase "Deserializer". Finalemente se
+// dejó acá porque el agregado de esa clase causaba dependencias circulares en
+// tiempo de ejecución y no se pudo arreglar a pesar de dedicarle varias horas
+Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
+  int entity_type, y, x, orientation, items_in_drop, drop_has_coins, class_id,
+      affected_by, meditating, ghost_mode, close_to_npc, items_equiped,
+      items_inventory;
+  uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
+      intelligence, agility, constitution, gold, xp_limit, current_xp;
+
+  unsigned int j = 0;
+  entity_type = extract<uint8_t>(serialization, j);
+
+  max_hp = extract<uint16_t>(serialization, j);
+  current_hp = extract<uint16_t>(serialization, j);
+  level = extract<uint16_t>(serialization, j);
+  affected_by = extract<uint8_t>(serialization, j);
+  std::cout << "lvl: " << level << "maxhp: " << max_hp << "current_hp"
+            << current_hp << std::endl;
+
+  int name_size = extract<uint8_t>(serialization, j);
+  std::string name;
+  for (int x = 0; x < name_size; x++) {
+    name += serialization.at(j);
+    j++;
+  }
+  std::cout << "Name of the hero: " << name << std::endl;
+
+  class_id = extract<uint8_t>(serialization, j);
+  mana_max = (extract<uint16_t>(serialization, j));
+  curr_mana = (extract<uint16_t>(serialization, j));
+  str = (extract<uint16_t>(serialization, j));
+  intelligence = (extract<uint16_t>(serialization, j));
+  agility = (extract<uint16_t>(serialization, j));
+  constitution = (extract<uint16_t>(serialization, j));
+  gold = (extract<uint16_t>(serialization, j));
+  xp_limit = (extract<uint16_t>(serialization, j));
+  current_xp = (extract<uint16_t>(serialization, j));
+  meditating = extract<uint8_t>(serialization, j);
+  ghost_mode = extract<uint8_t>(serialization, j);
+  close_to_npc = extract<uint8_t>(serialization, j);
+  std::cout << "@@@Hero stats@@@" << std::endl
+            << "max_hp: " << max_hp << " max_mana " << mana_max << "gold "
+            << gold << " ghost mode " << ghost_mode << " items equiped "
+            << items_equiped << "name size" << name_size << std::endl;
+
+  // Agregamos los items equipados
+  items_equiped = extract<uint8_t>(serialization, j);
+  // std::cout << "@@Deserializing items equiped@@" << std::endl;
+  for (int x = items_equiped; x > 0; x--) {
+    int current_item_slot = extract<uint8_t>(serialization, j);
+    int current_item_id = extract<uint8_t>(serialization, j);
+
+    // completarrrrrrrrrrr
+  }
+  // std::cout << "items in inventory: " << items_inventory << std::endl;
+
+  // Agregamos los items del inventario
+  items_inventory = extract<uint8_t>(serialization, j);
+
+  // std::cout << "@@Deserializing items in invetory@@" << std::endl;
+  for (int x = items_inventory; x > 0; x--) {
+    int current_item_id = extract<uint8_t>(serialization, j);
+
+    // completarrrrrrrrrrr
+  }
+
+  // falta la parte del banco
+  return nullptr;
+}
+
+/*
+  int bank_size = extract<uint8_t>(status_serialized, j);
+        // std::cout << "bank size is " << bank_size << std::endl;
+        for (int x = 0; x < bank_size; x++) {
+          int item = extract<uint8_t>(status_serialized, j);
+          next_ui_status.add_item(BANK, get_item_texture(item));
+          // std::cout << "item in bank: " << item << std::endl;;
+        }
+        // uint16_t gold = ntohs(extract<uint16_t>(status_serialized, j));
+        // std::cout << "gold in bnak: " << gold << std::endl;
+        next_ui_status.open_shop(BANK)
+        */
