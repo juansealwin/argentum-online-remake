@@ -8,14 +8,16 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
                            ThreadSafeQueue<Command *> *commands_queue,
                            Json::Value &map_cfg, std::ifstream &entities_config,
                            unsigned int &entities_ids,
-                           MessageCenter &message_center)
+                           MessageCenter &message_center,
+                           FilesHandler &files_handler)
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
       // map(map_cfg),
       alive(true),
       entities_ids(entities_ids),
-      message_center(message_center) {
+      message_center(message_center),
+      files_handler(files_handler) {
   std::unique_lock<std::mutex> lock(mutex);
   // Json::Value map_cfg;
   // map_config >> map_cfg;
@@ -731,4 +733,8 @@ bool ArgentumGame::closest_npcs_sells_or_buys_item(int x, int y, item_t item) {
       return true;
   }
   return false;
+}
+
+Hero* ArgentumGame::get_hero_by_id(const int id) {
+  return dynamic_cast<Hero *>(heroes.at(id));
 }

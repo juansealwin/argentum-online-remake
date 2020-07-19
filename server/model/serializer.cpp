@@ -40,7 +40,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     ArgentumGame *game) {
   std::vector<unsigned char> serialization;
   // mover a la clase
-  //unsigned int monsters_serialized = 0;
+  // unsigned int monsters_serialized = 0;
   uint8_t notification_id = 1;
   serialization.push_back(notification_id);
   // std::cout << "@@@@@@@@@monsters size is@@@@@@@@@@ " <<
@@ -57,7 +57,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     // std::endl;
   }
   for (auto &entity : game->monsters) {
-    //monsters_serialized++;
+    // monsters_serialized++;
     serialize_common_fields(std::ref(serialization), entity.first,
                             entity.second);
     serialize_monster(std::ref(serialization), entity.second);
@@ -74,7 +74,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     Drop *drop = element.second;
     serialize_drop(serialization, drop, coordinates);
   }
-  //debug_deserialize_v3(serialization);
+  // debug_deserialize_v3(serialization);
   return serialization;
 }
 
@@ -123,7 +123,6 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   uint16_t current_hp = htons(h->current_hp);
   uint16_t level = htons(h->level);
   uint8_t affected_by_item = h->affected_by;
-  // aca meter el nombre
   uint8_t name_size = h->name.size();
   uint8_t class_id = h->class_id;
   uint16_t mana_max = htons(h->max_mana);
@@ -200,6 +199,21 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   }
 }
 
+void Serializer::serialize_bank_of_hero(
+    std::vector<unsigned char> &serialization, Hero *h) {
+  std::vector<Item *> items = h->bank->items;
+  uint8_t bank_size = items.size();
+  serialization.push_back(bank_size);
+  for (unsigned int i = 0; i < items.size(); i++) {
+    uint8_t item_id = items.at(i)->id;
+    serialization.push_back(item_id);
+  }
+  uint16_t gold = h->bank->current_gold();
+  unsigned int current_pos = serialization.size();
+  serialization.resize(serialization.size() + sizeof(gold));
+  memcpy(serialization.data() + current_pos, &gold, sizeof(gold));
+}
+
 // void Serializer::debug_deserialize_v3(
 //     std::vector<unsigned char> serialization) {
 //   unsigned int monsters_detected, entities_quantity = 0;
@@ -250,7 +264,8 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 //       uint16_t level = ntohs(extract<uint16_t>(serialization, j));
 //       uint8_t affected_by = extract<uint8_t>(serialization, j);
 //       // if (affected_by != 0) {
-//       //   std::cout << "hero affected by : " << (int)affected_by << std::endl;
+//       //   std::cout << "hero affected by : " << (int)affected_by <<
+//       std::endl;
 //       // }
 //       int name_size = extract<uint8_t>(serialization, j);
 //       std::string name;
@@ -258,7 +273,8 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 //         name += serialization.at(j);
 //         j++;
 //       }
-//       // std::cout << "Name of the hero: " << name << "id of the hero " << id<<
+//       // std::cout << "Name of the hero: " << name << "id of the hero " <<
+//       id<<
 //       // std::endl;
 //       int class_id = extract<uint8_t>(serialization, j);
 //       uint16_t mana_max = ntohs(extract<uint16_t>(serialization, j));
@@ -278,7 +294,8 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 //       // std::cout << "@@@Hero stats@@@" << std::endl
 //       //           << "max_hp: " << max_hp << " max_mana " << mana_max << "
 //       //           gold"
-//       //           << gold << " ghost mode " << ghost_mode << " items equiped "
+//       //           << gold << " ghost mode " << ghost_mode << " items equiped
+//       "
 //       //           << items_equiped << "name size" << name_size << std::endl;
 //       // std::cout << "@@Deserializing items equiped@@" << std::endl;
 //       for (int x = items_equiped; x > 0; x--) {
@@ -293,7 +310,8 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
 //       // std::cout << "@@Deserializing items in invetory@@" << std::endl;
 //       for (int x = items_inventory; x > 0; x--) {
 //         int inventory_item_id = extract<uint8_t>(serialization, j);
-//         // std::cout << "item in inventory " << inventory_item_id << std::endl;
+//         // std::cout << "item in inventory " << inventory_item_id <<
+//         std::endl;
 //       }
 //     } else {
 //       npcs_or_others_detected++;
