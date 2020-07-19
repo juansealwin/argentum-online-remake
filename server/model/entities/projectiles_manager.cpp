@@ -14,7 +14,8 @@ void ProjectileManager::update(
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
   // 4 movimientos por segundo para los proyectiles
-  if (time_difference.count() >= 93750000) {
+  if (time_difference.count() >=
+      game_cfg["milisecondsForUpdatingProjectiles"].asUInt() * 1000000) {
     for (auto &projectile : projectiles) {
       Projectile *p = projectile.second;
       p->auto_move();

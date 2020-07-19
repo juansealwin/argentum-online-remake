@@ -351,10 +351,10 @@ void ArgentumGame::throw_projectile(int attacker_id) {
         attack_info.damage, attack_info.critical, attacker_id,
         attack_info.attacker_weapon_range, hero->orientation, map);
     projectiles.emplace(entities_ids++, projectile);
-  } 
+  }
 
   catch (ModelException &e) {
-    if(hero) message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
   } catch (const std::out_of_range &oor) {
   }
 }
@@ -380,8 +380,8 @@ void ArgentumGame::pick_up_drop(unsigned int player_id) {
 void ArgentumGame::send_message(unsigned int player_id, std::string dst,
                                 std::string msg) {
   try {
-  Hero *hero = heroes.at(player_id);
-  message_center.send_private_message(hero->get_name(), dst, msg);
+    Hero *hero = heroes.at(player_id);
+    message_center.send_private_message(hero->get_name(), dst, msg);
   } catch (const std::out_of_range &oor) {
   }
 }
@@ -451,12 +451,16 @@ void ArgentumGame::update() {
   }
   // actualizar monstruos antes que heroes ya que pueden atacarlos y matarlos
   // creando drops
-  monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center);
+  monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center,
+                          entities_cfg);
   monsters_manager.respawn_monsters(std::ref(monsters), map, 20,
                                     std::ref(entities_cfg["npcs"]),
                                     entities_ids);
 
-  heroes_manager.update(std::ref(heroes));
+  heroes_manager.update(
+      std::ref(heroes),
+      entities_cfg["milisecondsForRegeneratingHero"].asUInt() * 1000000,
+      entities_cfg["milisecondsForAutomoveHero"].asUInt() * 1000000);
 
   projectile_manager.update(std::ref(heroes), std::ref(monsters),
                             std::ref(projectiles), message_center,
@@ -581,25 +585,14 @@ unsigned int ArgentumGame::place_hero(const std::string &hero_race,
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
       class_stats["fClassMeditation"].asUInt(), race_stats["gold"].asUInt(),
       class_stats["id"].asUInt(), std::ref(map), hero_name,
-      entities_cfg["criticalDamageMiltiplier"].asFloat(),
+      entities_cfg["criticalDamageMultiplier"].asFloat(),
       entities_cfg["inventorySize"].asInt(),
       entities_cfg["criticalDamageProbability"].asFloat(),
       entities_cfg["evasionProbability"].asFloat(),
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
-      entities_cfg["startingXpCap"].asFloat(),
-      entities_cfg["bankSize"].asInt());
-  // hero->add_item(new DefensiveItem(6, 7, 7));
-  // hero->add_item(new DefensiveItem(5, 8, 10));
-  // hero->equip_armour(6);
-  // hero->equip_helmet(5);
-  // hero->add_item(new DefensiveItem(6, 7, 7));
-  // hero->add_item(new DefensiveItem(6, 7, 7));
-  // hero->add_item(new DefensiveItem(2, 7, 7));
-  // hero->equip_shield(2);
-  // hero->add_item(new Weapon(17, 10, 25, 5));
-  // hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
-  // hero->equip_staff(19);
+      entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
+      entities_cfg["amountOfExperienceToUpdate"].asUInt());
   setup_new_hero(hero);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);

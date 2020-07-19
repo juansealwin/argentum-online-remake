@@ -7,7 +7,9 @@ T extract(const std::vector<unsigned char>& v, int pos) {
   return value;
 }
 
-Client::Client(const char* host, const char* port) {
+Client::Client(const char* host, const char* port, const int screen_width,
+               const int screen_height)
+    : screen_width(screen_width), screen_height(screen_height) {
   Socket socket;
   socket.connect(host, port);
   this->socket = std::move(socket);
@@ -32,16 +34,17 @@ void Client::play() {
   CommandsSender sender(commands_to_send, socket);
   sender.start();
 
-  // Esto probablmente quede mejor moverlo
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
   player_id = ntohs(extract<uint16_t>(starting_info, 1));
   int initial_map = ntohs(extract<uint16_t>(starting_info, 3));
-  ProtectedMap protected_map(player_id, 800, 600, initial_map);
+  ProtectedMap protected_map(player_id, screen_width, screen_height,
+                             initial_map);
   EventsQueue event_queue;
 
   GameUpdater updater(player_id, protected_map, socket, is_running);
-  GameRenderer renderer(800, 600, protected_map, event_queue);
+  GameRenderer renderer(screen_width, screen_height, protected_map,
+                        event_queue);
   EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al
   // server

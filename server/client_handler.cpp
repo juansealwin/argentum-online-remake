@@ -9,14 +9,17 @@ ClientHandler::ClientHandler(
     ThreadSafeQueue<Command *> *commands_queue,
     BlockingThreadSafeQueue<Notification *> *notifications_queue,
     unsigned int hero_id, std::vector<ArgentumGame *> &games,
-    std::string player_name, MessageCenter &message_center)
-    : notifications_queue(notifications_queue),
-      commands_queue(commands_queue) {
+    std::string player_name, MessageCenter &message_center,
+    const int seconds_for_proccesing_room_changes,
+    const int nanoseconds_for_proccesing_attacks)
+    : notifications_queue(notifications_queue), commands_queue(commands_queue) {
   this->peer_socket = std::move(socket);
-  sender = new ClientNotificationSender(peer_socket, notifications_queue, std::ref(message_center),player_name);
-  receiver = new ClientCommandReceiver(peer_socket, game_room, commands_queue,
-                                       hero_id, std::ref(games), player_name,
-                                       std::ref(message_center));
+  sender = new ClientNotificationSender(peer_socket, notifications_queue,
+                                        std::ref(message_center), player_name);
+  receiver = new ClientCommandReceiver(
+      peer_socket, game_room, commands_queue, hero_id, std::ref(games),
+      player_name, std::ref(message_center),
+      seconds_for_proccesing_room_changes, nanoseconds_for_proccesing_attacks);
   sender->start();
   receiver->start();
 }
@@ -25,11 +28,8 @@ ClientHandler::~ClientHandler() {
   this->sender->stop();
   this->receiver->stop();
   delete sender;
-  // std::cout << "deleeted sender" << std::endl;
   this->peer_socket.close();
-
   delete receiver;
-  // std::cout << "deleted receiver" << std::endl;
 }
 
 bool ClientHandler::is_alive() {

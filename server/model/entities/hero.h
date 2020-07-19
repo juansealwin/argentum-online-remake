@@ -10,7 +10,6 @@
 #include "monster.h"
 #include "stdint.h"
 #include "class_ids.h"
-// meter en el json!
 class Inventory;
 class Item;
 class Drop;
@@ -28,7 +27,8 @@ class Hero : public BaseCharacter {
        const unsigned int inventory_size,
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap, const unsigned int bank_size);
+       const float starting_xp_cap, const unsigned int bank_size,
+       const int amount_of_experience_to_update);
   // Hero(Hero* h, Map &map);
   void regenerate();
   // curacion en cada update
@@ -115,7 +115,7 @@ class Hero : public BaseCharacter {
   // inicializados en member initialization list
   unsigned int strength, intelligence, agility, constitution, f_class_hp,
       f_race_hp, f_race_recovery, f_race_mana, f_class_mana, f_class_meditation,
-      class_id, experience,  respawn_x, respawn_y;
+      class_id, experience, respawn_x, respawn_y;
   int speed_x, speed_y;
   bool meditating, ghost_mode, close_to_npc, blocked;
   // config
@@ -131,6 +131,7 @@ class Hero : public BaseCharacter {
   std::chrono::time_point<std::chrono::high_resolution_clock>
       wait_starting_time;
   unsigned blocked_seconds_duration;
+  int amount_of_experience_to_update;
 
   // metodos privados
   unsigned int calculate_damage();
