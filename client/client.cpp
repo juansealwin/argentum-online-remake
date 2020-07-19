@@ -24,8 +24,8 @@ void Client::play() {
 
   /* Esto no debería estar harcodeado sino que se elige en el lobby */
   std::string player_name = "Federico";
-  std::string hero_race = "elf";
-  std::string hero_class = "mage";
+  std::string hero_race = "gnome";
+  std::string hero_class = "warrior";
 
   LoginCommandDTO* login_command =
       new LoginCommandDTO(initial_room, player_name, hero_race, hero_class);

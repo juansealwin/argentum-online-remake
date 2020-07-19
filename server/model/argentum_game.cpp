@@ -12,78 +12,22 @@ ArgentumGame::ArgentumGame(const unsigned int room_number,
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
-      // map(map_cfg),
       alive(true),
       entities_ids(entities_ids),
       message_center(message_center) {
   std::unique_lock<std::mutex> lock(mutex);
-  // Json::Value map_cfg;
-  // map_config >> map_cfg;
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
-  // this->map = Map(map_cfg);
   map_name = map_cfg["editorsettings"]["export"]["target"].asString();
   std::cout << "New game in " << map_name << std::endl;
   place_initial_npcs(map_cfg);
-  // tests_drops();
-}
-void ArgentumGame::tests_drops() {
-  // std::cout << "testing drops" << std::endl;
-  // Inventory *inventory = new Inventory(20);
-  // inventory->add_item(new Item(8));
-  // inventory->add_item(new Weapon(17, 4, 8, 5));
-  // std::cout << "Inventory has item 17? " << inventory->has_item(17)
-  //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
-  // std::endl; Drop *drop = new Drop(34, inventory, 0); std::cout << "Is drop
-  // empty?" << drop->is_empty() << std::endl; std::cout << "Inventory has item
-  // 17? " << inventory->has_item(17)
-  //           << std::endl;
-  // std::cout << "Inventory has item 8? " << inventory->has_item(8) <<
-  // std::endl; std::cout << "picking up first item" << std::endl; Item *item17
-  // = drop->take_item(drop->size()); std::cout << "picking up second item" <<
-  // std::endl; Item *item8 = drop->take_item(drop->size()); std::cout <<
-  // "picked up items " << item17->id << ", " << item8->id
-  //           << std::endl;
-  // Inventory *inventory2 = new Inventory(25);
-  // Drop *drop2 = new Drop(34, inventory2, 0);
-  // std::cout << "Drop 2 is empty? " << drop2->is_empty() << std::endl;
-  // delete drop2;
-  // delete inventory2;
-  // delete inventory;
-  // delete drop;
-  // delete item17;
-  // delete item8;
-}
-void ArgentumGame::tests_proyectiles() {
-  // std::cout << "Running tests" << std::endl;
-  // place_hero("human", "warrior", "test_name1", 10, 23);
-  // throw_projectile(15);
-  // place_hero("human", "warrior", "test_name1", 0, 0);
-  // place_hero("human", "warrior", "test_name1", 1, 0);
-  // place_monster(2, 0);
-  // throw_projectile(17);
-  // throw_projectile(18);
-  // place_hero("human", "warrior", "test_name1", 0, 3);
-  // place_hero("human", "warrior", "test_name1", 5, 3);
-  // throw_projectile(22);
-  // throw_projectile(23);
-  // place_monster(10, 3);
-  // unsigned int hero1 = place_hero("human", "warrior", "test_name1", 99, 0);
-  // unsigned int hero2 = place_hero("human", "warrior", "test_name1", 98, 1);
-  // throw_projectile(hero1);
-  // throw_projectile(hero2);
-  // unsigned int hero3 = place_hero("human", "warrior", "test_name1", 5, 16);
-  // unsigned int hero4 = place_hero("human", "warrior", "test_name1", 5, 16);
-  // throw_projectile(hero3);
-  // throw_projectile(hero4);
 }
 
 void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
   int row = 0;
   int col = 0;
   int map_cols = map_cfg["width"].asInt();
-  for (const auto &jv : map_cfg["layers"][2]["data"]) {
+  for (const auto &jv : map_cfg["layers"][1]["data"]) {
     Entity *e = nullptr;
     int type = jv.asInt();
     // en el futuro podria simplificarse, el caracter lo recibo para debug
@@ -91,14 +35,17 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
         std::tuple<unsigned int, unsigned int>(row, col);
     if (type == PRIEST) {
       e = new Priest(entities_ids, row, col, type, 'p');
-
+      std::cout << "found priest" << std::endl;
       npc_positions.emplace(pos, PRIEST);
     } else if (type == MERCHANT) {
       npc_positions.emplace(pos, MERCHANT);
       e = new Merchant(entities_ids, row, col, type, 'm');
+      std::cout << "found merch" << std::endl;
+
     } else if (type == BANKER) {
       npc_positions.emplace(pos, BANKER);
       e = new Banker(entities_ids, row, col, type, 'b');
+      std::cout << "found banker" << std::endl;
     }
     if (e) {
       map->ocupy_cell(row, col, entities_ids);
@@ -115,16 +62,19 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 /*********************** Acciones personajes *************************/
 
 void ArgentumGame::hero_use_special(int entity_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
   try {
+    hero = heroes.at(entity_id);
     hero->use_special_staff();
   } catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 void ArgentumGame::hero_revive(int entity_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
   try {
+    hero = heroes.at(entity_id);
     if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
       std::tuple<unsigned int, unsigned int> pos = get_npc_pos(PRIEST);
       int x = std::get<0>(pos);
@@ -142,32 +92,35 @@ void ArgentumGame::hero_revive(int entity_id) {
     } else
       hero->revive();
   } catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 void ArgentumGame::hero_heal(int entity_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) return;
     hero->heal(entities_cfg["npcs"]["priest"]["hpRegen"].asUInt(),
                entities_cfg["npcs"]["priest"]["manaRegen"].asUInt());
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_meditate(int entity_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     hero->meditate();
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
         1) {
@@ -199,12 +152,13 @@ void ArgentumGame::hero_buy_item(int entity_id, int item_id) {
     hero->add_item(i);
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_sell_item(int entity_id, int item_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     if ((is_npc_close(hero->x_position, hero->y_position, MERCHANT)) +
             (is_npc_close(hero->x_position, hero->y_position, PRIEST)) <
         1) {
@@ -232,27 +186,33 @@ void ArgentumGame::hero_sell_item(int entity_id, int item_id) {
     delete i;
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_bank_item(int entity_id, int item_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
 
   try {
+    hero = heroes.at(entity_id);
+
     if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) {
       // message_center.notify_must_be_close_to_banker(hero->name);
       return;
     }
     hero->bank_item(item_id);
   } catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
 
   try {
+    hero = heroes.at(entity_id);
+
     if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) {
       // message_center.notify_must_be_close_to_banker(hero->name);
       return;
@@ -260,14 +220,16 @@ void ArgentumGame::hero_unbank_item(int entity_id, int item_id) {
     hero->unbank_item(item_id);
 
   } catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
 
   try {
+    hero = heroes.at(entity_id);
     if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) {
       // message_center.notify_must_be_close_to_banker(hero->name);
       return;
@@ -275,14 +237,17 @@ void ArgentumGame::hero_bank_gold(int entity_id, int ammount) {
     hero->bank_gold(ammount);
 
   } catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+  Hero *hero = nullptr;
 
   try {
+    hero = heroes.at(entity_id);
+
     if (!is_npc_close(hero->x_position, hero->y_position, BANKER)) {
       // message_center.notify_must_be_close_to_banker(hero->name);
       return;
@@ -291,32 +256,36 @@ void ArgentumGame::hero_unbank_gold(int entity_id, int ammount) {
 
   } catch (ModelException &e) {
     message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 void ArgentumGame::hero_get_closest_npc_info(int entity_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-  Notification *n = nullptr;
-  if (is_npc_close(hero->x_position, hero->y_position, BANKER)) {
-    n = get_bank_status(hero);
+  try {
+    Hero *hero = heroes.at(entity_id);
+    Notification *n = nullptr;
+    if (is_npc_close(hero->x_position, hero->y_position, BANKER)) {
+      n = get_bank_status(hero);
 
-  } else if (is_npc_close(hero->x_position, hero->y_position, MERCHANT)) {
-    n = get_sale_info(MERCHANT);
-  } else if (is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
-    n = get_sale_info(PRIEST);
-  } else {
-    message_center.notify_need_to_be_close_to_npc(hero->name);
-    return;
+    } else if (is_npc_close(hero->x_position, hero->y_position, MERCHANT)) {
+      n = get_sale_info(MERCHANT);
+    } else if (is_npc_close(hero->x_position, hero->y_position, PRIEST)) {
+      n = get_sale_info(PRIEST);
+    } else {
+      message_center.notify_need_to_be_close_to_npc(hero->name);
+      return;
+    }
+    hero->set_close_to_npc(true);
+    BlockingThreadSafeQueue<Notification *> *q =
+        queues_notifications.at(entity_id);
+    q->push(n);
+  } catch (const std::out_of_range &oor) {
   }
-  hero->set_close_to_npc(true);
-  BlockingThreadSafeQueue<Notification *> *q =
-      queues_notifications.at(entity_id);
-  q->push(n);
 }
 
 void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
   using namespace std;
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     Item *i = hero->remove_item(item_id);
     tuple<unsigned int, unsigned int> pos =
         tuple<unsigned int, unsigned int>(hero->x_position, hero->y_position);
@@ -324,43 +293,50 @@ void ArgentumGame::hero_drop_item(int entity_id, int item_id) {
                            std::ref(entities_cfg["items"]), entities_ids);
   } catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_dequip_item(int entity_id, int item_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     hero->unequip(item_id);
   }
 
   catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::hero_use_item(int entity_id, int item_id) {
   try {
-    Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
+    Hero *hero = heroes.at(entity_id);
     hero->use_item(item_id);
   }
 
   catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::set_hero_speed(int entity_id, int speed_x, int speed_y) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(entity_id));
-  if (hero->blocked) return;
-  hero->set_speed_x(speed_x);
-  hero->set_speed_y(speed_y);
-  hero->set_close_to_npc(false);
-  hero->meditating = false;
+  try {
+    Hero *hero = heroes.at(entity_id);
+    if (hero->blocked) return;
+    hero->set_speed_x(speed_x);
+    hero->set_speed_y(speed_y);
+    hero->set_close_to_npc(false);
+    hero->meditating = false;
+  } catch (const std::out_of_range &oor) {
+  }
 }
 
 void ArgentumGame::throw_projectile(int attacker_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(attacker_id));
+  Hero *hero = nullptr;
   try {
+    hero = heroes.at(attacker_id);
     if (map->tile_is_safe(hero->x_position, hero->y_position)) return;
     // manejar errores despues
     // errores del heroe, y de posicion contigua inaccesible
@@ -378,12 +354,13 @@ void ArgentumGame::throw_projectile(int attacker_id) {
   }
 
   catch (ModelException &e) {
-    message_center.notify_error(hero->name, e.what());
+    if (hero) message_center.notify_error(hero->name, e.what());
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::pick_up_drop(unsigned int player_id) {
-  Hero *hero = dynamic_cast<Hero *>(heroes.at(player_id));
+  Hero *hero = heroes.at(player_id);
 
   try {
     std::tuple<unsigned int, unsigned int> pos =
@@ -396,13 +373,17 @@ void ArgentumGame::pick_up_drop(unsigned int player_id) {
 
   catch (ModelException &e) {
     std::cout << "Exception occured: " << e.what() << std::endl;
+  } catch (const std::out_of_range &oor) {
   }
 }
 
 void ArgentumGame::send_message(unsigned int player_id, std::string dst,
                                 std::string msg) {
-  Hero *hero = heroes.at(player_id);
-  message_center.send_private_message(hero->get_name(), dst, msg);
+  try {
+    Hero *hero = heroes.at(player_id);
+    message_center.send_private_message(hero->get_name(), dst, msg);
+  } catch (const std::out_of_range &oor) {
+  }
 }
 
 void ArgentumGame::kill_player(unsigned int player_id) {
@@ -612,20 +593,75 @@ unsigned int ArgentumGame::place_hero(const std::string &hero_race,
       entities_cfg["levelUpLimitPower"].asFloat(),
       entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
       entities_cfg["amountOfExperienceToUpdate"].asUInt());
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(5, 8, 10));
-  hero->equip_armour(6);
-  hero->equip_helmet(5);
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(6, 7, 7));
-  hero->add_item(new DefensiveItem(2, 7, 7));
-  hero->equip_shield(2);
-  hero->add_item(new Weapon(17, 10, 25, 5));
-  hero->add_item(new Staff(19, 0, 0, 0, 100, 120));
-  hero->equip_staff(19);
+  setup_new_hero(hero);
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
+}
+
+void ArgentumGame::setup_new_hero(Hero *h) {
+  std::vector<Item *> hero_items;
+  switch (h->get_class_id()) {
+    case mage:
+      hero_items = setup_new_mage();
+      break;
+
+    case paladin:
+      hero_items = setup_new_paladin();
+      break;
+
+    case warrior:
+      hero_items = setup_new_warrior();
+      break;
+
+    case cleric:
+      hero_items = setup_new_cleric();
+      break;
+    default:
+      hero_items = setup_new_warrior();
+      break;
+  }
+  for (auto &item : hero_items) {
+    h->add_item(item);
+  }
+}
+
+std::vector<Item *> ArgentumGame::setup_new_mage() {
+  std::vector<Item *> mage_items;
+  mage_items.push_back(
+      ItemFactory::create_gnarled_staff(entities_cfg["items"]));
+  mage_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
+  mage_items.push_back(ItemFactory::create_magic_hat(entities_cfg["items"]));
+  return mage_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_paladin() {
+  std::vector<Item *> paladin_items;
+  paladin_items.push_back(
+      ItemFactory::create_iron_shield(entities_cfg["items"]));
+  paladin_items.push_back(
+      ItemFactory::create_iron_helmet(entities_cfg["items"]));
+  paladin_items.push_back(
+      ItemFactory::create_plate_armour(entities_cfg["items"]));
+  paladin_items.push_back(ItemFactory::create_sword(entities_cfg["items"]));
+  return paladin_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_cleric() {
+  std::vector<Item *> cleric_items;
+  cleric_items.push_back(
+      ItemFactory::create_turtle_shield(entities_cfg["items"]));
+  cleric_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
+  cleric_items.push_back(ItemFactory::create_ash_stick(entities_cfg["items"]));
+  return cleric_items;
+}
+std::vector<Item *> ArgentumGame::setup_new_warrior() {
+  std::vector<Item *> warrior_items;
+  warrior_items.push_back(
+      ItemFactory::create_turtle_shield(entities_cfg["items"]));
+  warrior_items.push_back(ItemFactory::create_hood(entities_cfg["items"]));
+  warrior_items.push_back(
+      ItemFactory::create_leather_armour(entities_cfg["items"]));
+  warrior_items.push_back(ItemFactory::create_axe(entities_cfg["items"]));
+  return warrior_items;
 }
 
 void ArgentumGame::print_debug_map() {
