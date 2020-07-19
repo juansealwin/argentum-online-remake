@@ -378,7 +378,7 @@ void Lobby::check_mouse_click_login(int& x, int& y, int& x_check_mark,
     x_check_mark = X_RES_FS;
     click_sound.play_sound(0);
 
-  } else if (log.mouse_click_in(x, y)) {
+  } else if (log.mouse_click_in(x, y) && user_name != "") {
     is_running = false;
     click_sound.play_sound(0);
   }
