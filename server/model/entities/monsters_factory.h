@@ -2,7 +2,7 @@
 #define MONSTERS_FACTORY_H
 #include "monster.h"
 #include "helper_functions.h"
-
+#define ENIE 241
 typedef enum {
   goblin = 29,
   spider,

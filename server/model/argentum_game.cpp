@@ -32,22 +32,17 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
   for (const auto &jv : map_cfg["layers"][1]["data"]) {
     Entity *e = nullptr;
     int type = jv.asInt();
-    // en el futuro podria simplificarse, el caracter lo recibo para debug
     std::tuple<unsigned int, unsigned int> pos =
         std::tuple<unsigned int, unsigned int>(row, col);
     if (type == PRIEST) {
       e = new Priest(entities_ids, row, col, type, 'p');
-      std::cout << "found priest" << std::endl;
       npc_positions.emplace(pos, PRIEST);
     } else if (type == MERCHANT) {
       npc_positions.emplace(pos, MERCHANT);
       e = new Merchant(entities_ids, row, col, type, 'm');
-      std::cout << "found merch" << std::endl;
-
     } else if (type == BANKER) {
       npc_positions.emplace(pos, BANKER);
       e = new Banker(entities_ids, row, col, type, 'b');
-      std::cout << "found banker" << std::endl;
     }
     if (e) {
       map->ocupy_cell(row, col, entities_ids);
@@ -455,7 +450,7 @@ void ArgentumGame::update() {
   // creando drops
   monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center,
                           entities_cfg);
-  monsters_manager.respawn_monsters(std::ref(monsters), map, 20,
+  monsters_manager.respawn_monsters(std::ref(monsters), map, entities_cfg["monstersPoblation"].asUInt(),
                                     std::ref(entities_cfg["npcs"]),
                                     entities_ids);
 
@@ -479,20 +474,21 @@ void ArgentumGame::remove_death_entities() {
   drops_manager.remove_old_and_empty_drops(std::ref(drops));
 }
 
+void ArgentumGame::clear_heroes_effects() {
+  heroes_manager.clear_effects(std::ref(heroes));
+}
+
 void ArgentumGame::run() {
-  auto send_update_time = std::chrono::high_resolution_clock::now();
+  long time_step = 1000 / entities_cfg["ups"].asFloat();
   while (alive) {
     auto initial = std::chrono::high_resolution_clock::now();
     update();
     send_game_status();
+    clear_heroes_effects();
     remove_death_entities();
-    long time_step = 1000 / entities_cfg["ups"].asFloat();
     auto final = std::chrono::high_resolution_clock::now();
     auto loop_duration =
         std::chrono::duration_cast<std::chrono::milliseconds>(final - initial);
-    auto update_time_diff =
-        std::chrono::duration_cast<std::chrono::milliseconds>(initial -
-                                                              send_update_time);
     long sleep_time = time_step - loop_duration.count();
     if (sleep_time > 0) {
       std::this_thread::sleep_for(std::chrono::milliseconds(sleep_time));

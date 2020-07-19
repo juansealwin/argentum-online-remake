@@ -25,9 +25,16 @@ void HeroesManager::update(std::map<unsigned int, Hero *> &heroes,
       last_move_time = actual_time;
     }
 
+    //hero.second->clear_effects();
+  }
+}
+
+void HeroesManager::clear_effects(std::map<unsigned int, Hero *> &heroes) {
+  for (auto &hero : heroes) {
     hero.second->clear_effects();
   }
 }
+
 
 void HeroesManager::remove_death_heroes(std::map<unsigned int, Hero *> &heroes,
                                         Map *map) {

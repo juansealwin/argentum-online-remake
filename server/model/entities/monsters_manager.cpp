@@ -37,7 +37,7 @@ bool MonstersManager::attack_or_move_to_hero(Monster *m, Hero *h,
     const Attack att = m->attack();
     unsigned int dmg =
         h->receive_damage(att.damage, att.critical, att.attacker_weapon_id);
-    message_center.notify_damage_received(h->get_name(), dmg, m->get_name());
+    message_center.notify_damage_received(h->get_name(), dmg, m->get_name(), false);
     return true;
   } else if (m->is_close_to(h->x_position, h->y_position)) {
     m->move_closer_to(h->x_position, h->y_position);

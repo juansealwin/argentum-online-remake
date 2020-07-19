@@ -9,7 +9,8 @@ class Monster : public BaseCharacter {
  public:
   Monster(unsigned int unique_id, int x, int y, int id, char repr, int hp,
           int level, int dps, Map *map, const std::string &name,
-          const float critical_damage_multiplier);
+          const float critical_damage_multiplier, const unsigned int auto_attack_distance,
+          const unsigned int auto_follow_distance);
   Monster(const Monster &) = delete;
   // Moverse si no hay enemigos cercanos (O si hay muy cerca acercarse a ellos)
   // Atacar si hay enemigo cercano (crear proyectil)
@@ -32,6 +33,8 @@ class Monster : public BaseCharacter {
   std::size_t current_move = 0;
   std::vector<std::tuple<int, int>> get_possible_next_moves();
   float critical_damage_multiplier;
+  unsigned int auto_attack_distance;
+  unsigned int auto_follow_distance;
 };
 
 #endif  // MONSTER_H
