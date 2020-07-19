@@ -15,7 +15,9 @@ Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
 
     case spider:
       monster_cfg = monsters_cfg["spider"];
-      monster_name = "Araña";
+      monster_name = "Ara";
+      monster_name.push_back((char)ENIE);
+      monster_name += "a";
       break;
 
     case goblin:
@@ -36,7 +38,9 @@ Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
       new Monster(entities_ids, x, y, monster_cfg["id"].asInt(), 'g',
                   monster_cfg["maxHp"].asInt(), monster_cfg["level"].asInt(),
                   monster_cfg["dps"].asInt(), map, monster_name,
-                  monster_cfg["criticalDamageMultiplier"].asFloat());
+                  monster_cfg["criticalDamageMultiplier"].asFloat(), 
+                  monster_cfg["autoAttackDistance"].asInt(),
+                  monster_cfg["autoFollowDistance"].asInt() );
   map->ocupy_cell(x, y, entities_ids);
   return m;
 }

@@ -3,10 +3,14 @@
 #include <iostream>
 Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
                  int hp, int level, int dps, Map *map, const std::string &name,
-                 const float critical_damage_multiplier)
+                 const float critical_damage_multiplier,
+                 const unsigned int auto_attack_distance,
+                 const unsigned int auto_follow_distance)
     : BaseCharacter(unique_id, x, y, id, repr, hp, level, map, name),
       dps(dps),
-      critical_damage_multiplier(critical_damage_multiplier) {
+      critical_damage_multiplier(critical_damage_multiplier),
+      auto_attack_distance(auto_attack_distance),
+      auto_follow_distance(auto_follow_distance) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
   std::tuple<int, int> third_move = std::tuple<int, int>(0, -1);
@@ -57,12 +61,12 @@ const Attack Monster::attack() {
 
 bool Monster::is_next_to(int other_x, int other_y) {
   return (HelperFunctions::distance(other_x, x_position, other_y, y_position) ==
-          1);
+          auto_attack_distance);
 }
 
 bool Monster::is_close_to(int other_x, int other_y) {
   return (HelperFunctions::distance(other_x, x_position, other_y, y_position) <=
-          5);
+          auto_follow_distance);
 }
 
 void Monster::move_closer_to(int other_x, int other_y) {

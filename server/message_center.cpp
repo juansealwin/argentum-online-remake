@@ -11,13 +11,14 @@ void MessageCenter::add_player(
   players_notification_queues.emplace(player_name, notification_queue);
 }
 void MessageCenter::remove_player(const std::string &player_name) {
-  //std::cout << "called remove player" << std::endl;
+  // std::cout << "called remove player" << std::endl;
   std::unique_lock<std::mutex> lock(mutex);
   if (players_notification_queues.count(player_name) < 1) return;
   players_notification_queues.erase(player_name);
 }
 
-void MessageCenter::notify_error(const std::string &player, const std::string &error) {
+void MessageCenter::notify_error(const std::string &player,
+                                 const std::string &error) {
   std::unique_lock<std::mutex> lock(mutex);
   if (players_notification_queues.count(player) < 1) return;
   send_message(player, error);
@@ -33,7 +34,8 @@ void MessageCenter::notify_waiting_time_to_revive(const std::string &dst,
 
 // Agrega el nombre del origen al mensaje y crea una notificacion de mensaje a
 // ser enviada a player_dst
-void MessageCenter::send_message(const std::string &dst, const std::string &message) {
+void MessageCenter::send_message(const std::string &dst,
+                                 const std::string &message) {
   try {
     BlockingThreadSafeQueue<Notification *> *q =
         players_notification_queues.at(dst);
@@ -55,17 +57,18 @@ void MessageCenter::send_message(const std::string &dst, const std::string &mess
 
 void MessageCenter::notify_damage_received(const std::string &attacked,
                                            const unsigned int dmg,
-                                           const std::string &attacker) {
+                                           const std::string &attacker,
+                                           bool attacked_was_death) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string message =
-      "Recibiste " + std::to_string(dmg) + " de da"+(char)241+"o de: " + attacker;
-  if (dmg == 0) {
-    message = "Bloqueaste el ataque de " + attacker + "!";
-  }
+  if (attacked_was_death) return;
+  std::string message = "Recibiste " + std::to_string(dmg) + " de da" +
+                        (char)ENIE + "o de: " + attacker;
+  if (dmg == 0) message = "Bloqueaste el ataque de " + attacker + "!";
   send_message(attacked, message);
 }
 
-void MessageCenter::send_private_message(const std::string &src, const std::string &dst,
+void MessageCenter::send_private_message(const std::string &src,
+                                         const std::string &dst,
                                          const std::string &message) {
   std::unique_lock<std::mutex> lock(mutex);
   std::string msg = src + ": " + message;
@@ -84,7 +87,7 @@ void MessageCenter::notify_cant_attack_low_levels(const std::string &attacker,
   } else {
     msg = "Hay mucha diferencia de niveles entre vos y " + attacked +
           ", es nivel " + std::to_string(attacked_level) +
-          ". No podes hacerle da"+(char)241+"o.";
+          ". No podes hacerle da" + (char)ENIE + "o.";
   }
   send_message(attacker, msg);
 }
@@ -116,12 +119,12 @@ void MessageCenter::notify_no_npc_to_buy_item(const std::string &player) {
 }
 
 void MessageCenter::notify_need_to_be_close_to_npc(const std::string &player) {
-  std::string msg =
-      "Tenes que estar cerca del NPC para ejecutar este comando!";
+  std::string msg = "Tenes que estar cerca del NPC para ejecutar este comando!";
   send_message(player, msg);
 }
 
-void MessageCenter::notify_cant_sell_not_existing_item(const std::string &player) {
+void MessageCenter::notify_cant_sell_not_existing_item(
+    const std::string &player) {
   std::string msg = "No podes vender un item que no tengas en tu inventario!";
   send_message(player, msg);
 }
@@ -138,11 +141,19 @@ void MessageCenter::send_not_enough_gold_message(const std::string &dst,
   send_message(dst, msg);
 }
 
-void MessageCenter::notify_damage_done(const std::string &attacker, const unsigned int dmg,
-                                       const std::string &attacked) {
+void MessageCenter::notify_damage_done(const std::string &attacker,
+                                       const unsigned int dmg,
+                                       const std::string &attacked,
+                                       bool attacked_was_death) {
   std::unique_lock<std::mutex> lock(mutex);
-  std::string message =
-      "Has causado " + std::to_string(dmg) + " de da"+(char)241+"o a " + attacked;
+
+  std::string message = "Has causado " + std::to_string(dmg) + " de da" +
+                        (char)ENIE + "o a " + attacked;
   if (dmg == 0) message = attacker + " ha bloqueado tu ataque!";
+  if (attacked_was_death) {
+    message = "No puedes hacer da";
+    message.push_back((char)ENIE);
+    message += "o a fantasmas!";
+  }
   send_message(attacker, message);
 }

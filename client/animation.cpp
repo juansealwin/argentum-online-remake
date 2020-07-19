@@ -16,16 +16,15 @@ Animation::Animation(int char_width, int char_height)
   // Todos los items equipables(menos cascos) tienen esta cantidad de frames
   clips_up_down = 5;
   clips_left_right = 4;
-  current_clip[CLIP_DOWN] = 0;   
-  current_clip[CLIP_UP] = 0;     
-  current_clip[CLIP_LEFT] = 0;   
-  current_clip[CLIP_RIGHT] = 0;  
+  current_clip[CLIP_DOWN] = 0;
+  current_clip[CLIP_UP] = 0;
+  current_clip[CLIP_LEFT] = 0;
+  current_clip[CLIP_RIGHT] = 0;
 }
 
 Animation::Animation(const Animation& other_animation) {
   character_width = other_animation.character_width;
   character_height = other_animation.character_height;
-  offset_y = other_animation.offset_y;
   current_clip = other_animation.current_clip;
   clips_up_down = other_animation.clips_up_down;
   clips_left_right = other_animation.clips_left_right;
@@ -70,12 +69,11 @@ SDL_Rect Animation::get_next_clip() {
   } else {
     current_clip[CLIP_UP] = 0;
     // Para saber en que fila esta
-    if(current_clip[CLIP_DOWN])
+    if (current_clip[CLIP_DOWN])
       current_clip[CLIP_DOWN] = 0;
-    else 
+    else
       current_clip[CLIP_DOWN] = 1;
-  } 
-
+  }
 
   return next_frame;
 }
@@ -101,8 +99,7 @@ SDL_Rect Animation::get_next_clip(int lifetime, int max_lifetime) {
 
 SDL_Rect Animation::next_clip_move_up() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_UP],
-                        character_height + offset_y, character_width,
-                        character_height};
+                        character_height, character_width, character_height};
 
   if (current_clip[CLIP_UP] == clips_up_down)
     current_clip[CLIP_UP] = 0;
@@ -113,7 +110,7 @@ SDL_Rect Animation::next_clip_move_up() {
 }
 
 SDL_Rect Animation::next_clip_move_down() {
-  SDL_Rect next_clip = {character_width * current_clip[CLIP_DOWN], 0 + offset_y,
+  SDL_Rect next_clip = {character_width * current_clip[CLIP_DOWN], 0,
                         character_width, character_height};
 
   if (current_clip[CLIP_DOWN] == clips_up_down)
@@ -126,7 +123,7 @@ SDL_Rect Animation::next_clip_move_down() {
 
 SDL_Rect Animation::next_clip_move_left() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_LEFT],
-                        character_height * 2 + offset_y, character_width,
+                        character_height * 2, character_width,
                         character_height};
 
   if (current_clip[CLIP_LEFT] == clips_left_right)
@@ -139,7 +136,7 @@ SDL_Rect Animation::next_clip_move_left() {
 
 SDL_Rect Animation::next_clip_move_right() {
   SDL_Rect next_clip = {character_width * current_clip[CLIP_RIGHT],
-                        character_height * 3 + offset_y, character_width,
+                        character_height * 3, character_width,
                         character_height};
 
   if (current_clip[CLIP_RIGHT] == clips_left_right)
@@ -229,4 +226,3 @@ void Animation::set_total_clips(id_texture_t id) {
   }
 }
 
-void Animation::set_offset_y(int offset) { offset_y = offset; }

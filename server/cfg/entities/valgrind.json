@@ -4,25 +4,33 @@
       "maxHp": 100,
       "dps": 25,
       "level": 1,
-      "id": 29
+      "id": 29,
+      "autoAttackDistance": 1,
+      "autoFollowDistance": 5
     },
     "spider": {
       "maxHp": 75,
       "dps": 15,
       "level": 1,
-      "id": 30
+      "id": 30,
+      "autoAttackDistance": 1,
+      "autoFollowDistance": 10
     },
     "skeleton": {
       "maxHp": 125,
       "dps": 30,
       "level": 1,
-      "id": 31
+      "id": 31,
+      "autoAttackDistance": 1,
+      "autoFollowDistance": 5
     },
     "zombie": {
       "maxHp": 150,
       "dps": 40,
       "level": 1,
-      "id": 32
+      "id": 32,
+      "autoAttackDistance": 1,
+      "autoFollowDistance": 5
     },
     "priest": {
       "id": 33,
@@ -294,16 +302,17 @@
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
   "ups": 60.0,
-  "newbieLevelCap": 10,
-  "pvpLevelDifferenceAllowed": 5,
+  "newbieLevelCap": 1,
+  "pvpLevelDifferenceAllowed": 3,
   "lastId": 37,
   "screenWidth": 800,
   "screenHeight": 600,
   "amountOfExperienceToUpdate": 10,
   "milisecondsForRegeneratingHero": 5000,
   "milisecondsForAutomoveHero": 60,
-  "milisecondsForUpdatingMonsters": 800,
+  "milisecondsForUpdatingMonsters": 400,
   "milisecondsForUpdatingProjectiles": 93.75,
   "milisecondsForProccesingAttacks": 500,
-  "secondsForProccesingRoomChanges": 7
+  "secondsForProccesingRoomChanges": 7,
+  "monstersPoblation": 40
 }
