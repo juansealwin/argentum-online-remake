@@ -14,9 +14,9 @@ Lobby::Lobby(SDL_Renderer* ren)
   resolution_1024x768 = InteractiveBox(537, 533, 21, 21);
   resolution_fs = InteractiveBox(718, 533, 21, 21);
   log = InteractiveBox(489, 425, 92, 58);
-  user_name = " ";
-  pass = " ";
-  pass_hidden = " ";
+  user_name = "";
+  pass = "";
+  pass_hidden = "";
 }
 
 Lobby::~Lobby() {
@@ -97,7 +97,6 @@ void Lobby::start_lobby() {
               SDL_StopTextInput();
             }
 
-            // std::cout << "ingresa una letra" << std::endl;
             // Chequeamos si el usuario quiere borrar algo
             if (event_chat.type == SDL_KEYDOWN &&
                 event_chat.key.keysym.sym == SDLK_BACKSPACE) {
@@ -106,16 +105,6 @@ void Lobby::start_lobby() {
                 need_letter = false;
               }
             }
-
-            // Chequeamos si el usuario apreto "enter" para enviar mensaje
-            /*else if (event_chat.type == SDL_KEYDOWN &&
-                     event_chat.key.keysym.sym == SDLK_RETURN) {
-              if (user_name.length()) {
-                check_inpunt_send_command(events_queue.flush_message());
-                msg_length = 0;
-                events_queue.push(EVENT_MESSAGE);
-              }
-            }*/
 
             // Chequeamos si el usuario quiere escribir
             else if (event_chat.type == SDL_TEXTINPUT) {
@@ -160,16 +149,6 @@ void Lobby::start_lobby() {
               }
             }
 
-            // Chequeamos si el usuario apreto "enter" para enviar mensaje
-            /*else if (event_chat.type == SDL_KEYDOWN &&
-                     event_chat.key.keysym.sym == SDLK_RETURN) {
-              if (user_name.length()) {
-                check_inpunt_send_command(events_queue.flush_message());
-                msg_length = 0;
-                events_queue.push(EVENT_MESSAGE);
-              }
-            }*/
-
             // Chequeamos si el usuario quiere escribir
             else if (event_input.type == SDL_TEXTINPUT) {
               // Para impedir el copiado y pegado
@@ -181,7 +160,7 @@ void Lobby::start_lobby() {
                 if (pass.length() < MAX_USER_INPUT) {
                   // Agregamos el caracter presionado
                   pass += *event_input.text.text;
-                  pass_hidden += (char)250;
+                  pass_hidden += '*';
                   std::cout << pass << std::endl;
                   need_letter = false;
                 }

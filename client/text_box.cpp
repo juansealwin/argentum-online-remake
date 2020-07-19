@@ -13,7 +13,10 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
 
   padding = 2;
 
-  font = TTF_OpenFont("vinque.ttf", height);
+  if (type == USER || type == PASSWORD)
+    font = TTF_OpenFont("commodore.ttf", height);
+  else
+    font = TTF_OpenFont("vinque.ttf", height);
 }
 
 TextBox::~TextBox() { TTF_CloseFont(font); }
@@ -132,16 +135,16 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case USER:
       x = 284;
-      y = 426;
-      height = 20;
+      y = 428;
+      height = 15;
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
       break;
 
     case PASSWORD:
       x = 284;
-      y = 466;
-      height = 20;
+      y = 464;
+      height = 15;
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
       break;

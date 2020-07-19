@@ -7,7 +7,7 @@
 #include "interactive_box.h"
 #include "text_box.h"
 
-#define MAX_USER_INPUT 16
+#define MAX_USER_INPUT 14
 #define Y_CHECK_MARK_LOBBY_1 532
 #define X_RES_800x600 350
 #define X_RES_1024x768 537
