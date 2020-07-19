@@ -15,7 +15,6 @@ class Animation {
  private:
   int character_width;
   int character_height;
-  int offset_y = 0;
   std::map<char, int> current_clip;
   int clips_up_down;
   int clips_left_right;
@@ -28,7 +27,6 @@ class Animation {
   Animation(int, int);
   Animation(const Animation&);
   ~Animation();
-  void set_offset_y(int);
   // Para personajes
   SDL_Rect get_next_clip(move_t);
   // Para estados

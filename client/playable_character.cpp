@@ -12,7 +12,7 @@ PlayableCharacter::PlayableCharacter(entity_t id_char, int new_x, int new_y,
   set_character_features(id_char);
   set_head_dimensions(id_char);
   animation_move = Animation(width, height, type_character);
-  std::vector<sound_t>borr;
+  std::vector<sound_t> borr;
   update_equipment(ghost_mod, false, new_helmet, new_armor, new_shield,
                    new_weapon, borr);
 }
@@ -159,12 +159,17 @@ void PlayableCharacter::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
                 y - GHOST_HEIGHT / 2 - head_rect.h / 2 - y_rel);
   } else {
     // Solo se renderiza la armadura o el cuerpo para no repetir manos y pies
+    int offset = 0;
+    // Esto se debe a que el gráfico de gnomo y enano esta desfasado
+    if (type_character == ID_GNOME || type_character == ID_DWARF) offset = 10;
     if (armor != ID_NULL) {
       texture_manager.get_texture(armor).render(
-          renderer, &frame_equipped_a, x - x_rel, y - height / 2 - y_rel);
+          renderer, &frame_equipped_a, x - x_rel,
+          y - height / 2 - offset - y_rel);
     } else {
       texture_manager.get_texture(type_character)
-          .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
+          .render(renderer, &body_rect, x - x_rel,
+                  y - height / 2 - offset - y_rel);
     }
     // Renderizamos cabeza
     texture_manager.get_texture(type_head).render(
