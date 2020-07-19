@@ -16,7 +16,7 @@ Hero::Hero(
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap,
-    const unsigned int bank_size)
+    const unsigned int bank_size, const int amount_of_experience_to_update)
     : BaseCharacter(unique_id, x, y, race_id, repr,
                     constitution * f_class_hp * f_race_hp * level, level, map,
                     name),
@@ -46,7 +46,8 @@ Hero::Hero(
       max_safe_gold_multiplier(max_safe_gold_multiplier),
       level_up_limit_power(level_up_limit_power),
       starting_xp_cap(starting_xp_cap),
-      blocked_seconds_duration(0) {
+      blocked_seconds_duration(0),
+      amount_of_experience_to_update(amount_of_experience_to_update) {
   level_up();
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
@@ -304,10 +305,7 @@ bool Hero::has_free_space() { return (!inventory->is_full()); }
 
 bool Hero::has_items_in_inventory() { return (!inventory->is_empty()); }
 
-void Hero::add_gold(unsigned int gold) {
-  inventory->add_gold(gold);
-  // this->gold += gold;
-}
+void Hero::add_gold(unsigned int gold) { inventory->add_gold(gold); }
 
 void Hero::pick_up_drop(Drop *drop) {
   if (ghost_mode)
@@ -387,7 +385,6 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
 
 void Hero::meditate() {
   if (ghost_mode) throw ModelException("No se puede meditar si estas muerto!");
-  ;
   meditating = true;
 }
 
@@ -412,13 +409,15 @@ unsigned int Hero::calculate_damage() {
 }
 
 void Hero::update_experience(unsigned int dmg_done, BaseCharacter *other) {
-  experience += floor(
-      dmg_done * std::max((other->level - this->level) + 10, (unsigned int)0));
+  experience += floor(dmg_done * std::max((other->level - this->level) +
+                                              amount_of_experience_to_update,
+                                          (unsigned int)0));
   if (other->is_death()) {
     float p = rand() / double(RAND_MAX);
-    experience +=
-        floor(p * other->max_hp *
-              std::max((other->level - this->level) + 10, (unsigned int)0));
+    experience += floor(
+        p * other->max_hp *
+        std::max((other->level - this->level) + amount_of_experience_to_update,
+                 (unsigned int)0));
   }
   while (experience >= next_level_xp_limit) {
     experience -= next_level_xp_limit;
@@ -444,7 +443,6 @@ unsigned int Hero::remove_excess_gold() {
   if (inventory->current_gold() > max_safe_gold) {
     excess_gold = inventory->current_gold() - max_safe_gold;
     inventory->remove_gold(excess_gold);
-    // gold = max_safe_gold;
   }
   return excess_gold;
 }

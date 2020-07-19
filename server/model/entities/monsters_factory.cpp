@@ -35,7 +35,8 @@ Monster* MonstersFactory::create_random_monster(Json::Value& monsters_cfg,
   Monster* m =
       new Monster(entities_ids, x, y, monster_cfg["id"].asInt(), 'g',
                   monster_cfg["maxHp"].asInt(), monster_cfg["level"].asInt(),
-                  monster_cfg["dps"].asInt(), map, monster_name);
+                  monster_cfg["dps"].asInt(), map, monster_name,
+                  monster_cfg["criticalDamageMultiplier"].asFloat());
   map->ocupy_cell(x, y, entities_ids);
   return m;
 }

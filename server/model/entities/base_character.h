@@ -6,10 +6,10 @@
 #include "stdint.h"
 
 struct Attack {
-	unsigned int damage;
-	bool critical;
-	unsigned int attacker_weapon_id;
-	unsigned int attacker_weapon_range;
+  unsigned int damage;
+  bool critical;
+  unsigned int attacker_weapon_id;
+  unsigned int attacker_weapon_range;
 };
 
 class Map;
@@ -17,7 +17,8 @@ class BaseCharacter : public Entity {
  public:
   // Este primer constructor lo usa la clase hija Monster
   BaseCharacter(unsigned int unique_id, int x, int y, unsigned int type,
-                char repr, unsigned int max_hp, unsigned int level, Map *map, const std::string &name);
+                char repr, unsigned int max_hp, unsigned int level, Map *map,
+                const std::string &name);
   virtual ~BaseCharacter();
   BaseCharacter(const BaseCharacter &) = delete;
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
@@ -30,7 +31,7 @@ class BaseCharacter : public Entity {
   void set_position(int x, int y);
   void set_map(Map *map);
   virtual std::string get_name();
-  //remueve efecto que recibe por las armas
+  // remueve efecto que recibe por las armas
   void clear_effects();
   int current_hp;
   unsigned int max_hp;

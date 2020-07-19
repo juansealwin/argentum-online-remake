@@ -9,12 +9,13 @@ MonstersManager::~MonstersManager() {}
 
 void MonstersManager::update(std::map<unsigned int, Monster *> &monsters,
                              std::map<unsigned int, Hero *> heroes,
-                             MessageCenter &message_center) {
+                             MessageCenter &message_center, Json::Value &cfg) {
   auto actual_time = std::chrono::high_resolution_clock::now();
   auto time_difference = actual_time - last_update_time;
 
   for (auto &monster : monsters) {
-    if (time_difference.count() >= 800000000) {
+    if (time_difference.count() >=
+        cfg["milisecondsForUpdatingMonsters"].asUInt() * 1000000) {
       bool attacked_or_moved_to_hero = false;
       last_update_time = actual_time;
       for (auto &hero : heroes) {

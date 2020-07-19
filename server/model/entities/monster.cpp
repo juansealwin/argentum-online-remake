@@ -2,8 +2,11 @@
 
 #include <iostream>
 Monster::Monster(unsigned int unique_id, int x, int y, int id, char repr,
-                 int hp, int level, int dps, Map *map, const std::string &name)
-    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map, name), dps(dps) {
+                 int hp, int level, int dps, Map *map, const std::string &name,
+                 const float critical_damage_multiplier)
+    : BaseCharacter(unique_id, x, y, id, repr, hp, level, map, name),
+      dps(dps),
+      critical_damage_multiplier(critical_damage_multiplier) {
   std::tuple<int, int> first_move = std::tuple<int, int>(0, 1);
   std::tuple<int, int> second_move = std::tuple<int, int>(1, 0);
   std::tuple<int, int> third_move = std::tuple<int, int>(0, -1);
@@ -38,8 +41,7 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
   int last_hp = current_hp;
   int actual_damage = damage;
   if (critical) {
-    // Usar criticalDamageMultiplier de CFG
-    actual_damage *= 2;
+    actual_damage *= critical_damage_multiplier;
   }
   current_hp = std::max(current_hp - actual_damage, 0);
   if (current_hp == 0) alive = false;
