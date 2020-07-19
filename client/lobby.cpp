@@ -46,64 +46,17 @@ void Lobby::start_lobby() {
         SDL_GetMouseState(&x, &y);
 
         // Chequeamos si el mouse hizo click dentro del campo 'usuario'
-        if (user.mouse_click_in(x, y) || get_user_text) {
+        if (user.mouse_click_in(x, y)) {
           get_user_text = true;
+          get_password_text = false;
+          SDL_StartTextInput();
         }
 
         // Chequeamos si el mouse hizo click dentro del del campo 'contraseña'
         else if (password.mouse_click_in(x, y) || get_password_text) {
-          get_password_text = true;
           get_user_text = false;
-          SDL_Event event_input;
-          bool need_letter = true;
-
-          // Se va a escribir hasta que se haga click fuera del campo
-          while (need_letter && password.mouse_click_in(x, y)) {
-            while (SDL_PollEvent(&event_input) != 0) {
-              // Chequea si el click fue fuera de la caja de texto
-              if (event_input.type == SDL_MOUSEBUTTONDOWN) {
-                SDL_GetMouseState(&x, &y);
-              }
-
-              // Chequeamos si el usuario quiere borrar algo
-              else if (event_input.type == SDL_KEYDOWN &&
-                       event_input.key.keysym.sym == SDLK_BACKSPACE) {
-                if (pass.length()) {
-                  pass.pop_back();
-                  pass_hidden.pop_back();
-                  need_letter = false;
-                }
-              }
-
-              // Chequeamos si el usuario apreto "enter" para enviar mensaje
-              /*else if (event_chat.type == SDL_KEYDOWN &&
-                       event_chat.key.keysym.sym == SDLK_RETURN) {
-                if (user_name.length()) {
-                  check_inpunt_send_command(events_queue.flush_message());
-                  msg_length = 0;
-                  events_queue.push(EVENT_MESSAGE);
-                }
-              }*/
-
-              // Chequeamos si el usuario quiere escribir
-              else if (event_input.type == SDL_TEXTINPUT) {
-                // Para impedir el copiado y pegado
-                if (!(SDL_GetModState() & KMOD_CTRL &&
-                      (event_input.text.text[0] == 'c' ||
-                       event_input.text.text[0] == 'C' ||
-                       event_input.text.text[0] == 'v' ||
-                       event_input.text.text[0] == 'V'))) {
-                  if (pass.length() < MAX_USER_INPUT) {
-                    // Agregamos el caracter presionado
-                    pass += *event_input.text.text;
-                    pass_hidden += (char)250;
-                    std::cout << pass << std::endl;
-                    need_letter = false;
-                  }
-                }
-              }
-            }
-          }
+          get_password_text = true;
+          SDL_StartTextInput();
         }
 
         // Chequeamos si el usuario quiere alguna resolución en especial
@@ -128,8 +81,8 @@ void Lobby::start_lobby() {
           get_password_text = false;
         }
 
-      } else if (get_user_text && user.mouse_click_in(x, y)) {
-        get_user_text = true;
+      } else if (get_user_text /*&& user.mouse_click_in(x, y)*/) {
+        // get_user_text = true;
         get_password_text = false;
         SDL_Event event_chat;
         bool need_letter = true;
@@ -140,6 +93,8 @@ void Lobby::start_lobby() {
             // Chequea si el click fue fuera de la caja de texto*/
             if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
               SDL_GetMouseState(&x, &y);
+              if (!user.mouse_click_in(x, y)) get_user_text = false;
+              SDL_StopTextInput();
             }
 
             // std::cout << "ingresa una letra" << std::endl;
