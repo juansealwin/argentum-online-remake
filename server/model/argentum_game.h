@@ -71,8 +71,11 @@ class ArgentumGame : public Thread {
   void kill_player(unsigned int player_id);
 
   // devuelve el id auto-generado
-  unsigned int add_new_hero(const std::string &hero_race, const std::string &hero_class,
+  unsigned int add_new_hero(const std::string &hero_race,
+                            const std::string &hero_class,
                             const std::string &hero_name);
+  
+  std::vector<Item *> setup_new_warrior();
   void add_existing_hero(Hero *hero, unsigned int id);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue,
                               unsigned int player_id);
@@ -120,11 +123,10 @@ class ArgentumGame : public Thread {
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
       BaseCharacter *character);
   // agrega heroe en posicion x,y (los ejes estan invertidos)
-  unsigned int place_hero(const std::string &hero_race, const std::string &hero_class,
+  unsigned int place_hero(const std::string &hero_race,
+                          const std::string &hero_class,
                           const std::string &hero_name, const unsigned int x,
                           const unsigned int y);
-  void tests_proyectiles();
-  void tests_drops();
   npc_t find_closest_npc();
   BankStatusNotification *get_bank_status(Hero *h);
   SaleInfoNotification *get_sale_info(npc_t npc);
@@ -132,6 +134,15 @@ class ArgentumGame : public Thread {
   bool is_npc_close(int x, int y, npc_t npc);
   std::tuple<int, int> get_npc_pos(npc_t npc);
   bool closest_npcs_sells_or_buys_item(int x, int y, item_t item);
+// Agrega items iniciales al heroe
+  void setup_new_hero(Hero *h);
+  // Agrega items correspondientes al nuevo mago
+  std::vector<Item *> setup_new_mage();
+  // Agrega items correspondientes al nuevo paladin
+  std::vector<Item *> setup_new_paladin();
+  // Agrega items correspondientes al nuevo clerigo
+  std::vector<Item *> setup_new_cleric();
+  // Agrega items correspondientes al nuevo guerrero
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;
@@ -141,9 +152,9 @@ class ArgentumGame : public Thread {
       leather_armour, plate_armour, blue_tunic,  sword,       axe,
       hammer,         simple_bow,   compound_bow};
 
-  std::vector<item_t> priest_sale_items = {
-      hp_potion,     mana_potion, ash_stick,
-      gnarled_staff, crimp_staff, elven_flute};
+  std::vector<item_t> priest_sale_items = {hp_potion,   mana_potion,
+                                           ash_stick,   gnarled_staff,
+                                           crimp_staff, elven_flute};
 };
 
 #endif  // ARGENTUMGAME_H

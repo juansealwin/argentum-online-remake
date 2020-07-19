@@ -396,6 +396,11 @@ void Hero::revive() {
   ghost_mode = false;
 }
 
+class_t Hero::get_class_id() {
+  return (class_t)class_id;
+}
+
+
 Hero::~Hero() {
   if (inventory) delete inventory;
   if (equipment) delete equipment;

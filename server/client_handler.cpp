@@ -14,7 +14,8 @@ ClientHandler::ClientHandler(
     const int nanoseconds_for_proccesing_attacks)
     : notifications_queue(notifications_queue), commands_queue(commands_queue) {
   this->peer_socket = std::move(socket);
-  sender = new ClientNotificationSender(peer_socket, notifications_queue);
+  sender = new ClientNotificationSender(peer_socket, notifications_queue,
+                                        std::ref(message_center), player_name);
   receiver = new ClientCommandReceiver(
       peer_socket, game_room, commands_queue, hero_id, std::ref(games),
       player_name, std::ref(message_center),
@@ -27,11 +28,8 @@ ClientHandler::~ClientHandler() {
   this->sender->stop();
   this->receiver->stop();
   delete sender;
-  // std::cout << "deleeted sender" << std::endl;
   this->peer_socket.close();
-
   delete receiver;
-  // std::cout << "deleted receiver" << std::endl;
 }
 
 bool ClientHandler::is_alive() {
