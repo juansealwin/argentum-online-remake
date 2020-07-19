@@ -15,19 +15,21 @@ TextureManager& texture_manager = TextureManager::get_instance();
 
 int main(int argc, char* argv[]) {
   try {
-    ClientArgumentsValidator validator(argc, argv);
-    validator.validate_arguments();
+    //ClientArgumentsValidator validator(argc, argv);
+    //validator.validate_arguments();
 
-    std::ifstream config_file("../../server/cfg/entities/entities.json");
-    Json::Value config;
-    config_file >> config;
+    //std::ifstream config_file("../../server/cfg/entities/entities.json");
+    //Json::Value config;
+    //config_file >> config;
+    
     WindowGame window_game;
     Lobby argentum_lobby(window_game.get_renderer());
-    Client client(validator.get_ip(), validator.get_port(),
+    argentum_lobby.start_lobby();
+    /*Client client(validator.get_ip(), validator.get_port(),
                   config["screenWidth"].asUInt(),
                   config["screenHeight"].asUInt());
     
-    client.play();
+    client.play();*/
     return EXIT_SUCCESS;
   } catch (ArgumentsException excep) {
     std::cout << excep.what() << std::endl;

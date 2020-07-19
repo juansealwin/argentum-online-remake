@@ -12,7 +12,7 @@ class InteractiveBox {
  public:
   InteractiveBox();
   // Constructor: x, y, ancho y alto, filas y columnas
-  InteractiveBox(int, int, int, int, int, int);
+  InteractiveBox(int, int, int, int, int=1, int=1);
   ~InteractiveBox();
   bool mouse_click_in(int, int);
   int get_item_clicked(int, int);

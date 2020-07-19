@@ -23,9 +23,17 @@ void TextBox::set_texture(SDL_Renderer* renderer) {
   if (width == 0) width = text_texture.get_width() + padding * 2;
 }
 
+void TextBox::set_text(std::string new_text) {
+  // No se puede renderizar texto vacio
+  if (new_text == "")
+    text = " ";
+  else
+    text = new_text;
+}
+
 void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   // Background rect
-  //SDL_Rect background_rect = {x - x_rel, y - y_rel, width, height};
+  // SDL_Rect background_rect = {x - x_rel, y - y_rel, width, height};
 
   // SDL_SetRenderDrawColor(renderer, background_color.r, background_color.g,
   // background_color.b, background_color.a);
@@ -120,6 +128,22 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       x = 660;
       y = 415;
       height = 15;
+      break;
+
+    case USER:
+      x = 284;
+      y = 426;
+      height = 20;
+      // El color del input text es negro
+      text_color = {0, 0, 0, 0};
+      break;
+
+    case PASSWORD:
+      x = 284;
+      y = 466;
+      height = 20;
+      // El color del input text es negro
+      text_color = {0, 0, 0, 0};
       break;
 
     default:

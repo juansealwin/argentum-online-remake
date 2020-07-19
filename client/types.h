@@ -189,7 +189,9 @@ typedef enum {
   EXP,
   GOLD_QUANTITY,
   HEALTH,
-  MANA
+  MANA,
+  USER,
+  PASSWORD
 } text_box_t;
 
 typedef enum { INVENTORY, BANK, MARKET } inventory_t;
