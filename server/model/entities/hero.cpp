@@ -68,11 +68,20 @@ void Hero::try_to_unblock() {
   auto diff = std::chrono::duration_cast<std::chrono::seconds>(
       current_time - wait_starting_time);
   if (diff.count() >= blocked_seconds_duration) {
-    blocked = false;
     revive();
-    move(respawn_x, respawn_y);
+    bool moved = false;
+    moved = move(respawn_x, respawn_y);
+    int y_diff = 0;
+    int x_diff = 0;
+    while (!moved) {
+      //intento moverlo lo mas cercano posible
+      y_diff += HelperFunctions::random_int(-1, 1);
+      x_diff += HelperFunctions::random_int(-1, 1);
+      moved = move(respawn_x + x_diff, respawn_y + y_diff);
+    }
     respawn_x = 0;
     respawn_y = 0;
+    blocked = false;
   }
 }
 

@@ -75,16 +75,21 @@ void EventHandler::get_events() {
           }
 
           if (event.key.keysym.sym == SDLK_1) {
+            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
+
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(1);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_2) {
+            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
+
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_3) {
+            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(3);
             commands_queue.push(change_game_room_command);

@@ -291,7 +291,8 @@
   },
   "maps": [
     "../../server/cfg/maps/grass_map.json",
-    "../../server/cfg/maps/desert_map.json"
+    "../../server/cfg/maps/desert_map.json",
+    "../../server/cfg/maps/argal_map.json"
   ],
   "criticalDamageMultiplier": 2,
   "inventorySize": 10,
@@ -301,7 +302,7 @@
   "maxSafeGoldMultiplier": 400,
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
-  "ups": 60.0,
+  "ups": 25.0,
   "newbieLevelCap": 1,
   "pvpLevelDifferenceAllowed": 3,
   "lastId": 37,

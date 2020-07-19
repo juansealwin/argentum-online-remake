@@ -81,7 +81,7 @@ void ArgentumGame::hero_revive(int entity_id) {
       }
       int distance =
           HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
-      int seconds_blocked = (distance / 3) + 10;
+      int seconds_blocked = ((distance / 3) + 10)/2;
       hero->block(seconds_blocked, x + 1, y);
       message_center.notify_waiting_time_to_revive(hero->name, seconds_blocked);
     } else

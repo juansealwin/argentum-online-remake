@@ -23,7 +23,9 @@ class BaseCharacter : public Entity {
   BaseCharacter(const BaseCharacter &) = delete;
   virtual unsigned int receive_damage(unsigned int damage, bool critical,
                                       unsigned int weapon_origin) = 0;
-  virtual void move(int next_x, int next_y);
+  //devuelve true si se movio a la sig posicion, false si no
+  //muevase o no el pj, cambia su orientacion
+  virtual bool move(int next_x, int next_y);
   virtual bool is_death() = 0;
   virtual const Attack attack() = 0;
   virtual void notify_damage_done(BaseCharacter *other,
