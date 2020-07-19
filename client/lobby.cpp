@@ -112,10 +112,12 @@ void Lobby::lobby_log_in() {
           get_password_text = false;
 
         } else if (log.mouse_click_in(x, y)) {
-        } else {
           get_user_text = false;
           get_password_text = false;
           is_running = false;
+        } else {
+          get_user_text = false;
+          get_password_text = false;
         }
 
       } else if (get_user_text && user.mouse_click_in(x, y)) {
