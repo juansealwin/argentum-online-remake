@@ -20,7 +20,7 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
   if (type == USER || type == PASSWORD)
     font = TTF_OpenFont("commodore.ttf", height);
   else
-    font = TTF_OpenFont("vinque.ttf", height);
+    font = TTF_OpenFont("Alkhemikal.ttf", height);
 }
 
 TextBox::~TextBox() { TTF_CloseFont(font); }
@@ -154,15 +154,15 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       break;
 
     case RACE_MSG:
-      x = 46;
+      x = 38;
       y = 537;
-      height = 15;
+      height = 19;
       break;
 
     case CLASS_MSG:
-      x = 46;
+      x = 38;
       y = 565;
-      height = 15;
+      height = 19;
       break;
 
     default:

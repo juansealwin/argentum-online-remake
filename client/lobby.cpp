@@ -11,6 +11,8 @@ Lobby::Lobby(SDL_Renderer* ren)
   check_mark = new Texture("tilde.png", renderer);
   is_running = true;
   quit = false;
+  click_sound.set_sound("click.mp3");
+  lobby_music.set_music("musica_lobby.mp3");
 
   // Parte del lobby de log in
   user = InteractiveBox(X_INPUT, Y_USER_INPUT, 182, 20);
@@ -56,8 +58,11 @@ Lobby::~Lobby() {
 }
 
 void Lobby::start_lobby() {
+  lobby_music.play_music();
+  lobby_music.decrease_music_volume(80);
   if (!quit) lobby_log_in();
   if (!quit) lobby_character_selection();
+  lobby_music.stop_music();
 }
 
 void Lobby::lobby_log_in() {
@@ -80,47 +85,10 @@ void Lobby::lobby_log_in() {
       else if (event.type == SDL_MOUSEBUTTONDOWN) {
         // int x, y;
         SDL_GetMouseState(&x, &y);
-
-        // Chequeamos si el mouse hizo click dentro del campo 'usuario'
-        if (user.mouse_click_in(x, y)) {
-          get_user_text = true;
-          get_password_text = false;
-          SDL_StartTextInput();
-        }
-
-        // Chequeamos si el mouse hizo click dentro del del campo 'contraseña'
-        else if (password.mouse_click_in(x, y) || get_password_text) {
-          get_user_text = false;
-          get_password_text = true;
-          SDL_StartTextInput();
-        }
-
-        // Chequeamos si el usuario quiere alguna resolución en especial
-        else if (resolution_800x600.mouse_click_in(x, y)) {
-          x_check_mark = X_RES_800x600;
-          get_user_text = false;
-          get_password_text = false;
-
-        } else if (resolution_1024x768.mouse_click_in(x, y)) {
-          x_check_mark = X_RES_1024x768;
-          get_user_text = false;
-          get_password_text = false;
-
-        } else if (resolution_fs.mouse_click_in(x, y)) {
-          x_check_mark = X_RES_FS;
-          get_user_text = false;
-          get_password_text = false;
-
-        } else if (log.mouse_click_in(x, y)) {
-          get_user_text = false;
-          get_password_text = false;
-          is_running = false;
-        } else {
-          get_user_text = false;
-          get_password_text = false;
-        }
-
-      } else if (get_user_text && user.mouse_click_in(x, y)) {
+        check_mouse_click_login(x, y, x_check_mark, get_user_text,
+                                get_password_text);
+      }
+      if (get_user_text && user.mouse_click_in(x, y)) {
         // get_user_text = true;
         get_password_text = false;
         SDL_Event event_chat;
@@ -129,11 +97,20 @@ void Lobby::lobby_log_in() {
         // Se va a escribir hasta que se haga click fuera del campo 'usuario'
         while (need_letter && user.mouse_click_in(x, y)) {
           while (SDL_PollEvent(&event_chat) != 0) {
-            // Chequea si el click fue fuera de la caja de texto*/
+            // Chequea si se quiere cerrar en el medio de la escritura
+            if (event_chat.type == SDL_QUIT) {
+              quit = true;
+              is_running = false;
+              SDL_GetMouseState(&x, &y);
+              break;
+            }
+
+            // Chequea si el click fue fuera de la caja de texto
             if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
               SDL_GetMouseState(&x, &y);
-              if (!user.mouse_click_in(x, y)) get_user_text = false;
-              SDL_StopTextInput();
+
+              check_mouse_click_login(x, y, x_check_mark, get_user_text,
+                                      get_password_text);
             }
 
             // Chequeamos si el usuario quiere borrar algo
@@ -156,7 +133,6 @@ void Lobby::lobby_log_in() {
                 if (user_name.length() < MAX_USER_INPUT) {
                   // Agregamos el caracter presionado
                   user_name += *event_chat.text.text;
-                  std::cout << user_name << std::endl;
                   need_letter = false;
                 }
               }
@@ -173,9 +149,20 @@ void Lobby::lobby_log_in() {
         // Se va a escribir hasta que se haga click fuera del campo
         while (need_letter && password.mouse_click_in(x, y)) {
           while (SDL_PollEvent(&event_input) != 0) {
+            
+            // Chequea si se quiere cerrar en el medio de la escritura
+            if (event_input.type == SDL_QUIT) {
+              quit = true;
+              is_running = false;
+              SDL_GetMouseState(&x, &y);
+              break;
+            }
+
             // Chequea si el click fue fuera de la caja de texto
             if (event_input.type == SDL_MOUSEBUTTONDOWN) {
               SDL_GetMouseState(&x, &y);
+              check_mouse_click_login(x, y, x_check_mark, get_user_text,
+                                      get_password_text);
             }
 
             // Chequeamos si el usuario quiere borrar algo
@@ -200,7 +187,6 @@ void Lobby::lobby_log_in() {
                   // Agregamos el caracter presionado
                   pass += *event_input.text.text;
                   pass_hidden += '*';
-                  std::cout << pass << std::endl;
                   need_letter = false;
                 }
               }
@@ -266,52 +252,70 @@ void Lobby::lobby_character_selection() {
           race_selected = RACE_HUMAN;
           race_message = MESSAGE_HUMAN;
           race_checkmark = true;
+          if (class_message == WARNING_MESSAGE2) class_message = "";
+          click_sound.play_sound(0);
         } else if (option_elf.mouse_click_in(x, y)) {
           x_race_checkmark = X_RACE;
           y_race_checkmark = Y_RACE_ELF;
           race_selected = RACE_ELF;
           race_message = MESSAGE_ELF;
           race_checkmark = true;
+          if (class_message == WARNING_MESSAGE2) class_message = "";
+          click_sound.play_sound(0);
         } else if (option_dwarf.mouse_click_in(x, y)) {
           x_race_checkmark = X_RACE;
           y_race_checkmark = Y_RACE_DWARF;
           race_selected = RACE_DWARF;
           race_message = MESSAGE_DWARF;
           race_checkmark = true;
+          if (class_message == WARNING_MESSAGE2) class_message = "";
+          click_sound.play_sound(0);
         } else if (option_gnome.mouse_click_in(x, y)) {
           x_race_checkmark = X_RACE;
           y_race_checkmark = Y_RACE_GNOME;
           race_selected = RACE_GNOME;
           race_message = MESSAGE_GNOME;
           race_checkmark = true;
+          if (class_message == WARNING_MESSAGE2) class_message = "";
+          click_sound.play_sound(0);
         } else if (option_warrior.mouse_click_in(x, y)) {
           x_class_checkmark = X_CLASS;
           y_class_checkmark = Y_CLASS_WARRIOR;
           class_selected = CLASS_WARRIOR;
           class_message = MESSAGE_WARRIOR;
           class_checkmark = true;
+          if (race_message == WARNING_MESSAGE) race_message = "";
+          click_sound.play_sound(0);
         } else if (option_paladin.mouse_click_in(x, y)) {
           x_class_checkmark = X_CLASS;
           y_class_checkmark = Y_CLASS_PALADIN;
           class_selected = CLASS_PALADIN;
           class_message = MESSAGE_PALADIN;
           class_checkmark = true;
+          if (race_message == WARNING_MESSAGE) race_message = "";
+          click_sound.play_sound(0);
         } else if (option_cleric.mouse_click_in(x, y)) {
           x_class_checkmark = X_CLASS;
           y_class_checkmark = Y_CLASS_CLERIC;
           class_selected = CLASS_CLERIC;
           class_message = MESSAGE_CLERIC;
           class_checkmark = true;
+          if (race_message == WARNING_MESSAGE) race_message = "";
+          click_sound.play_sound(0);
         } else if (option_wizard.mouse_click_in(x, y)) {
           x_class_checkmark = X_CLASS;
           y_class_checkmark = Y_CLASS_WIZARD;
           class_selected = CLASS_WIZARD;
           class_message = MESSAGE_WIZARD;
           class_checkmark = true;
+          if (race_message == WARNING_MESSAGE) race_message = "";
+          click_sound.play_sound(0);
         } else if (play.mouse_click_in(x, y)) {
           is_running = false;
+          click_sound.play_sound(0);
         }
       }
+
       // Limpiamos el render anterior
       SDL_RenderClear(renderer);
 
@@ -338,5 +342,44 @@ void Lobby::lobby_character_selection() {
       // Renderizamos todo lo de esta pasada
       SDL_RenderPresent(renderer);
     }
+  }
+}
+
+void Lobby::check_mouse_click_login(int& x, int& y, int& x_check_mark,
+                                    bool& get_user_text,
+                                    bool& get_password_text) {
+  // Chequeamos si el mouse hizo click dentro del campo 'usuario'
+  if (user.mouse_click_in(x, y)) {
+    get_user_text = true;
+    get_password_text = false;
+    SDL_StartTextInput();
+  }
+  // Chequeamos si el mouse hizo click dentro del del campo 'contraseña'
+  else if (password.mouse_click_in(x, y) || get_password_text) {
+    get_user_text = false;
+    get_password_text = true;
+    SDL_StartTextInput();
+  } else {
+    get_user_text = false;
+    get_password_text = false;
+    SDL_StopTextInput();
+  }
+
+  // Chequeamos si el usuario quiere alguna resolución en especial
+  if (resolution_800x600.mouse_click_in(x, y)) {
+    x_check_mark = X_RES_800x600;
+    click_sound.play_sound(0);
+
+  } else if (resolution_1024x768.mouse_click_in(x, y)) {
+    x_check_mark = X_RES_1024x768;
+    click_sound.play_sound(0);
+
+  } else if (resolution_fs.mouse_click_in(x, y)) {
+    x_check_mark = X_RES_FS;
+    click_sound.play_sound(0);
+
+  } else if (log.mouse_click_in(x, y)) {
+    is_running = false;
+    click_sound.play_sound(0);
   }
 }

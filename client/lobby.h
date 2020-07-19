@@ -6,6 +6,7 @@
 #include <string>
 
 #include "interactive_box.h"
+#include "sound_effect.h"
 #include "text_box.h"
 #include "texture.h"
 
@@ -36,34 +37,30 @@
 #define CHECKBOX_EDGE 24
 #define WARNING_MESSAGE "Se permite un personaje por usuario."
 #define WARNING_MESSAGE2 \
-  "En caso de tener uno, jugará con el anteriormente creado."
+  "En caso de tener uno, jugara con el anteriormente creado."
 #define MESSAGE_HUMAN "Son una raza equilibrada."
 #define MESSAGE_ELF \
-  "Son muy inteligentes y ágiles pero de una constitución física frágil."
+  "Son muy inteligentes y agiles pero de una constitucion fisica fragil."
 #define MESSAGE_DWARF \
   "Son muy fuertes y resistentes, pero la agilidad no es lo suyo."
 #define MESSAGE_GNOME \
-  "Inteligentes y resistentes, pero mucho menos ágiles que los elfos."
-#define MESSAGE_WARRIOR                                                    \
-  "han dedicado toda su vida al combate, son típicamente más fuertes y " \
-  "resistentes que otros pero carecen de la sabiduría para usar la magia."
-#define MESSAGE_PALADIN                                                   \
-  "Entrenados para el combate, son fuertes y resistentes aunque capaces " \
-  "también de usar magia, con una mucho menor inteligencia que un mago."
-#define MESSAGE_CLERIC                                                         \
-  "Un poco menos inteligentes y hábiles que los magos, un clérigo compensa " \
-  "sus falencias con un mayor desempeño físico."
-#define MESSAGE_WIZARD                                                   \
-  "Quienes hayan estudiado magia han cultivados sus mentes y menos sus " \
-  "cuerpos."
-#define RACE_HUMAN 25
-#define RACE_ELF 26
-#define RACE_DWARF 27
-#define RACE_GNOME 28
-#define CLASS_WARRIOR 24
-#define CLASS_PALADIN 23
-#define CLASS_CLERIC 21
-#define CLASS_WIZARD 20
+  "Inteligentes y resistentes, pero mucho menos agiles que los elfos."
+#define MESSAGE_WARRIOR \
+  "Son los mas fuertes y resistentes, pero incapaces de usar magia."
+#define MESSAGE_PALADIN \
+  "Son fuertes y resistentes, y usuarios basicos de magia."
+#define MESSAGE_CLERIC \
+  "Muy inteligentes para usar magia y suplir debilidades fisicas "
+#define MESSAGE_WIZARD \
+  "Los mas podersos usuarios de magia, aunque debiles y fragiles"
+#define RACE_HUMAN "human"
+#define RACE_ELF "elf"
+#define RACE_DWARF "dwarf"
+#define RACE_GNOME "gnome"
+#define CLASS_WARRIOR "warrior"
+#define CLASS_PALADIN "paladin"
+#define CLASS_CLERIC "cleric"
+#define CLASS_WIZARD "wizard"
 
 class Lobby {
  private:
@@ -97,8 +94,10 @@ class Lobby {
   std::string pass_hidden;
   std::string race_message;
   std::string class_message;
-  int race_selected;
-  int class_selected;
+  std::string race_selected;
+  std::string class_selected;
+  SoundEffect click_sound;
+  SoundEffect lobby_music;
 
  public:
   Lobby(SDL_Renderer*);
@@ -106,6 +105,7 @@ class Lobby {
   void start_lobby();
   void lobby_log_in();
   void lobby_character_selection();
+  void check_mouse_click_login(int&, int&, int&, bool&, bool&);
 };
 
 #endif
