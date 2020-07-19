@@ -86,6 +86,7 @@ bool ClientCommandReceiver::is_alive() { return this->alive; }
 
 void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
   if (current_game_room == new_game_room) return;
+  if (new_game_room >= game_rooms.size()) return;
   std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *> hero_and_queue =
       game_rooms.at(current_game_room)
           ->remove_hero_and_notification_queue(hero_id);

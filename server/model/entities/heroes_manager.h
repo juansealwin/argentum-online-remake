@@ -11,7 +11,7 @@ class HeroesManager {
   void update(std::map<unsigned int, Hero *> &heroes,
               const int nanoseconds_for_regenerating_hero,
               const int nanoseconds_for_automove_hero);
-  // remueve heroes que se hayan desconectado del juego
+  void clear_effects(std::map<unsigned int, Hero *> &heroes);
   void remove_death_heroes(std::map<unsigned int, Hero *> &heroes, Map *map);
 
  private:

@@ -102,48 +102,48 @@ void EventHandler::get_events() {
             HealCommandDTO* heal_command = new HealCommandDTO();
             commands_queue.push(heal_command);
           }
-          // borrar todos estos if, son de prueba
-          // if (event.key.keysym.sym == SDLK_h) {
-          //   DropItemCommandDTO* change_game_room_command =
-          //       new DropItemCommandDTO(6);
-          //   commands_queue.push(change_game_room_command);
+          // // borrar todos estos if, son de prueba
+          // // if (event.key.keysym.sym == SDLK_h) {
+          // //   DropItemCommandDTO* change_game_room_command =
+          // //       new DropItemCommandDTO(6);
+          // //   commands_queue.push(change_game_room_command);
+          // // }
+          // if (event.key.keysym.sym == SDLK_3) {
+          //   PrivateMessageDTO* private_message_command =
+          //       new PrivateMessageDTO("test", "hello");
+          //   commands_queue.push(private_message_command);
           // }
-          if (event.key.keysym.sym == SDLK_3) {
-            PrivateMessageDTO* private_message_command =
-                new PrivateMessageDTO("test", "hello");
-            commands_queue.push(private_message_command);
-          }
-          if (event.key.keysym.sym == SDLK_4) {
-            BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_5) {
-            UnbankItemCommandDTO* bank_item_command =
-                new UnbankItemCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_6) {
-            BankGoldCommandDTO* bank_item_command = new BankGoldCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_7) {
-            UnbankGoldCommandDTO* bank_item_command =
-                new UnbankGoldCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_8) {
-            GetBankedItemsCommandDTO* bank_item_command =
-                new GetBankedItemsCommandDTO();
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_9) {
-            BuyItemCommandDTO* bank_item_command = new BuyItemCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
-          if (event.key.keysym.sym == SDLK_0) {
-            SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
-            commands_queue.push(bank_item_command);
-          }
+          // if (event.key.keysym.sym == SDLK_4) {
+          //   BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_5) {
+          //   UnbankItemCommandDTO* bank_item_command =
+          //       new UnbankItemCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_6) {
+          //   BankGoldCommandDTO* bank_item_command = new BankGoldCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_7) {
+          //   UnbankGoldCommandDTO* bank_item_command =
+          //       new UnbankGoldCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_8) {
+          //   GetBankedItemsCommandDTO* bank_item_command =
+          //       new GetBankedItemsCommandDTO();
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_9) {
+          //   BuyItemCommandDTO* bank_item_command = new BuyItemCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
+          // if (event.key.keysym.sym == SDLK_0) {
+          //   SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
+          //   commands_queue.push(bank_item_command);
+          // }
 
         // Chequeamos si el usuario quiere dejar de moverse
         } else if (event.type == SDL_KEYUP) {
