@@ -76,6 +76,8 @@ class ArgentumGame : public Thread {
   unsigned int add_new_hero(const std::string &hero_race,
                             const std::string &hero_class,
                             const std::string &hero_name);
+  
+  std::vector<Item *> setup_new_warrior();
   void add_existing_hero(Hero *hero, unsigned int id);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue,
                               unsigned int player_id);
@@ -129,8 +131,6 @@ class ArgentumGame : public Thread {
                           const std::string &hero_class,
                           const std::string &hero_name, const unsigned int x,
                           const unsigned int y);
-  void tests_proyectiles();
-  void tests_drops();
   npc_t find_closest_npc();
   BankStatusNotification *get_bank_status(Hero *h);
   SaleInfoNotification *get_sale_info(npc_t npc);
@@ -138,6 +138,15 @@ class ArgentumGame : public Thread {
   bool is_npc_close(int x, int y, npc_t npc);
   std::tuple<int, int> get_npc_pos(npc_t npc);
   bool closest_npcs_sells_or_buys_item(int x, int y, item_t item);
+// Agrega items iniciales al heroe
+  void setup_new_hero(Hero *h);
+  // Agrega items correspondientes al nuevo mago
+  std::vector<Item *> setup_new_mage();
+  // Agrega items correspondientes al nuevo paladin
+  std::vector<Item *> setup_new_paladin();
+  // Agrega items correspondientes al nuevo clerigo
+  std::vector<Item *> setup_new_cleric();
+  // Agrega items correspondientes al nuevo guerrero
   ProjectileManager projectile_manager;
   HeroesManager heroes_manager;
   MonstersManager monsters_manager;

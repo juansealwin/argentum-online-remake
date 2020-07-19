@@ -9,7 +9,7 @@
 #include "inventory.h"
 #include "monster.h"
 #include "stdint.h"
-
+#include "class_ids.h"
 class Inventory;
 class Item;
 class Drop;
@@ -101,6 +101,7 @@ class Hero : public BaseCharacter {
   // bloquea a un heroe durante x segundos, una vez que paso el tiempo, es
   // revivido en la posicion x, y
   void block(unsigned int seconds, int x, int y);
+  class_t get_class_id();
   friend class Staff;
   friend class Weapon;
   friend class DefensiveItem;

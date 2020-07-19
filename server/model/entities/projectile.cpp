@@ -34,7 +34,6 @@ void Projectile::auto_move() {
 }
 
 void Projectile::impact_at_position(int x, int y) {
-  std::cout << "calling impact at possition!" << std::endl;
   if (map->tile_is_safe(x, y)) {
     kill();
     return;
