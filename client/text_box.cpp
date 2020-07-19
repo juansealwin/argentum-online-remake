@@ -9,7 +9,11 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
 
   set_mesures_box(type);
 
-  text = new_text;
+  // No se puede renderizar un string nulo
+  if (new_text == "")
+    text = " ";
+  else
+    text = new_text;
 
   padding = 2;
 
@@ -147,6 +151,18 @@ void TextBox::set_mesures_box(text_box_t box_type) {
       height = 15;
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
+      break;
+
+    case RACE_MSG:
+      x = 46;
+      y = 537;
+      height = 15;
+      break;
+
+    case CLASS_MSG:
+      x = 46;
+      y = 565;
+      height = 15;
       break;
 
     default:

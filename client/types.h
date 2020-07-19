@@ -191,7 +191,9 @@ typedef enum {
   HEALTH,
   MANA,
   USER,
-  PASSWORD
+  PASSWORD,
+  RACE_MSG,
+  CLASS_MSG
 } text_box_t;
 
 typedef enum { INVENTORY, BANK, MARKET } inventory_t;
