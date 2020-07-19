@@ -26,8 +26,8 @@
     },
     "priest": {
       "id": 33,
-      "manaRegen" : 100,
-      "hpRegen" : 100
+      "manaRegen": 100,
+      "hpRegen": 100
     },
     "merchant": {
       "id": 34
@@ -42,13 +42,13 @@
         "turtleShield": {
           "minDefense": 1,
           "maxDefense": 2,
-          "price" : 50,
+          "price": 50,
           "id": 1
         },
         "ironShield": {
           "minDefense": 1,
           "maxDefense": 4,
-          "price" : 100,
+          "price": 100,
           "id": 2
         }
       },
@@ -56,19 +56,19 @@
         "hood": {
           "minDefense": 1,
           "maxDefense": 4,
-          "price" : 50,
+          "price": 50,
           "id": 3
         },
         "ironHelmet": {
           "minDefense": 4,
           "maxDefense": 8,
-          "price" : 150,
+          "price": 150,
           "id": 4
         },
         "magicHat": {
           "minDefense": 4,
           "maxDefense": 12,
-          "price" : 200,
+          "price": 200,
           "id": 5
         }
       },
@@ -76,19 +76,19 @@
         "leatherArmour": {
           "minDefense": 2,
           "maxDefense": 16,
-          "price" : 100,
+          "price": 100,
           "id": 6
         },
         "plateArmour": {
           "minDefense": 15,
           "maxDefense": 30,
-          "price" : 300,
+          "price": 300,
           "id": 7
         },
         "blueTunic": {
           "minDefense": 6,
           "maxDefense": 10,
-          "price" : 125,
+          "price": 125,
           "id": 8
         }
       }
@@ -97,7 +97,7 @@
       "hpPotion": {
         "hpRegen": 50,
         "manaRegen": 0,
-        "price" : 25,
+        "price": 25,
         "id": 9
       },
       "manaPotion": {
@@ -280,7 +280,12 @@
       "gold": 200,
       "id": 28
     }
-  },  "maps": ["../../server/cfg/maps/grass_map.json", "../../server/cfg/maps/desert_map.json"],
+  },
+  "maps": [
+    "../../server/cfg/maps/grass_map.json",
+    "../../server/cfg/maps/desert_map.json",
+    "../../server/cfg/maps/argal_map.json"
+  ],
   "criticalDamageMiltiplier": 2,
   "inventorySize": 10,
   "bankSize": 10,
@@ -291,6 +296,6 @@
   "startingXpCap": 1000,
   "ups": 60.0,
   "newbieLevelCap": 10,
-  "pvpLevelDifferenceAllowed":5,
+  "pvpLevelDifferenceAllowed": 5,
   "lastId": 37
 }
