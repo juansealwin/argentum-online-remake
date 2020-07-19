@@ -58,8 +58,6 @@ void Character::set_character_features(entity_t id) {
     case GNOME:
       width = 25;
       height = 45;
-      // Esto se debe a que el grafico es distinto
-      body_rect.y = 10;
       type_character = ID_GNOME;
       walk = WALK_PC;
       break;
@@ -67,8 +65,6 @@ void Character::set_character_features(entity_t id) {
     case DWARF:
       width = 25;
       height = 45;
-      // Esto se debe a que el grafico es distinto
-      body_rect.y = 10;
       type_character = ID_DWARF;
       walk = WALK_PC;
       break;
