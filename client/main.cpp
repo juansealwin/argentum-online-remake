@@ -8,6 +8,8 @@
 #include "client_arguments_validator.h"
 #include "connection_exceptions.h"
 #include "texture_manager.h"
+#include "window_game.h"
+#include "lobby.h"
 
 TextureManager& texture_manager = TextureManager::get_instance();
 
@@ -19,10 +21,12 @@ int main(int argc, char* argv[]) {
     std::ifstream config_file("../../server/cfg/entities/entities.json");
     Json::Value config;
     config_file >> config;
-
+    WindowGame window_game;
+    Lobby argentum_lobby(window_game.get_renderer());
     Client client(validator.get_ip(), validator.get_port(),
                   config["screenWidth"].asUInt(),
                   config["screenHeight"].asUInt());
+    
     client.play();
     return EXIT_SUCCESS;
   } catch (ArgumentsException excep) {
