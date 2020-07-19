@@ -428,6 +428,7 @@ void Protocol::send_command(const Socket& socket, CommandDTO* commandDTO) {
 void Protocol::send_notification(const Socket& socket, Notification* n) {
   std::vector<unsigned char> serialization = n->vector;
   uint16_t size = htons(serialization.size());
+  std::cout << "sending notification of type: " << (int)serialization.at(0) << std::endl;
   socket.send(&size, 2);
   socket.send(serialization.data(), serialization.size());
 }

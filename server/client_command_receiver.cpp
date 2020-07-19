@@ -46,6 +46,7 @@ void ClientCommandReceiver::run() {
       ChangeGameRoomDTO *cgrDTO =
           dynamic_cast<ChangeGameRoomDTO *>(command_dto);
       if (cgrDTO) {
+        std::cout << "change room command received" << std::endl;
         if (command_blocker.can_process_room_change())
           change_game_room(cgrDTO->room_number - 1);
         else
@@ -72,6 +73,7 @@ void ClientCommandReceiver::run() {
 void ClientCommandReceiver::send_close_connection() {
   std::vector<unsigned char> notification;
   // mover a la clase
+  std::cout << "sending close connection" << std::endl;
   uint8_t notification_id = 0;
   notification.push_back(notification_id);
   CloseConnectionNotification *n =
@@ -85,6 +87,7 @@ bool ClientCommandReceiver::is_alive() { return this->alive; }
 /********************** metodos privados ********************/
 
 void ClientCommandReceiver::change_game_room(unsigned int new_game_room) {
+  std::cout << "in change rooom" << std::endl;
   if (current_game_room == new_game_room) return;
   if (new_game_room >= game_rooms.size()) return;
   std::tuple<Hero *, BlockingThreadSafeQueue<Notification *> *> hero_and_queue =
