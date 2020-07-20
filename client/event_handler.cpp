@@ -223,6 +223,19 @@ void EventHandler::get_events() {
             // Se va a escribir hasta que se haga click fuera de text_box
             while (text_box.mouse_click_in(x, y)) {
               while (SDL_PollEvent(&event_chat) != 0) {
+                
+                // Chequeamos si el usuario quiere cerrar mientras escribe
+                if (event_chat.type == SDL_QUIT) {
+                  is_running = false;
+                  QuitCommandDTO* quit_command = new QuitCommandDTO();
+                  commands_queue.push(quit_command);
+
+                  // Aviso al renderer que hay que cerrar
+                  events_queue.push(EVENT_QUIT);
+                  SDL_GetMouseState(&x, &y);
+                  break;
+                }
+
                 // Chequea si el click fue fuera de la caja de texto
                 if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
                   SDL_GetMouseState(&x, &y);
@@ -250,6 +263,9 @@ void EventHandler::get_events() {
                 // Chequeamos si el usuario quiere escribir
                 else if (event_chat.type == SDL_TEXTINPUT) {
                   // Para impedir el copiado y pegado
+                  std::cout
+                      << "EL USUARIO QUIERE ESCRIBIR: " << *event_chat.text.text
+                      << std::endl;
                   if (!(SDL_GetModState() & KMOD_CTRL &&
                         (event_chat.text.text[0] == 'c' ||
                          event_chat.text.text[0] == 'C' ||
@@ -257,6 +273,8 @@ void EventHandler::get_events() {
                          event_chat.text.text[0] == 'V'))) {
                     if (msg_length < MAX_MSG_LENGTH) {
                       // Agregamos el caracter presionado
+                      std::cout << "VOY A AGREGAR EL CARACTER: "
+                                << *event_chat.text.text << std::endl;
                       msg_length =
                           events_queue.append_character(*event_chat.text.text);
                       events_queue.push(EVENT_MESSAGE);
