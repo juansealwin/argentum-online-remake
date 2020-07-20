@@ -32,6 +32,7 @@ namespace ItemFactory {
   Staff* create_gnarled_staff(Json::Value &items_config);
   Staff* create_crimp_staff(Json::Value &items_config);
   Staff* create_elven_flute(Json::Value &items_config);
+  Staff* create_deadly_staff(Json::Value &items_config);
   unsigned int get_item_price(Json::Value &items_config, item_t item);
 }
 #endif  // ITEM_FACTORY_H

@@ -27,6 +27,7 @@ void Staff::attack_use(Hero *hero) {
     throw ModelException("Mana insuficiente!");
   hero->set_hp(hero->current_hp + hp_regen);
   hero->set_mana(hero->current_mana - mana_consumption);
+  if (hp_regen > 0) hero->affected_by = this->id;
   //hero->current_mana -= mana_consumption;
 }
 
