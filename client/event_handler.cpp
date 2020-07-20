@@ -86,23 +86,17 @@ void EventHandler::get_events() {
             MeditateCommandDTO* meditate_command = new MeditateCommandDTO();
             commands_queue.push(meditate_command);
           }
-
           if (event.key.keysym.sym == SDLK_1) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
-
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(1);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_2) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
-
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_3) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(3);
             commands_queue.push(change_game_room_command);
@@ -170,8 +164,12 @@ void EventHandler::get_events() {
                 GetBankedItemsCommandDTO* list_command =
                     new GetBankedItemsCommandDTO();
                 commands_queue.push(list_command);
-                // O bien quiere comprar un item en el mercado
+
+              // O bien quiere comprar un item en el mercado
               } else if (type_of_shop == MARKET) {
+                BuyItemCommandDTO* buy_item_command =
+                    new BuyItemCommandDTO(get_item_t(item));
+                commands_queue.push(buy_item_command);
               }
             }
           }
