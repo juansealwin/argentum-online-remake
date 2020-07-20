@@ -12,14 +12,16 @@ BaseCharacter::BaseCharacter(unsigned int unique_id, int x, int y,
       map(map),
       name(name) {}
 
-void BaseCharacter::move(int next_x, int next_y) {
+bool BaseCharacter::move(int next_x, int next_y) {
   change_orientation(x_position, y_position, next_x, next_y);
   if (map->can_ocupy_cell(next_x, next_y)) {
     map->ocupy_cell(next_x, next_y, unique_id);
     map->empty_cell(x_position, y_position);
     x_position = next_x;
     y_position = next_y;
+    return true;
   }
+  return false;
 }
 
 void BaseCharacter::change_orientation(int old_x, int old_y, int new_x,
