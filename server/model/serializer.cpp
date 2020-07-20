@@ -146,7 +146,9 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   insert(serialization, level);
   insert(serialization, affected_by_item);
   serialization.push_back(name_size);
+  std::cout << "name size serializer: " << (int)name_size << std::endl;
   for (int x = 0; x < name_size; x++) {
+    // std::cout << "x es igual a " << x << std::endl;
     serialization.push_back(h->name.at(x));
   }
   serialization.push_back(class_id);
@@ -361,17 +363,20 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
 
   unsigned int j = 0;
   entity_type = extract<uint8_t>(serialization, j);
+  std::cout << "entity type: " << entity_type << std::endl;
 
   max_hp = extract<uint16_t>(serialization, j);
   current_hp = extract<uint16_t>(serialization, j);
   level = extract<uint16_t>(serialization, j);
   affected_by = extract<uint8_t>(serialization, j);
-  std::cout << "lvl: " << level << "maxhp: " << max_hp << "current_hp"
+  std::cout << "lvl: " << level << " maxhp: " << max_hp << " current_hp"
             << current_hp << std::endl;
 
-  int name_size = extract<uint8_t>(serialization, j);
+  uint8_t name_size = extract<uint8_t>(serialization, j);
+  std::cout << "name size deserealizer: " << (int)name_size << std::endl;
   std::string name;
   for (int x = 0; x < name_size; x++) {
+    // std::cout << "(deserealizer) x es igual a " << x << std::endl;
     name += serialization.at(j);
     j++;
   }
@@ -391,9 +396,8 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
   ghost_mode = extract<uint8_t>(serialization, j);
   close_to_npc = extract<uint8_t>(serialization, j);
   std::cout << "@@@Hero stats@@@" << std::endl
-            << "max_hp: " << max_hp << " max_mana " << mana_max << "gold "
-            << gold << " ghost mode " << ghost_mode << " items equiped "
-            << items_equiped << "name size" << name_size << std::endl;
+            << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
+            << gold << " ghost mode " << ghost_mode << std::endl;
 
   // Agregamos los items equipados
   items_equiped = extract<uint8_t>(serialization, j);
@@ -404,20 +408,22 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
 
     // completarrrrrrrrrrr
   }
-  // std::cout << "items in inventory: " << items_inventory << std::endl;
 
-  // Agregamos los items del inventario
-  items_inventory = extract<uint8_t>(serialization, j);
-
-  // std::cout << "@@Deserializing items in invetory@@" << std::endl;
-  for (int x = items_inventory; x > 0; x--) {
-    int current_item_id = extract<uint8_t>(serialization, j);
-
-    // completarrrrrrrrrrr
-  }
-
-  // falta la parte del banco
   return nullptr;
+  // // std::cout << "items in inventory: " << items_inventory << std::endl;
+
+  // // Agregamos los items del inventario
+  // items_inventory = extract<uint8_t>(serialization, j);
+
+  // // std::cout << "@@Deserializing items in invetory@@" << std::endl;
+  // for (int x = items_inventory; x > 0; x--) {
+  //   int current_item_id = extract<uint8_t>(serialization, j);
+
+  //   // completarrrrrrrrrrr
+  // }
+
+  // // falta la parte del banco
+  // return nullptr;
 }
 
 /*

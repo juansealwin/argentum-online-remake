@@ -15,8 +15,10 @@ void FilesHandler::save_player_status(Hero* hero) {
   std::vector<unsigned char> player_serialization;
   uint8_t entity_type = hero->type;
   player_serialization.push_back(entity_type);
+  std::cout << "entity type es " << entity_type << " y " << (int)entity_type
+            << std::endl;
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
-  Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
+  // Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
 
   std::ofstream players_status(
       "../../server/status/players_status",
