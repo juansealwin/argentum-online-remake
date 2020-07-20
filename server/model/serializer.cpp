@@ -424,8 +424,6 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
 
   // Agregamos los items equipados
   items_equiped = extract<uint8_t>(serialization, j);
-  std::vector<Item *> itemsToEquip;
-  // std::cout << "@@Deserializing items equiped@@" << std::endl;
   for (int x = items_equiped; x > 0; x--) {
     int current_item_slot = extract<uint8_t>(serialization, j);
     int current_item_id = extract<uint8_t>(serialization, j);

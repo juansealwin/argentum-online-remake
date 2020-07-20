@@ -54,8 +54,9 @@ void FilesHandler::save_player_status(Hero* hero) {
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
   int current_serialization_size = player_serialization.size();
-  for (int i = 0; i++; i < (DATA_SIZE - current_serialization_size)) {
-    player_serialization.push_back(0);
+
+  for (int i = 0; i < (DATA_SIZE - current_serialization_size); i++) {
+    player_serialization.push_back('0');
   }
 
   std::unordered_map<std::string, int> players_positions =
@@ -66,9 +67,7 @@ void FilesHandler::save_player_status(Hero* hero) {
   if (result != players_positions.end()) {
     position = result->second;
   } else {
-    if (players_positions.empty()) {
-      position = DATA_SIZE;
-    } else {
+    if (!players_positions.empty()) {
       int last_position = players_positions.at("last_position");
       position = last_position + DATA_SIZE;
     }
@@ -102,10 +101,9 @@ Hero* FilesHandler::get_player_status(const std::string player_name,
   const int position = result->second;
   std::cout << "leyendo a " << player_name << " en: " << position << std::endl;
 
-  std::vector<unsigned char> player_serialization;
   std::ifstream players_status("../../server/status/players_status",
                                std::ios::out);
-
+  std::vector<unsigned char> player_serialization;
   player_serialization.resize(DATA_SIZE);
   players_status.seekg(position);
   players_status.read((char*)&player_serialization[0], DATA_SIZE);
