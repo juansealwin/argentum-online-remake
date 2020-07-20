@@ -401,6 +401,12 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       weapon = ID_CRIMPED_STAFF_EQUIPPED;
       break;
 
+    case ID_DEADLY_STAFF:
+      frame_equipped_w = {body_rect.x, body_rect.y, 25, 45};
+      weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);
+      weapon = ID_DEADLY_STAFF_EQUIPPED;
+      break;
+
     case ID_SIMPLE_BOW:
       frame_equipped_w = {body_rect.x, body_rect.y, 25, 45};
       weapon_animation = Animation(frame_equipped_w.w, frame_equipped_w.h);

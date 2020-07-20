@@ -161,7 +161,7 @@ void EntityStatus::set_spellbound(int affected_by) {
       break;
 
     case DEADLY_STAFF:
-      spellbound = ID_HEAL;
+      spellbound = ID_FINAL_JUDGMENT;
       lifetime = FRAMES_PER_TEXTURE * FRAMES_FINAL_JUDGMENT;
       break;
 

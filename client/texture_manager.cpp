@@ -168,6 +168,18 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_EXPLOSION_18] = new Texture("explosion19.png", renderer);
   map[ID_EXPLOSION_19] = new Texture("explosion20.png", renderer);
   map[ID_EXPLOSION_20] = new Texture("explosion21.png", renderer);
+
+  map[ID_FINAL_JUDGMENT] = new Texture("juicio_final1.png", renderer);
+  map[ID_FINAL_JUDGMENT_1] = new Texture("juicio_final2.png", renderer);
+  map[ID_FINAL_JUDGMENT_2] = new Texture("juicio_final3.png", renderer);
+  map[ID_FINAL_JUDGMENT_3] = new Texture("juicio_final4.png", renderer);
+  map[ID_FINAL_JUDGMENT_4] = new Texture("juicio_final5.png", renderer);
+  map[ID_FINAL_JUDGMENT_5] = new Texture("juicio_final6.png", renderer);
+  map[ID_FINAL_JUDGMENT_6] = new Texture("juicio_final7.png", renderer);
+  map[ID_FINAL_JUDGMENT_7] = new Texture("juicio_final8.png", renderer);
+  map[ID_FINAL_JUDGMENT_8] = new Texture("juicio_final9.png", renderer);
+  map[ID_FINAL_JUDGMENT_9] = new Texture("juicio_final10.png", renderer);
+  map[ID_FINAL_JUDGMENT_10] = new Texture("juicio_final11.png", renderer);
 }
 
 TextureManager::~TextureManager() {}
@@ -246,6 +258,31 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
       else if (lifetime > FRAMES_PER_TEXTURE * 11)
         id_frame = (id_texture_t)(id + 9);
       else if (lifetime > FRAMES_PER_TEXTURE * 10)
+        id_frame = (id_texture_t)(id + 10);
+      else if (lifetime > FRAMES_PER_TEXTURE * 9)
+        id_frame = (id_texture_t)(id + 11);
+      else if (lifetime > FRAMES_PER_TEXTURE * 8)
+        id_frame = (id_texture_t)(id + 12);
+      else if (lifetime > FRAMES_PER_TEXTURE * 7)
+        id_frame = (id_texture_t)(id + 13);
+      else if (lifetime > FRAMES_PER_TEXTURE * 6)
+        id_frame = (id_texture_t)(id + 14);
+      else if (lifetime > FRAMES_PER_TEXTURE * 5)
+        id_frame = (id_texture_t)(id + 15);
+      else if (lifetime > FRAMES_PER_TEXTURE * 4)
+        id_frame = (id_texture_t)(id + 16);
+      else if (lifetime > FRAMES_PER_TEXTURE * 3)
+        id_frame = (id_texture_t)(id + 17);
+      else if (lifetime > FRAMES_PER_TEXTURE * 2)
+        id_frame = (id_texture_t)(id + 18);
+      else if (lifetime > FRAMES_PER_TEXTURE)
+        id_frame = (id_texture_t)(id + 19);
+      else
+        id_frame = (id_texture_t)(id + 20);
+      break;
+
+    case ID_FINAL_JUDGMENT:
+      if (lifetime > FRAMES_PER_TEXTURE * 10)
         id_frame = (id_texture_t)(id + 10);
       else if (lifetime > FRAMES_PER_TEXTURE * 9)
         id_frame = (id_texture_t)(id + 11);

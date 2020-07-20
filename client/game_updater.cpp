@@ -257,7 +257,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           armor = get_item_texture(current_item_id);
         else if (item_type == SHIELD)
           shield = get_item_texture(current_item_id);
-        else if (item_type == WEAPON)
+        else if (item_type == WEAPON) 
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
