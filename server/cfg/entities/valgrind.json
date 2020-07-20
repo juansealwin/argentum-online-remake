@@ -191,7 +191,7 @@
         "minDmg": 0,
         "maxDmg": 0,
         "hpRecovery": 120,
-        "range": 0,
+        "range": 8,
         "mana": 100,
         "price": 200,
         "id": 19
@@ -202,7 +202,7 @@
         "minDmg": 30,
         "maxDmg": 50,
         "hpRecovery": 0,
-        "range": 0,
+        "range": 8,
         "mana": 80,
         "price": 200,
         "id": 20
