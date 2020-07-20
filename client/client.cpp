@@ -28,7 +28,7 @@ void Client::do_handshake(std::string user_name, std::string race_selected,
 
   Protocol::send_command(socket, login_command);
   delete login_command;
-
+  std::cout<<"SOY "<<race_selected<<" Y "<<class_selected<<std::endl;
   // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);

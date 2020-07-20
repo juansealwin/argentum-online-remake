@@ -65,7 +65,7 @@
 #define CLASS_WARRIOR "warrior"
 #define CLASS_PALADIN "paladin"
 #define CLASS_CLERIC "cleric"
-#define CLASS_WIZARD "wizard"
+#define CLASS_WIZARD "mage"
 
 class Lobby {
  private:
