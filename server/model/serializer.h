@@ -17,13 +17,14 @@ class Serializer {
                                      Hero *h);
   static void serialize_hero(std::vector<unsigned char> &serialization, Hero *m,
                              const bool use_htons);
-  static Hero *deserialize_hero(std::vector<unsigned char> &serialization);
+  static Hero *deserialize_hero(std::vector<unsigned char> &serialization,
+                                Json::Value &entities_cfg);
 
   // static void debug_deserialize_v3(std::vector<unsigned char>
   // serialization);
 
  private:
-  //  //deben coincidir con los config del json
+  // deben coincidir con los config del json
   static void serialize_common_fields(std::vector<unsigned char> &serialization,
                                       uint16_t uid, Entity *entity);
   static void serialize_drop();

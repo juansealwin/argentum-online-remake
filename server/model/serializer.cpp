@@ -354,10 +354,10 @@ bool Serializer::is_drop(uint8_t t) { return (t == 37); }
 // Al principio este método estaba en otra clase "Deserializer". Finalemente se
 // dejó acá porque el agregado de esa clase causaba dependencias circulares en
 // tiempo de ejecución y no se pudo arreglar a pesar de dedicarle varias horas
-Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
-  int entity_type, y, x, orientation, items_in_drop, drop_has_coins, class_id,
-      affected_by, meditating, ghost_mode, close_to_npc, items_equiped,
-      items_inventory;
+Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
+                                   Json::Value &entities_cfg) {
+  int entity_type, class_id, affected_by, meditating, ghost_mode, close_to_npc,
+      items_equiped, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
       intelligence, agility, constitution, gold, xp_limit, current_xp;
 
@@ -365,10 +365,10 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
   entity_type = extract<uint8_t>(serialization, j);
   std::cout << "entity type: " << entity_type << std::endl;
 
-  max_hp = extract<uint16_t>(serialization, j);
+  max_hp = extract<uint16_t>(serialization, j);  // no se usa aun
   current_hp = extract<uint16_t>(serialization, j);
   level = extract<uint16_t>(serialization, j);
-  affected_by = extract<uint8_t>(serialization, j);
+  affected_by = extract<uint8_t>(serialization, j);  // no se usa aun
   std::cout << "lvl: " << level << " maxhp: " << max_hp << " current_hp"
             << current_hp << std::endl;
 
@@ -376,14 +376,13 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
   std::cout << "name size deserealizer: " << (int)name_size << std::endl;
   std::string name;
   for (int x = 0; x < name_size; x++) {
-    // std::cout << "(deserealizer) x es igual a " << x << std::endl;
     name += serialization.at(j);
     j++;
   }
   std::cout << "Name of the hero: " << name << std::endl;
 
   class_id = extract<uint8_t>(serialization, j);
-  mana_max = (extract<uint16_t>(serialization, j));
+  mana_max = (extract<uint16_t>(serialization, j));  // no se usa aun
   curr_mana = (extract<uint16_t>(serialization, j));
   str = (extract<uint16_t>(serialization, j));
   intelligence = (extract<uint16_t>(serialization, j));
@@ -392,21 +391,68 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization) {
   gold = (extract<uint16_t>(serialization, j));
   xp_limit = (extract<uint16_t>(serialization, j));
   current_xp = (extract<uint16_t>(serialization, j));
-  meditating = extract<uint8_t>(serialization, j);
+  meditating = extract<uint8_t>(serialization, j);  // no se usa aun
   ghost_mode = extract<uint8_t>(serialization, j);
-  close_to_npc = extract<uint8_t>(serialization, j);
+  close_to_npc = extract<uint8_t>(serialization, j);  // no se usa aun
   std::cout << "@@@Hero stats@@@" << std::endl
             << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
             << gold << " ghost mode " << ghost_mode << std::endl;
 
+  Json::Value race_stats = entities_cfg["races"][entity_type];
+  Json::Value class_stats = entities_cfg["classes"][class_id];
+  Hero *hero = new Hero(
+      race_stats["id"].asUInt(), 'h', level, str, intelligence, agility,
+      constitution, class_stats["fClassHp"].asUInt(),
+      race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
+      race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
+      class_stats["fClassMeditation"].asUInt(), gold, class_id, name,
+      entities_cfg["criticalDamageMultiplier"].asFloat(),
+      entities_cfg["inventorySize"].asInt(),
+      entities_cfg["criticalDamageProbability"].asFloat(),
+      entities_cfg["evasionProbability"].asFloat(),
+      entities_cfg["maxSafeGoldMultiplier"].asFloat(),
+      entities_cfg["levelUpLimitPower"].asFloat(),
+      entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
+      entities_cfg["amountOfExperienceToUpdate"].asUInt());
+
+  hero->set_hp(current_hp);
+  hero->set_mana(curr_mana);
+  if (ghost_mode) {
+    hero->set_ghost_mode(true);
+  }
+  hero->set_next_level_xp_limit(xp_limit);
+  hero->set_experience(current_xp);
+
   // Agregamos los items equipados
   items_equiped = extract<uint8_t>(serialization, j);
+  std::vector<Item *> itemsToEquip;
   // std::cout << "@@Deserializing items equiped@@" << std::endl;
   for (int x = items_equiped; x > 0; x--) {
     int current_item_slot = extract<uint8_t>(serialization, j);
     int current_item_id = extract<uint8_t>(serialization, j);
 
-    // completarrrrrrrrrrr
+    Item *i = ItemFactory::create_item(entities_cfg["items"],
+                                       (item_t)current_item_id);
+    hero->add_item(i);
+    switch (current_item_slot) {
+      case 0:  // slot de casco
+        hero->equip_helmet(current_item_id);
+        break;
+      case 1:  // slot de armadura
+        hero->equip_armour(current_item_id);
+        break;
+      case 2:  // slot de escudo
+        hero->equip_shield(current_item_id);
+        break;
+      case 3:  // slot de vara
+        hero->equip_staff(current_item_id);
+        break;
+      case 4:  // slot de arma
+        hero->equip_weapon(current_item_id);
+        break;
+      default:
+        break;
+    }
   }
 
   return nullptr;

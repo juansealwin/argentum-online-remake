@@ -14,7 +14,8 @@ class FilesHandler {
   FilesHandler();
   ~FilesHandler();
   void save_player_status(Hero* hero);
-  Hero* get_player_status(const std::string player_name);
+  Hero* get_player_status(const std::string player_name,
+                          Json::Value& entities_cfg);
 };
 
 #endif

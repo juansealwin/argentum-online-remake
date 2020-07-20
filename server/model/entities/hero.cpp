@@ -383,6 +383,10 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
   return actual_damage;
 }
 
+void Hero::set_ghost_mode(const bool ghost_mode) {
+  this->ghost_mode = ghost_mode;
+}
+
 void Hero::meditate() {
   if (ghost_mode) throw ModelException("No se puede meditar si estas muerto!");
   meditating = true;
@@ -396,10 +400,7 @@ void Hero::revive() {
   ghost_mode = false;
 }
 
-class_t Hero::get_class_id() {
-  return (class_t)class_id;
-}
-
+class_t Hero::get_class_id() { return (class_t)class_id; }
 
 Hero::~Hero() {
   if (inventory) delete inventory;
@@ -453,3 +454,11 @@ unsigned int Hero::remove_excess_gold() {
 }
 
 void Hero::set_close_to_npc(bool val) { close_to_npc = val; }
+
+void Hero::set_next_level_xp_limit(unsigned int next_level_xp_limit) {
+  this->next_level_xp_limit = next_level_xp_limit;
+}
+
+void Hero::set_experience(unsigned int experience) {
+  this->experience = experience;
+}

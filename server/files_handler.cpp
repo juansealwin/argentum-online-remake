@@ -37,7 +37,8 @@ void FilesHandler::save_player_status(Hero* hero) {
   players_status.close();
 }
 
-Hero* FilesHandler::get_player_status(const std::string player_name) {
+Hero* FilesHandler::get_player_status(const std::string player_name,
+                                      Json::Value& entities_cfg) {
   std::unique_lock<std::mutex> lock(mutex);
 
   std::vector<unsigned char> player_serialization;
@@ -55,7 +56,7 @@ Hero* FilesHandler::get_player_status(const std::string player_name) {
   players_status.seekg(0, std::ios_base::beg);
   players_status.read((char*)&player_serialization[0], fileSize);
 
-  Hero* hero = Serializer::deserialize_hero(player_serialization);
+  Hero* hero = Serializer::deserialize_hero(player_serialization, entities_cfg);
   players_status.close();
 
   return hero;

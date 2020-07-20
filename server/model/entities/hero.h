@@ -5,11 +5,11 @@
 #include <cmath>
 
 #include "base_character.h"
+#include "class_ids.h"
 #include "equipment.h"
 #include "inventory.h"
 #include "monster.h"
 #include "stdint.h"
-#include "class_ids.h"
 class Inventory;
 class Item;
 class Drop;
@@ -29,6 +29,24 @@ class Hero : public BaseCharacter {
        const float max_safe_gold_multiplier, const float level_up_limit_power,
        const float starting_xp_cap, const unsigned int bank_size,
        const int amount_of_experience_to_update);
+
+  // constructor para heroes ya existentes
+  // falta unique_id, x, y, map. que me los pase argentum game cuando el chabon
+  // se loguea. agregar datos del banco?
+  Hero(unsigned int race_id, char repr, unsigned int level,
+       unsigned int strength, unsigned int intelligence, unsigned int agility,
+       unsigned int constitution, unsigned int f_class_hp,
+       unsigned int f_race_hp, unsigned int f_race_recovery,
+       unsigned int f_race_mana, unsigned int f_class_mana,
+       unsigned int f_class_meditation, unsigned int gold,
+       unsigned int class_id, const std::string &name,
+       const float critical_damage_multiplier,
+       const unsigned int inventory_size,
+       const float critical_damage_probability, const float evasion_probability,
+       const float max_safe_gold_multiplier, const float level_up_limit_power,
+       const float starting_xp_cap, const unsigned int bank_size,
+       const int amount_of_experience_to_update);
+
   // Hero(Hero* h, Map &map);
   void regenerate();
   // curacion en cada update
@@ -110,6 +128,9 @@ class Hero : public BaseCharacter {
   friend class ArgentumGame;
   unsigned int current_mana;
   unsigned int max_mana;
+  void set_ghost_mode(const bool ghost_mode);
+  void set_next_level_xp_limit(unsigned int next_level_xp_limit);
+  void set_experience(unsigned int experience);
 
  private:
   // inicializados en member initialization list
