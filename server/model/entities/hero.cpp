@@ -16,7 +16,8 @@ Hero::Hero(
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap,
-    const unsigned int bank_size, const int amount_of_experience_to_update)
+    const unsigned int bank_size, const int amount_of_experience_to_update,
+    const bool is_new)
     : BaseCharacter(unique_id, x, y, race_id, repr,
                     constitution * f_class_hp * f_race_hp * level, level, map,
                     name),
@@ -48,7 +49,16 @@ Hero::Hero(
       starting_xp_cap(starting_xp_cap),
       blocked_seconds_duration(0),
       amount_of_experience_to_update(amount_of_experience_to_update) {
-  level_up();
+  if (is_new) {
+    level_up();
+  } else {
+    max_hp = constitution * f_class_hp * f_race_hp * level;
+    max_mana = intelligence * f_class_mana * f_race_mana * level;
+    std::cout << "level: " << level << " int: " << intelligence
+              << " f_class_mana " << f_class_mana << " f_race_mana "
+              << f_race_mana << std::endl;
+    max_safe_gold = max_safe_gold_multiplier * level;
+  }
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
   bank = new Inventory(bank_size, 0);
@@ -74,7 +84,7 @@ void Hero::try_to_unblock() {
     int y_diff = 0;
     int x_diff = 0;
     while (!moved) {
-      //intento moverlo lo mas cercano posible
+      // intento moverlo lo mas cercano posible
       y_diff += HelperFunctions::random_int(-1, 1);
       x_diff += HelperFunctions::random_int(-1, 1);
       moved = move(respawn_x + x_diff, respawn_y + y_diff);
@@ -293,6 +303,9 @@ void Hero::bank_item(unsigned int item_id) {
   bank->add_item(i);
 }
 
+void Hero::add_item_to_bank(Item *item) { bank->add_item(item); }
+void Hero::add_gold_to_bank(unsigned int ammount) { bank->add_gold(ammount); }
+
 Item *Hero::remove_item(unsigned int item_id) {
   if (ghost_mode)
     throw ModelException(
@@ -388,8 +401,13 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
   if (current_hp <= 0) {
     current_hp = 0;
     ghost_mode = true;
+    experience = experience/2;
   }
   return actual_damage;
+}
+
+void Hero::set_ghost_mode(const bool ghost_mode) {
+  this->ghost_mode = ghost_mode;
 }
 
 void Hero::meditate() {
@@ -405,10 +423,7 @@ void Hero::revive() {
   ghost_mode = false;
 }
 
-class_t Hero::get_class_id() {
-  return (class_t)class_id;
-}
-
+class_t Hero::get_class_id() { return (class_t)class_id; }
 
 Hero::~Hero() {
   if (inventory) delete inventory;
@@ -462,3 +477,11 @@ unsigned int Hero::remove_excess_gold() {
 }
 
 void Hero::set_close_to_npc(bool val) { close_to_npc = val; }
+
+void Hero::set_next_level_xp_limit(unsigned int next_level_xp_limit) {
+  this->next_level_xp_limit = next_level_xp_limit;
+}
+
+void Hero::set_experience(unsigned int experience) {
+  this->experience = experience;
+}

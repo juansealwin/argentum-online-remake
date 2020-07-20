@@ -25,7 +25,8 @@ void Inventory::add_item(Item* item) {
   //           << " capacitiy is " << items.capacity() << std::endl;
   if ((items.size() - items.capacity()) == 0)
     throw ModelException("Inventory is full");
-  items.push_back(item);
+  //items.push_back(item);
+  items.insert(items.begin(), item);
 }
 
 bool Inventory::has_item(unsigned int id) {

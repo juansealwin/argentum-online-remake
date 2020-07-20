@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "client_handler.h"
+#include "files_handler.h"
 #include "login_command_dto.h"
 
 ClientListener::ClientListener(const char *port,
@@ -17,6 +18,8 @@ ClientListener::ClientListener(const char *port,
   nanoseconds_for_proccesing_attacks =
       entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
 
+  FilesHandler files_handler;
+
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
     std::ifstream entities_file(entities_cfg_file);
@@ -28,9 +31,9 @@ ClientListener::ClientListener(const char *port,
         new ThreadSafeQueue<Command *>();
     Json::Value map_cfg;
     map_file >> map_cfg;
-    ArgentumGame *game =
-        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
-                         std::ref(entities_ids), std::ref(message_center));
+    ArgentumGame *game = new ArgentumGame(
+        i, commands_queue, std::ref(map_cfg), entities_file,
+        std::ref(entities_ids), std::ref(message_center), files_handler);
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);

@@ -16,6 +16,7 @@
 #include "command.h"  //<- guarda con esto y dependencias circulares
 #include "drop.h"
 #include "drops_manager.h"
+#include "files_handler.h"
 #include "game_status_notification.h"
 #include "hero.h"
 #include "heroes_manager.h"
@@ -30,6 +31,7 @@
 #include "projectiles_manager.h"
 #include "sale_info_notification.h"
 #include "serializer.h"
+
 typedef enum { PRIEST = 33, MERCHANT, BANKER } npc_t;
 // #define PRIEST 33
 // #define MERCHANT 34
@@ -41,7 +43,7 @@ class ArgentumGame : public Thread {
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
                std::ifstream &entities_config, unsigned int &entities_ids,
-               MessageCenter &message_center);
+               MessageCenter &message_center, FilesHandler &files_handler);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -74,7 +76,7 @@ class ArgentumGame : public Thread {
   unsigned int add_new_hero(const std::string &hero_race,
                             const std::string &hero_class,
                             const std::string &hero_name);
-  
+
   std::vector<Item *> setup_new_warrior();
   void add_existing_hero(Hero *hero, unsigned int id);
   void add_notification_queue(BlockingThreadSafeQueue<Notification *> *queue,
@@ -88,6 +90,9 @@ class ArgentumGame : public Thread {
   ThreadSafeQueue<Command *> *get_commands_queue();
   void stop_notification_queue(int player_id);
   void send_message(unsigned int player_id, std::string dst, std::string msg);
+  FilesHandler &files_handler;
+  Hero *get_hero_by_id(const int id);
+  Json::Value entities_cfg;
 
  private:
   unsigned int room = 0;
@@ -118,7 +123,6 @@ class ArgentumGame : public Thread {
   std::map<std::tuple<unsigned int, unsigned int>, int> npc_positions;
 
   void send_game_status();
-  Json::Value entities_cfg;
   std::map<unsigned int, BlockingThreadSafeQueue<Notification *> *>
       queues_notifications;
   std::tuple<unsigned int, unsigned int> get_contiguous_position(
@@ -128,6 +132,8 @@ class ArgentumGame : public Thread {
                           const std::string &hero_class,
                           const std::string &hero_name, const unsigned int x,
                           const unsigned int y);
+  unsigned int place_existing_hero(Hero *hero, const unsigned int x,
+                                   const unsigned int y);
   npc_t find_closest_npc();
   BankStatusNotification *get_bank_status(Hero *h);
   SaleInfoNotification *get_sale_info(npc_t npc);
@@ -135,7 +141,7 @@ class ArgentumGame : public Thread {
   bool is_npc_close(int x, int y, npc_t npc);
   std::tuple<int, int> get_npc_pos(npc_t npc);
   bool closest_npcs_sells_or_buys_item(int x, int y, item_t item);
-// Agrega items iniciales al heroe
+  // Agrega items iniciales al heroe
   void setup_new_hero(Hero *h);
   // Agrega items correspondientes al nuevo mago
   std::vector<Item *> setup_new_mage();
