@@ -212,7 +212,6 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       id_texture_t armor = ID_NULL;
       id_texture_t shield = ID_NULL;
       id_texture_t weapon = ID_NULL;
-      // std::cout << "Name of the hero: " << name << std::endl;
       class_id = extract<uint8_t>(status_serialized, j);
       mana_max = ntohs(extract<uint16_t>(status_serialized, j));
       curr_mana = ntohs(extract<uint16_t>(status_serialized, j));

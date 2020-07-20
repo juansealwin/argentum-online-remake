@@ -5,11 +5,11 @@
 #include <cmath>
 
 #include "base_character.h"
+#include "class_ids.h"
 #include "equipment.h"
 #include "inventory.h"
 #include "monster.h"
 #include "stdint.h"
-#include "class_ids.h"
 class Inventory;
 class Item;
 class Drop;
@@ -28,7 +28,8 @@ class Hero : public BaseCharacter {
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
        const float starting_xp_cap, const unsigned int bank_size,
-       const int amount_of_experience_to_update);
+       const int amount_of_experience_to_update, const bool is_new);
+
   // Hero(Hero* h, Map &map);
   void regenerate();
   // curacion en cada update
@@ -110,6 +111,11 @@ class Hero : public BaseCharacter {
   friend class ArgentumGame;
   unsigned int current_mana;
   unsigned int max_mana;
+  void set_ghost_mode(const bool ghost_mode);
+  void set_next_level_xp_limit(unsigned int next_level_xp_limit);
+  void set_experience(unsigned int experience);
+  void add_item_to_bank(Item *item);
+  void add_gold_to_bank(unsigned int ammount);
 
  private:
   // inicializados en member initialization list

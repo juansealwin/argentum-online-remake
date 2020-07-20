@@ -23,12 +23,13 @@ Client::~Client() {}
 void Client::do_handshake(std::string user_name, std::string race_selected,
                           std::string class_selected) {
   // Mandamos la información del usuario y preferencias
-  LoginCommandDTO* login_command =
-      new LoginCommandDTO(0, user_name, race_selected, class_selected);
+  int initial_room = HelperFunctions::random_int(0, 2);
+  LoginCommandDTO* login_command = new LoginCommandDTO(
+      initial_room, user_name, race_selected, class_selected);
 
   Protocol::send_command(socket, login_command);
   delete login_command;
-  std::cout<<"SOY "<<race_selected<<" Y "<<class_selected<<std::endl;
+  std::cout << "SOY " << race_selected << " Y " << class_selected << std::endl;
   // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
