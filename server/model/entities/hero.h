@@ -114,6 +114,8 @@ class Hero : public BaseCharacter {
   void set_ghost_mode(const bool ghost_mode);
   void set_next_level_xp_limit(unsigned int next_level_xp_limit);
   void set_experience(unsigned int experience);
+  void add_item_to_bank(Item *item);
+  void add_gold_to_bank(unsigned int ammount);
 
  private:
   // inicializados en member initialization list

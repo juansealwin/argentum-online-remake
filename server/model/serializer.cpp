@@ -368,7 +368,7 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
   current_hp = extract<uint16_t>(serialization, j);
   level = extract<uint16_t>(serialization, j);
   affected_by = extract<uint8_t>(serialization, j);  // no se usa aun
-  std::cout << "lvl: " << level << " maxhp: " << max_hp << " current_hp"
+  std::cout << "lvl: " << level << " maxhp: " << max_hp << " current_hp "
             << current_hp << std::endl;
 
   uint8_t name_size = extract<uint8_t>(serialization, j);
@@ -457,32 +457,23 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
     }
   }
 
+  // Agregamos los items del inventario
+  items_inventory = extract<uint8_t>(serialization, j);
+  std::cout << "items in inventory: " << items_inventory << std::endl;
+  for (int x = items_inventory; x > 0; x--) {
+    int current_item_id = extract<uint8_t>(serialization, j);
+    Item *i = ItemFactory::create_item(entities_cfg["items"],
+                                       (item_t)current_item_id);
+    hero->add_item(i);
+  }
+
+  int bank_size = extract<uint8_t>(serialization, j);
+  for (int x = 0; x < bank_size; x++) {
+    int item = extract<uint8_t>(serialization, j);
+    Item *i = ItemFactory::create_item(entities_cfg["items"], (item_t)item);
+    hero->add_item_to_bank(i);
+  }
+  uint16_t gold_in_bank = extract<uint16_t>(serialization, j);
+  hero->add_gold_to_bank(gold_in_bank);
   return hero;
-  // // std::cout << "items in inventory: " << items_inventory << std::endl;
-
-  // // Agregamos los items del inventario
-  // items_inventory = extract<uint8_t>(serialization, j);
-
-  // // std::cout << "@@Deserializing items in invetory@@" << std::endl;
-  // for (int x = items_inventory; x > 0; x--) {
-  //   int current_item_id = extract<uint8_t>(serialization, j);
-
-  //   // completarrrrrrrrrrr
-  // }
-
-  // // falta la parte del banco
-  // return nullptr;
 }
-
-/*
-  int bank_size = extract<uint8_t>(status_serialized, j);
-        // std::cout << "bank size is " << bank_size << std::endl;
-        for (int x = 0; x < bank_size; x++) {
-          int item = extract<uint8_t>(status_serialized, j);
-          next_ui_status.add_item(BANK, get_item_texture(item));
-          // std::cout << "item in bank: " << item << std::endl;;
-        }
-        // uint16_t gold = ntohs(extract<uint16_t>(status_serialized, j));
-        // std::cout << "gold in bnak: " << gold << std::endl;
-        next_ui_status.open_shop(BANK)
-        */

@@ -287,6 +287,9 @@ void Hero::bank_item(unsigned int item_id) {
   bank->add_item(i);
 }
 
+void Hero::add_item_to_bank(Item *item) { bank->add_item(item); }
+void Hero::add_gold_to_bank(unsigned int ammount) { bank->add_gold(ammount); }
+
 Item *Hero::remove_item(unsigned int item_id) {
   if (ghost_mode)
     throw ModelException(
