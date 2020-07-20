@@ -45,4 +45,4 @@ client/client_autogen
 client/client
 server/server
 
-server/status
+server/status/*
