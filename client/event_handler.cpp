@@ -6,11 +6,20 @@ EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
   // Seteamos las dimensiones de la "caja" de inventario
-  inventory = InteractiveBox(640, 168, 139, 183, 5, 4);
+  inventory = InteractiveBox(640 * texture_manager.get_w_ratio(),
+                             168 * texture_manager.get_h_ratio(),
+                             139 * texture_manager.get_w_ratio(),
+                             183 * texture_manager.get_h_ratio(), 5, 4);
   // Seteamos las dimensiones de la "caja" para escribir en el minichat
-  text_box = InteractiveBox(10, 112, 544, 20, 1, 1);
+  text_box = InteractiveBox(10 * texture_manager.get_w_ratio(),
+                            112 * texture_manager.get_h_ratio(),
+                            544 * texture_manager.get_w_ratio(),
+                            20 * texture_manager.get_h_ratio(), 1, 1);
   // Seteamos las dimensiones de la "caja" para la tienda
-  shop_box = InteractiveBox(640, 451, 139, 138, 4, 4);
+  shop_box = InteractiveBox(640 * texture_manager.get_w_ratio(),
+                            451 * texture_manager.get_h_ratio(),
+                            139 * texture_manager.get_w_ratio(),
+                            138 * texture_manager.get_h_ratio(), 4, 4);
 }
 
 void EventHandler::get_events() {
@@ -50,16 +59,16 @@ void EventHandler::get_events() {
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_EQUALS) {
-            //background_music.increase_music_volume();
+            // background_music.increase_music_volume();
           }
           if (event.key.keysym.sym == SDLK_MINUS) {
-            //background_music.decrease_music_volume();
+            // background_music.decrease_music_volume();
           }
           if (event.key.keysym.sym == SDLK_m) {
-            //background_music.stop_music();
+            // background_music.stop_music();
           }
           if (event.key.keysym.sym == SDLK_p) {
-            //background_music.play_music();
+            // background_music.play_music();
           }
           if (event.key.keysym.sym == SDLK_SPACE) {
             AttackCommandDTO* attack_command = new AttackCommandDTO();
@@ -119,8 +128,8 @@ void EventHandler::get_events() {
           //   commands_queue.push(private_message_command);
           // }
           // if (event.key.keysym.sym == SDLK_4) {
-          //   BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
+          //   BankItemCommandDTO* bank_item_command = new
+          //   BankItemCommandDTO(6); commands_queue.push(bank_item_command);
           // }
           // if (event.key.keysym.sym == SDLK_5) {
           //   UnbankItemCommandDTO* bank_item_command =
@@ -128,8 +137,8 @@ void EventHandler::get_events() {
           //   commands_queue.push(bank_item_command);
           // }
           // if (event.key.keysym.sym == SDLK_6) {
-          //   BankGoldCommandDTO* bank_item_command = new BankGoldCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
+          //   BankGoldCommandDTO* bank_item_command = new
+          //   BankGoldCommandDTO(6); commands_queue.push(bank_item_command);
           // }
           // if (event.key.keysym.sym == SDLK_7) {
           //   UnbankGoldCommandDTO* bank_item_command =
@@ -146,11 +155,11 @@ void EventHandler::get_events() {
           //   commands_queue.push(bank_item_command);
           // }
           // if (event.key.keysym.sym == SDLK_0) {
-          //   SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
+          //   SellItemCommandDTO* bank_item_command = new
+          //   SellItemCommandDTO(6); commands_queue.push(bank_item_command);
           // }
 
-        // Chequeamos si el usuario quiere dejar de moverse
+          // Chequeamos si el usuario quiere dejar de moverse
         } else if (event.type == SDL_KEYUP) {
           if (event.key.keysym.sym == SDLK_UP ||
               event.key.keysym.sym == SDLK_DOWN ||

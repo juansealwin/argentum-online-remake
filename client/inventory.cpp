@@ -48,8 +48,8 @@ id_texture_t Inventory::drop_item(int index) {
 }
 
 void Inventory::render(SDL_Renderer* renderer) {
-  int j = X_SHOP;
-  int k = Y_SHOP;
+  int j = X_SHOP * texture_manager.get_w_ratio();
+  int k = Y_SHOP * texture_manager.get_h_ratio();
 
   for (int i = 0; i < MAX_ITEMS_SHOP; i++) {
     if (items[i].first != ID_NULL)
@@ -59,7 +59,7 @@ void Inventory::render(SDL_Renderer* renderer) {
     j += ITEM_SIZE + X_PADDING;
     // Si ya se renderizaron 4 items se pasa a la siguiente fila
     if (((i + 1) % 4) == 0) {
-      j = X_INVENTORY;
+      j = X_SHOP * texture_manager.get_w_ratio();
       // Dejamos 3px de espacio vertical entre items
       k += ITEM_SIZE + Y_PADDING;
     }
@@ -67,8 +67,8 @@ void Inventory::render(SDL_Renderer* renderer) {
 }
 
 void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
-  int j = X_INVENTORY;
-  int k = Y_INVENTORY;
+  int j = X_INVENTORY * texture_manager.get_w_ratio();
+  int k = Y_INVENTORY * texture_manager.get_h_ratio();
 
   for (int i = 0; i < MAX_ITEMS_INVENTORY; i++) {
     if (items[i].first != ID_NULL)
@@ -87,7 +87,7 @@ void Inventory::render(SDL_Renderer* renderer, bool is_selected, int index) {
     j += ITEM_SIZE + X_PADDING;
     // Si ya se renderizaron 4 items se pasa a la siguiente fila
     if (((i + 1) % 4) == 0) {
-      j = X_INVENTORY;
+      j = X_INVENTORY * texture_manager.get_w_ratio();
       // Dejamos 3px de espacio vertical entre items
       k += ITEM_SIZE + Y_PADDING;
     }
