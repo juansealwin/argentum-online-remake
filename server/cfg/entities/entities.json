@@ -295,7 +295,7 @@
     "../../server/cfg/maps/argal_map.json"
   ],
   "criticalDamageMultiplier": 2,
-  "inventorySize": 10,
+  "inventorySize": 16,
   "bankSize": 10,
   "criticalDamageProbability": 0.125,
   "evasionProbability": 0.001,
