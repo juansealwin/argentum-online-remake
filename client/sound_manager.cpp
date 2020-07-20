@@ -11,7 +11,7 @@ void SoundManager::charge_sound_music() {
   /************** SONIDOS AL CAMINAR *****************/
   sound_effects[WALK_PC].set_sound("caminar.wav");
   sound_effects[WALK_SPIDER].set_sound("caminar_araña.wav");
-  sound_effects[WALK_SKELETON].set_sound("caminar_araña.wav");
+  sound_effects[WALK_SKELETON].set_sound("caminar_esqueleto.wav");
   sound_effects[WALK_GOBLIN].set_sound("caminar_goblin.wav");
   sound_effects[WALK_ZOMBIE].set_sound("caminar_zombie.wav");
   sound_effects[CAST_BLEEDING].set_sound("sangrado.mp3");
