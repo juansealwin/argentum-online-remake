@@ -196,6 +196,17 @@
         "price": 200,
         "id": 19
       }
+      ,
+      "deadlyStaff": {
+        "spellName": "deadly missile",
+        "minDmg": 30,
+        "maxDmg": 50,
+        "hpRecovery": 0,
+        "range": 0,
+        "mana": 80,
+        "price": 200,
+        "id": 20
+      }
     },
     "drop": {
       "id": 37

@@ -10,61 +10,44 @@ Item* ItemFactory::create_item(Json::Value &items_config, item_t item) {
 switch (item) {
     case turtle_shield:
       return create_turtle_shield(items_config);
-      break;
     case iron_shield:
       return create_iron_shield(items_config);
-      break;
     case hood:
       return create_hood(items_config);
-      break;
     case iron_helmet:
       return create_iron_helmet(items_config);
-      break;
     case magic_hat:
       return create_magic_hat(items_config);
-      break;
     case leather_armour:
       return create_leather_armour(items_config);
-      break;
     case plate_armour:
       return create_plate_armour(items_config);
-      break;
     case blue_tunic:
       return create_blue_tunic(items_config);
-      break;
     case hp_potion:
       return create_hp_potion(items_config);
-      break;
     case mana_potion:
       return create_mana_potion(items_config);
-      break;
     case sword:
       return create_sword(items_config);
-      break;
     case axe:
       return create_axe(items_config);
-      break;
     case hammer:
       return create_hammer(items_config);
-      break;
     case simple_bow:
       return create_simple_bow(items_config);
-      break;
     case compound_bow:
       return create_compound_bow(items_config);
-      break;
     case ash_stick:
       return create_ash_stick(items_config);
-      break;
     case gnarled_staff:
       return create_gnarled_staff(items_config);
-      break;
     case crimp_staff:
       return create_crimp_staff(items_config);
-      break;
     case elven_flute:
       return create_elven_flute(items_config);
-      break;
+    case deadly_staff:
+      return create_deadly_staff(items_config);
     default:
       return nullptr;
   }
@@ -238,6 +221,13 @@ Staff *ItemFactory::create_crimp_staff(Json::Value &items_config) {
 }
 Staff *ItemFactory::create_elven_flute(Json::Value &items_config) {
   Json::Value cfg = items_config["staffs"]["elvenFlute"];
+  return new Staff(cfg["id"].asUInt(), cfg["minDmg"].asUInt(),
+                   cfg["maxDmg"].asUInt(), cfg["range"].asUInt(),
+                   cfg["mana"].asUInt(), cfg["hpRecovery"].asUInt());
+}
+
+Staff *ItemFactory::create_deadly_staff(Json::Value &items_config) {
+  Json::Value cfg = items_config["staffs"]["deadlyStaff"];
   return new Staff(cfg["id"].asUInt(), cfg["minDmg"].asUInt(),
                    cfg["maxDmg"].asUInt(), cfg["range"].asUInt(),
                    cfg["mana"].asUInt(), cfg["hpRecovery"].asUInt());
