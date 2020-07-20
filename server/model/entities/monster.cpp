@@ -48,7 +48,7 @@ unsigned int Monster::receive_damage(unsigned int damage, bool critical,
     actual_damage *= critical_damage_multiplier;
   }
   current_hp = std::max(current_hp - actual_damage, 0);
-  if (current_hp == 0) alive = false;
+  if (current_hp <= 0) alive = false;
   affected_by = weapon_origin;
   return last_hp - current_hp;
 }
