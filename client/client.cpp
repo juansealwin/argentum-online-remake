@@ -7,48 +7,51 @@ T extract(const std::vector<unsigned char>& v, int pos) {
   return value;
 }
 
-Client::Client(const char* host, const char* port, const int screen_width,
-               const int screen_height)
-    : screen_width(screen_width), screen_height(screen_height) {
+Client::Client(const char* host, const char* port, WindowGame& new_window)
+    : window_game(new_window) {
   Socket socket;
-  socket.connect(host, port);
-  this->socket = std::move(socket);
-  is_running = true;
+  if (socket.connect(host, port) == EXIT_SUCCESS) {
+    this->socket = std::move(socket);
+    is_running = true;
+  } else {
+    throw ConnectionException("%s", MSG_ERROR_CONNECTING_SERVER);
+  }
 }
 
 Client::~Client() {}
 
-void Client::play() {
-  CommandsBlockingQueue commands_to_send;
-  int initial_room = HelperFunctions::random_int(0, 2);
-
-  /* Esto no debería estar harcodeado sino que se elige en el lobby */
-  std::string player_name = "tobias";
-  std::string hero_race = "gnome";
-  std::string hero_class = "warrior";
-
+void Client::do_handshake(std::string user_name, std::string race_selected,
+                          std::string class_selected) {
+  // Mandamos la información del usuario y preferencias
   LoginCommandDTO* login_command =
-      new LoginCommandDTO(initial_room, player_name, hero_race, hero_class);
-  commands_to_send.push(login_command);
+      new LoginCommandDTO(0, user_name, race_selected, class_selected);
 
-  CommandsSender sender(commands_to_send, socket);
-  sender.start();
-
+  Protocol::send_command(socket, login_command);
+  delete login_command;
+  std::cout << "SOY " << race_selected << " Y " << class_selected << std::endl;
+  // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
   player_id = ntohs(extract<uint16_t>(starting_info, 1));
-  int initial_map = ntohs(extract<uint16_t>(starting_info, 3));
-  ProtectedMap protected_map(player_id, screen_width, screen_height,
-                             initial_map);
-  EventsQueue event_queue;
+  initial_map = ntohs(extract<uint16_t>(starting_info, 3));
+}
 
+void Client::play() {
+  ProtectedMap protected_map(player_id, window_game.get_screen_width(),
+                             window_game.get_screen_height(), initial_map);
+  EventsQueue event_queue;
+  CommandsBlockingQueue commands_to_send;
+
+  CommandsSender sender(commands_to_send, socket);
   GameUpdater updater(player_id, protected_map, socket, is_running);
-  GameRenderer renderer(screen_width, screen_height, protected_map,
-                        event_queue);
+  GameRenderer renderer(
+      window_game.get_renderer(), window_game.get_screen_width(),
+      window_game.get_screen_height(), protected_map, event_queue);
   EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al
   // server
 
+  sender.start();
   updater.start();
   renderer.start();
   event_handler.get_events();

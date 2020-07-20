@@ -6,19 +6,32 @@
 #include <iostream>
 #include <stdexcept>
 
-void Socket::connect(const char *host, const char *port) {
+int Socket::connect(const char *host, const char *port) {
   bool connected = false;
+  int fd = 0;
+
   struct addrinfo *addrinfo_list;
   addrinfo_list = getAddr(host, port, CLIENT_FLAGS);
-  int fd = -1;
+  if (addrinfo_list == NULL) return EXIT_FAILURE;
+
   struct addrinfo *addr = addrinfo_list;
   while (addr && !connected) {
     fd = socket(addr->ai_family, addr->ai_socktype, addr->ai_protocol);
-    if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == 0) connected = true;
+
+    if (fd == -1) return EXIT_FAILURE;
+
+    else if (::connect(fd, addr->ai_addr, addr->ai_addrlen) == -1) {
+      freeaddrinfo(addrinfo_list);
+      return EXIT_FAILURE;
+    } else {
+      connected = true;
+    }
+
     addr = addr->ai_next;
   }
   this->fd = fd;
   freeaddrinfo(addrinfo_list);
+  return EXIT_SUCCESS;
 }
 
 void Socket::bind_and_listen(const char *port) {

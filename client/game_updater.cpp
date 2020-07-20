@@ -27,11 +27,12 @@ void GameUpdater::run() {
       j = 0;
 
       // Recibimos las actualizaciones del mapa
-      Protocol::receive_notification(read_socket, status_serialized);
-
+      status_serialized.clear();
+      status_serialized.resize(0);
+      int bytes_rcv = Protocol::receive_notification(read_socket, status_serialized);
+      if (bytes_rcv == 0) break;
       // Extraemos el tipo de notificación
       type_of_notification = extract<uint8_t>(status_serialized, j);
-
       // Vemos si es una notificación de estado del mapa
       if (type_of_notification == STATUS_NOTIFICATION) {
         // Deserializamos la información recibida
@@ -97,6 +98,8 @@ void GameUpdater::run() {
       // Chequeamos si es una notificación de cierre de cliente
       else if (type_of_notification == CLOSE_CONNECTION_NOTIFICATION) {
         break;
+      } else {
+        continue;
       }
 
       if (!open_store) {
