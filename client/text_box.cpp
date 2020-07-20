@@ -69,74 +69,76 @@ void TextBox::set_mesures_box(text_box_t box_type) {
   width = 0;
 
   switch (box_type) {
+    // TextBox de la UI
     case MESSAGE_1:
-      x = 15;
-      y = 13;
-      height = 16;
+      x = 15 * texture_manager.get_w_ratio();
+      y = 13 * texture_manager.get_h_ratio();
+      height = 16 * texture_manager.get_h_ratio();
       break;
 
     case MESSAGE_2:
-      x = 15;
-      y = 35;
-      height = 16;
+      x = 15 * texture_manager.get_w_ratio();
+      y = 35 * texture_manager.get_h_ratio();
+      height = 16 * texture_manager.get_h_ratio();
       break;
 
     case MESSAGE_3:
-      x = 15;
-      y = 57;
-      height = 16;
+      x = 15 * texture_manager.get_w_ratio();
+      y = 57 * texture_manager.get_h_ratio();
+      height = 16 * texture_manager.get_h_ratio();
       break;
 
     case MESSAGE_4:
-      x = 15;
-      y = 79;
-      height = 16;
+      x = 15 * texture_manager.get_w_ratio();
+      y = 79 * texture_manager.get_h_ratio();
+      height = 16 * texture_manager.get_h_ratio();
       break;
 
     case INPUT_TEXT:
-      x = 15;
-      y = 110;
-      height = 16;
+      x = 15 * texture_manager.get_w_ratio();
+      y = 110 * texture_manager.get_h_ratio();
+      height = 16 * texture_manager.get_h_ratio();
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
       break;
 
     case NAME:
-      x = 640;
-      y = 52;
-      height = 25;
+      x = 640 * texture_manager.get_w_ratio();
+      y = 52 * texture_manager.get_h_ratio();
+      height = 25 * texture_manager.get_h_ratio();
       break;
 
     case LEVEL:
-      x = 640;
-      y = 23;
-      height = 20;
+      x = 640 * texture_manager.get_w_ratio();
+      y = 23 * texture_manager.get_h_ratio();
+      height = 20 * texture_manager.get_h_ratio();
       break;
 
     case EXP:
-      x = 660;
-      y = 92;
-      height = 20;
+      x = 660 * texture_manager.get_w_ratio();
+      y = 92 * texture_manager.get_h_ratio();
+      height = 20 * texture_manager.get_h_ratio();
       break;
 
     case GOLD_QUANTITY:
-      x = 665;
-      y = 364;
-      height = 15;
+      x = 665 * texture_manager.get_w_ratio();
+      y = 364 * texture_manager.get_h_ratio();
+      height = 15 * texture_manager.get_h_ratio();
       break;
 
     case HEALTH:
-      x = 660;
-      y = 390;
-      height = 15;
+      x = 660 * texture_manager.get_w_ratio();
+      y = 390 * texture_manager.get_h_ratio();
+      height = 15 * texture_manager.get_h_ratio();
       break;
 
     case MANA:
-      x = 660;
-      y = 415;
-      height = 15;
+      x = 660 * texture_manager.get_w_ratio();
+      y = 415 * texture_manager.get_h_ratio();
+      height = 15 * texture_manager.get_h_ratio();
       break;
 
+    // TextBox del Lobby
     case USER:
       x = 284;
       y = 428;

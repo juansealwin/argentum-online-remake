@@ -270,3 +270,13 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
 
   return *map[id_frame];
 }
+
+void TextureManager::set_aspect_ratio(const float w_ratio,
+                                      const float h_ratio) {
+  width_ratio = w_ratio;
+  height_ratio = h_ratio;
+}
+
+float TextureManager::get_w_ratio() const { return width_ratio; }
+
+float TextureManager::get_h_ratio() const { return height_ratio; }

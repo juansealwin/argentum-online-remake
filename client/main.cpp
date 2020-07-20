@@ -29,9 +29,16 @@ int main(int argc, char* argv[]) {
                                 argentum_lobby.get_screen_height(),
                                 argentum_lobby.get_fs_mode());
 
+      // Seteamos la relación de ancho y alto de resolución
+      texture_manager.set_aspect_ratio(window_game.get_width_ratio(),
+                                       window_game.get_height_ratio());
+
+      // Hacemos el handshake con el server
       client.do_handshake(argentum_lobby.get_user_name(),
-                            argentum_lobby.get_player_race(),
-                            argentum_lobby.get_player_class());
+                          argentum_lobby.get_player_race(),
+                          argentum_lobby.get_player_class());
+
+      // Comenzamos el juego
       client.play();
     }
     return EXIT_SUCCESS;
