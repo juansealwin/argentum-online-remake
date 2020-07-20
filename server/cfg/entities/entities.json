@@ -289,6 +289,18 @@
       "id": 28
     }
   },
+  "idToRace": {
+    "25": "human",
+    "26": "elf",
+    "27": "dwarf",
+    "28": "gnome"
+  },
+  "idToClass": {
+    "20": "mage",
+    "21": "cleric",
+    "23": "paladin",
+    "24": "warrior"
+  },
   "maps": [
     "../../server/cfg/maps/grass_map.json",
     "../../server/cfg/maps/desert_map.json",

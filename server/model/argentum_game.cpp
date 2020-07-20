@@ -418,8 +418,8 @@ unsigned int ArgentumGame::add_new_hero(const std::string &hero_race,
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
 
-  Hero *hero = files_handler.get_player_status(hero_name, entities_cfg, x, y,
-                                               std::ref(map));
+  Hero *hero = files_handler.get_player_status(
+      hero_name, entities_cfg, entities_ids, x, y, std::ref(map));
   unsigned int new_player_id = 0;
   if (hero != nullptr) {
     new_player_id = place_existing_hero(hero, x, y);

@@ -15,8 +15,6 @@ void FilesHandler::save_player_status(Hero* hero) {
   std::vector<unsigned char> player_serialization;
   uint8_t entity_type = hero->type;
   player_serialization.push_back(entity_type);
-  std::cout << "entity type es " << entity_type << " y " << (int)entity_type
-            << std::endl;
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   // Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
 
@@ -38,8 +36,8 @@ void FilesHandler::save_player_status(Hero* hero) {
 }
 
 Hero* FilesHandler::get_player_status(const std::string player_name,
-                                      Json::Value& entities_cfg, int id, int x, int y,
-                                      Map* map) {
+                                      Json::Value& entities_cfg, int id, int x,
+                                      int y, Map* map) {
   std::unique_lock<std::mutex> lock(mutex);
 
   std::vector<unsigned char> player_serialization;
@@ -57,8 +55,8 @@ Hero* FilesHandler::get_player_status(const std::string player_name,
   players_status.seekg(0, std::ios_base::beg);
   players_status.read((char*)&player_serialization[0], fileSize);
 
-  Hero* hero = Serializer::deserialize_hero(player_serialization, entities_cfg, id,
-                                            x, y, map);
+  Hero* hero = Serializer::deserialize_hero(player_serialization, entities_cfg,
+                                            id, x, y, map);
   players_status.close();
 
   return hero;

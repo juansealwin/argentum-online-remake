@@ -146,9 +146,7 @@ void Serializer::serialize_hero(std::vector<unsigned char> &serialization,
   insert(serialization, level);
   insert(serialization, affected_by_item);
   serialization.push_back(name_size);
-  std::cout << "name size serializer: " << (int)name_size << std::endl;
   for (int x = 0; x < name_size; x++) {
-    // std::cout << "x es igual a " << x << std::endl;
     serialization.push_back(h->name.at(x));
   }
   serialization.push_back(class_id);
@@ -357,13 +355,13 @@ bool Serializer::is_drop(uint8_t t) { return (t == 37); }
 Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
                                    Json::Value &entities_cfg, int id, int x,
                                    int y, Map *map) {
-  int entity_type, class_id, affected_by, meditating, ghost_mode, close_to_npc,
+  int class_id, affected_by, meditating, ghost_mode, close_to_npc,
       items_equiped, items_inventory;
-  uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
-      intelligence, agility, constitution, gold, xp_limit, current_xp;
+  uint16_t max_hp, current_hp, level, mana_max, curr_mana, str, intelligence,
+      agility, constitution, gold, xp_limit, current_xp;
 
   unsigned int j = 0;
-  entity_type = extract<uint8_t>(serialization, j);
+  int entity_type = extract<uint8_t>(serialization, j);
   std::cout << "entity type: " << entity_type << std::endl;
 
   max_hp = extract<uint16_t>(serialization, j);  // no se usa aun
@@ -374,14 +372,11 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
             << current_hp << std::endl;
 
   uint8_t name_size = extract<uint8_t>(serialization, j);
-  std::cout << "name size deserealizer: " << (int)name_size << std::endl;
   std::string name;
   for (int x = 0; x < name_size; x++) {
     name += serialization.at(j);
     j++;
   }
-  std::cout << "Name of the hero: " << name << std::endl;
-
   class_id = extract<uint8_t>(serialization, j);
   mana_max = (extract<uint16_t>(serialization, j));  // no se usa aun
   curr_mana = (extract<uint16_t>(serialization, j));
@@ -399,8 +394,14 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
             << "max_hp: " << max_hp << " max_mana " << mana_max << " gold "
             << gold << " ghost mode " << ghost_mode << std::endl;
 
-  Json::Value race_stats = entities_cfg["races"][entity_type];
-  Json::Value class_stats = entities_cfg["classes"][class_id];
+  const std::string race_name =
+      entities_cfg["idToRace"][std::to_string(entity_type)].asString();
+  Json::Value race_stats = entities_cfg["races"][race_name];
+
+  const std::string class_name =
+      entities_cfg["idToClass"][std::to_string(class_id)].asString();
+  Json::Value class_stats = entities_cfg["classes"][class_name];
+
   Hero *hero = new Hero(
       id, x, y, race_stats["id"].asUInt(), 'h', level, str, intelligence,
       agility, constitution, class_stats["fClassHp"].asUInt(),
@@ -456,7 +457,7 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
     }
   }
 
-  return nullptr;
+  return hero;
   // // std::cout << "items in inventory: " << items_inventory << std::endl;
 
   // // Agregamos los items del inventario

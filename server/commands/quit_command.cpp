@@ -9,7 +9,6 @@ QuitCommand::~QuitCommand() {}
 void QuitCommand::execute(ArgentumGame *game) {
   Hero *hero = game->get_hero_by_id(uid);
   game->files_handler.save_player_status(hero);
-  game->files_handler.get_player_status(hero->get_name(), game->entities_cfg);
 
   game->stop_notification_queue(uid);
   game->clean_notifications_queues();
