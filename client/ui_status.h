@@ -25,7 +25,7 @@ class UIStatus {
   UIStatus& operator=(const UIStatus&);
   // Seteo de msj de ui: name, lvl, mx_hp, hp, max_mana, mana, goal_xp, xp, gold
   void set_ui_messages(std::string, int, int, int, int, int, int, int, int);
-  void render(SDL_Renderer*, std::string, bool, int);
+  void render(SDL_Renderer*, SDL_Rect, std::string, bool, int);
   void add_item(inventory_t, id_texture_t);
   void add_item(id_texture_t, bool);
   void close_shops();

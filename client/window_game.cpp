@@ -61,9 +61,13 @@ void WindowGame::resize_screen(int new_screen_w, int new_screen_h, bool fs) {
   if (fs) {
     SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
     SDL_GetRendererOutputSize(renderer, &screen_width, &screen_height);
+    //SDL_RenderSetLogicalSize(renderer, 800, 600);
     full_screen = true;
   } else {
     SDL_SetWindowSize(window, new_screen_w, new_screen_h);
+    //SDL_RenderSetLogicalSize(renderer, new_screen_w, new_screen_h);
+    screen_width = new_screen_w;
+    screen_height = new_screen_h;
     full_screen = false;
   }
 }

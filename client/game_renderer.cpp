@@ -18,6 +18,8 @@ void GameRenderer::run() {
     texture_manager.load_textures(renderer);
     int frame_start;
     int frame_time;
+    // Para saber las dimensiones de la ventana de juego
+    SDL_Rect window_size = {0, 0, screen_width, screen_height};
     // Leemos la primera instancia que nos manda el server
     Game current_game;
     protected_map.map_reader(current_game, ui, current_sounds);
@@ -27,7 +29,7 @@ void GameRenderer::run() {
     int index;
     bool is_selected = false;
     int item_selected = 20;  // TODO: aclarar que hace
-    std::string input_message = " ";
+    std::string input_message = "";
 
     while (is_running) {
       frame_start = SDL_GetTicks();
@@ -70,8 +72,6 @@ void GameRenderer::run() {
       // Actualizamos el estado del inventario para el EventHandler
       events_queue.write_status(ui);
 
-      // Actualizamos el mercado/banco
-
       // Limpiamos el renderer
       SDL_RenderClear(renderer);
 
@@ -79,7 +79,8 @@ void GameRenderer::run() {
       current_game.render(renderer);
 
       // Renderizamos la UI con sus valores actualizados
-      ui.render(renderer, input_message, is_selected, item_selected);
+      ui.render(renderer, window_size, input_message, is_selected,
+                item_selected);
 
       // Renderizamos todo lo de esta pasada
       SDL_RenderPresent(renderer);
