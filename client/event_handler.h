@@ -65,6 +65,12 @@
 #define STR_GNARLED_STAFF "baculo nudoso"
 #define STR_CRIMP_STAFF "baculo engarzado"
 #define STR_ELVEN_ELUDE "laud elfico"
+#define WIDTH_RATIO_800 1
+#define INV_ROWS_800x600 5
+#define INV_COLS_800x600 4
+#define SHOP_ROWS_800x600 4
+#define SHOP_COLS_800x600 4
+
 
 class EventHandler {
  private:
