@@ -18,7 +18,8 @@ class Serializer {
   static void serialize_hero(std::vector<unsigned char> &serialization, Hero *m,
                              const bool use_htons);
   static Hero *deserialize_hero(std::vector<unsigned char> &serialization,
-                                Json::Value &entities_cfg);
+                                Json::Value &entities_cfg, int id, int x, int y,
+                                Map *map);
 
   // static void debug_deserialize_v3(std::vector<unsigned char>
   // serialization);

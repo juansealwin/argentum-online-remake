@@ -417,8 +417,16 @@ unsigned int ArgentumGame::add_new_hero(const std::string &hero_race,
   std::tuple<int, int> free_tile = map->get_random_free_space();
   int x = std::get<0>(free_tile);
   int y = std::get<1>(free_tile);
-  unsigned int new_player_id =
-      place_hero(hero_race, hero_class, hero_name, x, y);
+
+  Hero *hero = files_handler.get_player_status(hero_name, entities_cfg, x, y,
+                                               std::ref(map));
+  unsigned int new_player_id = 0;
+  if (hero != nullptr) {
+    new_player_id = place_existing_hero(hero, x, y);
+  } else {
+    new_player_id = place_hero(hero_race, hero_class, hero_name, x, y);
+  }
+
   return new_player_id;
 }
 
@@ -450,9 +458,9 @@ void ArgentumGame::update() {
   // creando drops
   monsters_manager.update(std::ref(monsters), std::ref(heroes), message_center,
                           entities_cfg);
-  monsters_manager.respawn_monsters(std::ref(monsters), map, entities_cfg["monstersPoblation"].asUInt(),
-                                    std::ref(entities_cfg["npcs"]),
-                                    entities_ids);
+  monsters_manager.respawn_monsters(
+      std::ref(monsters), map, entities_cfg["monstersPoblation"].asUInt(),
+      std::ref(entities_cfg["npcs"]), entities_ids);
 
   heroes_manager.update(
       std::ref(heroes),
@@ -590,8 +598,15 @@ unsigned int ArgentumGame::place_hero(const std::string &hero_race,
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
       entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
-      entities_cfg["amountOfExperienceToUpdate"].asUInt());
+      entities_cfg["amountOfExperienceToUpdate"].asUInt(), true);
   setup_new_hero(hero);
+  map->ocupy_cell(x, y, entities_ids);
+  heroes.emplace(entities_ids, hero);
+  return entities_ids++;
+}
+
+unsigned int ArgentumGame::place_existing_hero(Hero *hero, const unsigned int x,
+                                               const unsigned int y) {
   map->ocupy_cell(x, y, entities_ids);
   heroes.emplace(entities_ids, hero);
   return entities_ids++;
@@ -767,6 +782,6 @@ bool ArgentumGame::closest_npcs_sells_or_buys_item(int x, int y, item_t item) {
   return false;
 }
 
-Hero* ArgentumGame::get_hero_by_id(const int id) {
+Hero *ArgentumGame::get_hero_by_id(const int id) {
   return dynamic_cast<Hero *>(heroes.at(id));
 }

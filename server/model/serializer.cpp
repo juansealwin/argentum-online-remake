@@ -355,7 +355,8 @@ bool Serializer::is_drop(uint8_t t) { return (t == 37); }
 // dejó acá porque el agregado de esa clase causaba dependencias circulares en
 // tiempo de ejecución y no se pudo arreglar a pesar de dedicarle varias horas
 Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
-                                   Json::Value &entities_cfg) {
+                                   Json::Value &entities_cfg, int id, int x,
+                                   int y, Map *map) {
   int entity_type, class_id, affected_by, meditating, ghost_mode, close_to_npc,
       items_equiped, items_inventory;
   uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
@@ -401,11 +402,11 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
   Json::Value race_stats = entities_cfg["races"][entity_type];
   Json::Value class_stats = entities_cfg["classes"][class_id];
   Hero *hero = new Hero(
-      race_stats["id"].asUInt(), 'h', level, str, intelligence, agility,
-      constitution, class_stats["fClassHp"].asUInt(),
+      id, x, y, race_stats["id"].asUInt(), 'h', level, str, intelligence,
+      agility, constitution, class_stats["fClassHp"].asUInt(),
       race_stats["fRaceHp"].asUInt(), race_stats["fRaceRecovery"].asUInt(),
       race_stats["fRaceMana"].asUInt(), class_stats["fClassMana"].asUInt(),
-      class_stats["fClassMeditation"].asUInt(), gold, class_id, name,
+      class_stats["fClassMeditation"].asUInt(), gold, class_id, map, name,
       entities_cfg["criticalDamageMultiplier"].asFloat(),
       entities_cfg["inventorySize"].asInt(),
       entities_cfg["criticalDamageProbability"].asFloat(),
@@ -413,7 +414,7 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
       entities_cfg["maxSafeGoldMultiplier"].asFloat(),
       entities_cfg["levelUpLimitPower"].asFloat(),
       entities_cfg["startingXpCap"].asFloat(), entities_cfg["bankSize"].asInt(),
-      entities_cfg["amountOfExperienceToUpdate"].asUInt());
+      entities_cfg["amountOfExperienceToUpdate"].asUInt(), false);
 
   hero->set_hp(current_hp);
   hero->set_mana(curr_mana);

@@ -28,24 +28,7 @@ class Hero : public BaseCharacter {
        const float critical_damage_probability, const float evasion_probability,
        const float max_safe_gold_multiplier, const float level_up_limit_power,
        const float starting_xp_cap, const unsigned int bank_size,
-       const int amount_of_experience_to_update);
-
-  // constructor para heroes ya existentes
-  // falta unique_id, x, y, map. que me los pase argentum game cuando el chabon
-  // se loguea. agregar datos del banco?
-  Hero(unsigned int race_id, char repr, unsigned int level,
-       unsigned int strength, unsigned int intelligence, unsigned int agility,
-       unsigned int constitution, unsigned int f_class_hp,
-       unsigned int f_race_hp, unsigned int f_race_recovery,
-       unsigned int f_race_mana, unsigned int f_class_mana,
-       unsigned int f_class_meditation, unsigned int gold,
-       unsigned int class_id, const std::string &name,
-       const float critical_damage_multiplier,
-       const unsigned int inventory_size,
-       const float critical_damage_probability, const float evasion_probability,
-       const float max_safe_gold_multiplier, const float level_up_limit_power,
-       const float starting_xp_cap, const unsigned int bank_size,
-       const int amount_of_experience_to_update);
+       const int amount_of_experience_to_update, const bool is_new);
 
   // Hero(Hero* h, Map &map);
   void regenerate();

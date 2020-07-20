@@ -132,6 +132,8 @@ class ArgentumGame : public Thread {
                           const std::string &hero_class,
                           const std::string &hero_name, const unsigned int x,
                           const unsigned int y);
+  unsigned int place_existing_hero(Hero *hero, const unsigned int x,
+                                   const unsigned int y);
   npc_t find_closest_npc();
   BankStatusNotification *get_bank_status(Hero *h);
   SaleInfoNotification *get_sale_info(npc_t npc);

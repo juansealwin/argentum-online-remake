@@ -16,7 +16,8 @@ Hero::Hero(
     const unsigned int inventory_size, const float critical_damage_probability,
     const float evasion_probability, const float max_safe_gold_multiplier,
     const float level_up_limit_power, const float starting_xp_cap,
-    const unsigned int bank_size, const int amount_of_experience_to_update)
+    const unsigned int bank_size, const int amount_of_experience_to_update,
+    const bool is_new)
     : BaseCharacter(unique_id, x, y, race_id, repr,
                     constitution * f_class_hp * f_race_hp * level, level, map,
                     name),
@@ -48,7 +49,9 @@ Hero::Hero(
       starting_xp_cap(starting_xp_cap),
       blocked_seconds_duration(0),
       amount_of_experience_to_update(amount_of_experience_to_update) {
-  level_up();
+  if (is_new) {
+    level_up();
+  }
   equipment = new Equipment();
   inventory = new Inventory(inventory_size, gold);
   bank = new Inventory(bank_size, 0);
