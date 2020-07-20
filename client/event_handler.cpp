@@ -101,11 +101,11 @@ void EventHandler::get_events() {
                 new ChangeGameRoomDTO(3);
             commands_queue.push(change_game_room_command);
           }
-          if (event.key.keysym.sym == SDLK_s) {
-            UseItemSpecialCommandDTO* use_item_special_command =
-                new UseItemSpecialCommandDTO();
-            commands_queue.push(use_item_special_command);
-          }
+          // if (event.key.keysym.sym == SDLK_s) {
+          //   UseItemSpecialCommandDTO* use_item_special_command =
+          //       new UseItemSpecialCommandDTO();
+          //   commands_queue.push(use_item_special_command);
+          // }
           if (event.key.keysym.sym == SDLK_r) {
             ReviveCommandDTO* revive_command = new ReviveCommandDTO();
             commands_queue.push(revive_command);

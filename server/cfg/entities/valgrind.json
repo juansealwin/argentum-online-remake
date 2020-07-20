@@ -196,6 +196,17 @@
         "price": 200,
         "id": 19
       }
+      ,
+      "deadlyStaff": {
+        "spellName": "deadly missile",
+        "minDmg": 30,
+        "maxDmg": 50,
+        "hpRecovery": 0,
+        "range": 0,
+        "mana": 80,
+        "price": 200,
+        "id": 20
+      }
     },
     "drop": {
       "id": 37
@@ -307,14 +318,14 @@
     "../../server/cfg/maps/argal_map.json"
   ],
   "criticalDamageMultiplier": 2,
-  "inventorySize": 10,
+  "inventorySize": 16,
   "bankSize": 10,
   "criticalDamageProbability": 0.125,
   "evasionProbability": 0.001,
   "maxSafeGoldMultiplier": 400,
   "levelUpLimitPower": 1.8,
   "startingXpCap": 1000,
-  "ups": 20.0,
+  "ups": 30.0,
   "newbieLevelCap": 1,
   "pvpLevelDifferenceAllowed": 3,
   "lastId": 37,

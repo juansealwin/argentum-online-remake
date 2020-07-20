@@ -21,9 +21,10 @@ typedef enum {
   gnarled_staff,
   crimp_staff,
   elven_flute,
+  deadly_staff,
   fist = sword,
   first_item_id = turtle_shield,
-  last_item_id = elven_flute
+  last_item_id = deadly_staff
 } item_t;
 
 #endif //ITEM_IDS_H
