@@ -643,7 +643,7 @@ void ArgentumGame::setup_new_hero(Hero *h) {
 std::vector<Item *> ArgentumGame::setup_new_mage() {
   std::vector<Item *> mage_items;
   mage_items.push_back(
-      ItemFactory::create_elven_flute(entities_cfg["items"]));
+      ItemFactory::create_gnarled_staff(entities_cfg["items"]));
   mage_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
   mage_items.push_back(ItemFactory::create_magic_hat(entities_cfg["items"]));
   return mage_items;
