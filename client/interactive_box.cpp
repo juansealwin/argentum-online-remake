@@ -2,8 +2,8 @@
 
 InteractiveBox::InteractiveBox() { box_dimensions = {0, 0, 0, 0}; }
 
-InteractiveBox::InteractiveBox(int x, int y, int width, int height, int r = 1,
-                               int c = 1) {
+InteractiveBox::InteractiveBox(int x, int y, int width, int height, int r,
+                               int c) {
   box_dimensions = {x, y, width, height};
   rows = r;
   cols = c;

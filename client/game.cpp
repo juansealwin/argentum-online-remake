@@ -2,6 +2,7 @@
 
 Game::Game() {}
 
+// 620 ancho y 465 de alto el viewport
 Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
     : id_hero(id_player),
       screen_width(scr_width - WIDTH_UI),

@@ -22,6 +22,7 @@ class TextBox : public Drawable {
   ~TextBox();
   virtual void render(SDL_Renderer *, int, int);
   void set_texture(SDL_Renderer *);
+  void set_text(std::string);
   void set_text_color(SDL_Color &);
   void set_background_color(SDL_Color &);
   //virtual void set_x(int);

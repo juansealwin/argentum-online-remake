@@ -71,7 +71,6 @@ class EventHandler {
   CommandsBlockingQueue& commands_queue;
   EventsQueue& events_queue;
   bool& is_running;
-  SoundEffect background_music;
   InteractiveBox inventory;
   InteractiveBox text_box;
   InteractiveBox shop_box;

@@ -19,7 +19,7 @@ class Socket {
 
   void bind_and_listen(const char *port);
 
-  void connect(const char *host, const char *port);
+  int connect(const char *host, const char *port);
 
   Socket accept();
   //retorna -1 en caso de error.
