@@ -59,13 +59,13 @@ SDL_Window* WindowGame::get_window() { return window; }
 
 void WindowGame::resize_screen(int new_screen_w, int new_screen_h, bool fs) {
   if (fs) {
-    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
     SDL_GetRendererOutputSize(renderer, &screen_width, &screen_height);
-    // SDL_RenderSetLogicalSize(renderer, 800, 600);
+    //SDL_RenderSetLogicalSize(renderer, screen_height*4/3, screen_height);
     full_screen = true;
   } else {
     SDL_SetWindowSize(window, new_screen_w, new_screen_h);
-    // SDL_RenderSetLogicalSize(renderer, new_screen_w, new_screen_h);
+    //SDL_RenderSetLogicalSize(renderer, new_screen_w, new_screen_h);
     screen_width = new_screen_w;
     screen_height = new_screen_h;
     full_screen = false;
@@ -75,8 +75,6 @@ void WindowGame::resize_screen(int new_screen_w, int new_screen_h, bool fs) {
 int WindowGame::get_screen_width() { return screen_width; }
 
 int WindowGame::get_screen_height() { return screen_height; }
-
-bool WindowGame::get_full_screen_mode() { return full_screen; }
 
 float WindowGame::get_width_ratio() {
   return (float)screen_width / DEFAULT_WIDTH;

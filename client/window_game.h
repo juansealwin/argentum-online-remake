@@ -27,7 +27,6 @@ class WindowGame {
   void resize_screen(int, int, bool);
   int get_screen_width();
   int get_screen_height();
-  bool get_full_screen_mode();
   float get_width_ratio();
   float get_height_ratio();
 };
