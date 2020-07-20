@@ -27,7 +27,7 @@ class ProtectedMap {
   std::condition_variable cv;
 
  public:
-  ProtectedMap(int, int, int, int);
+  ProtectedMap(int, int, int, float, float, int);
   ~ProtectedMap();
   void map_reader(Game&, UIStatus&, std::vector<sound_t>&);
   void copy_buffer(UIStatus&);

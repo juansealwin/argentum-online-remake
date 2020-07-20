@@ -28,7 +28,7 @@ void Client::do_handshake(std::string user_name, std::string race_selected,
 
   Protocol::send_command(socket, login_command);
   delete login_command;
-  
+
   // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
@@ -38,7 +38,9 @@ void Client::do_handshake(std::string user_name, std::string race_selected,
 
 void Client::play() {
   ProtectedMap protected_map(player_id, window_game.get_screen_width(),
-                             window_game.get_screen_height(), initial_map);
+                             window_game.get_screen_height(),
+                             window_game.get_width_ratio(),
+                             window_game.get_height_ratio(), initial_map);
   EventsQueue event_queue;
   CommandsBlockingQueue commands_to_send;
 
