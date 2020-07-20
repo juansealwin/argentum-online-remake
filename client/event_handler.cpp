@@ -5,12 +5,25 @@ EventHandler::~EventHandler() {}
 EventHandler::EventHandler(CommandsBlockingQueue& commands_queue,
                            EventsQueue& queue, bool& run)
     : commands_queue(commands_queue), events_queue(queue), is_running(run) {
+  int additional_row_column = 0;
+  if (texture_manager.get_w_ratio() > WIDTH_RATIO_800) additional_row_column++;
+
   // Seteamos las dimensiones de la "caja" de inventario
-  inventory = InteractiveBox(640, 168, 139, 183, 5, 4);
+  inventory = InteractiveBox(
+      640 * texture_manager.get_w_ratio(), 168 * texture_manager.get_h_ratio(),
+      139 * texture_manager.get_w_ratio(), 183 * texture_manager.get_h_ratio(),
+      INV_ROWS_800x600 + additional_row_column,
+      INV_COLS_800x600 + additional_row_column);
   // Seteamos las dimensiones de la "caja" para escribir en el minichat
-  text_box = InteractiveBox(10, 112, 544, 20, 1, 1);
+  text_box = InteractiveBox(
+      10 * texture_manager.get_w_ratio(), 112 * texture_manager.get_h_ratio(),
+      544 * texture_manager.get_w_ratio(), 20 * texture_manager.get_h_ratio());
   // Seteamos las dimensiones de la "caja" para la tienda
-  shop_box = InteractiveBox(640, 451, 139, 138, 4, 4);
+  shop_box = InteractiveBox(
+      640 * texture_manager.get_w_ratio(), 451 * texture_manager.get_h_ratio(),
+      139 * texture_manager.get_w_ratio(), 138 * texture_manager.get_h_ratio(),
+      SHOP_ROWS_800x600 + additional_row_column,
+      SHOP_COLS_800x600 + additional_row_column);
 }
 
 void EventHandler::get_events() {
@@ -50,16 +63,16 @@ void EventHandler::get_events() {
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_EQUALS) {
-            //background_music.increase_music_volume();
+            // background_music.increase_music_volume();
           }
           if (event.key.keysym.sym == SDLK_MINUS) {
-            //background_music.decrease_music_volume();
+            // background_music.decrease_music_volume();
           }
           if (event.key.keysym.sym == SDLK_m) {
-            //background_music.stop_music();
+            // background_music.stop_music();
           }
           if (event.key.keysym.sym == SDLK_p) {
-            //background_music.play_music();
+            // background_music.play_music();
           }
           if (event.key.keysym.sym == SDLK_SPACE) {
             AttackCommandDTO* attack_command = new AttackCommandDTO();
@@ -73,23 +86,17 @@ void EventHandler::get_events() {
             MeditateCommandDTO* meditate_command = new MeditateCommandDTO();
             commands_queue.push(meditate_command);
           }
-
           if (event.key.keysym.sym == SDLK_1) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
-
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(1);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_2) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
-
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(2);
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_3) {
-            std::cout << "SE ENVIA CAMBIO MAP " << std::endl;
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(3);
             commands_queue.push(change_game_room_command);
@@ -107,50 +114,7 @@ void EventHandler::get_events() {
             HealCommandDTO* heal_command = new HealCommandDTO();
             commands_queue.push(heal_command);
           }
-          // // borrar todos estos if, son de prueba
-          // // if (event.key.keysym.sym == SDLK_h) {
-          // //   DropItemCommandDTO* change_game_room_command =
-          // //       new DropItemCommandDTO(6);
-          // //   commands_queue.push(change_game_room_command);
-          // // }
-          // if (event.key.keysym.sym == SDLK_3) {
-          //   PrivateMessageDTO* private_message_command =
-          //       new PrivateMessageDTO("test", "hello");
-          //   commands_queue.push(private_message_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_4) {
-          //   BankItemCommandDTO* bank_item_command = new BankItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_5) {
-          //   UnbankItemCommandDTO* bank_item_command =
-          //       new UnbankItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_6) {
-          //   BankGoldCommandDTO* bank_item_command = new BankGoldCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_7) {
-          //   UnbankGoldCommandDTO* bank_item_command =
-          //       new UnbankGoldCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_8) {
-          //   GetBankedItemsCommandDTO* bank_item_command =
-          //       new GetBankedItemsCommandDTO();
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_9) {
-          //   BuyItemCommandDTO* bank_item_command = new BuyItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-          // if (event.key.keysym.sym == SDLK_0) {
-          //   SellItemCommandDTO* bank_item_command = new SellItemCommandDTO(6);
-          //   commands_queue.push(bank_item_command);
-          // }
-
-        // Chequeamos si el usuario quiere dejar de moverse
+          // Chequeamos si el usuario quiere dejar de moverse
         } else if (event.type == SDL_KEYUP) {
           if (event.key.keysym.sym == SDLK_UP ||
               event.key.keysym.sym == SDLK_DOWN ||
@@ -200,8 +164,12 @@ void EventHandler::get_events() {
                 GetBankedItemsCommandDTO* list_command =
                     new GetBankedItemsCommandDTO();
                 commands_queue.push(list_command);
-                // O bien quiere comprar un item en el mercado
+
+              // O bien quiere comprar un item en el mercado
               } else if (type_of_shop == MARKET) {
+                BuyItemCommandDTO* buy_item_command =
+                    new BuyItemCommandDTO(get_item_t(item));
+                commands_queue.push(buy_item_command);
               }
             }
           }
@@ -211,11 +179,25 @@ void EventHandler::get_events() {
           else if (text_box.mouse_click_in(x, y)) {
             SDL_Event event_chat;
             int msg_length = 0;
+            SDL_StartTextInput();
             // Se va a escribir hasta que se haga click fuera de text_box
             while (text_box.mouse_click_in(x, y)) {
               while (SDL_PollEvent(&event_chat) != 0) {
+                // Chequeamos si el usuario quiere cerrar mientras escribe
+                if (event_chat.type == SDL_QUIT) {
+                  is_running = false;
+                  QuitCommandDTO* quit_command = new QuitCommandDTO();
+                  commands_queue.push(quit_command);
+
+                  // Aviso al renderer que hay que cerrar
+                  events_queue.push(EVENT_QUIT);
+                  SDL_StopTextInput();
+                  SDL_GetMouseState(&x, &y);
+                  break;
+                }
+
                 // Chequea si el click fue fuera de la caja de texto
-                if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
+                else if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
                   SDL_GetMouseState(&x, &y);
                 }
 
@@ -256,6 +238,8 @@ void EventHandler::get_events() {
                 }
               }
             }
+            // Paramos la entrada de texto
+            SDL_StopTextInput();
           }
         }
       }

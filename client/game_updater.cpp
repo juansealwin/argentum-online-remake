@@ -72,7 +72,10 @@ void GameUpdater::run() {
           // std::cout << "item in bank: " << item << std::endl;;
         }
 
-        // uint16_t gold = ntohs(extract<uint16_t>(status_serialized, j));
+        uint16_t gold = ntohs(extract<uint16_t>(status_serialized, j));
+        if (gold) {
+          next_ui_status.add_item(BANK, ID_GOLD);
+        }
         // std::cout << "gold in bnak: " << gold << std::endl;
         next_ui_status.open_shop(BANK);
         continue;

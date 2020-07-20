@@ -75,6 +75,8 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_BLUE_TUNIC] = new Texture("tunica_azul.png", renderer);
   map[ID_BLUE_TUNIC_EQUIPPED] =
       new Texture("tunica_azul_equipada.png", renderer);
+  map[ID_BLUE_TUNIC_XS_EQUIPPED] =
+      new Texture("tunica_azul_xs_equipada.png", renderer);
 
   /* WEAPON TEXTURES */
   map[ID_COMPOUND_BOW] = new Texture("arco_compuesto.png", renderer);
@@ -270,3 +272,13 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
 
   return *map[id_frame];
 }
+
+void TextureManager::set_aspect_ratio(const float w_ratio,
+                                      const float h_ratio) {
+  width_ratio = w_ratio;
+  height_ratio = h_ratio;
+}
+
+float TextureManager::get_w_ratio() const { return width_ratio; }
+
+float TextureManager::get_h_ratio() const { return height_ratio; }

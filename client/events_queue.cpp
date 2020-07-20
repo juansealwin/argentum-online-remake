@@ -58,8 +58,6 @@ void EventsQueue::write_status(UIStatus& ui) {
   shop_status.clear();
   if(open_shop)
     shop_status = ui.get_shop();
-  /*else 
-    shop_status.clear();*/
 }
 
 int EventsQueue::append_character(char c) {

@@ -2,14 +2,17 @@
 
 Game::Game() {}
 
-// 620 ancho y 465 de alto el viewport
-Game::Game(int id_player, int scr_width, int scr_height, map_t new_map)
+// El viewport es la "ventana" por la cual vemos el juego
+Game::Game(int id_player, int scr_width, int scr_height, float w_ratio,
+           float h_ratio, map_t new_map)
     : id_hero(id_player),
-      screen_width(scr_width - WIDTH_UI),
-      screen_height(scr_height - HEIGHT_UI) {
+      screen_width(scr_width - WIDTH_UI * w_ratio),
+      screen_height(scr_height - HEIGHT_UI * h_ratio),
+      width_ratio(w_ratio),
+      height_ratio(h_ratio) {
   change_map(new_map);
   map_piece = {0, 0, screen_width, screen_height};
-  viewport = {0, HEIGHT_UI, screen_width, screen_height};
+  viewport = {0, (int)(HEIGHT_UI * h_ratio), screen_width, screen_height};
 }
 
 Game::~Game() {
@@ -22,6 +25,8 @@ Game::Game(const Game& other_game) {
   id_hero = other_game.id_hero;
   screen_width = other_game.screen_width;
   screen_height = other_game.screen_height;
+  width_ratio = other_game.width_ratio;
+  height_ratio = other_game.height_ratio;
   background = other_game.background;
   static_objects = other_game.static_objects;
   map_piece = other_game.map_piece;
@@ -48,6 +53,8 @@ Game& Game::operator=(const Game& other_game) {
   id_hero = other_game.id_hero;
   screen_width = other_game.screen_width;
   screen_height = other_game.screen_height;
+  width_ratio = other_game.width_ratio;
+  height_ratio = other_game.height_ratio;
   background = other_game.background;
   static_objects = other_game.static_objects;
   map_piece = other_game.map_piece;
@@ -92,7 +99,7 @@ void Game::update_character(int id, entity_t entity_type, int new_x, int new_y,
     if ((map_piece.x < x_render_scale) &&
         (x_render_scale < map_piece.x + screen_width))
       if ((map_piece.y < y_render_scale) &&
-          (y_render_scale < map_piece.y + screen_width))
+          (y_render_scale < map_piece.y + screen_height))
         incoming_sounds.push_back(characters[id]->sound_walk());
 
     // Actualizamos la posición
@@ -138,10 +145,10 @@ void Game::update_map(int new_x, int new_y) {
   }
   // Como renderizar cuando nos aceramos al borde superior
   if (map_piece.y < 0) {
-    viewport.y = -map_piece.y + HEIGHT_UI;
+    viewport.y = -map_piece.y + HEIGHT_UI * height_ratio;
     map_piece.h = screen_height - map_piece.y;
   } else {
-    viewport.y = HEIGHT_UI;
+    viewport.y = HEIGHT_UI * height_ratio;
     map_piece.h = screen_height;
   }
 }
@@ -204,7 +211,8 @@ void Game::render_entities(SDL_Renderer* renderer) {
           (it2->second.y <= map_piece.y + screen_height)) {
         texture_manager.get_texture(it2->second.type_item)
             .render(renderer, NULL, it2->second.x - map_piece.x,
-                    it2->second.y - map_piece.y + HEIGHT_UI);
+                    it2->second.y - map_piece.y +
+                        HEIGHT_UI * height_ratio);
       }
   }
 
@@ -214,7 +222,9 @@ void Game::render_entities(SDL_Renderer* renderer) {
         (it->second->get_x() <= map_piece.x + screen_width))
       if ((map_piece.y <= it->second->get_y()) &&
           (it->second->get_y() <= map_piece.y + screen_height)) {
-        it->second->render(renderer, map_piece.x, map_piece.y - HEIGHT_UI);
+        it->second->render(
+            renderer, map_piece.x,
+            map_piece.y - HEIGHT_UI * height_ratio);
       }
   }
 }

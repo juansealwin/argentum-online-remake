@@ -7,6 +7,8 @@
 
 #include "sdl_exception.h"
 #include "texture.h"
+#define DEFAULT_WIDTH 800
+#define DEFAULT_HEIGHT 600
 
 class WindowGame {
  private:
@@ -25,7 +27,8 @@ class WindowGame {
   void resize_screen(int, int, bool);
   int get_screen_width();
   int get_screen_height();
-  bool get_full_screen_mode();
+  float get_width_ratio();
+  float get_height_ratio();
 };
 
 #endif
