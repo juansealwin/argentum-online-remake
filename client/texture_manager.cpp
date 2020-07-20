@@ -75,6 +75,8 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_BLUE_TUNIC] = new Texture("tunica_azul.png", renderer);
   map[ID_BLUE_TUNIC_EQUIPPED] =
       new Texture("tunica_azul_equipada.png", renderer);
+  map[ID_BLUE_TUNIC_XS_EQUIPPED] =
+      new Texture("tunica_azul_xs_equipada.png", renderer);
 
   /* WEAPON TEXTURES */
   map[ID_COMPOUND_BOW] = new Texture("arco_compuesto.png", renderer);

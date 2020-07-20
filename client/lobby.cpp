@@ -65,7 +65,7 @@ Lobby::~Lobby() {
 bool Lobby::start_lobby() {
   bool exit_success = true;
   lobby_music.play_music();
-  lobby_music.decrease_music_volume(80);
+  //lobby_music.decrease_music_volume(40);
   if (!quit) lobby_log_in();
   if (!quit) lobby_character_selection();
   lobby_music.stop_music();
