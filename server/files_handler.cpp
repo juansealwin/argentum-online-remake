@@ -3,19 +3,17 @@
 #include <fstream>
 #include <iostream>
 #include <msgpack.hpp>
-#include <unordered_map>
 
 #include "serializer.h"
 
 #define DATA_SIZE 200
 
-FilesHandler::FilesHandler() : mutex() {}
+FilesHandler::FilesHandler() {}
 
 FilesHandler::~FilesHandler() {}
 
-void hola() {
-  std::unordered_map<std::string, int> map = {
-      {"Rodrigo", 1}, {"sdssds", 21212}, {"FEfplepelfp", 848}};
+void FilesHandler::save_players_positions_map(
+    std::unordered_map<std::string, int>& map) {
   std::stringstream buffer;
   msgpack::pack(buffer, map);
   std::ofstream players_file_position(
@@ -24,46 +22,64 @@ void hola() {
   players_file_position.close();
 }
 
-void chau() {
+std::unordered_map<std::string, int> FilesHandler::get_players_positions_map() {
+  std::unordered_map<std::string, int> map;
   std::vector<unsigned char> buffer;
   std::ifstream players_file_position(
       "../../server/status/players_file_position", std::ios::binary);
   players_file_position.seekg(0, std::ios_base::end);
   std::streampos file_size = players_file_position.tellg();
-  std::cout << file_size << std::endl;
+
+  if (file_size == 0) {
+    return std::move(map);
+  }
+
   buffer.resize(file_size);
   players_file_position.seekg(0, std::ios_base::beg);
   players_file_position.read((char*)&buffer[0], file_size);
+
   const std::string buffer_str(buffer.begin(), buffer.end());
   const char* buffer_chars = buffer_str.c_str();
-  msgpack::object_handle oh =
-      msgpack::unpack(buffer_chars, buffer_str.size());
+  msgpack::object_handle oh = msgpack::unpack(buffer_chars, buffer_str.size());
   msgpack::object deserialized = oh.get();
-  std::unordered_map<std::string, int> map;
+
   deserialized.convert(map);
-  std::unordered_map<std::string, int> expected_map = {
-      {"Rodrigo", 1}, {"sdssds", 21212}, {"fEfplepelfp", 848}};
-  const bool equal = expected_map == map;
-  std::cout << "son iguales? " << equal << std::endl;
+  return std::move(map);
 }
 
 void FilesHandler::save_player_status(Hero* hero) {
-  std::unique_lock<std::mutex> lock(mutex);
+  std::unordered_map<std::string, int> players_positions =
+      get_players_positions_map();
+  const std::unordered_map<std::string, int>::const_iterator result =
+      players_positions.find(hero->get_name());
+  int position = 0;
+  if (result != players_positions.end()) {
+    position = result->second;
+  } else {
+    if (players_positions.empty()) {
+      position = DATA_SIZE;
+    } else {
+      int last_position = players_positions.at("last_position");
+      position = last_position + DATA_SIZE;
+    }
+    players_positions[hero->get_name()] = position;
+    players_positions["last_position"] = position;
+    save_players_positions_map(players_positions);
+  }
 
   std::vector<unsigned char> player_serialization;
   uint8_t entity_type = hero->type;
   player_serialization.push_back(entity_type);
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
-
-  std::ofstream players_status("../../server/status/players_status",
-                               std::ios::out);
-
   int current_serialization_size = player_serialization.size();
   for (int i = 0; i++; i < (DATA_SIZE - current_serialization_size)) {
     player_serialization.push_back(0);
   }
 
+  std::ofstream players_status("../../server/status/players_status",
+                               std::ios::out);
+  // aca usar la posicion
   players_status.write((char*)&player_serialization[0],
                        player_serialization.size());
   players_status.close();
@@ -72,9 +88,17 @@ void FilesHandler::save_player_status(Hero* hero) {
 Hero* FilesHandler::get_player_status(const std::string player_name,
                                       Json::Value& entities_cfg, int id, int x,
                                       int y, Map* map) {
-  std::unique_lock<std::mutex> lock(mutex);
-  hola();
-  chau();
+    std::unordered_map<std::string, int> players_positions =
+      get_players_positions_map();
+  const std::unordered_map<std::string, int>::const_iterator result =
+      players_positions.find(player_name);
+
+  if (result == players_positions.end()) {
+    return nullptr;
+  }
+
+  const int position = result->second;  // falta usarla
+  std::cout << "posicion es: " << position << std::endl;
   return nullptr;
 
   std::vector<unsigned char> player_serialization;

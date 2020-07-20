@@ -1,14 +1,15 @@
 #ifndef FILES_HANDLER_H
 #define FILES_HANDLER_H
 
-#include <mutex>
 #include <string>
+#include <unordered_map>
 
 #include "hero.h"
 
 class FilesHandler {
  private:
-  std::mutex mutex;
+  std::unordered_map<std::string, int> get_players_positions_map();
+  void save_players_positions_map(std::unordered_map<std::string, int>& map);
 
  public:
   FilesHandler();
