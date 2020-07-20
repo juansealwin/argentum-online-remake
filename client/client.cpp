@@ -23,7 +23,7 @@ void Client::play() {
   int initial_room = HelperFunctions::random_int(0, 2);
 
   /* Esto no debería estar harcodeado sino que se elige en el lobby */
-  std::string player_name = "Federico";
+  std::string player_name = "Edgardo";
   std::string hero_race = "gnome";
   std::string hero_class = "warrior";
 

@@ -349,9 +349,6 @@ bool Serializer::is_monster(uint8_t t) {
 
 bool Serializer::is_drop(uint8_t t) { return (t == 37); }
 
-// Al principio este método estaba en otra clase "Deserializer". Finalemente se
-// dejó acá porque el agregado de esa clase causaba dependencias circulares en
-// tiempo de ejecución y no se pudo arreglar a pesar de dedicarle varias horas
 Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
                                    Json::Value &entities_cfg, int id, int x,
                                    int y, Map *map) {
