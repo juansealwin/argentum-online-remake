@@ -14,6 +14,7 @@
 #define Y_SHOP 453
 #define X_PADDING 2
 #define Y_PADDING 3
+#define RATIO_800 1 
 
 class Inventory {
  private:

@@ -34,12 +34,14 @@ class Game {
   SDL_Rect viewport;
   int screen_width;
   int screen_height;
+  float width_ratio;
+  float height_ratio;
   std::map<int, Character*> characters;
   std::map<int, dropped_t> items;
 
  public:
   Game();
-  Game(int, int, int, map_t);
+  Game(int, int, int, float, float, map_t);
   Game(const Game&);
   Game& operator=(const Game&);
   ~Game();

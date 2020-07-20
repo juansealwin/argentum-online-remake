@@ -466,7 +466,10 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
     case ID_BLUE_TUNIC:
       frame_equipped_a = {body_rect.x, body_rect.y, 25, 45};
       armor_animation = Animation(frame_equipped_a.w, frame_equipped_a.h);
-      armor = ID_BLUE_TUNIC_EQUIPPED;
+      if (type_character == ID_GNOME || type_character == ID_DWARF)
+        armor = ID_BLUE_TUNIC_XS_EQUIPPED;
+      else
+        armor = ID_BLUE_TUNIC_EQUIPPED;
       break;
 
     default:

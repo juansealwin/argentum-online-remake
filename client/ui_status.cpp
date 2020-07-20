@@ -82,10 +82,10 @@ void UIStatus::charge_messages(std::string msg1, std::string msg2,
   text_messages[MESSAGE_4] = msg4;
 }
 
-void UIStatus::render(SDL_Renderer* renderer, std::string input_txt,
-                      bool is_selected, int index) {
+void UIStatus::render(SDL_Renderer* renderer, SDL_Rect window_size,
+                      std::string input_txt, bool is_selected, int index) {
   // Renderizamos el UI estático
-  texture_manager.get_texture(ID_UI).render(renderer, NULL, 0, 0);
+  texture_manager.get_texture(ID_UI).render(renderer, &window_size, 0, 0);
 
   // Renderizamos los items del inventario
   inventory.render(renderer, is_selected, index);
