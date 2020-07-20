@@ -165,7 +165,7 @@ void EventHandler::get_events() {
                     new GetBankedItemsCommandDTO();
                 commands_queue.push(list_command);
 
-              // O bien quiere comprar un item en el mercado
+                // O bien quiere comprar un item en el mercado
               } else if (type_of_shop == MARKET) {
                 BuyItemCommandDTO* buy_item_command =
                     new BuyItemCommandDTO(get_item_t(item));
@@ -449,6 +449,8 @@ item_t EventHandler::get_item_t(std::string item) {
     item_required = CRIMP_STAFF;
   else if (item.compare(0, length, STR_ELVEN_ELUDE) == 0)
     item_required = ELVEN_FLUTE;
+  else if (item.compare(0, length, STR_DEADLY_STAFF) == 0)
+    item_required = DEADLY_STAFF;
   else
     item_required = DUMMY_ITEM;
 
@@ -533,6 +535,10 @@ item_t EventHandler::get_item_t(id_texture_t texture) {
 
     case ID_ELVEN_ELUDE:
       item = ELVEN_FLUTE;
+      break;
+
+    case ID_DEADLY_STAFF:
+      item = DEADLY_STAFF;
       break;
 
     default:

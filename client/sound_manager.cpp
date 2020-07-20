@@ -19,6 +19,7 @@ void SoundManager::charge_sound_music() {
   sound_effects[CAST_HEAL].set_sound("curar.wav");
   sound_effects[CAST_ELECTRIC_SHOCK].set_sound("descarga_electrica.wav");
   sound_effects[CAST_EXPLOSION].set_sound("explosion.wav");
+  sound_effects[CAST_FINAL_JUDGMENT].set_sound("juicio_final.wav");
   sound_effects[CAST_REVIVE].set_sound("revivir.wav");
   sound_effects[CAST_MEDITATION].set_sound("meditar.wav");
   sound_effects[DEAD_PC].set_sound("muerto.wav");

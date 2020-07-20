@@ -160,6 +160,11 @@ void EntityStatus::set_spellbound(int affected_by) {
       lifetime = FRAMES_PER_TEXTURE * FRAMES_HEAL;
       break;
 
+    case DEADLY_STAFF:
+      spellbound = ID_HEAL;
+      lifetime = FRAMES_PER_TEXTURE * FRAMES_FINAL_JUDGMENT;
+      break;
+
     default:
       break;
   }
@@ -220,6 +225,8 @@ sound_t EntityStatus::get_cast_sound() {
     cast_sound = CAST_ELECTRIC_SHOCK;
   else if (spellbound == ID_EXPLOSION)
     cast_sound = CAST_EXPLOSION;
+  else if (spellbound == ID_FINAL_JUDGMENT)
+    cast_sound = CAST_FINAL_JUDGMENT;
 
   return cast_sound;
 }
