@@ -401,6 +401,7 @@ unsigned int Hero::receive_damage(unsigned int damage, bool critical,
   if (current_hp <= 0) {
     current_hp = 0;
     ghost_mode = true;
+    experience = experience/2;
   }
   return actual_damage;
 }

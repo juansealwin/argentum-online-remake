@@ -417,9 +417,7 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
 
   hero->set_hp(current_hp);
   hero->set_mana(curr_mana);
-  if (ghost_mode) {
-    hero->set_ghost_mode(true);
-  }
+  hero->set_ghost_mode(false);
   hero->set_next_level_xp_limit(xp_limit);
   hero->set_experience(current_xp);
 
@@ -471,5 +469,8 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
   }
   uint16_t gold_in_bank = extract<uint16_t>(serialization, j);
   hero->add_gold_to_bank(gold_in_bank);
+  if (ghost_mode) {
+    hero->set_ghost_mode(true);
+  }
   return hero;
 }
