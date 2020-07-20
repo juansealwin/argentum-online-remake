@@ -54,7 +54,6 @@ void FilesHandler::save_player_status(Hero* hero) {
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
   int current_serialization_size = player_serialization.size();
-
   for (int i = 0; i < (DATA_SIZE - current_serialization_size); i++) {
     player_serialization.push_back('0');
   }
@@ -77,7 +76,7 @@ void FilesHandler::save_player_status(Hero* hero) {
   }
 
   std::ofstream players_status("../../server/status/players_status",
-                               std::ios::out);
+                               std::ios::binary | std::ios::out | std::ios::in);
   std::cout << "guardando a " << hero->get_name() << " en la posicion "
             << position << std::endl;
   players_status.seekp(position);
@@ -102,7 +101,7 @@ Hero* FilesHandler::get_player_status(const std::string player_name,
   std::cout << "leyendo a " << player_name << " en: " << position << std::endl;
 
   std::ifstream players_status("../../server/status/players_status",
-                               std::ios::out);
+                               std::ios::binary);
   std::vector<unsigned char> player_serialization;
   player_serialization.resize(DATA_SIZE);
   players_status.seekg(position);

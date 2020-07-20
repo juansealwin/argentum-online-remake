@@ -318,8 +318,6 @@
   "newbieLevelCap": 1,
   "pvpLevelDifferenceAllowed": 3,
   "lastId": 37,
-  "screenWidth": 800,
-  "screenHeight": 600,
   "amountOfExperienceToUpdate": 10,
   "milisecondsForRegeneratingHero": 5000,
   "milisecondsForAutomoveHero": 60,

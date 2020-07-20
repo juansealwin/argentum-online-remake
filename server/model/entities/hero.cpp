@@ -84,7 +84,7 @@ void Hero::try_to_unblock() {
     int y_diff = 0;
     int x_diff = 0;
     while (!moved) {
-      //intento moverlo lo mas cercano posible
+      // intento moverlo lo mas cercano posible
       y_diff += HelperFunctions::random_int(-1, 1);
       x_diff += HelperFunctions::random_int(-1, 1);
       moved = move(respawn_x + x_diff, respawn_y + y_diff);

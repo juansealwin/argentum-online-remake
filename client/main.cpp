@@ -30,8 +30,8 @@ int main(int argc, char* argv[]) {
                                 argentum_lobby.get_fs_mode());
 
       client.do_handshake(argentum_lobby.get_user_name(),
-                            argentum_lobby.get_player_race(),
-                            argentum_lobby.get_player_class());
+                          argentum_lobby.get_player_race(),
+                          argentum_lobby.get_player_class());
       client.play();
     }
     return EXIT_SUCCESS;
