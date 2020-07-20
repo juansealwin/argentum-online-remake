@@ -220,11 +220,10 @@ void EventHandler::get_events() {
           else if (text_box.mouse_click_in(x, y)) {
             SDL_Event event_chat;
             int msg_length = 0;
+            SDL_StartTextInput();
             // Se va a escribir hasta que se haga click fuera de text_box
             while (text_box.mouse_click_in(x, y)) {
               while (SDL_PollEvent(&event_chat) != 0) {
-                
-                std::cout << "ESPERANDO INPUT " << std::endl;
                 // Chequeamos si el usuario quiere cerrar mientras escribe 
                 if (event_chat.type == SDL_QUIT) {
                   is_running = false;
@@ -233,6 +232,7 @@ void EventHandler::get_events() {
 
                   // Aviso al renderer que hay que cerrar
                   events_queue.push(EVENT_QUIT);
+                  SDL_StopTextInput();
                   SDL_GetMouseState(&x, &y);
                   break;
                 }
@@ -264,9 +264,6 @@ void EventHandler::get_events() {
                 // Chequeamos si el usuario quiere escribir
                 else if (event_chat.type == SDL_TEXTINPUT) {
                   // Para impedir el copiado y pegado
-                  std::cout
-                      << "EL USUARIO QUIERE ESCRIBIR: " << *event_chat.text.text
-                      << std::endl;
                   if (!(SDL_GetModState() & KMOD_CTRL &&
                         (event_chat.text.text[0] == 'c' ||
                          event_chat.text.text[0] == 'C' ||
@@ -274,8 +271,6 @@ void EventHandler::get_events() {
                          event_chat.text.text[0] == 'V'))) {
                     if (msg_length < MAX_MSG_LENGTH) {
                       // Agregamos el caracter presionado
-                      std::cout << "VOY A AGREGAR EL CARACTER: "
-                                << *event_chat.text.text << std::endl;
                       msg_length =
                           events_queue.append_character(*event_chat.text.text);
                       events_queue.push(EVENT_MESSAGE);
@@ -284,6 +279,8 @@ void EventHandler::get_events() {
                 }
               }
             }
+            // Paramos la entrada de texto
+            SDL_StopTextInput();
           }
         }
       }
