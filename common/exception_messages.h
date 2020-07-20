@@ -36,6 +36,9 @@
 
 #define MSG_ERROR_SENDING_DATA "Error: No se pudo enviar datos por el socket"
 
+#define MSG_ERROR_CONNECTING_SERVER \
+  "Error: No hay servidores disponibles o bien fallo la conexión"
+
 /*** SDL ERRORS ***/
 #define MSG_ERROR_SDL_INIT_WINDOW "Error: No se pudo inicializar una ventana"
 

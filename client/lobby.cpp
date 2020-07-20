@@ -1,7 +1,8 @@
 #include "lobby.h"
 
-Lobby::Lobby(SDL_Renderer* ren)
-    : renderer(ren),
+Lobby::Lobby(SDL_Window* win, SDL_Renderer* ren)
+    : window(win),
+      renderer(ren),
       user_text_box(USER, ""),
       password_text_box(PASSWORD, ""),
       race_text_box(RACE_MSG, WARNING_MESSAGE),
@@ -26,6 +27,10 @@ Lobby::Lobby(SDL_Renderer* ren)
   user_name = "";
   pass = "";
   pass_hidden = "";
+  // Resolución predeterminada
+  screen_width = WIDTH_800;
+  screen_height = HEIGHT_600;
+  full_screen = false;
 
   // Parte del lobby de character selection
   option_human =
@@ -57,12 +62,16 @@ Lobby::~Lobby() {
   delete check_mark;
 }
 
-void Lobby::start_lobby() {
+bool Lobby::start_lobby() {
+  bool exit_success = true;
   lobby_music.play_music();
   lobby_music.decrease_music_volume(80);
   if (!quit) lobby_log_in();
   if (!quit) lobby_character_selection();
   lobby_music.stop_music();
+  if (quit) exit_success = false;
+
+  return exit_success;
 }
 
 void Lobby::lobby_log_in() {
@@ -149,7 +158,6 @@ void Lobby::lobby_log_in() {
         // Se va a escribir hasta que se haga click fuera del campo
         while (need_letter && password.mouse_click_in(x, y)) {
           while (SDL_PollEvent(&event_input) != 0) {
-            
             // Chequea si se quiere cerrar en el medio de la escritura
             if (event_input.type == SDL_QUIT) {
               quit = true;
@@ -368,14 +376,21 @@ void Lobby::check_mouse_click_login(int& x, int& y, int& x_check_mark,
   // Chequeamos si el usuario quiere alguna resolución en especial
   if (resolution_800x600.mouse_click_in(x, y)) {
     x_check_mark = X_RES_800x600;
+    screen_width = WIDTH_800;
+    screen_height = HEIGHT_600;
+    full_screen = false;
     click_sound.play_sound(0);
 
   } else if (resolution_1024x768.mouse_click_in(x, y)) {
     x_check_mark = X_RES_1024x768;
+    screen_width = WIDTH_1024;
+    screen_height = HEIGHT_768;
+    full_screen = false;
     click_sound.play_sound(0);
 
   } else if (resolution_fs.mouse_click_in(x, y)) {
     x_check_mark = X_RES_FS;
+    full_screen = true;
     click_sound.play_sound(0);
 
   } else if (log.mouse_click_in(x, y) && user_name != "") {
@@ -383,3 +398,15 @@ void Lobby::check_mouse_click_login(int& x, int& y, int& x_check_mark,
     click_sound.play_sound(0);
   }
 }
+
+std::string Lobby::get_user_name() { return user_name; }
+
+std::string Lobby::get_player_race() { return race_selected; }
+
+std::string Lobby::get_player_class() { return class_selected; }
+
+int Lobby::get_screen_width() { return screen_width; }
+
+int Lobby::get_screen_height() { return screen_height; }
+
+bool Lobby::get_fs_mode() { return full_screen; }

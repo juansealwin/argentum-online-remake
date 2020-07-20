@@ -10,6 +10,7 @@
 #include "commands_blocking_queue.h"
 #include "commands_sender.h"
 #include "common_socket.h"
+#include "connection_exceptions.h"
 #include "event_handler.h"
 #include "events_queue.h"
 #include "game.h"
@@ -19,20 +20,21 @@
 #include "login_command_dto.h"
 #include "protocol.h"
 #include "texture.h"
+#include "window_game.h"
 
 class Client {
  private:
   int player_id;
+  int initial_map;
   Socket socket;
   bool is_running;
-  int screen_width;
-  int screen_height;
+  WindowGame& window_game;
 
  public:
-  Client(const char* host, const char* port, const int screen_width,
-         const int screen_height);
+  Client(const char*, const char*, WindowGame&);
   ~Client();
   void play();
+  void do_handshake(std::string, std::string, std::string);
 };
 
 #endif

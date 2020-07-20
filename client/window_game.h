@@ -14,12 +14,18 @@ class WindowGame {
   SDL_Renderer* renderer;
   int screen_width;
   int screen_height;
+  bool full_screen;
 
  public:
   WindowGame();
   ~WindowGame();
   void window_init();
+  SDL_Window* get_window();
   SDL_Renderer* get_renderer();
+  void resize_screen(int, int, bool);
+  int get_screen_width();
+  int get_screen_height();
+  bool get_full_screen_mode();
 };
 
 #endif

@@ -3,6 +3,7 @@
 WindowGame::WindowGame() {
   screen_width = 800;
   screen_height = 600;
+  full_screen = false;
   window_init();
 }
 
@@ -53,3 +54,22 @@ void WindowGame::window_init() {
 }
 
 SDL_Renderer* WindowGame::get_renderer() { return renderer; }
+
+SDL_Window* WindowGame::get_window() { return window; }
+
+void WindowGame::resize_screen(int new_screen_w, int new_screen_h, bool fs) {
+  if (fs) {
+    SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+    SDL_GetRendererOutputSize(renderer, &screen_width, &screen_height);
+    full_screen = true;
+  } else {
+    SDL_SetWindowSize(window, new_screen_w, new_screen_h);
+    full_screen = false;
+  }
+}
+
+int WindowGame::get_screen_width() { return screen_width; }
+
+int WindowGame::get_screen_height() { return screen_height; }
+
+bool WindowGame::get_full_screen_mode() { return full_screen; }

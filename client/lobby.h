@@ -10,6 +10,11 @@
 #include "text_box.h"
 #include "texture.h"
 
+#define WIDTH_800 800
+#define HEIGHT_600 600
+#define WIDTH_1024 1024
+#define HEIGHT_768 768
+
 #define MAX_USER_INPUT 14
 #define X_LOGIN 489
 #define Y_LOGIN 425
@@ -64,10 +69,11 @@
 
 class Lobby {
  private:
+  SDL_Window* window;
+  SDL_Renderer* renderer;
   Texture* log_in;
   Texture* character_selection;
   Texture* check_mark;
-  SDL_Renderer* renderer;
   TextBox user_text_box;
   TextBox password_text_box;
   TextBox race_text_box;
@@ -89,6 +95,9 @@ class Lobby {
   InteractiveBox play;
   bool is_running;
   bool quit;
+  int screen_width;
+  int screen_height;
+  bool full_screen;
   std::string user_name;
   std::string pass;
   std::string pass_hidden;
@@ -100,12 +109,18 @@ class Lobby {
   SoundEffect lobby_music;
 
  public:
-  Lobby(SDL_Renderer*);
+  Lobby(SDL_Window*, SDL_Renderer*);
   ~Lobby();
-  void start_lobby();
+  bool start_lobby();
   void lobby_log_in();
   void lobby_character_selection();
   void check_mouse_click_login(int&, int&, int&, bool&, bool&);
+  std::string get_user_name();
+  std::string get_player_race();
+  std::string get_player_class();
+  int get_screen_width();
+  int get_screen_height();
+  bool get_fs_mode();
 };
 
 #endif
