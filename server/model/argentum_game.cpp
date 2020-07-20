@@ -97,6 +97,7 @@ void ArgentumGame::hero_heal(int entity_id) {
   try {
     Hero *hero = heroes.at(entity_id);
     if (!is_npc_close(hero->x_position, hero->y_position, PRIEST)) return;
+    hero->affected_by = elven_flute;
     hero->heal(entities_cfg["npcs"]["priest"]["hpRegen"].asUInt(),
                entities_cfg["npcs"]["priest"]["manaRegen"].asUInt());
   } catch (ModelException &e) {
