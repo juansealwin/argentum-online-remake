@@ -5,6 +5,8 @@
 
 #include "serializer.h"
 
+#define DATA_SIZE 200
+
 FilesHandler::FilesHandler() : mutex() {}
 
 FilesHandler::~FilesHandler() {}
@@ -18,17 +20,13 @@ void FilesHandler::save_player_status(Hero* hero) {
   Serializer::serialize_hero(std::ref(player_serialization), hero, false);
   Serializer::serialize_bank_of_hero(std::ref(player_serialization), hero);
 
-  std::ofstream players_status(
-      "../../server/status/players_status",
-      std::ios::out | std::ios::binary | std::ios::app);
-  // std::ofstream players_file_position(
-  //     "../../server/status/players_file_position");
+  std::ofstream players_status("../../server/status/players_status",
+                               std::ios::out);
 
-  // players_status.write(reinterpret_cast<unsigned char*>(&players_status),
-  //                      sizeof(player_serialization))
-
-  //     std::copy(player_serialization.cbegin(), player_serialization.cend(),
-  //               std::ostreambuf_iterator<char>(players_status));
+  int current_serialization_size = player_serialization.size();
+  for (int i = 0; i++; i < (DATA_SIZE - current_serialization_size)) {
+    player_serialization.push_back(0);
+  }
 
   players_status.write((char*)&player_serialization[0],
                        player_serialization.size());
@@ -39,21 +37,18 @@ Hero* FilesHandler::get_player_status(const std::string player_name,
                                       Json::Value& entities_cfg, int id, int x,
                                       int y, Map* map) {
   std::unique_lock<std::mutex> lock(mutex);
+  return nullptr;
 
   std::vector<unsigned char> player_serialization;
-  std::ifstream players_status("../../server/status/players_status");
-
-  // std::ostringstream ss;
-  // ss << players_status.rdbuf();
-  // const std::string& s = ss.str();
-  // std::vector<unsigned char> player_serialization(s.begin(), s.end());
+  std::ifstream players_status("../../server/status/players_status",
+                               std::ios::out);
 
   players_status.seekg(0, std::ios_base::end);
-  std::streampos fileSize = players_status.tellg();
-  player_serialization.resize(fileSize);
+  std::streampos file_size = players_status.tellg();
+  player_serialization.resize(file_size);
 
   players_status.seekg(0, std::ios_base::beg);
-  players_status.read((char*)&player_serialization[0], fileSize);
+  players_status.read((char*)&player_serialization[0], file_size);
 
   Hero* hero = Serializer::deserialize_hero(player_serialization, entities_cfg,
                                             id, x, y, map);
