@@ -44,9 +44,9 @@ void Client::play() {
 
   CommandsSender sender(commands_to_send, socket);
   GameUpdater updater(player_id, protected_map, socket, is_running);
-  GameRenderer renderer(window_game.get_screen_width(),
-                        window_game.get_screen_height(), protected_map,
-                        event_queue);
+  GameRenderer renderer(
+      window_game.get_renderer(), window_game.get_screen_width(),
+      window_game.get_screen_height(), protected_map, event_queue);
   EventHandler event_handler(commands_to_send, event_queue, is_running);
   // Lanzo los hilos para renderizar, actualizar el modelo, enviar datos al
   // server

@@ -25,7 +25,6 @@
 
 class GameRenderer : public Thread {
  private:
-  SDL_Window* window;
   SDL_Renderer* renderer;
   bool is_running;
   int screen_width;
@@ -36,7 +35,7 @@ class GameRenderer : public Thread {
   std::vector<sound_t> current_sounds;
 
  public:
-  GameRenderer(int, int, ProtectedMap&, EventsQueue&);
+  GameRenderer(SDL_Renderer*, int, int, ProtectedMap&, EventsQueue&);
   ~GameRenderer();
   void window_init();
   void run();

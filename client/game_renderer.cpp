@@ -1,60 +1,16 @@
 #include "game_renderer.h"
 
-GameRenderer::GameRenderer(int width, int height, ProtectedMap& prot_map,
-                           EventsQueue& queue)
-    : screen_width(width),
+GameRenderer::GameRenderer(SDL_Renderer* ren, int width, int height,
+                           ProtectedMap& prot_map, EventsQueue& queue)
+    : renderer(ren),
+      screen_width(width),
       screen_height(height),
       protected_map(prot_map),
       events_queue(queue) {
-  window_init();
   is_running = true;
 }
 
-void GameRenderer::window_init() {
-  window = SDL_CreateWindow("Argentum Online", SDL_WINDOWPOS_UNDEFINED,
-                            SDL_WINDOWPOS_UNDEFINED, screen_width,
-                            screen_height, SDL_WINDOW_SHOWN);
-
-  if (!window) {
-    throw SdlException(MSG_ERROR_SDL_INIT_WINDOW, SDL_GetError());
-  } else {
-    renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-    if (!renderer) {
-      throw SdlException(MSG_ERROR_SDL_INIT_RENDERER, SDL_GetError());
-    } else {
-      // Fondo negro
-      SDL_SetRenderDrawColor(renderer, 0, 0, 0, 0xFF);
-
-      // Initialize PNG loading
-      int imgFlags = IMG_INIT_PNG;
-      if (!(IMG_Init(imgFlags) & imgFlags))
-        throw SdlException(MSG_ERROR_SDL_IMG_INIT, IMG_GetError());
-
-      // Inicializamos el mixer de audio
-      if (Mix_OpenAudio(22050, MIX_DEFAULT_FORMAT, 2, 2048) < 0)
-        throw SdlException(MSG_ERROR_SDL_MIXER_INIT, Mix_GetError());
-
-      // Inicializamos TTF
-      if (TTF_Init() == -1)
-        throw SdlException(MSG_ERROR_SDL_TTF_INIT, TTF_GetError());
-    }
-  }
-}
-
-GameRenderer::~GameRenderer() {
-  if (renderer) {
-    SDL_DestroyRenderer(renderer);
-    renderer = nullptr;
-  }
-  if (window) {
-    SDL_DestroyWindow(window);
-    window = nullptr;
-  }
-  IMG_Quit();
-  SDL_Quit();
-  Mix_Quit();
-  TTF_Quit();
-}
+GameRenderer::~GameRenderer() {}
 
 void GameRenderer::run() {
   try {
@@ -70,7 +26,7 @@ void GameRenderer::run() {
     event_t local_event;
     int index;
     bool is_selected = false;
-    int item_selected = 20; // TODO: aclarar que hace
+    int item_selected = 20;  // TODO: aclarar que hace
     std::string input_message = " ";
 
     while (is_running) {
