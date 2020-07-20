@@ -224,7 +224,8 @@ void EventHandler::get_events() {
             while (text_box.mouse_click_in(x, y)) {
               while (SDL_PollEvent(&event_chat) != 0) {
                 
-                // Chequeamos si el usuario quiere cerrar mientras escribe
+                std::cout << "ESPERANDO INPUT " << std::endl;
+                // Chequeamos si el usuario quiere cerrar mientras escribe 
                 if (event_chat.type == SDL_QUIT) {
                   is_running = false;
                   QuitCommandDTO* quit_command = new QuitCommandDTO();
@@ -237,7 +238,7 @@ void EventHandler::get_events() {
                 }
 
                 // Chequea si el click fue fuera de la caja de texto
-                if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
+                else if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
                   SDL_GetMouseState(&x, &y);
                 }
 
@@ -259,7 +260,7 @@ void EventHandler::get_events() {
                     events_queue.push(EVENT_MESSAGE);
                   }
                 }
-
+                
                 // Chequeamos si el usuario quiere escribir
                 else if (event_chat.type == SDL_TEXTINPUT) {
                   // Para impedir el copiado y pegado

@@ -115,7 +115,7 @@ void Lobby::lobby_log_in() {
             }
 
             // Chequea si el click fue fuera de la caja de texto
-            if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
+            else if (event_chat.type == SDL_MOUSEBUTTONDOWN) {
               SDL_GetMouseState(&x, &y);
 
               check_mouse_click_login(x, y, x_check_mark, get_user_text,
@@ -123,7 +123,7 @@ void Lobby::lobby_log_in() {
             }
 
             // Chequeamos si el usuario quiere borrar algo
-            if (event_chat.type == SDL_KEYDOWN &&
+            else if (event_chat.type == SDL_KEYDOWN &&
                 event_chat.key.keysym.sym == SDLK_BACKSPACE) {
               if (user_name.length()) {
                 user_name.pop_back();
@@ -363,7 +363,7 @@ void Lobby::check_mouse_click_login(int& x, int& y, int& x_check_mark,
     SDL_StartTextInput();
   }
   // Chequeamos si el mouse hizo click dentro del del campo 'contraseña'
-  else if (password.mouse_click_in(x, y) || get_password_text) {
+  else if (password.mouse_click_in(x, y)) {
     get_user_text = false;
     get_password_text = true;
     SDL_StartTextInput();
