@@ -97,8 +97,8 @@ void Spell::set_features(id_texture_t type) {
       break;
 
     case ID_FINAL_JUDGMENT:
-      width = 128;
-      height = 100;
+      width = 110;
+      height = 50;
       one_texture_animation = false;
       max_life_time = FRAMES_FINAL_JUDGMENT * FRAMES_PER_TEXTURE;
       break;

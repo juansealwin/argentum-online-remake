@@ -11,7 +11,7 @@ void Character::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   texture_manager.get_texture(type_character)
       .render(renderer, &body_rect, x - x_rel, y - height / 2 - y_rel);
 
-  if (spellbound.spell_alive())
+  if (spellbound.spell_alive()) 
     spellbound.render(renderer, x - x_rel, y - height / 2 - y_rel);
 }
 
