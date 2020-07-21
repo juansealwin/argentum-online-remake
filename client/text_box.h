@@ -7,6 +7,11 @@
 
 #include "drawable.h"
 #include "texture_manager.h"
+#include "algorithm"
+
+// No es el ñ ASCII pero por alguna razón lo identifica con este numero
+#define ENIE_ASCII -61
+#define ENIE 241
 
 class TextBox : public Drawable {
  private:
