@@ -336,6 +336,7 @@
   "milisecondsForUpdatingMonsters": 400,
   "milisecondsForUpdatingProjectiles": 93.75,
   "milisecondsForProccesingAttacks": 500,
-  "secondsForProccesingRoomChanges": 7,
-  "monstersPoblation": 40
+  "secondsForProccesingRoomChanges": 3,
+  "monstersPoblation": 40,
+  "miliseconsForSavingPlayers": 60000
 }

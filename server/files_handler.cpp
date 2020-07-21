@@ -57,8 +57,6 @@ std::vector<unsigned char> FilesHandler::get_serialization_of_hero(Hero* hero) {
   for (int i = 0; i < (DATA_SIZE - current_serialization_size); i++) {
     player_serialization.push_back('0');
   }
-  std::cout << "vector que se devuelve en get serialization "
-            << player_serialization.size() << std::endl;
   return std::move(player_serialization);
 }
 
@@ -88,8 +86,6 @@ void FilesHandler::save_player_status(
   std::cout << "guardando a " << player_name << " en la posicion " << position
             << std::endl;
   players_status.seekp(position);
-  std::cout << "vector de chars es " << player_serialization.size()
-            << std::endl;
   players_status.write((char*)&player_serialization[0],
                        player_serialization.size());
   players_status.close();
