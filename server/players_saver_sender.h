@@ -17,6 +17,7 @@ class PlayersSaverSender : public Thread {
                      std::vector<ArgentumGame *> &rooms,
                      const int milisecons_interval_to_update);
   ~PlayersSaverSender() override;
+  void stop();
   void run() override;
 
  private:

@@ -52,6 +52,7 @@ class ArgentumGame : public Thread {
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
+  bool is_alive();
   void kill();
   void print_debug_map();
   void hero_dequip_item(int entity_id, int item_id);
