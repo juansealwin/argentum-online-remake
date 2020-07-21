@@ -337,6 +337,7 @@ void Hero::pick_up_drop(Drop *drop) {
   if ((drop->size() > 0) && (this->has_free_space())) {
     // siempre tomo el ultimo item en el drop
     Item *item = drop->take_item(drop->size());
+    if (!item) return;
     this->add_item(item);
   } else if ((drop->ammount_of_gold() > 0) && this->can_hold_more_gold()) {
     unsigned int hero_gold_space = this->gold_space_remaining();

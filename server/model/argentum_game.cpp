@@ -9,11 +9,9 @@ ArgentumGame::ArgentumGame(
     Json::Value &map_cfg, std::ifstream &entities_config,
     unsigned int &entities_ids, MessageCenter &message_center,
     FilesHandler &files_handler,
-    BlockingThreadSafeQueue<
-        std::tuple<std::string, std::vector<unsigned char>> *>
-        *players_serializations_queue)
-    : 
-      files_handler(files_handler),
+    BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>
+                                *> *players_serializations_queue)
+    : files_handler(files_handler),
       room(room_number),
       commands_queue(commands_queue),
       mutex(),
@@ -372,14 +370,14 @@ void ArgentumGame::throw_projectile(int attacker_id) {
 }
 
 void ArgentumGame::pick_up_drop(unsigned int player_id) {
-  Hero *hero = heroes.at(player_id);
-
   try {
+    Hero *hero = heroes.at(player_id);
     std::tuple<unsigned int, unsigned int> pos =
         std::tuple<unsigned int, unsigned int>(hero->x_position,
                                                hero->y_position);
     if (drops.count(pos) == 0) return;
     Drop *drop = drops.at(pos);
+    if (!drop) return;
     hero->pick_up_drop(drop);
   }
 
