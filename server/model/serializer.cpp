@@ -73,6 +73,7 @@ std::vector<unsigned char> Serializer::serialize_game_status(
     // Accessing KEY from element
     std::tuple<unsigned int, unsigned int> coordinates = element.first;
     Drop *drop = element.second;
+    if(drop->is_empty()) continue;
     serialize_drop(serialization, drop, coordinates);
   }
   // debug_deserialize_v3(serialization);
