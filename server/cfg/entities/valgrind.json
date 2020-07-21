@@ -248,7 +248,7 @@
       "intelligence": 0,
       "agility": 15,
       "fClassHp": 2,
-      "fClassMana": 10,
+      "fClassMana": 0,
       "fClassMeditation": 0,
       "level": 0,
       "id": 24
@@ -315,7 +315,8 @@
   "maps": [
     "../../server/cfg/maps/grass_map.json",
     "../../server/cfg/maps/desert_map.json",
-    "../../server/cfg/maps/argal_map.json"
+    "../../server/cfg/maps/argal_map.json",
+    "../../server/cfg/maps/ice_map.json"
   ],
   "criticalDamageMultiplier": 2,
   "inventorySize": 16,

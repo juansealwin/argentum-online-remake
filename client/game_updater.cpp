@@ -437,6 +437,9 @@ map_t GameUpdater::get_new_map(int map) {
     case 2:
       new_map = ARGAL_MAP;
       break;
+    case 3:
+      new_map = ICE_MAP;
+      break;
 
     default:
       break;

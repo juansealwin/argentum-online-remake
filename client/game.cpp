@@ -211,8 +211,7 @@ void Game::render_entities(SDL_Renderer* renderer) {
           (it2->second.y <= map_piece.y + screen_height)) {
         texture_manager.get_texture(it2->second.type_item)
             .render(renderer, NULL, it2->second.x - map_piece.x,
-                    it2->second.y - map_piece.y +
-                        HEIGHT_UI * height_ratio);
+                    it2->second.y - map_piece.y + HEIGHT_UI * height_ratio);
       }
   }
 
@@ -222,9 +221,8 @@ void Game::render_entities(SDL_Renderer* renderer) {
         (it->second->get_x() <= map_piece.x + screen_width))
       if ((map_piece.y <= it->second->get_y()) &&
           (it->second->get_y() <= map_piece.y + screen_height)) {
-        it->second->render(
-            renderer, map_piece.x,
-            map_piece.y - HEIGHT_UI * height_ratio);
+        it->second->render(renderer, map_piece.x,
+                           map_piece.y - HEIGHT_UI * height_ratio);
       }
   }
 }
@@ -244,6 +242,10 @@ void Game::change_map(map_t new_map) {
     case ARGAL_MAP:
       background = ID_MAP_ARGAL_BACKGROUND;
       static_objects = ID_MAP_ARGAL_OBJECTS;
+      break;
+    case ICE_MAP:
+      background = ID_MAP_ICE_BACKGROUND;
+      static_objects = ID_MAP_ICE_OBJECTS;
       break;
 
     default:

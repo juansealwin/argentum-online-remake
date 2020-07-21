@@ -50,8 +50,9 @@ class ArgentumGame : public Thread {
   void kill();
   void print_debug_map();
   void hero_dequip_item(int entity_id, int item_id);
-  // equipa o usa una pocion
   void hero_use_special(int entity_id);
+  void hero_level_up(int entity_id);
+
   void hero_revive(int entity_id);
   void hero_heal(int entity_id);
   void hero_buy_item(int entity_id, int item_id);
@@ -90,9 +91,9 @@ class ArgentumGame : public Thread {
   ThreadSafeQueue<Command *> *get_commands_queue();
   void stop_notification_queue(int player_id);
   void send_message(unsigned int player_id, std::string dst, std::string msg);
-  FilesHandler &files_handler;
   Hero *get_hero_by_id(const int id);
   Json::Value entities_cfg;
+  FilesHandler &files_handler;
 
  private:
   unsigned int room = 0;
@@ -162,6 +163,7 @@ class ArgentumGame : public Thread {
   std::vector<item_t> priest_sale_items = {hp_potion,   mana_potion,
                                            ash_stick,   gnarled_staff,
                                            crimp_staff, elven_flute};
+  
 };
 
 #endif  // ARGENTUMGAME_H
