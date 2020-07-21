@@ -1,6 +1,9 @@
 #include "sound_manager.h"
 
-SoundManager::SoundManager() { charge_sound_music(); }
+SoundManager::SoundManager() {
+  actual_music = BG_MUSIC_1;
+  charge_sound_music();
+}
 
 SoundManager::~SoundManager() {}
 
@@ -25,9 +28,8 @@ void SoundManager::charge_sound_music() {
   sound_effects[DEAD_PC].set_sound("muerto.wav");
 }
 
-void SoundManager::play_music(sound_t id) {
-  music[id].play_music();
-  music[id].decrease_music_volume(90);
+void SoundManager::play_music() {
+  music[actual_music].play_music();
 }
 
 void SoundManager::play_sound_effects(std::vector<sound_t>& current_sounds) {
@@ -35,4 +37,14 @@ void SoundManager::play_sound_effects(std::vector<sound_t>& current_sounds) {
     sound_effects[current_sounds.back()].play_sound(0);
     current_sounds.pop_back();
   }
+}
+
+void SoundManager::stop_music() { music[actual_music].stop_music(); }
+
+void SoundManager::increase_music_volume(int dec) {
+  music[actual_music].increase_music_volume(dec);
+}
+
+void SoundManager::decrease_music_volume(int dec) {
+  music[actual_music].decrease_music_volume(dec);
 }

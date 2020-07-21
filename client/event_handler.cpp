@@ -63,16 +63,16 @@ void EventHandler::get_events() {
             commands_queue.push(move_command);
           }
           if (event.key.keysym.sym == SDLK_EQUALS) {
-            // background_music.increase_music_volume();
+            events_queue.push(EVENT_INCREASE_MUSIC_VOLUME);
           }
           if (event.key.keysym.sym == SDLK_MINUS) {
-            // background_music.decrease_music_volume();
+            events_queue.push(EVENT_DECREASE_MUSIC_VOLUME);
           }
           if (event.key.keysym.sym == SDLK_m) {
-            // background_music.stop_music();
+            events_queue.push(EVENT_STOP_MUSIC);
           }
           if (event.key.keysym.sym == SDLK_p) {
-            // background_music.play_music();
+            events_queue.push(EVENT_PLAY_MUSIC);
           }
           if (event.key.keysym.sym == SDLK_SPACE) {
             AttackCommandDTO* attack_command = new AttackCommandDTO();
