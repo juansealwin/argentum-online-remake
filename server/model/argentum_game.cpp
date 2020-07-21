@@ -435,6 +435,7 @@ unsigned int ArgentumGame::add_new_hero(const std::string &hero_race,
 
   Hero *hero = files_handler.get_player_status(
       hero_name, entities_cfg, entities_ids, x, y, std::ref(map));
+  std::cout << "sali de obtener al hero " << (hero == nullptr) << std::endl;
   unsigned int new_player_id = 0;
   if (hero != nullptr) {
     new_player_id = place_existing_hero(hero, x, y);

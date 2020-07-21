@@ -1,7 +1,6 @@
 #ifndef PLAYERS_SAVER_SENDER_H
 #define PLAYERS_SAVER_SENDER_H
 
-#include <chrono>
 #include <string>
 #include <tuple>
 
@@ -10,23 +9,20 @@
 
 class PlayersSaverSender : public Thread {
  public:
-  PlayersSaverSender(BlockingThreadSafeQueue<
-                         std::tuple<std::string, std::vector<unsigned char>> *>
-                         *players_serializations_queue,
-                     FilesHandler &files_handler, bool periodic_mode,
-                     std::vector<ArgentumGame *> &rooms,
-                     const int milisecons_interval_to_update);
+  PlayersSaverSender(
+      BlockingThreadSafeQueue<
+          std::tuple<std::string, std::vector<unsigned char>> *>
+          *players_serializations_queue,
+      FilesHandler &files_handler);
   ~PlayersSaverSender() override;
   void run() override;
+  void stop();
 
  private:
-  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>> *>
-      *players_serializations_queue;
+  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>
+                              *> *players_serializations_queue;
   FilesHandler &files_handler;
   bool alive;
-  bool periodic_mode;
-  std::vector<ArgentumGame *> &rooms;
-  int milisecons_interval_to_update;
 };
 
 #endif
