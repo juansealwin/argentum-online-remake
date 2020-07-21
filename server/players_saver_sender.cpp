@@ -17,20 +17,23 @@ PlayersSaverSender::PlayersSaverSender(
       alive(true),
       rooms(rooms),
       milisecons_interval_to_update(milisecons_interval_to_update) {}
-
-PlayersSaverSender::~PlayersSaverSender() {
-  this->players_serializations_queue->close();
+void PlayersSaverSender::stop() {
   this->alive = false;
+}
+PlayersSaverSender::~PlayersSaverSender() {
+  if (!periodic_mode) this->players_serializations_queue->close();
+  
   join();
-  delete players_serializations_queue;
+  if (!periodic_mode) delete players_serializations_queue;
 }
 
 void PlayersSaverSender::run() {
   while (alive) {
+    
     if (periodic_mode) {
       std::this_thread::sleep_for(
           std::chrono::milliseconds(milisecons_interval_to_update));
-      std::cout << "Se actualizan a todos los jugadores en archivo\n";
+      if(!alive) break;
       std::vector<std::map<unsigned int, Hero*>> heroes_copy;
       // Copio para evitar errores por si justo un jugador cambia de mapa
       for (int i = 0; i < rooms.size(); i++) {
@@ -61,4 +64,5 @@ void PlayersSaverSender::run() {
       }
     }
   }
+  std::cout << "afuera del while, periodic mode: " << periodic_mode << std::endl;
 }

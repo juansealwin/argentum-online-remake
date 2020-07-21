@@ -68,6 +68,8 @@ void ClientListener::stop_listening() {
   for (ThreadSafeQueue<Command *> *q : queues_commands) {
     delete q;
   }
+  players_saver_sender->stop();
+  players_saver_sender_periodically->stop();
 
   delete players_saver_sender;
   delete players_saver_sender_periodically;
