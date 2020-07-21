@@ -242,6 +242,8 @@ void Hero::unequip_armour() {
 void Hero::use_item(unsigned int item_id) {
   if (ghost_mode) throw ModelException("Los fantasmas no pueden usar items!");
   meditating = false;
+  if (!inventory->has_item(item_id)) throw ModelException("No tiene este item!");;
+
   Item *i = inventory->item_with_id(item_id);
   i->use(this);
 }
