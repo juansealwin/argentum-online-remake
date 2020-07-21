@@ -45,7 +45,7 @@
 #define MSG_BUY "/comprar "
 #define MSG_SELL "/vender "
 #define MSG_TAKE "/tomar"
-#define MSG_DROP "/tirar "
+#define MSG_DROP "/tirar"
 #define STR_TURTLE_SHIELD "escudo de tortuga"
 #define STR_IRON_SHIELD "escudo de hierro"
 #define STR_HOOD "capucha"
@@ -65,6 +65,7 @@
 #define STR_GNARLED_STAFF "baculo nudoso"
 #define STR_CRIMP_STAFF "baculo engarzado"
 #define STR_ELVEN_ELUDE "laud elfico"
+#define STR_DEADLY_STAFF "baculo mortifero"
 #define WIDTH_RATIO_800 1
 #define INV_ROWS_800x600 5
 #define INV_COLS_800x600 4

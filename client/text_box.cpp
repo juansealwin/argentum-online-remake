@@ -9,11 +9,7 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
 
   set_mesures_box(type);
 
-  // No se puede renderizar un string nulo
-  if (new_text == "")
-    text = " ";
-  else
-    text = new_text;
+  set_text(new_text);
 
   padding = 2;
 
@@ -34,8 +30,10 @@ void TextBox::set_text(std::string new_text) {
   // No se puede renderizar texto vacio
   if (new_text == "")
     text = " ";
-  else
+  else {
     text = new_text;
+    std::replace(text.begin(), text.end(), (char)ENIE_ASCII, (char)ENIE);
+  }
 }
 
 void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {

@@ -50,6 +50,8 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
       new Texture("mapa_desierto_objetos.png", renderer);
   map[ID_MAP_ARGAL_BACKGROUND] = new Texture("mapa_argal_fondo.png", renderer);
   map[ID_MAP_ARGAL_OBJECTS] = new Texture("mapa_argal_objetos.png", renderer);
+  map[ID_MAP_ICE_BACKGROUND] = new Texture("mapa_hielo_fondo.png", renderer);
+  map[ID_MAP_ICE_OBJECTS] = new Texture("mapa_hielo_objetos.png", renderer);
 
   /* HELMETS AND HATS TEXTURES*/
   map[ID_MAGIC_HAT] = new Texture("sombrero_magico.png", renderer);
@@ -100,6 +102,9 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_CRIMPED_STAFF] = new Texture("baculo_engarzado.png", renderer);
   map[ID_CRIMPED_STAFF_EQUIPPED] =
       new Texture("baculo_engarzado_equipado.png", renderer);
+  map[ID_DEADLY_STAFF] = new Texture("baculo_mortal.png", renderer);
+  map[ID_DEADLY_STAFF_EQUIPPED] =
+      new Texture("baculo_mortal_equipado.png", renderer);
   map[ID_ELVEN_ELUDE] = new Texture("laud_elfico.png", renderer);
   map[ID_ELVEN_ELUDE_EQUIPPED] =
       new Texture("laud_elfico_equipado.png", renderer);
@@ -165,6 +170,18 @@ void TextureManager::load_textures(SDL_Renderer* renderer) {
   map[ID_EXPLOSION_18] = new Texture("explosion19.png", renderer);
   map[ID_EXPLOSION_19] = new Texture("explosion20.png", renderer);
   map[ID_EXPLOSION_20] = new Texture("explosion21.png", renderer);
+
+  map[ID_FINAL_JUDGMENT] = new Texture("juicio_final1.png", renderer);
+  map[ID_FINAL_JUDGMENT_1] = new Texture("juicio_final2.png", renderer);
+  map[ID_FINAL_JUDGMENT_2] = new Texture("juicio_final3.png", renderer);
+  map[ID_FINAL_JUDGMENT_3] = new Texture("juicio_final4.png", renderer);
+  map[ID_FINAL_JUDGMENT_4] = new Texture("juicio_final5.png", renderer);
+  map[ID_FINAL_JUDGMENT_5] = new Texture("juicio_final6.png", renderer);
+  map[ID_FINAL_JUDGMENT_6] = new Texture("juicio_final7.png", renderer);
+  map[ID_FINAL_JUDGMENT_7] = new Texture("juicio_final8.png", renderer);
+  map[ID_FINAL_JUDGMENT_8] = new Texture("juicio_final9.png", renderer);
+  map[ID_FINAL_JUDGMENT_9] = new Texture("juicio_final10.png", renderer);
+  map[ID_FINAL_JUDGMENT_10] = new Texture("juicio_final11.png", renderer);
 }
 
 TextureManager::~TextureManager() {}
@@ -264,6 +281,31 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
         id_frame = (id_texture_t)(id + 19);
       else
         id_frame = (id_texture_t)(id + 20);
+      break;
+
+    case ID_FINAL_JUDGMENT:
+      if (lifetime > FRAMES_PER_TEXTURE * 10)
+        id_frame = id;
+      else if (lifetime > FRAMES_PER_TEXTURE * 9)
+        id_frame = (id_texture_t)(id + 1);
+      else if (lifetime > FRAMES_PER_TEXTURE * 8)
+        id_frame = (id_texture_t)(id + 2);
+      else if (lifetime > FRAMES_PER_TEXTURE * 7)
+        id_frame = (id_texture_t)(id + 3);
+      else if (lifetime > FRAMES_PER_TEXTURE * 6)
+        id_frame = (id_texture_t)(id + 4);
+      else if (lifetime > FRAMES_PER_TEXTURE * 5)
+        id_frame = (id_texture_t)(id + 5);
+      else if (lifetime > FRAMES_PER_TEXTURE * 4)
+        id_frame = (id_texture_t)(id + 6);
+      else if (lifetime > FRAMES_PER_TEXTURE * 3)
+        id_frame = (id_texture_t)(id + 7);
+      else if (lifetime > FRAMES_PER_TEXTURE * 2)
+        id_frame = (id_texture_t)(id + 8);
+      else if (lifetime > FRAMES_PER_TEXTURE)
+        id_frame = (id_texture_t)(id + 9);
+      else
+        id_frame = (id_texture_t)(id + 10);
       break;
 
     default:

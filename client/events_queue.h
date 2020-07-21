@@ -24,14 +24,17 @@ class EventsQueue {
   EventsQueue();
   ~EventsQueue();
   void push(event_t);
-  bool push(event_t, id_texture_t&, int&, bool&);
-  bool get_item(inventory_t&, id_texture_t&, int&);
+  bool select_item(id_texture_t&, int&, bool&);
+  bool throwable(id_texture_t&, int&);
+  bool get_item_shop(inventory_t&, id_texture_t&, int&);
+  bool get_item_inventory(inventory_t&, id_texture_t&, int&);
   event_t pop(int&);
   void write_status(UIStatus&);
   int append_character(char c);
   int delete_character();
   std::string read_message();
   std::string flush_message();
+  bool is_shop_open();
 };
 
 #endif

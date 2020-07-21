@@ -29,7 +29,8 @@ void GameUpdater::run() {
       // Recibimos las actualizaciones del mapa
       status_serialized.clear();
       status_serialized.resize(0);
-      int bytes_rcv = Protocol::receive_notification(read_socket, status_serialized);
+      int bytes_rcv =
+          Protocol::receive_notification(read_socket, status_serialized);
       if (bytes_rcv == 0) break;
       // Extraemos el tipo de notificación
       type_of_notification = extract<uint8_t>(status_serialized, j);
@@ -256,7 +257,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           armor = get_item_texture(current_item_id);
         else if (item_type == SHIELD)
           shield = get_item_texture(current_item_id);
-        else if (item_type == WEAPON)
+        else if (item_type == WEAPON) 
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)
@@ -366,6 +367,10 @@ id_texture_t GameUpdater::get_item_texture(int new_item) const {
       item = ID_ELVEN_ELUDE;
       break;
 
+    case DEADLY_STAFF:
+      item = ID_DEADLY_STAFF;
+      break;
+
     case GOLD:
       item = ID_GOLD;
       break;
@@ -407,6 +412,7 @@ equipped_t GameUpdater::get_type_equipped(int new_item) {
     case GNARLED_STAFF:
     case CRIMP_STAFF:
     case ELVEN_FLUTE:
+    case DEADLY_STAFF:
       type_equipped = WEAPON;
       break;
 
@@ -430,6 +436,9 @@ map_t GameUpdater::get_new_map(int map) {
 
     case 2:
       new_map = ARGAL_MAP;
+      break;
+    case 3:
+      new_map = ICE_MAP;
       break;
 
     default:

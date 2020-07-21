@@ -67,8 +67,12 @@ void SoundEffect::play_music(int loops) {
       Mix_PlayMusic(music, loops);
       playing_music = true;
     }
+  } else {
+    if (Mix_PausedMusic())
+      Mix_ResumeMusic();
+    else
+      Mix_PauseMusic();
   }
-  if (Mix_PausedMusic()) Mix_ResumeMusic();
 }
 
 void SoundEffect::stop_music() { Mix_HaltMusic(); }

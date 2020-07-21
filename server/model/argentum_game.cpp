@@ -12,13 +12,14 @@ ArgentumGame::ArgentumGame(
     BlockingThreadSafeQueue<
         std::tuple<std::string, std::vector<unsigned char>> *>
         *players_serializations_queue)
-    : room(room_number),
+    : 
+      files_handler(files_handler),
+      room(room_number),
       commands_queue(commands_queue),
       mutex(),
       alive(true),
       entities_ids(entities_ids),
       message_center(message_center),
-      files_handler(files_handler),
       players_serializations_queue(players_serializations_queue) {
   std::unique_lock<std::mutex> lock(mutex);
   entities_config >> entities_cfg;
@@ -60,6 +61,16 @@ void ArgentumGame::place_initial_npcs(Json::Value &map_cfg) {
 }
 
 /*********************** Acciones personajes *************************/
+
+void ArgentumGame::hero_level_up(int entity_id) {
+  Hero *hero = nullptr;
+  try {
+    hero = heroes.at(entity_id);
+    hero->level_up();
+  } catch (ModelException &e) {
+  } catch (const std::out_of_range &oor) {
+  }
+}
 
 void ArgentumGame::hero_use_special(int entity_id) {
   Hero *hero = nullptr;
@@ -646,8 +657,7 @@ void ArgentumGame::setup_new_hero(Hero *h) {
 
 std::vector<Item *> ArgentumGame::setup_new_mage() {
   std::vector<Item *> mage_items;
-  mage_items.push_back(
-      ItemFactory::create_gnarled_staff(entities_cfg["items"]));
+  mage_items.push_back(ItemFactory::create_ash_stick(entities_cfg["items"]));
   mage_items.push_back(ItemFactory::create_blue_tunic(entities_cfg["items"]));
   mage_items.push_back(ItemFactory::create_magic_hat(entities_cfg["items"]));
   return mage_items;
