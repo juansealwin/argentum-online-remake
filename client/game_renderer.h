@@ -21,7 +21,7 @@
 #include "sound_manager.h"
 
 // 40 FPS
-#define FRAME_DELAY 1000/40
+#define FRAME_DELAY 1000/10
 
 class GameRenderer : public Thread {
  private:
