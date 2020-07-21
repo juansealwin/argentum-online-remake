@@ -191,7 +191,7 @@
         "minDmg": 0,
         "maxDmg": 0,
         "hpRecovery": 120,
-        "range": 8,
+        "range": 0,
         "mana": 100,
         "price": 200,
         "id": 19
@@ -337,5 +337,6 @@
   "milisecondsForUpdatingProjectiles": 93.75,
   "milisecondsForProccesingAttacks": 500,
   "secondsForProccesingRoomChanges": 7,
-  "monstersPoblation": 40
+  "monstersPoblation": 40,
+  "miliseconsForSavingPlayers": 120000
 }

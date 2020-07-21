@@ -462,6 +462,11 @@ void ArgentumGame::kill() {
   alive = false;
 }
 
+bool ArgentumGame::is_alive() {
+  std::unique_lock<std::mutex> lock(mutex);
+  return alive;
+}
+
 void ArgentumGame::update() {
   std::unique_lock<std::mutex> lock(mutex);
   while (!commands_queue->is_empty()) {

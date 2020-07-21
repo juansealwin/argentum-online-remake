@@ -34,6 +34,7 @@ void PlayersSaverSender::run() {
       std::vector<std::map<unsigned int, Hero*>> heroes_copy;
       // Copio para evitar errores por si justo un jugador cambia de mapa
       for (int i = 0; i < rooms.size(); i++) {
+        if (!rooms.at(i)->is_alive()) continue;
         heroes_copy.emplace_back(rooms[i]->heroes);
       }
 
