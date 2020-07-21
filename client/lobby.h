@@ -14,6 +14,10 @@
 #define HEIGHT_600 600
 #define WIDTH_1024 1024
 #define HEIGHT_768 768
+#define GRASS 0
+#define DESERT 1
+#define ARGAL 2
+#define ICE 3
 
 #define MAX_USER_INPUT 14
 #define X_LOGIN 489
@@ -35,10 +39,15 @@
 #define Y_CLASS_PALADIN 216
 #define Y_CLASS_CLERIC 288
 #define Y_CLASS_WIZARD 364
-#define X_PLAY_BUTTON 608
-#define Y_PLAY_BUTTON 136
-#define PLAY_BUTTON_W 100
-#define PLAY_BUTTON_H 64
+#define X_PLAY_BUTTON 648
+#define Y_PLAY_BUTTON 527
+#define X_MAP 759
+#define Y_MAP_GRASS 70
+#define Y_MAP_DESERT 117
+#define Y_MAP_ARGAL 163
+#define Y_MAP_ICE 210
+#define PLAY_BUTTON_W 122
+#define PLAY_BUTTON_H 62
 #define CHECKBOX_EDGE 24
 #define WARNING_MESSAGE "Se permite un personaje por usuario."
 #define WARNING_MESSAGE2 \
@@ -92,6 +101,10 @@ class Lobby {
   InteractiveBox option_paladin;
   InteractiveBox option_cleric;
   InteractiveBox option_wizard;
+  InteractiveBox option_grass_map;
+  InteractiveBox option_desert_map;
+  InteractiveBox option_argal_map;
+  InteractiveBox option_ice_map;
   InteractiveBox play;
   bool is_running;
   bool quit;
@@ -105,6 +118,7 @@ class Lobby {
   std::string class_message;
   std::string race_selected;
   std::string class_selected;
+  int initial_map;
   SoundEffect click_sound;
   SoundEffect lobby_music;
 
@@ -118,6 +132,7 @@ class Lobby {
   std::string get_user_name();
   std::string get_player_race();
   std::string get_player_class();
+  int get_initial_map();
   int get_screen_width();
   int get_screen_height();
   bool get_fs_mode();

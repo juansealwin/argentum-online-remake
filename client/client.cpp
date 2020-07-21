@@ -21,11 +21,10 @@ Client::Client(const char* host, const char* port, WindowGame& new_window)
 Client::~Client() {}
 
 void Client::do_handshake(std::string user_name, std::string race_selected,
-                          std::string class_selected) {
+                          std::string class_selected, int initial_map) {
   // Mandamos la información del usuario y preferencias
-  int initial_room = HelperFunctions::random_int(0, 2);
   LoginCommandDTO* login_command = new LoginCommandDTO(
-      initial_room, user_name, race_selected, class_selected);
+      initial_map, user_name, race_selected, class_selected);
 
   Protocol::send_command(socket, login_command);
   delete login_command;
