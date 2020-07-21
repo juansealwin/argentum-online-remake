@@ -283,27 +283,27 @@ Texture& TextureManager::get_texture(id_texture_t id, int lifetime) {
 
     case ID_FINAL_JUDGMENT:
       if (lifetime > FRAMES_PER_TEXTURE * 10)
-        id_frame = (id_texture_t)(id + 10);
+        id_frame = id;
       else if (lifetime > FRAMES_PER_TEXTURE * 9)
-        id_frame = (id_texture_t)(id + 11);
+        id_frame = (id_texture_t)(id + 1);
       else if (lifetime > FRAMES_PER_TEXTURE * 8)
-        id_frame = (id_texture_t)(id + 12);
+        id_frame = (id_texture_t)(id + 2);
       else if (lifetime > FRAMES_PER_TEXTURE * 7)
-        id_frame = (id_texture_t)(id + 13);
+        id_frame = (id_texture_t)(id + 3);
       else if (lifetime > FRAMES_PER_TEXTURE * 6)
-        id_frame = (id_texture_t)(id + 14);
+        id_frame = (id_texture_t)(id + 4);
       else if (lifetime > FRAMES_PER_TEXTURE * 5)
-        id_frame = (id_texture_t)(id + 15);
+        id_frame = (id_texture_t)(id + 5);
       else if (lifetime > FRAMES_PER_TEXTURE * 4)
-        id_frame = (id_texture_t)(id + 16);
+        id_frame = (id_texture_t)(id + 6);
       else if (lifetime > FRAMES_PER_TEXTURE * 3)
-        id_frame = (id_texture_t)(id + 17);
+        id_frame = (id_texture_t)(id + 7);
       else if (lifetime > FRAMES_PER_TEXTURE * 2)
-        id_frame = (id_texture_t)(id + 18);
+        id_frame = (id_texture_t)(id + 8);
       else if (lifetime > FRAMES_PER_TEXTURE)
-        id_frame = (id_texture_t)(id + 19);
+        id_frame = (id_texture_t)(id + 9);
       else
-        id_frame = (id_texture_t)(id + 20);
+        id_frame = (id_texture_t)(id + 10);
       break;
 
     default:
