@@ -38,6 +38,7 @@ class ClientListener : public Thread {
   Socket server_socket;
   std::list<ClientHandler *> clients;
   PlayersSaverSender *players_saver_sender;
+  PlayersSaverSender *players_saver_sender_periodically;
   StartingInfoNotification *create_start_notification(unsigned int hero_id,
                                                       unsigned int initial_map);
   /*Remueve a los clientes del vector clients

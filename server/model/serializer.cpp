@@ -374,7 +374,6 @@ Hero *Serializer::deserialize_hero(std::vector<unsigned char> &serialization,
     name += serialization.at(j);
     j++;
   }
-  std::cout << "nombre desearilizado: " << name << std::endl;
   class_id = extract<uint8_t>(serialization, j);
   mana_max = (extract<uint16_t>(serialization, j));  // no se usa aun
   curr_mana = (extract<uint16_t>(serialization, j));
