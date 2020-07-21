@@ -25,7 +25,8 @@ class ProjectileManager {
   void manage_collision(Projectile *projectile,
                         std::map<unsigned int, Hero *> &heroes,
                         std::map<unsigned int, Monster *> &monsters,
-                        MessageCenter &message_center, Json::Value &game_cfg);
+                        MessageCenter &message_center,
+                        Json::Value &game_cfg);
   BaseCharacter *get_hero_or_monster(
       int uid, std::map<unsigned int, Hero *> &heroes,
       std::map<unsigned int, Monster *> &monsters);

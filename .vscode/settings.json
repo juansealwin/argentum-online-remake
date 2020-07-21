@@ -58,10 +58,6 @@
       "iomanip": "cpp",
       "condition_variable": "cpp",
       "mutex": "cpp",
-      "forward_list": "cpp",
-      "bitset": "cpp",
-      "complex": "cpp",
-      "cfenv": "cpp",
-      "typeindex": "cpp"
+      "forward_list": "cpp"
     }
 }
