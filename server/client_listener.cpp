@@ -18,19 +18,14 @@ ClientListener::ClientListener(const char *port,
   nanoseconds_for_proccesing_attacks =
       entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
 
-  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>> *>
-      *players_serializations_queue = new BlockingThreadSafeQueue<
+  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>
+                              *> *players_serializations_queue =
+      new BlockingThreadSafeQueue<
           std::tuple<std::string, std::vector<unsigned char>> *>();
-
-  players_saver_sender = new PlayersSaverSender(
-      players_serializations_queue, std::ref(files_handler), false, game_rooms,
-      entities_cfg["miliseconsForSavingPlayers"].asUInt());
+  
+  players_saver_sender =
+      new PlayersSaverSender(players_serializations_queue, std::ref(files_handler));
   players_saver_sender->start();
-
-  players_saver_sender_periodically = new PlayersSaverSender(
-      players_serializations_queue, std::ref(files_handler), true, game_rooms,
-      entities_cfg["miliseconsForSavingPlayers"].asUInt());
-  players_saver_sender_periodically->start();
 
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
@@ -70,7 +65,6 @@ void ClientListener::stop_listening() {
   }
 
   delete players_saver_sender;
-  delete players_saver_sender_periodically;
 
   server_socket.close();
 }
@@ -100,6 +94,7 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
+    std::cout << "acepte nuevo cliente " << std::endl;
     LoginCommandDTO *login_command = static_cast<LoginCommandDTO *>(
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =

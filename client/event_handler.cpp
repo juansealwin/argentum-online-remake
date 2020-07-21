@@ -91,8 +91,6 @@ void EventHandler::get_events() {
             int index;
             if (events_queue.throwable(item_required, index)) {
               if (get_item_t(item_required) != DUMMY_ITEM) {
-                std::cout << "voy a dropear " << get_item_t(item_required)
-                          << std::endl;
                 DropItemCommandDTO* drop_command =
                     new DropItemCommandDTO(get_item_t(item_required));
                 commands_queue.push(drop_command);
