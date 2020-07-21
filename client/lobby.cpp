@@ -339,19 +339,19 @@ void Lobby::lobby_character_selection() {
         } else if (option_desert_map.mouse_click_in(x, y)) {
           x_map_checkmark = X_MAP;
           y_map_checkmark = Y_MAP_DESERT;
-          initial_map = GRASS;
+          initial_map = DESERT;
           map_checkmark = true;
           click_sound.play_sound(0);
         } else if (option_argal_map.mouse_click_in(x, y)) {
           x_map_checkmark = X_MAP;
           y_map_checkmark = Y_MAP_ARGAL;
-          initial_map = GRASS;
+          initial_map = ARGAL;
           map_checkmark = true;
           click_sound.play_sound(0);
         } else if (option_ice_map.mouse_click_in(x, y)) {
           x_map_checkmark = X_MAP;
           y_map_checkmark = Y_MAP_ICE;
-          initial_map = GRASS;
+          initial_map = 3;
           map_checkmark = true;
           click_sound.play_sound(0);
         } else if (play.mouse_click_in(x, y)) {
