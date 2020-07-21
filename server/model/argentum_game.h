@@ -93,6 +93,7 @@ class ArgentumGame : public Thread {
   void send_message(unsigned int player_id, std::string dst, std::string msg);
   Hero *get_hero_by_id(const int id);
   Json::Value entities_cfg;
+  FilesHandler &files_handler;
 
  private:
   unsigned int room = 0;
@@ -162,7 +163,6 @@ class ArgentumGame : public Thread {
   std::vector<item_t> priest_sale_items = {hp_potion,   mana_potion,
                                            ash_stick,   gnarled_staff,
                                            crimp_staff, elven_flute};
-  FilesHandler &files_handler;
   
 };
 
