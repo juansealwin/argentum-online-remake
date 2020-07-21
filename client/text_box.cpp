@@ -139,8 +139,8 @@ void TextBox::set_mesures_box(text_box_t box_type) {
     // TextBox del Lobby
     case USER:
       x = 284;
-      y = 428;
-      height = 15;
+      y = 430;
+      height = 16;
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
       break;
