@@ -24,12 +24,14 @@ void GameRenderer::run() {
     Game current_game;
     protected_map.map_reader(current_game, ui, current_sounds);
     SoundManager sound_manager;
-    sound_manager.play_music(BG_MUSIC_1);
+    sound_manager.play_music();
+    sound_manager.decrease_music_volume(100);
     event_t local_event;
     int index;
+    // No hay items seleccionado entonces dejamos a item_selected en -1
     bool is_selected = false;
-    int item_selected = 20;  // TODO: aclarar que hace
-    std::string input_message = "";
+    int item_selected = -1;
+    std::string input_message;
 
     while (is_running) {
       frame_start = SDL_GetTicks();
@@ -43,12 +45,17 @@ void GameRenderer::run() {
             break;
 
           case EVENT_SELECT_ITEM:
+            // Habia un item seleccionado
             if (is_selected) {
+              // Se selecciono un item ya seleccionado
               if (index == item_selected) {
                 is_selected = false;
-              } else {
+              }
+              // Se selecciono un item distinto al seleccionado
+              else {
                 item_selected = index;
               }
+              // No habia item seleccionado
             } else {
               item_selected = index;
               is_selected = true;
@@ -59,6 +66,22 @@ void GameRenderer::run() {
             input_message = events_queue.read_message();
             // Para que no quede un string vacio ya que no se puede renderizar
             if (input_message.size() == 0) input_message = " ";
+            break;
+
+          case EVENT_INCREASE_MUSIC_VOLUME:
+            sound_manager.increase_music_volume();
+            break;
+
+          case EVENT_DECREASE_MUSIC_VOLUME:
+            sound_manager.decrease_music_volume();
+            break;
+
+          case EVENT_STOP_MUSIC:
+            sound_manager.stop_music();
+            break;
+
+          case EVENT_PLAY_MUSIC:
+            sound_manager.play_music();
             break;
 
           default:

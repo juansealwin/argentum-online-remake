@@ -96,6 +96,13 @@ void Spell::set_features(id_texture_t type) {
       max_life_time = FRAMES_EXPLOSION * FRAMES_PER_TEXTURE;
       break;
 
+    case ID_FINAL_JUDGMENT:
+      width = 110;
+      height = 50;
+      one_texture_animation = false;
+      max_life_time = FRAMES_FINAL_JUDGMENT * FRAMES_PER_TEXTURE;
+      break;
+
     default:
       break;
   }
