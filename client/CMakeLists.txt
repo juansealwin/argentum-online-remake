@@ -11,7 +11,6 @@ set(UTIL_SOURCE_DIR ${PROJECT_SOURCE_DIR}/../util)
 
 
 find_package(SDL2 REQUIRED)
-find_package(Qt5 COMPONENTS Widgets DBus REQUIRED)
 find_package(Threads)
 
 INCLUDE(FindPkgConfig) 
@@ -27,16 +26,6 @@ include_directories(${PROTOCOL_SOURCE_DIR})
 include_directories(${NET_SOURCE_DIR})
 include_directories(${UTIL_SOURCE_DIR})
 
-
-#qt5_wrap_ui(UIS_HEADERS
-#	${PROJECT_SOURCE_DIR}/qtdesigner/clientlobby.ui
-#)
-
-#SET(UI_RESOURCES
-#	${PROJECT_SOURCE_DIR}/qtdesigner/client_lobby_resources.qrc
-#)
-
-#QT5_ADD_RESOURCES(UI_RESOURCES_RCC ${UI_RESOURCES})
 
 file(GLOB client_source_files *.cpp)
 file(GLOB client_header_files *.h)
@@ -71,6 +60,9 @@ target_link_libraries(client ${SDL2_LIBRARIES} ${SDL2IMAGE_LIBRARIES} ${SDL2TTF_
 
 #Install the images
 install(DIRECTORY assets/ DESTINATION ${CMAKE_BINARY_DIR}/client)
+
+#Install the fonts
+install(DIRECTORY fonts/ DESTINATION ${CMAKE_BINARY_DIR}/client)
 
 #Install the sound and music
 install(DIRECTORY sound/ DESTINATION ${CMAKE_BINARY_DIR}/client)
