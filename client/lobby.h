@@ -41,11 +41,11 @@
 #define Y_CLASS_WIZARD 364
 #define X_PLAY_BUTTON 648
 #define Y_PLAY_BUTTON 527
-#define X_MAP 759
-#define Y_MAP_GRASS 70
-#define Y_MAP_DESERT 117
-#define Y_MAP_ARGAL 163
-#define Y_MAP_ICE 210
+#define X_MAP 762
+#define Y_MAP_GRASS 75
+#define Y_MAP_DESERT 122
+#define Y_MAP_ARGAL 168
+#define Y_MAP_ICE 215
 #define PLAY_BUTTON_W 122
 #define PLAY_BUTTON_H 62
 #define CHECKBOX_EDGE 24
