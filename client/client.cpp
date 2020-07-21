@@ -22,17 +22,22 @@ Client::~Client() {}
 
 void Client::do_handshake(std::string user_name, std::string race_selected,
                           std::string class_selected, int initial_map) {
+  std::cout << "initial map: " << initial_map << std::endl;
   // Mandamos la información del usuario y preferencias
   LoginCommandDTO* login_command = new LoginCommandDTO(
-      initial_map, user_name, race_selected, class_selected);
+      0, user_name, race_selected, class_selected);
 
   Protocol::send_command(socket, login_command);
   delete login_command;
+  std::cout << "mande login " << std::endl;
   // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
+  std::cout << "recibimos vecor " << std::endl;
   player_id = ntohs(extract<uint16_t>(starting_info, 1));
+  std::cout << "id " << initial_map << std::endl;
   initial_map = ntohs(extract<uint16_t>(starting_info, 3));
+  std::cout << "initial map " << std::endl;
 }
 
 void Client::play() {
@@ -42,7 +47,7 @@ void Client::play() {
                              window_game.get_height_ratio(), initial_map);
   EventsQueue event_queue;
   CommandsBlockingQueue commands_to_send;
-
+std::cout << "llego a play" << std::endl;
   CommandsSender sender(commands_to_send, socket);
   GameUpdater updater(player_id, protected_map, socket, is_running);
   GameRenderer renderer(
