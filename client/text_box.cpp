@@ -94,7 +94,7 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case INPUT_TEXT:
       x = 15 * texture_manager.get_w_ratio();
-      y = 114 * texture_manager.get_h_ratio();
+      y = 111 * texture_manager.get_h_ratio();
       height = 16 * texture_manager.get_h_ratio();
       // El color del input text es negro
       text_color = {0, 0, 0, 0};
@@ -114,7 +114,7 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case EXP:
       x = 660 * texture_manager.get_w_ratio();
-      y = 92 * texture_manager.get_h_ratio();
+      y = 89 * texture_manager.get_h_ratio();
       height = 20 * texture_manager.get_h_ratio();
       break;
 
