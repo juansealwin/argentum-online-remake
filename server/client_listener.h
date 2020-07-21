@@ -47,6 +47,7 @@ class ClientListener : public Thread {
   unsigned int entities_ids = 0;
   int seconds_for_proccesing_room_changes;
   int nanoseconds_for_proccesing_attacks;
+  FilesHandler files_handler;
 };
 
 #endif  // CLIENTLISTENER_H

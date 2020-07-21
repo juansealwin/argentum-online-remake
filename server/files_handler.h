@@ -6,7 +6,6 @@
 #include <unordered_map>
 
 #include "hero.h"
-
 class FilesHandler {
  private:
   std::mutex mutex;

@@ -22,9 +22,9 @@ ClientListener::ClientListener(const char *port,
                               *> *players_serializations_queue =
       new BlockingThreadSafeQueue<
           std::tuple<std::string, std::vector<unsigned char>> *>();
-  FilesHandler files_handler;
+  
   players_saver_sender =
-      new PlayersSaverSender(players_serializations_queue, files_handler);
+      new PlayersSaverSender(players_serializations_queue, std::ref(files_handler));
   players_saver_sender->start();
 
   const int maps_quantity = entities_cfg["maps"].size();
@@ -41,7 +41,7 @@ ClientListener::ClientListener(const char *port,
     ArgentumGame *game =
         new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
                          std::ref(entities_ids), std::ref(message_center),
-                         files_handler, players_serializations_queue);
+                         std::ref(files_handler), players_serializations_queue);
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
