@@ -14,7 +14,8 @@ class PlayersSaverSender : public Thread {
                          std::tuple<std::string, std::vector<unsigned char>> *>
                          *players_serializations_queue,
                      FilesHandler &files_handler, bool periodic_mode,
-                     std::vector<ArgentumGame *> &rooms);
+                     std::vector<ArgentumGame *> &rooms,
+                     const int milisecons_interval_to_update);
   ~PlayersSaverSender() override;
   void run() override;
 
@@ -25,7 +26,7 @@ class PlayersSaverSender : public Thread {
   bool alive;
   bool periodic_mode;
   std::vector<ArgentumGame *> &rooms;
-  std::chrono::time_point<std::chrono::high_resolution_clock> last_update_time;
+  int milisecons_interval_to_update;
 };
 
 #endif

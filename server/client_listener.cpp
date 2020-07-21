@@ -23,11 +23,13 @@ ClientListener::ClientListener(const char *port,
           std::tuple<std::string, std::vector<unsigned char>> *>();
 
   players_saver_sender = new PlayersSaverSender(
-      players_serializations_queue, std::ref(files_handler), false, game_rooms);
+      players_serializations_queue, std::ref(files_handler), false, game_rooms,
+      entities_cfg["miliseconsForSavingPlayers"].asUInt());
   players_saver_sender->start();
 
   players_saver_sender_periodically = new PlayersSaverSender(
-      players_serializations_queue, std::ref(files_handler), true, game_rooms);
+      players_serializations_queue, std::ref(files_handler), true, game_rooms,
+      entities_cfg["miliseconsForSavingPlayers"].asUInt());
   players_saver_sender_periodically->start();
 
   const int maps_quantity = entities_cfg["maps"].size();
