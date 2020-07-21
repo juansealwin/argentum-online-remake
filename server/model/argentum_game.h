@@ -47,7 +47,7 @@ class ArgentumGame : public Thread {
                std::ifstream &entities_config, unsigned int &entities_ids,
                MessageCenter &message_center, FilesHandler &files_handler,
                BlockingThreadSafeQueue<
-                   std::tuple<std::string, std::vector<unsigned char>>*>
+                   std::tuple<std::string, std::vector<unsigned char>> *>
                    *players_serializations_queue);
   ~ArgentumGame() override;
   void run() override;
@@ -101,6 +101,7 @@ class ArgentumGame : public Thread {
   void add_player_to_save(
       std::tuple<std::string, std::vector<unsigned char>> *player);
   FilesHandler &files_handler;
+  std::map<unsigned int, Hero *> heroes;
 
  private:
   unsigned int room = 0;
@@ -114,7 +115,7 @@ class ArgentumGame : public Thread {
   bool alive = true;
   unsigned int &entities_ids;
   MessageCenter &message_center;
-  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>*>
+  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>> *>
       *players_serializations_queue;
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
@@ -126,7 +127,6 @@ class ArgentumGame : public Thread {
   // coloca a los monstruos iniciales del mapa.
   void place_initial_npcs(Json::Value &map_cfg);
   std::map<unsigned int, Entity *> npcs;
-  std::map<unsigned int, Hero *> heroes;
   std::map<unsigned int, Monster *> monsters;
   std::map<unsigned int, Projectile *> projectiles;
   std::map<std::tuple<unsigned int, unsigned int>, Drop *> drops;
@@ -172,7 +172,6 @@ class ArgentumGame : public Thread {
   std::vector<item_t> priest_sale_items = {hp_potion,   mana_potion,
                                            ash_stick,   gnarled_staff,
                                            crimp_staff, elven_flute};
-  
 };
 
 #endif  // ARGENTUMGAME_H
