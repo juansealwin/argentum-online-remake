@@ -91,6 +91,8 @@ void EventHandler::get_events() {
             int index;
             if (events_queue.throwable(item_required, index)) {
               if (get_item_t(item_required) != DUMMY_ITEM) {
+                std::cout << "voy a dropear " << get_item_t(item_required)
+                          << std::endl;
                 DropItemCommandDTO* drop_command =
                     new DropItemCommandDTO(get_item_t(item_required));
                 commands_queue.push(drop_command);
@@ -148,12 +150,42 @@ void EventHandler::get_events() {
             int item_slot = inventory.get_item_clicked(x, y);
             bool is_equipped = false;
             id_texture_t item;
-            // Chequeamos si hay item en el slot y si ademas esta equipado o
-            // no
-            if (events_queue.select_item(item, item_slot, is_equipped)) {
-              UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
-                  get_item_t(item), item_slot, is_equipped);
-              commands_queue.push(use_item_command);
+
+            // El banco/mercado estan cerrados, entonces quiere seleccionar
+            if (!events_queue.is_shop_open()) {
+              // Chequeamos si hay item en el slot y si ademas esta equipado o
+              // no
+              if (events_queue.select_item(item, item_slot, is_equipped)) {
+                UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
+                    get_item_t(item), item_slot, is_equipped);
+                commands_queue.push(use_item_command);
+              }
+            }
+
+            // Si están abiertos hizo click para vender o depositar
+            else {
+              inventory_t type_of_shop;
+              if (events_queue.get_item_inventory(type_of_shop, item,
+                                                  item_slot)) {
+                // Si el banco esta abierto, entonces quiere depositar
+                if (type_of_shop == BANK && get_item_t(item) != DUMMY_ITEM) {
+                  BankItemCommandDTO* bank_item_command =
+                      new BankItemCommandDTO(get_item_t(item));
+                  commands_queue.push(bank_item_command);
+
+                  // Listamos para actualizar el inventario
+                  GetBankedItemsCommandDTO* list_command =
+                      new GetBankedItemsCommandDTO();
+                  commands_queue.push(list_command);
+
+                  // O bien quiere vender un item en el mercado
+                } else if (type_of_shop == MARKET &&
+                           get_item_t(item) != DUMMY_ITEM) {
+                  SellItemCommandDTO* sell_item_command =
+                      new SellItemCommandDTO(get_item_t(item));
+                  commands_queue.push(sell_item_command);
+                }
+              }
             }
           }
 
@@ -165,7 +197,7 @@ void EventHandler::get_events() {
             inventory_t type_of_shop;
             // Chequeamos si hay item en el slot y si ademas esta equipado o
             // no
-            if (events_queue.get_item(type_of_shop, item, item_slot)) {
+            if (events_queue.get_item_shop(type_of_shop, item, item_slot)) {
               // Chequeamos si el usuario quiere retirar un item del banco
               if (type_of_shop == BANK) {
                 UnbankItemCommandDTO* bank_item_command =

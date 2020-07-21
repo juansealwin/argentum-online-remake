@@ -50,11 +50,25 @@ bool EventsQueue::throwable(id_texture_t& item, int& i) {
   return is_throwable;
 }
 
-bool EventsQueue::get_item(inventory_t& type, id_texture_t& item, int& i) {
+bool EventsQueue::get_item_shop(inventory_t& type, id_texture_t& item, int& i) {
   std::unique_lock<std::mutex> lock(block_queue);
   // Si no hay items no hay nada que seleccionar
   if (shop_status[i].first != ID_NULL && open_shop) {
     item = shop_status[i].first;
+    type = shop_type;
+    return true;
+  }
+  return false;
+}
+
+bool EventsQueue::get_item_inventory(inventory_t& type, id_texture_t& item,
+                                     int& i) {
+  std::unique_lock<std::mutex> lock(block_queue);
+  // Para vender/depositar tiene que estar el shop abierto, tiene que haber item
+  // y no tiene que estar equipado
+  if (inventory_status[i].first != ID_NULL && open_shop &&
+      !inventory_status[i].second) {
+    item = inventory_status[i].first;
     type = shop_type;
     return true;
   }
@@ -79,6 +93,7 @@ void EventsQueue::write_status(UIStatus& ui) {
   inventory_status = ui.get_items();
   open_shop = ui.is_shop_open(shop_type);
   shop_status.clear();
+  // Si mercado/banco esta abierto copiamos su estado
   if (open_shop) shop_status = ui.get_shop();
 }
 
@@ -106,4 +121,9 @@ std::string EventsQueue::flush_message() {
   message.clear();
 
   return temp;
+}
+
+bool EventsQueue::is_shop_open() {
+  std::unique_lock<std::mutex> lock(block_queue);
+  return open_shop;
 }
