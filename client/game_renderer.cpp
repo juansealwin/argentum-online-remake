@@ -28,9 +28,10 @@ void GameRenderer::run() {
     sound_manager.decrease_music_volume(100);
     event_t local_event;
     int index;
+    // No hay items seleccionado entonces dejamos a item_selected en -1
     bool is_selected = false;
-    int item_selected = 20;  // TODO: aclarar que hace
-    std::string input_message = "";
+    int item_selected = -1;
+    std::string input_message;
 
     while (is_running) {
       frame_start = SDL_GetTicks();
@@ -44,12 +45,17 @@ void GameRenderer::run() {
             break;
 
           case EVENT_SELECT_ITEM:
+            // Habia un item seleccionado
             if (is_selected) {
+              // Se selecciono un item ya seleccionado
               if (index == item_selected) {
                 is_selected = false;
-              } else {
+              }
+              // Se selecciono un item distinto al seleccionado
+              else {
                 item_selected = index;
               }
+              // No habia item seleccionado
             } else {
               item_selected = index;
               is_selected = true;

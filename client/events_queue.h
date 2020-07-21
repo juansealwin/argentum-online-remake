@@ -24,7 +24,8 @@ class EventsQueue {
   EventsQueue();
   ~EventsQueue();
   void push(event_t);
-  bool push(event_t, id_texture_t&, int&, bool&);
+  bool select_item(id_texture_t&, int&, bool&);
+  bool throwable(id_texture_t&, int&);
   bool get_item(inventory_t&, id_texture_t&, int&);
   event_t pop(int&);
   void write_status(UIStatus&);

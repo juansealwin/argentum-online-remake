@@ -86,6 +86,17 @@ void EventHandler::get_events() {
             MeditateCommandDTO* meditate_command = new MeditateCommandDTO();
             commands_queue.push(meditate_command);
           }
+          if (event.key.keysym.sym == SDLK_d) {
+            id_texture_t item_required;
+            int index;
+            if (events_queue.throwable(item_required, index)) {
+              if (get_item_t(item_required) != DUMMY_ITEM) {
+                DropItemCommandDTO* drop_command =
+                    new DropItemCommandDTO(get_item_t(item_required));
+                commands_queue.push(drop_command);
+              }
+            }
+          }
           if (event.key.keysym.sym == SDLK_1) {
             ChangeGameRoomDTO* change_game_room_command =
                 new ChangeGameRoomDTO(1);
@@ -137,9 +148,9 @@ void EventHandler::get_events() {
             int item_slot = inventory.get_item_clicked(x, y);
             bool is_equipped = false;
             id_texture_t item;
-            // Chequeamos si hay item en el slot y si ademas esta equipado o no
-            if (events_queue.push(EVENT_SELECT_ITEM, item, item_slot,
-                                  is_equipped)) {
+            // Chequeamos si hay item en el slot y si ademas esta equipado o
+            // no
+            if (events_queue.select_item(item, item_slot, is_equipped)) {
               UseItemCommandDTO* use_item_command = new UseItemCommandDTO(
                   get_item_t(item), item_slot, is_equipped);
               commands_queue.push(use_item_command);
@@ -152,7 +163,8 @@ void EventHandler::get_events() {
             int item_slot = shop_box.get_item_clicked(x, y);
             id_texture_t item;
             inventory_t type_of_shop;
-            // Chequeamos si hay item en el slot y si ademas esta equipado o no
+            // Chequeamos si hay item en el slot y si ademas esta equipado o
+            // no
             if (events_queue.get_item(type_of_shop, item, item_slot)) {
               // Chequeamos si el usuario quiere retirar un item del banco
               if (type_of_shop == BANK) {
@@ -380,13 +392,16 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     commands_queue.push(pick_up_item_command);
   }
   // Chequeamos si el usuario quiere tirar algun item al suelo
-  else if (input_text.compare(0, strlen(MSG_DROP), MSG_DROP) == 0) {
+  else if (input_text.compare(0, input_text.length(), MSG_DROP) == 0) {
     std::cout << "COMANDO TIRAR" << std::endl;
-    std::string drop = input_text.erase(0, strlen(MSG_DROP));
-    item_t item_required = get_item_t(drop);
-    if (item_required != DUMMY_ITEM) {
-      DropItemCommandDTO* drop_command = new DropItemCommandDTO(item_required);
-      commands_queue.push(drop_command);
+    id_texture_t item_required;
+    int index;
+    if (events_queue.throwable(item_required, index)) {
+      if (get_item_t(item_required) != DUMMY_ITEM) {
+        DropItemCommandDTO* drop_command =
+            new DropItemCommandDTO(get_item_t(item_required));
+        commands_queue.push(drop_command);
+      }
     }
   }
   // Chequeamos si se ingreso un mensaje privado

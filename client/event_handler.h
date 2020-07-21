@@ -45,7 +45,7 @@
 #define MSG_BUY "/comprar "
 #define MSG_SELL "/vender "
 #define MSG_TAKE "/tomar"
-#define MSG_DROP "/tirar "
+#define MSG_DROP "/tirar"
 #define STR_TURTLE_SHIELD "escudo de tortuga"
 #define STR_IRON_SHIELD "escudo de hierro"
 #define STR_HOOD "capucha"
