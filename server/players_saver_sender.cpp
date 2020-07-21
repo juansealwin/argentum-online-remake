@@ -15,6 +15,8 @@ PlayersSaverSender::PlayersSaverSender(
       alive(true) {}
 
 PlayersSaverSender::~PlayersSaverSender() {
+  this->players_serializations_queue->close();
+  this->alive = false;
   join();
   delete players_serializations_queue;
 }
@@ -34,7 +36,10 @@ void PlayersSaverSender::run() {
     if (players_serializations_queue->is_closed()) break;
     std::tuple<std::string, std::vector<unsigned char>>* tuple =
         players_serializations_queue->pop();
-    files_handler.save_player_status(std::get<1>(*tuple), std::get<0>(*tuple));
-    delete tuple;
+    if (tuple) {
+      files_handler.save_player_status(std::get<1>(*tuple),
+                                       std::get<0>(*tuple));
+      delete tuple;
+    }
   }
 }
