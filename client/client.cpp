@@ -21,14 +21,14 @@ Client::Client(const char* host, const char* port, WindowGame& new_window)
 Client::~Client() {}
 
 void Client::do_handshake(std::string user_name, std::string race_selected,
-                          std::string class_selected) {
+                          std::string class_selected, int init_map) {
   // Mandamos la información del usuario y preferencias
-  int initial_room = HelperFunctions::random_int(0, 2);
-  LoginCommandDTO* login_command = new LoginCommandDTO(
-      initial_room, user_name, race_selected, class_selected);
+  LoginCommandDTO* login_command =
+      new LoginCommandDTO(init_map, user_name, race_selected, class_selected);
 
   Protocol::send_command(socket, login_command);
   delete login_command;
+
   // Recibimos el id y el mapa inicial
   std::vector<unsigned char> starting_info;
   Protocol::receive_notification(socket, starting_info);
@@ -43,7 +43,6 @@ void Client::play() {
                              window_game.get_height_ratio(), initial_map);
   EventsQueue event_queue;
   CommandsBlockingQueue commands_to_send;
-
   CommandsSender sender(commands_to_send, socket);
   GameUpdater updater(player_id, protected_map, socket, is_running);
   GameRenderer renderer(

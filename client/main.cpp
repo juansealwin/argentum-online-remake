@@ -34,9 +34,9 @@ int main(int argc, char* argv[]) {
                                        window_game.get_height_ratio());
 
       // Hacemos el handshake con el server
-      client.do_handshake(argentum_lobby.get_user_name(),
-                          argentum_lobby.get_player_race(),
-                          argentum_lobby.get_player_class());
+      client.do_handshake(
+          argentum_lobby.get_user_name(), argentum_lobby.get_player_race(),
+          argentum_lobby.get_player_class(), argentum_lobby.get_initial_map());
 
       // Comenzamos el juego
       client.play();

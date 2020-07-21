@@ -20,8 +20,8 @@
 #include "text_box.h"
 #include "sound_manager.h"
 
-// 10 FPS
-#define FRAME_DELAY 100
+// 40 FPS
+#define FRAME_DELAY 1000/40
 
 class GameRenderer : public Thread {
  private:

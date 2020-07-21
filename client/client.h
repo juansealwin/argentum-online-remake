@@ -16,7 +16,6 @@
 #include "game.h"
 #include "game_renderer.h"
 #include "game_updater.h"
-#include "helper_functions.h"
 #include "login_command_dto.h"
 #include "protocol.h"
 #include "texture.h"
@@ -34,7 +33,7 @@ class Client {
   Client(const char*, const char*, WindowGame&);
   ~Client();
   void play();
-  void do_handshake(std::string, std::string, std::string);
+  void do_handshake(std::string, std::string, std::string, int);
 };
 
 #endif

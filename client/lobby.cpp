@@ -48,12 +48,21 @@ Lobby::Lobby(SDL_Window* win, SDL_Renderer* ren)
       InteractiveBox(X_CLASS, Y_CLASS_CLERIC, CHECKBOX_EDGE, CHECKBOX_EDGE);
   option_wizard =
       InteractiveBox(X_CLASS, Y_CLASS_WIZARD, CHECKBOX_EDGE, CHECKBOX_EDGE);
+  option_grass_map =
+      InteractiveBox(X_MAP, Y_MAP_GRASS, CHECKBOX_EDGE, CHECKBOX_EDGE);
+  option_desert_map =
+      InteractiveBox(X_MAP, Y_MAP_DESERT, CHECKBOX_EDGE, CHECKBOX_EDGE);
+  option_argal_map =
+      InteractiveBox(X_MAP, Y_MAP_ARGAL, CHECKBOX_EDGE, CHECKBOX_EDGE);
+  option_ice_map =
+      InteractiveBox(X_MAP, Y_MAP_ICE, CHECKBOX_EDGE, CHECKBOX_EDGE);
   play = InteractiveBox(X_PLAY_BUTTON, Y_PLAY_BUTTON, PLAY_BUTTON_W,
                         PLAY_BUTTON_H);
   race_message = WARNING_MESSAGE;
   class_message = WARNING_MESSAGE2;
   race_selected = RACE_HUMAN;
   class_selected = CLASS_WARRIOR;
+  initial_map = GRASS;
 }
 
 Lobby::~Lobby() {
@@ -65,7 +74,7 @@ Lobby::~Lobby() {
 bool Lobby::start_lobby() {
   bool exit_success = true;
   lobby_music.play_music();
-  //lobby_music.decrease_music_volume(40);
+  // lobby_music.decrease_music_volume(40);
   if (!quit) lobby_log_in();
   if (!quit) lobby_character_selection();
   lobby_music.stop_music();
@@ -124,7 +133,7 @@ void Lobby::lobby_log_in() {
 
             // Chequeamos si el usuario quiere borrar algo
             else if (event_chat.type == SDL_KEYDOWN &&
-                event_chat.key.keysym.sym == SDLK_BACKSPACE) {
+                     event_chat.key.keysym.sym == SDLK_BACKSPACE) {
               if (user_name.length()) {
                 user_name.pop_back();
                 need_letter = false;
@@ -235,9 +244,12 @@ void Lobby::lobby_character_selection() {
   int y_race_checkmark;
   int x_class_checkmark;
   int y_class_checkmark;
+  int x_map_checkmark;
+  int y_map_checkmark;
   int x, y;
   bool race_checkmark = false;
   bool class_checkmark = false;
+  bool map_checkmark = false;
 
   while (is_running) {
     while (SDL_PollEvent(&event) != 0) {
@@ -318,6 +330,30 @@ void Lobby::lobby_character_selection() {
           class_checkmark = true;
           if (race_message == WARNING_MESSAGE) race_message = "";
           click_sound.play_sound(0);
+        } else if (option_grass_map.mouse_click_in(x, y)) {
+          x_map_checkmark = X_MAP;
+          y_map_checkmark = Y_MAP_GRASS;
+          initial_map = GRASS;
+          map_checkmark = true;
+          click_sound.play_sound(0);
+        } else if (option_desert_map.mouse_click_in(x, y)) {
+          x_map_checkmark = X_MAP;
+          y_map_checkmark = Y_MAP_DESERT;
+          initial_map = DESERT;
+          map_checkmark = true;
+          click_sound.play_sound(0);
+        } else if (option_argal_map.mouse_click_in(x, y)) {
+          x_map_checkmark = X_MAP;
+          y_map_checkmark = Y_MAP_ARGAL;
+          initial_map = ARGAL;
+          map_checkmark = true;
+          click_sound.play_sound(0);
+        } else if (option_ice_map.mouse_click_in(x, y)) {
+          x_map_checkmark = X_MAP;
+          y_map_checkmark = Y_MAP_ICE;
+          initial_map = 3;
+          map_checkmark = true;
+          click_sound.play_sound(0);
         } else if (play.mouse_click_in(x, y)) {
           is_running = false;
           click_sound.play_sound(0);
@@ -346,6 +382,9 @@ void Lobby::lobby_character_selection() {
       if (class_checkmark)
         check_mark->render(renderer, NULL, x_class_checkmark,
                            y_class_checkmark);
+      if (map_checkmark)
+        check_mark->render(renderer, NULL, x_map_checkmark,
+                           y_map_checkmark);
 
       // Renderizamos todo lo de esta pasada
       SDL_RenderPresent(renderer);
@@ -404,6 +443,8 @@ std::string Lobby::get_user_name() { return user_name; }
 std::string Lobby::get_player_race() { return race_selected; }
 
 std::string Lobby::get_player_class() { return class_selected; }
+
+int Lobby::get_initial_map() { return initial_map; }
 
 int Lobby::get_screen_width() { return screen_width; }
 
