@@ -11,9 +11,11 @@
 #include "client_handler.h"
 #include "common_socket.h"
 #include "message_center.h"
+#include "players_saver_sender.h"
 #include "protocol.h"
 #include "starting_info_notification.h"
 #include "thread.h"
+
 class ClientListener : public Thread {
  public:
   /*Crea un nuevo ClientListener que escuchara en el puerto port
@@ -35,6 +37,7 @@ class ClientListener : public Thread {
   std::vector<ThreadSafeQueue<Command *> *> queues_commands;
   Socket server_socket;
   std::list<ClientHandler *> clients;
+  PlayersSaverSender *players_saver_sender;
   StartingInfoNotification *create_start_notification(unsigned int hero_id,
                                                       unsigned int initial_map);
   /*Remueve a los clientes del vector clients
@@ -44,6 +47,7 @@ class ClientListener : public Thread {
   unsigned int entities_ids = 0;
   int seconds_for_proccesing_room_changes;
   int nanoseconds_for_proccesing_attacks;
+  FilesHandler files_handler;
 };
 
 #endif  // CLIENTLISTENER_H
