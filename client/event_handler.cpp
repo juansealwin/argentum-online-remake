@@ -112,6 +112,11 @@ void EventHandler::get_events() {
                 new ChangeGameRoomDTO(3);
             commands_queue.push(change_game_room_command);
           }
+          if (event.key.keysym.sym == SDLK_4) {
+            ChangeGameRoomDTO* change_game_room_command =
+                new ChangeGameRoomDTO(4);
+            commands_queue.push(change_game_room_command);
+          }
           // if (event.key.keysym.sym == SDLK_s) {
           //   UseItemSpecialCommandDTO* use_item_special_command =
           //       new UseItemSpecialCommandDTO();

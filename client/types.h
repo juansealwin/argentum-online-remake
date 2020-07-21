@@ -38,6 +38,8 @@ typedef enum {
   ID_MAP_DESERT_OBJECTS,
   ID_MAP_ARGAL_BACKGROUND,
   ID_MAP_ARGAL_OBJECTS,
+  ID_MAP_ICE_BACKGROUND,
+  ID_MAP_ICE_OBJECTS,
   ID_GOLD,
   ID_HP_POTION,
   ID_MANA_POTION,
@@ -194,7 +196,7 @@ typedef enum {
   GOLD = 36
 } item_t;
 
-typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP, ARGAL_MAP } map_t;
+typedef enum { CURRENT_MAP, GRASS_MAP, DESERT_MAP, ARGAL_MAP, ICE_MAP } map_t;
 
 typedef enum { HELMET, ARMOR, SHIELD, WEAPON } equipped_t;
 

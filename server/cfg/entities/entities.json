@@ -315,7 +315,8 @@
   "maps": [
     "../../server/cfg/maps/grass_map.json",
     "../../server/cfg/maps/desert_map.json",
-    "../../server/cfg/maps/argal_map.json"
+    "../../server/cfg/maps/argal_map.json",
+    "../../server/cfg/maps/ice_map.json"
   ],
   "criticalDamageMultiplier": 2,
   "inventorySize": 16,
