@@ -5,5 +5,5 @@ UseItemSpecialCommand::UseItemSpecialCommand(const unsigned int uid) : Command(u
 UseItemSpecialCommand::~UseItemSpecialCommand() {}
 
 void UseItemSpecialCommand::execute(ArgentumGame *game) {
-  game->hero_use_special(uid);
+  game->hero_level_up(uid);
 }

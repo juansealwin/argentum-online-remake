@@ -460,9 +460,9 @@ void Hero::level_up() {
   level++;
   max_hp = current_hp = constitution * f_class_hp * f_race_hp * level;
   max_mana = current_mana = intelligence * f_class_mana * f_race_mana * level;
-  std::cout << "level: " << level << " int: " << intelligence
-            << " f_class_mana " << f_class_mana << " f_race_mana "
-            << f_race_mana << std::endl;
+  // std::cout << "level: " << level << " int: " << intelligence
+  //           << " f_class_mana " << f_class_mana << " f_race_mana "
+  //           << f_race_mana << std::endl;
   next_level_xp_limit =
       starting_xp_cap * floor(pow(level, level_up_limit_power));
   max_safe_gold = max_safe_gold_multiplier * level;
