@@ -4,19 +4,22 @@
 
 #include "defensive_item.h"
 #include "weapon.h"
-ArgentumGame::ArgentumGame(const unsigned int room_number,
-                           ThreadSafeQueue<Command *> *commands_queue,
-                           Json::Value &map_cfg, std::ifstream &entities_config,
-                           unsigned int &entities_ids,
-                           MessageCenter &message_center,
-                           FilesHandler &files_handler)
+ArgentumGame::ArgentumGame(
+    const unsigned int room_number, ThreadSafeQueue<Command *> *commands_queue,
+    Json::Value &map_cfg, std::ifstream &entities_config,
+    unsigned int &entities_ids, MessageCenter &message_center,
+    FilesHandler &files_handler,
+    BlockingThreadSafeQueue<
+        std::tuple<std::string, std::vector<unsigned char>> *>
+        *players_serializations_queue)
     : room(room_number),
       commands_queue(commands_queue),
       mutex(),
       alive(true),
       entities_ids(entities_ids),
       message_center(message_center),
-      files_handler(files_handler) {
+      files_handler(files_handler),
+      players_serializations_queue(players_serializations_queue) {
   std::unique_lock<std::mutex> lock(mutex);
   entities_config >> entities_cfg;
   map = new Map(map_cfg);
@@ -83,7 +86,7 @@ void ArgentumGame::hero_revive(int entity_id) {
       }
       int distance =
           HelperFunctions::distance(hero->x_position, x, hero->y_position, y);
-      int seconds_blocked = ((distance / 3) + 10)/2;
+      int seconds_blocked = ((distance / 3) + 10) / 2;
       hero->block(seconds_blocked, x + 1, y);
       message_center.notify_waiting_time_to_revive(hero->name, seconds_blocked);
     } else
@@ -421,6 +424,7 @@ unsigned int ArgentumGame::add_new_hero(const std::string &hero_race,
 
   Hero *hero = files_handler.get_player_status(
       hero_name, entities_cfg, entities_ids, x, y, std::ref(map));
+  std::cout << "sali de obtener al hero " << (hero == nullptr) << std::endl;
   unsigned int new_player_id = 0;
   if (hero != nullptr) {
     new_player_id = place_existing_hero(hero, x, y);
@@ -785,4 +789,9 @@ bool ArgentumGame::closest_npcs_sells_or_buys_item(int x, int y, item_t item) {
 
 Hero *ArgentumGame::get_hero_by_id(const int id) {
   return dynamic_cast<Hero *>(heroes.at(id));
+}
+
+void ArgentumGame::add_player_to_save(
+    std::tuple<std::string, std::vector<unsigned char>> *player) {
+  players_serializations_queue->push(player);
 }

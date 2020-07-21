@@ -4,6 +4,7 @@
 
 #include <fstream>
 #include <mutex>
+#include <tuple>
 #include <vector>
 
 #include "../util/json/json-forwards.h"
@@ -26,6 +27,7 @@
 #include "monster.h"
 #include "monsters_manager.h"
 #include "move_command.h"
+#include "players_saver_sender.h"
 #include "priest.h"
 #include "projectile.h"
 #include "projectiles_manager.h"
@@ -43,7 +45,10 @@ class ArgentumGame : public Thread {
   ArgentumGame(const unsigned int room,
                ThreadSafeQueue<Command *> *commands_queue, Json::Value &map_cfg,
                std::ifstream &entities_config, unsigned int &entities_ids,
-               MessageCenter &message_center, FilesHandler &files_handler);
+               MessageCenter &message_center, FilesHandler &files_handler,
+               BlockingThreadSafeQueue<
+                   std::tuple<std::string, std::vector<unsigned char>>*>
+                   *players_serializations_queue);
   ~ArgentumGame() override;
   void run() override;
   unsigned int get_room();
@@ -93,6 +98,8 @@ class ArgentumGame : public Thread {
   FilesHandler &files_handler;
   Hero *get_hero_by_id(const int id);
   Json::Value entities_cfg;
+  void add_player_to_save(
+      std::tuple<std::string, std::vector<unsigned char>> *player);
 
  private:
   unsigned int room = 0;
@@ -106,6 +113,8 @@ class ArgentumGame : public Thread {
   bool alive = true;
   unsigned int &entities_ids;
   MessageCenter &message_center;
+  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>*>
+      *players_serializations_queue;
   // actualiza el mundo segun los comandos recibidos
   // si recibe true, ademas,  aplica los cambios que se deberian aplicar pasado
   // un segundo

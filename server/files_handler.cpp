@@ -8,7 +8,7 @@
 
 #define DATA_SIZE 200
 
-FilesHandler::FilesHandler() {}
+FilesHandler::FilesHandler() : mutex() {}
 
 FilesHandler::~FilesHandler() {}
 
@@ -47,7 +47,7 @@ std::unordered_map<std::string, int> FilesHandler::get_players_positions_map() {
   return std::move(map);
 }
 
-void FilesHandler::save_player_status(Hero* hero) {
+std::vector<unsigned char> FilesHandler::get_serialization_of_hero(Hero* hero) {
   std::vector<unsigned char> player_serialization;
   uint8_t entity_type = hero->type;
   player_serialization.push_back(entity_type);
@@ -57,11 +57,19 @@ void FilesHandler::save_player_status(Hero* hero) {
   for (int i = 0; i < (DATA_SIZE - current_serialization_size); i++) {
     player_serialization.push_back('0');
   }
+  std::cout << "vector que se devuelve en get serialization "
+            << player_serialization.size() << std::endl;
+  return std::move(player_serialization);
+}
 
+void FilesHandler::save_player_status(
+    std::vector<unsigned char>& player_serialization,
+    const std::string player_name) {
+  std::unique_lock<std::mutex> lock(mutex);
   std::unordered_map<std::string, int> players_positions =
       get_players_positions_map();
   const std::unordered_map<std::string, int>::const_iterator result =
-      players_positions.find(hero->get_name());
+      players_positions.find(player_name);
   int position = 0;
   if (result != players_positions.end()) {
     position = result->second;
@@ -70,16 +78,18 @@ void FilesHandler::save_player_status(Hero* hero) {
       int last_position = players_positions.at("last_position");
       position = last_position + DATA_SIZE;
     }
-    players_positions[hero->get_name()] = position;
+    players_positions[player_name] = position;
     players_positions["last_position"] = position;
     save_players_positions_map(players_positions);
   }
 
   std::ofstream players_status("../../server/status/players_status",
                                std::ios::binary | std::ios::out | std::ios::in);
-  std::cout << "guardando a " << hero->get_name() << " en la posicion "
-            << position << std::endl;
+  std::cout << "guardando a " << player_name << " en la posicion " << position
+            << std::endl;
   players_status.seekp(position);
+  std::cout << "vector de chars es " << player_serialization.size()
+            << std::endl;
   players_status.write((char*)&player_serialization[0],
                        player_serialization.size());
   players_status.close();
@@ -88,6 +98,7 @@ void FilesHandler::save_player_status(Hero* hero) {
 Hero* FilesHandler::get_player_status(const std::string player_name,
                                       Json::Value& entities_cfg, int id, int x,
                                       int y, Map* map) {
+  std::unique_lock<std::mutex> lock(mutex);
   std::unordered_map<std::string, int> players_positions =
       get_players_positions_map();
   const std::unordered_map<std::string, int>::const_iterator result =

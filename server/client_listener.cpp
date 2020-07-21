@@ -18,7 +18,14 @@ ClientListener::ClientListener(const char *port,
   nanoseconds_for_proccesing_attacks =
       entities_cfg["milisecondsForProccesingAttacks"].asUInt() * 1000000;
 
+  BlockingThreadSafeQueue<std::tuple<std::string, std::vector<unsigned char>>
+                              *> *players_serializations_queue =
+      new BlockingThreadSafeQueue<
+          std::tuple<std::string, std::vector<unsigned char>> *>();
   FilesHandler files_handler;
+  players_saver_sender =
+      new PlayersSaverSender(players_serializations_queue, files_handler);
+  players_saver_sender->start();
 
   const int maps_quantity = entities_cfg["maps"].size();
   for (int i = 0; i < maps_quantity; i++) {
@@ -31,9 +38,10 @@ ClientListener::ClientListener(const char *port,
         new ThreadSafeQueue<Command *>();
     Json::Value map_cfg;
     map_file >> map_cfg;
-    ArgentumGame *game = new ArgentumGame(
-        i, commands_queue, std::ref(map_cfg), entities_file,
-        std::ref(entities_ids), std::ref(message_center), files_handler);
+    ArgentumGame *game =
+        new ArgentumGame(i, commands_queue, std::ref(map_cfg), entities_file,
+                         std::ref(entities_ids), std::ref(message_center),
+                         files_handler, players_serializations_queue);
     game->start();
     game_rooms.emplace_back(game);
     queues_commands.emplace_back(commands_queue);
@@ -55,6 +63,9 @@ void ClientListener::stop_listening() {
   for (ThreadSafeQueue<Command *> *q : queues_commands) {
     delete q;
   }
+
+  delete players_saver_sender;
+
   server_socket.close();
 }
 
@@ -83,6 +94,7 @@ void ClientListener::run() {
     } catch (std::invalid_argument) {
       break;
     }
+    std::cout << "acepte nuevo cliente " << std::endl;
     LoginCommandDTO *login_command = static_cast<LoginCommandDTO *>(
         Protocol::receive_command(client_socket));
     BlockingThreadSafeQueue<Notification *> *notifications_queue =
