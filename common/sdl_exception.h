@@ -12,7 +12,6 @@
 
 class SdlException : public std::exception {
  private:
-  int myerrno;
   std::string msg_error;
 
  public:

@@ -5,7 +5,7 @@
 
 class SellItemCommandDTO : public CommandDTO {
  public:
-  SellItemCommandDTO(const int item);
+  explicit SellItemCommandDTO(const int item);
   SellItemCommandDTO(const SellItemCommandDTO&) = delete;
   ~SellItemCommandDTO();
   int get_id();

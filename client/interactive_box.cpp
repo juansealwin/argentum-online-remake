@@ -1,6 +1,6 @@
 #include "interactive_box.h"
 
-InteractiveBox::InteractiveBox() { box_dimensions = {0, 0, 0, 0}; }
+InteractiveBox::InteractiveBox() : rows(1), cols(1) { box_dimensions = {0, 0, 0, 0}; }
 
 InteractiveBox::InteractiveBox(int x, int y, int width, int height, int r,
                                int c) {

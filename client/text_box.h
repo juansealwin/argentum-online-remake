@@ -12,6 +12,7 @@
 // No es el ñ ASCII pero por alguna razón lo identifica con este numero
 #define ENIE_ASCII -61
 #define ENIE 241
+#define LARGE_NAME 7
 
 class TextBox : public Drawable {
  private:
@@ -23,16 +24,16 @@ class TextBox : public Drawable {
   int padding;
 
  public:
-  TextBox(text_box_t, std::string);
+  TextBox(text_box_t, const std::string&);
   ~TextBox();
   virtual void render(SDL_Renderer *, int, int);
   void set_texture(SDL_Renderer *);
-  void set_text(std::string);
-  void set_text_color(SDL_Color &);
-  void set_background_color(SDL_Color &);
-  // virtual void set_x(int);
-  // virtual void set_y(int);
+  void set_text(const std::string&);
+  // Servirian para barras interactivas y mensajes de color
+  //void set_text_color(SDL_Color &);
+  //void set_background_color(SDL_Color &);
   void set_mesures_box(text_box_t);
+  void align_name();
 };
 
 #endif

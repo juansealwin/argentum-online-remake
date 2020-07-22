@@ -33,7 +33,6 @@ void PlayersSaverSender::run() {
       std::this_thread::sleep_for(
           std::chrono::milliseconds(milisecons_interval_to_update));
       if (!alive) break;
-      std::cout << "Se actualizan a todos los jugadores en archivo\n";
       std::vector<std::map<unsigned int, Hero*>> heroes_copy;
       // Copio para evitar errores por si justo un jugador cambia de mapa
       for (int i = 0; i < rooms.size(); i++) {

@@ -7,9 +7,9 @@
 
 class LoginCommandDTO : public CommandDTO {
  public:
-  explicit LoginCommandDTO(const int room_number, const std::string player_name,
-                           const std::string hero_race,
-                           const std::string hero_class);
+  explicit LoginCommandDTO(const int room_number, const std::string& player_name,
+                           const std::string& hero_race,
+                           const std::string& hero_class);
   LoginCommandDTO(const LoginCommandDTO &) = delete;
   ~LoginCommandDTO();
   int get_id();

@@ -1,8 +1,6 @@
 #include <fstream>
 #include <iostream>
 
-#include "../util/json/json-forwards.h"
-#include "../util/json/json.h"
 #include "arguments_exceptions.h"
 #include "client.h"
 #include "client_arguments_validator.h"
@@ -42,11 +40,11 @@ int main(int argc, char* argv[]) {
       client.play();
     }
     return EXIT_SUCCESS;
-  } catch (ArgumentsException excep) {
+  } catch (ArgumentsException& excep) {
     std::cout << excep.what() << std::endl;
-  } catch (ConnectionException excep) {
+  } catch (ConnectionException& excep) {
     std::cout << excep.what() << std::endl;
-  } catch (std::exception excep) {
+  } catch (std::exception& excep) {
     std::cout << excep.what() << std::endl;
   }
 }

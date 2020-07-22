@@ -5,7 +5,7 @@
 
 class DropItemCommandDTO : public CommandDTO {
  public:
-  DropItemCommandDTO(const int item_id);
+  explicit DropItemCommandDTO(const int item_id);
   DropItemCommandDTO(const DropItemCommandDTO&) = delete;
   ~DropItemCommandDTO();
   int get_id();

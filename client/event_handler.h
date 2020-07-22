@@ -85,7 +85,6 @@ class EventHandler {
  public:
   EventHandler(CommandsBlockingQueue& commands_queue, EventsQueue&, bool&);
   ~EventHandler();
-  bool is_up();
   void get_events();
   void check_inpunt_send_command(std::string);
   item_t get_item_t(id_texture_t);

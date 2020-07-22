@@ -118,7 +118,7 @@ void EventHandler::get_events() {
             commands_queue.push(change_game_room_command);
           }
           if (event.key.keysym.sym == SDLK_l) {
-            //se reutiliza este comando, pero para subir de nivel
+            // se reutiliza este comando, pero para subir de nivel
             UseItemSpecialCommandDTO* use_item_special_command =
                 new UseItemSpecialCommandDTO();
             commands_queue.push(use_item_special_command);
@@ -152,11 +152,11 @@ void EventHandler::get_events() {
           if (inventory.mouse_click_in(x, y)) {
             // Chequeamos que parte del inventario se clickeo
             int item_slot = inventory.get_item_clicked(x, y);
-            bool is_equipped = false;
             id_texture_t item;
 
             // El banco/mercado estan cerrados, entonces quiere seleccionar
             if (!events_queue.is_shop_open()) {
+              bool is_equipped = false;
               // Chequeamos si hay item en el slot y si ademas esta equipado o
               // no
               if (events_queue.select_item(item, item_slot, is_equipped)) {
@@ -455,8 +455,6 @@ void EventHandler::check_inpunt_send_command(std::string input_text) {
     std::cout << "COMANDO INVALIDO" << std::endl;
   }
 }
-
-bool EventHandler::is_up() { return is_running; }
 
 item_t EventHandler::get_item_t(std::string item) {
   item_t item_required;

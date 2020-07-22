@@ -5,7 +5,7 @@
 
 class BankItemCommandDTO : public CommandDTO {
  public:
-  BankItemCommandDTO(const int item);
+  explicit BankItemCommandDTO(const int item);
   BankItemCommandDTO(const BankItemCommandDTO&) = delete;
   ~BankItemCommandDTO();
   int get_id();

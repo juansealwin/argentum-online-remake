@@ -7,7 +7,7 @@ TextureManager& TextureManager::get_instance() {
 
 TextureManager::TextureManager() {
   std::map<id_texture_t, Texture*>::iterator it;
-  for (it = map.begin(); it != map.end(); it++) {
+  for (it = map.begin(); it != map.end(); ++it) {
     it->second->~Texture();
     delete it->second;
   }

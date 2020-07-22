@@ -483,7 +483,3 @@ void PlayableCharacter::set_item_dimensions(id_texture_t id) {
       break;
   }
 }
-
-int PlayableCharacter::get_head_w() const { return head_rect.w; }
-
-int PlayableCharacter::get_head_h() const { return head_rect.h; }

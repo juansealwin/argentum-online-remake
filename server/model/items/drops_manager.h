@@ -3,6 +3,8 @@
 #include "drop.h"
 #include "helper_functions.h"
 #include "item_factory.h"
+#define DROP_RATE 3
+
 class DropsManager {
  public:
   DropsManager();

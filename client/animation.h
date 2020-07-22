@@ -25,7 +25,6 @@ class Animation {
   Animation(int, int, id_texture_t);
   // Construsctor para animaciones de items
   Animation(int, int);
-  Animation(const Animation&);
   ~Animation();
   // Para personajes
   SDL_Rect get_next_clip(move_t);

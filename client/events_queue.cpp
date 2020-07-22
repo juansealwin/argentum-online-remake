@@ -1,6 +1,7 @@
 #include "events_queue.h"
 
-EventsQueue::EventsQueue() { open_shop = false; }
+EventsQueue::EventsQueue()
+    : index(-1), open_shop(false), shop_type(INVENTORY) {}
 
 EventsQueue::~EventsQueue() {}
 

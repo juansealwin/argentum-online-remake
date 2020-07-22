@@ -8,7 +8,7 @@ T extract(const std::vector<unsigned char>& v, int pos) {
 }
 
 Client::Client(const char* host, const char* port, WindowGame& new_window)
-    : window_game(new_window) {
+    : player_id(0), initial_map(0), window_game(new_window) {
   Socket socket;
   if (socket.connect(host, port) == EXIT_SUCCESS) {
     this->socket = std::move(socket);

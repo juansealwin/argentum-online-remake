@@ -20,17 +20,12 @@ class Inventory {
  private:
   std::map<int, std::pair<id_texture_t, bool>> items;
   bool is_selected = false;
-  int item_selected;
 
  public:
   Inventory();
   ~Inventory();
-  Inventory& operator=(const Inventory&);
   // Agrega items al inventario/banco/mercado
   void add_item(id_texture_t, bool);
-  // agrega items mercado o banco
-  //void add_item(id_texture_t, int);
-  id_texture_t drop_item(int);
   void change_gold(int);
   // Render para el inventario
   void render(SDL_Renderer*, bool, int);

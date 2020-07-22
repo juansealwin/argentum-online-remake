@@ -5,7 +5,7 @@
 
 class UnbankGoldCommandDTO : public CommandDTO {
  public:
-  UnbankGoldCommandDTO(const int ammount);
+  explicit UnbankGoldCommandDTO(const int ammount);
   UnbankGoldCommandDTO(const UnbankGoldCommandDTO&) = delete;
   ~UnbankGoldCommandDTO();
   int get_id();

@@ -8,18 +8,18 @@
 class EntityStatus {
  private:
   entity_t type_entity;
-  id_texture_t item;
   int x;
   int y;
-  move_t orientation;
-  bool is_alive;
-  id_texture_t spellbound;
-  int lifetime;
-  bool meditating;
-  id_texture_t helmet;
-  id_texture_t armor;
-  id_texture_t shield;
-  id_texture_t weapon;
+  id_texture_t item = ID_NULL;
+  move_t orientation = MOVE_DOWN;
+  bool is_alive = true;
+  id_texture_t spellbound = ID_NULL;
+  int lifetime = 0;
+  bool meditating = false;
+  id_texture_t helmet = ID_NULL;
+  id_texture_t armor = ID_NULL;
+  id_texture_t shield = ID_NULL;
+  id_texture_t weapon = ID_NULL;
 
  public:
   EntityStatus();
@@ -33,7 +33,6 @@ class EntityStatus {
   EntityStatus(int, int, int, int, int, int, int, id_texture_t, id_texture_t,
                id_texture_t, id_texture_t);
   ~EntityStatus();
-  EntityStatus& operator=(const EntityStatus&);
   bool is_equal(EntityStatus);
   int get_x() const;
   int get_y() const;
