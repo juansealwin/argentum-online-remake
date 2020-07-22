@@ -9,16 +9,6 @@ Inventory::Inventory() {
 
 Inventory::~Inventory() {}
 
-Inventory& Inventory::operator=(const Inventory& other_inv) {
-  std::map<int, std::pair<id_texture_t, bool>>::const_iterator it;
-
-  for (it = other_inv.items.begin(); it != other_inv.items.end(); it++) {
-    items[it->first].first = it->second.first;
-    items[it->first].second = it->second.second;
-  }
-  return *this;
-}
-
 void Inventory::add_item(id_texture_t new_item, bool equipped) {
   int i = 0;
   while ((items[i].first != ID_NULL)) {
@@ -26,17 +16,6 @@ void Inventory::add_item(id_texture_t new_item, bool equipped) {
   }
   items[i].first = new_item;
   items[i].second = equipped;
-}
-
-id_texture_t Inventory::drop_item(int index) {
-  id_texture_t temp = ID_NULL;
-
-  if (items[index].first != ID_NULL) {
-    temp = items[index].first;
-    items[index].first = ID_NULL;
-    if (items[index].second) items[index].second = false;
-  }
-  return temp;
 }
 
 void Inventory::render(SDL_Renderer* renderer) {

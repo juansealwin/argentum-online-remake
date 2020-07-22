@@ -7,6 +7,7 @@ SoundEffect::SoundEffect() {
   music = nullptr;
   playing_music = false;
   playing_sound = false;
+  music_volume = 0;
   if (CHANNEL_COUNTER == INT_MAX) CHANNEL_COUNTER = 1;
 
   channel = CHANNEL_COUNTER++;
@@ -57,8 +58,6 @@ void SoundEffect::play_sound(int loops) {
     playing_sound = true;
   }
 }
-
-void SoundEffect::stop_sound() { Mix_HaltChannel(channel); }
 
 void SoundEffect::play_music(int loops) {
   if (!Mix_PlayingMusic()) {

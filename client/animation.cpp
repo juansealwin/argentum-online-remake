@@ -3,31 +3,21 @@
 Animation::Animation() {}
 
 Animation::Animation(int char_width, int char_height, id_texture_t id_character)
-    : character_width(char_width), character_height(char_height) {
+    : character_width(char_width),
+      character_height(char_height),
+      current_clip{
+          {CLIP_DOWN, 0}, {CLIP_UP, 0}, {CLIP_LEFT, 0}, {CLIP_RIGHT, 0}} {
   set_total_clips(id_character);
-  current_clip[CLIP_DOWN] = 0;
-  current_clip[CLIP_UP] = 0;
-  current_clip[CLIP_LEFT] = 0;
-  current_clip[CLIP_RIGHT] = 0;
 }
 
 Animation::Animation(int char_width, int char_height)
-    : character_width(char_width), character_height(char_height) {
+    : character_width(char_width),
+      character_height(char_height),
+      current_clip{
+          {CLIP_DOWN, 0}, {CLIP_UP, 0}, {CLIP_LEFT, 0}, {CLIP_RIGHT, 0}} {
   // Todos los items equipables(menos cascos) tienen esta cantidad de frames
   clips_up_down = 5;
   clips_left_right = 4;
-  current_clip[CLIP_DOWN] = 0;
-  current_clip[CLIP_UP] = 0;
-  current_clip[CLIP_LEFT] = 0;
-  current_clip[CLIP_RIGHT] = 0;
-}
-
-Animation::Animation(const Animation& other_animation) {
-  character_width = other_animation.character_width;
-  character_height = other_animation.character_height;
-  current_clip = other_animation.current_clip;
-  clips_up_down = other_animation.clips_up_down;
-  clips_left_right = other_animation.clips_left_right;
 }
 
 Animation::~Animation() {}
@@ -225,4 +215,3 @@ void Animation::set_total_clips(id_texture_t id) {
       break;
   }
 }
-

@@ -3,9 +3,8 @@
 EntityStatus::EntityStatus() {}
 
 EntityStatus::EntityStatus(id_texture_t texture_item, int new_x, int new_y)
-    : item(texture_item), x(new_x), y(new_y) {
+    : x(new_x), y(new_y), item(texture_item) {
   type_entity = ITEM;
-  spellbound = ID_NULL;
 }
 
 EntityStatus::EntityStatus(int type_ent, int new_x, int new_y)
@@ -27,12 +26,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y)
     default:
       break;
   }
-  set_spellbound(DUMMY_ITEM);
-  meditating = false;
-  helmet = ID_NULL;
-  armor = ID_NULL;
-  shield = ID_NULL;
-  weapon = ID_NULL;
 }
 
 EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
@@ -60,11 +53,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
       break;
   }
   set_spellbound(affected_by);
-  meditating = false;
-  helmet = ID_NULL;
-  armor = ID_NULL;
-  shield = ID_NULL;
-  weapon = ID_NULL;
 }
 
 EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
@@ -104,23 +92,6 @@ EntityStatus::EntityStatus(int type_ent, int new_x, int new_y, int orient,
 }
 
 EntityStatus::~EntityStatus() {}
-
-EntityStatus& EntityStatus::operator=(const EntityStatus& other_status) {
-  type_entity = other_status.type_entity;
-  x = other_status.x;
-  y = other_status.y;
-  orientation = other_status.orientation;
-  is_alive = other_status.is_alive;
-  spellbound = other_status.spellbound;
-  item = other_status.item;
-  lifetime = other_status.lifetime;
-  meditating = other_status.meditating;
-  helmet = other_status.helmet;
-  armor = other_status.armor;
-  shield = other_status.shield;
-  weapon = other_status.weapon;
-  return *this;
-}
 
 void EntityStatus::set_spellbound(int affected_by) {
   // Vemos si la entidad la esta afectando alguna magia/estado
@@ -198,11 +169,9 @@ move_t EntityStatus::get_orientation() const { return orientation; }
 bool EntityStatus::is_meditating() const { return meditating; }
 
 id_texture_t EntityStatus::get_equipped(equipped_t type_item) {
-  id_texture_t item;
+  id_texture_t item = helmet;
 
-  if (type_item == HELMET)
-    item = helmet;
-  else if (type_item == ARMOR)
+  if (type_item == ARMOR)
     item = armor;
   else if (type_item == SHIELD)
     item = shield;
@@ -213,11 +182,9 @@ id_texture_t EntityStatus::get_equipped(equipped_t type_item) {
 }
 
 sound_t EntityStatus::get_cast_sound() {
-  sound_t cast_sound;
+  sound_t cast_sound = CAST_BLEEDING;
 
-  if (spellbound == ID_BLEEDING)
-    cast_sound = CAST_BLEEDING;
-  else if (spellbound == ID_MAGIC_ARROW)
+  if (spellbound == ID_MAGIC_ARROW)
     cast_sound = CAST_MAGIC_ARROW;
   else if (spellbound == ID_HEAL)
     cast_sound = CAST_HEAL;

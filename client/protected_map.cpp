@@ -1,15 +1,19 @@
 #include "protected_map.h"
 
 ProtectedMap::ProtectedMap(int id_player, int screen_width, int screen_height,
-                           float w_ratio, float h_ratio, int initial_map) {
-  read_map =
+                           float w_ratio, float h_ratio, int initial_map) :
+                           read_map(std::unique_ptr<Game>(new Game(id_player, screen_width, screen_height,
+                                     w_ratio, h_ratio, map_t(initial_map)))),
+                                     write_map(std::unique_ptr<Game>(new Game(id_player, screen_width, screen_height,
+                                     w_ratio, h_ratio, map_t(initial_map)))) {
+  /*read_map =
       std::unique_ptr<Game>(new Game(id_player, screen_width, screen_height,
                                      w_ratio, h_ratio, map_t(initial_map)));
   write_map =
       std::unique_ptr<Game>(new Game(id_player, screen_width, screen_height,
-                                     w_ratio, h_ratio, map_t(initial_map)));
-  current_status.clear();
-  characters_afected.clear();
+                                     w_ratio, h_ratio, map_t(initial_map)));*/
+  /*current_status.clear();
+  characters_afected.clear();*/
 }
 
 ProtectedMap::~ProtectedMap() {}
@@ -51,7 +55,7 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
   }
 
   // Hacemos updates de las entidades que aun estan y creamos las nuevas
-  for (it = next_status.begin(); it != next_status.end(); it++) {
+  for (it = next_status.begin(); it != next_status.end(); ++it) {
     // Chequeamos si el personaje fue afectado por algo y si tiene alguna
     // animación en curso de otro hechizo
     if (it->second.is_afected() != ID_NULL) {
@@ -100,7 +104,7 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
   // Si todavía queda resto de alguna animación de hechizo, lo actualizamos
   // y restamos al lifetime de lo que queda de dicha animación
   for (it_afected = characters_afected.begin();
-       it_afected != characters_afected.end(); it_afected++) {
+       it_afected != characters_afected.end(); ++it_afected) {
     if (it_afected->second.lifetime >= 0) {
       write_map->update_spellbound(it_afected->first,
                                    it_afected->second.type_spell,
@@ -122,7 +126,7 @@ void ProtectedMap::map_writer(std::map<int, EntityStatus>& next_status,
       write_map->clean_entity(it->first, it->second.get_type_entity());
       it = current_status.erase(it);
     } else {
-      it++;
+      ++it;
     }
   }
 }

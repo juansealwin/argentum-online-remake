@@ -1,6 +1,10 @@
 #include "spell.h"
 
-Spell::Spell() { life_time = 0; }
+Spell::Spell()
+    : spell_type(ID_NULL),
+      life_time(0),
+      max_life_time(0),
+      one_texture_animation(false) {}
 
 Spell::Spell(id_texture_t type, int time_left) {
   life_time = time_left;

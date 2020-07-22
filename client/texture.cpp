@@ -104,4 +104,4 @@ void Texture::free() {
 
 int Texture::get_width(void) const { return width; }
 
-int Texture::get_height(void) const { return height; }
+//int Texture::get_height(void) const { return height; }

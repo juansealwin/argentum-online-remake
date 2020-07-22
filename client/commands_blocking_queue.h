@@ -20,7 +20,6 @@ class CommandsBlockingQueue {
   ~CommandsBlockingQueue();
   void push(CommandDTO* command);
   CommandDTO* pop();
-  void no_more_commands();
   CommandsBlockingQueue(CommandsBlockingQueue&) = delete;
   CommandsBlockingQueue& operator=(const CommandsBlockingQueue&) = delete;
 };

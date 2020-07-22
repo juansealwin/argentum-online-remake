@@ -1,6 +1,6 @@
 #include "text_box.h"
 
-TextBox::TextBox(text_box_t type, std::string new_text) {
+TextBox::TextBox(text_box_t type, const std::string& new_text) {
   // Text color default blanco
   text_color = {255, 255, 255, 0};
 
@@ -10,6 +10,8 @@ TextBox::TextBox(text_box_t type, std::string new_text) {
   set_mesures_box(type);
 
   set_text(new_text);
+
+  if (type == NAME) align_name();
 
   padding = 2;
 
@@ -26,7 +28,7 @@ void TextBox::set_texture(SDL_Renderer* renderer) {
   if (width == 0) width = text_texture.get_width() + padding * 2;
 }
 
-void TextBox::set_text(std::string new_text) {
+void TextBox::set_text(const std::string& new_text) {
   // No se puede renderizar texto vacio
   if (new_text == "")
     text = " ";
@@ -50,17 +52,11 @@ void TextBox::render(SDL_Renderer* renderer, int x_rel, int y_rel) {
   text_texture.render(renderer, x + padding - x_rel, y + padding - y_rel);
 }
 
-void TextBox::set_text_color(SDL_Color& color) { text_color = color; }
+/*void TextBox::set_text_color(SDL_Color& color) { text_color = color; }
 
 void TextBox::set_background_color(SDL_Color& color) {
   background_color = color;
-}
-
-/*
-void TextBox::set_x(int x) { x = x - width / 2; }
-
-void TextBox::set_y(int y) { y = y - height / 2; }
-*/
+}*/
 
 void TextBox::set_mesures_box(text_box_t box_type) {
   // Depende del ancho del texto
@@ -114,7 +110,7 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     case EXP:
       x = 660 * texture_manager.get_w_ratio();
-      y = 89 * texture_manager.get_h_ratio();
+      y = 87 * texture_manager.get_h_ratio();
       height = 20 * texture_manager.get_h_ratio();
       break;
 
@@ -167,5 +163,12 @@ void TextBox::set_mesures_box(text_box_t box_type) {
 
     default:
       break;
+  }
+}
+
+void TextBox::align_name() {
+  if (text.length() > LARGE_NAME) {
+    for (size_t i = LARGE_NAME; i < text.length(); i++)
+      x -= 10 * texture_manager.get_w_ratio();
   }
 }

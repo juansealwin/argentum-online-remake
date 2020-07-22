@@ -42,7 +42,6 @@ class SoundEffect {
   void play_music(int loops = -1);
   void increase_music_volume(int inc = 10);
   void decrease_music_volume(int dec = 10);
-  void stop_sound();
   void stop_music();
 };
 

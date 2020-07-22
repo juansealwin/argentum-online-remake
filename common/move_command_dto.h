@@ -13,7 +13,7 @@ typedef enum {
 
 class MoveCommandDTO : public CommandDTO {
  public:
-  MoveCommandDTO(const movement_t movement_type);
+  explicit MoveCommandDTO(const movement_t movement_type);
   MoveCommandDTO(const MoveCommandDTO &) = delete;
   ~MoveCommandDTO();
   int get_id();

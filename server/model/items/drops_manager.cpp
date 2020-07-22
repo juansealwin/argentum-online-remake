@@ -94,9 +94,10 @@ void DropsManager::randomly_add_drop(
     Item *item = ItemFactory::create_random_item(items_config);
     rand_int = HelperFunctions::random_int(0, 9);
     unsigned int gold = 0;
-    //if (rand_int < 3) {  // 30% de probabilidades de agregar monedas al drop
+    if (rand_int <
+        DROP_RATE) {  // 30% de probabilidades de agregar monedas al drop
       gold = rand_int * dead_monster->max_hp;
-    //}
+    }
     if (drops.count(drop_coordinates) > 0) {
       drop = drops.at(drop_coordinates);
       drop->add_item(item);

@@ -83,8 +83,6 @@ void FilesHandler::save_player_status(
 
   std::ofstream players_status("../../server/status/players_status",
                                std::ios::binary | std::ios::out | std::ios::in);
-  std::cout << "guardando a " << player_name << " en la posicion " << position
-            << std::endl;
   players_status.seekp(position);
   players_status.write((char*)&player_serialization[0],
                        player_serialization.size());

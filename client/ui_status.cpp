@@ -1,30 +1,22 @@
 #include "ui_status.h"
 
-UIStatus::UIStatus() {
-  inventory = Inventory();
-  bank = Inventory();
-  market = Inventory();
-  text_messages.clear();
-  second_inventory = false;
+UIStatus::UIStatus()
+    : inventory(Inventory()),
+      bank(Inventory()),
+      market(Inventory()),
+      second_inventory(false),
+      bank_or_market(INVENTORY) {
 }
 
 UIStatus::~UIStatus() {}
 
-UIStatus& UIStatus::operator=(const UIStatus& other_status) {
-  inventory = other_status.inventory;
-  bank = other_status.bank;
-  market = other_status.market;
-  bank_or_market = other_status.bank_or_market;
-  second_inventory = other_status.second_inventory;
-  text_messages = other_status.text_messages;
-  return *this;
-}
-
-void UIStatus::set_ui_messages(std::string name, int lvl, int max_hp, int hp,
+void UIStatus::set_ui_messages(std::string& name, int lvl, int max_hp, int hp,
                                int max_mn, int mn, int goal_xp, int xp,
                                int gold) {
   // Vaciamos el inventario anterior
   inventory = Inventory();
+  int experience_percentage = 0;
+  if (goal_xp) experience_percentage = xp * 100 / goal_xp;
 
   // Le damos formato al nombre
   text_messages[NAME] = name;
@@ -36,7 +28,7 @@ void UIStatus::set_ui_messages(std::string name, int lvl, int max_hp, int hp,
 
   // Le damos formato a la experiencia (en porcentaje del total)
   std::ostringstream exp_oss;
-  exp_oss << xp * 100 / goal_xp << " %";
+  exp_oss << experience_percentage << " %";
   text_messages[EXP] = exp_oss.str();
 
   // Le damos formato a la experiencia
@@ -74,8 +66,8 @@ void UIStatus::add_item(inventory_t inv_type, id_texture_t new_item) {
   }
 }
 
-void UIStatus::charge_messages(std::string msg1, std::string msg2,
-                               std::string msg3, std::string msg4) {
+void UIStatus::charge_messages(std::string& msg1, std::string& msg2,
+                               std::string& msg3, std::string& msg4) {
   text_messages[MESSAGE_1] = msg1;
   text_messages[MESSAGE_2] = msg2;
   text_messages[MESSAGE_3] = msg3;
@@ -148,12 +140,6 @@ std::map<int, std::pair<id_texture_t, bool>> UIStatus::get_shop() {
 
 bool UIStatus::is_shop_open(inventory_t& type) {
   type = bank_or_market;
-  /*if (second_inventory == 0)
-    std::cout << "NO ESTA ABIERTO" << std::endl;
-  else if (second_inventory == 1)
-    std::cout << " ESTA ABIERTO" << std::endl;
-  else
-    std::cout << "HAY BASURA" << std::endl;*/
   return second_inventory;
 }
 

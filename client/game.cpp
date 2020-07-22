@@ -38,7 +38,7 @@ Game::Game(const Game& other_game) {
 
   std::map<int, Character*>::const_iterator it;
   for (it = other_game.characters.begin(); it != other_game.characters.end();
-       it++) {
+       ++it) {
     Npc* npc = dynamic_cast<Npc*>(it->second);
     PlayableCharacter* pc = dynamic_cast<PlayableCharacter*>(it->second);
     if (npc != nullptr)
@@ -66,7 +66,7 @@ Game& Game::operator=(const Game& other_game) {
 
   std::map<int, Character*>::const_iterator it;
   for (it = other_game.characters.begin(); it != other_game.characters.end();
-       it++) {
+       ++it) {
     Npc* npc = dynamic_cast<Npc*>(it->second);
     PlayableCharacter* pc = dynamic_cast<PlayableCharacter*>(it->second);
     if (npc != nullptr)
@@ -203,7 +203,7 @@ void Game::render_entities(SDL_Renderer* renderer) {
   std::map<int, Character*>::iterator it;
   std::map<int, dropped_t>::iterator it2;
 
-  for (it2 = items.begin(); it2 != items.end(); it2++) {
+  for (it2 = items.begin(); it2 != items.end(); ++it2) {
     // El item DEBE estar dentro del viewport
     if ((map_piece.x <= it2->second.x) &&
         (it2->second.x <= map_piece.x + screen_width))
@@ -215,7 +215,7 @@ void Game::render_entities(SDL_Renderer* renderer) {
       }
   }
 
-  for (it = characters.begin(); it != characters.end(); it++) {
+  for (it = characters.begin(); it != characters.end(); ++it) {
     // El personaje DEBE estar dentro del viewport
     if ((map_piece.x <= it->second->get_x()) &&
         (it->second->get_x() <= map_piece.x + screen_width))
@@ -269,7 +269,7 @@ void Game::clean_all_characters(bool also_hero) {
       delete it->second;
       it = characters.erase(it);
     } else {
-      it++;
+      ++it;
     }
   }
   items.clear();

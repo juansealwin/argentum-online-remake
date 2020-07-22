@@ -1,7 +1,11 @@
 #include "game_updater.h"
 
 GameUpdater::GameUpdater(int id, ProtectedMap& map, Socket& socket, bool& run)
-    : id_hero(id), protected_map(map), read_socket(socket), is_running(run) {}
+    : id_hero(id),
+      protected_map(map),
+      read_socket(socket),
+      is_running(run),
+      open_store(false) {}
 
 template <typename T>
 T extract(const std::vector<unsigned char>& v, unsigned int& pos) {
@@ -15,16 +19,14 @@ GameUpdater::~GameUpdater() {}
 
 void GameUpdater::run() {
   try {
-    int type_of_notification;
-    unsigned int j;
     map_t new_map = CURRENT_MAP;
-    std::string chat_message_1 = " ";
-    std::string chat_message_2 = " ";
-    std::string chat_message_3 = " ";
-    std::string chat_message_4 = " ";
+    std::string chat_message_1 = "";
+    std::string chat_message_2 = "";
+    std::string chat_message_3 = "";
+    std::string chat_message_4 = "";
 
     while (is_running) {
-      j = 0;
+      unsigned int j = 0;
 
       // Recibimos las actualizaciones del mapa
       status_serialized.clear();
@@ -33,7 +35,7 @@ void GameUpdater::run() {
           Protocol::receive_notification(read_socket, status_serialized);
       if (bytes_rcv == 0) break;
       // Extraemos el tipo de notificación
-      type_of_notification = extract<uint8_t>(status_serialized, j);
+      int type_of_notification = extract<uint8_t>(status_serialized, j);
       // Vemos si es una notificación de estado del mapa
       if (type_of_notification == STATUS_NOTIFICATION) {
         // Deserializamos la información recibida
@@ -150,20 +152,19 @@ void GameUpdater::deserialize_status(unsigned int& j) {
 
   // Declaramos las variables necesarias para extraer la informacion int para
   // las de 1 byte y uint16_t para las de 2 bytes
-  int entity_type, y, x, orientation, items_in_drop, drop_has_coins,
-      affected_by, name_size, class_id, meditating, ghost_mode, close_to_npc,
-      items_equiped, items_inventory;
-  uint16_t id, max_hp, current_hp, level, mana_max, curr_mana, str,
-      intelligence, agility, constitution, gold, xp_limit, current_xp;
+  int items_in_drop, drop_has_coins, name_size, meditating, ghost_mode,
+      close_to_npc, items_equiped, items_inventory;
+  uint16_t max_hp, current_hp, level, mana_max, curr_mana, str, intelligence,
+      agility, constitution, gold, xp_limit, current_xp;
 
   while (j < status_serialized.size()) {
-    id = ntohs(extract<uint16_t>(status_serialized, j));
-    entity_type = extract<uint8_t>(status_serialized, j);
-    y = extract<uint8_t>(status_serialized, j);
-    x = extract<uint8_t>(status_serialized, j);
-    orientation = extract<uint8_t>(status_serialized, j);
+    uint16_t id = ntohs(extract<uint16_t>(status_serialized, j));
+    int entity_type = extract<uint8_t>(status_serialized, j);
+    int y = extract<uint8_t>(status_serialized, j);
+    int x = extract<uint8_t>(status_serialized, j);
+    int orientation = extract<uint8_t>(status_serialized, j);
     // En principio la entidad no fue afectada por un arma
-    affected_by = 0;
+    int affected_by = 0;
     // std::cout << "Entity id: " << id << ", type: " << entity_type
     //           << ", x_pos: " << x << ", y_pos: " << y
     //           << "orientation: " << orientation << std::endl;
@@ -216,7 +217,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
       id_texture_t armor = ID_NULL;
       id_texture_t shield = ID_NULL;
       id_texture_t weapon = ID_NULL;
-      class_id = extract<uint8_t>(status_serialized, j);
+      int class_id = extract<uint8_t>(status_serialized, j);
       mana_max = ntohs(extract<uint16_t>(status_serialized, j));
       curr_mana = ntohs(extract<uint16_t>(status_serialized, j));
       str = ntohs(extract<uint16_t>(status_serialized, j));
@@ -257,7 +258,7 @@ void GameUpdater::deserialize_status(unsigned int& j) {
           armor = get_item_texture(current_item_id);
         else if (item_type == SHIELD)
           shield = get_item_texture(current_item_id);
-        else if (item_type == WEAPON) 
+        else if (item_type == WEAPON)
           weapon = get_item_texture(current_item_id);
         // Si son los items del cliente, queremos mostrarlos en la UI
         if (id == id_hero)

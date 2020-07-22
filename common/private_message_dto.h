@@ -5,7 +5,7 @@
 
 class PrivateMessageDTO : public CommandDTO {
  public:
-  PrivateMessageDTO(std::string dst, std::string msg);
+  PrivateMessageDTO(std::string& dst, std::string& msg);
   PrivateMessageDTO(const PrivateMessageDTO &) = delete;
   ~PrivateMessageDTO();
   int get_id();

@@ -19,7 +19,7 @@
 #define ARGAL 2
 #define ICE 3
 
-#define MAX_USER_INPUT 14
+#define MAX_USER_INPUT 13
 #define X_LOGIN 489
 #define Y_LOGIN 425
 #define X_INPUT 284
@@ -124,7 +124,9 @@ class Lobby {
 
  public:
   Lobby(SDL_Window*, SDL_Renderer*);
+  Lobby(const Lobby&) = delete;
   ~Lobby();
+  Lobby& operator=(const Lobby&) = delete;
   bool start_lobby();
   void lobby_log_in();
   void lobby_character_selection();

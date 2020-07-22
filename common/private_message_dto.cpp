@@ -1,6 +1,6 @@
 #include "private_message_dto.h"
 
-PrivateMessageDTO::PrivateMessageDTO(std::string dst, std::string msg)
+PrivateMessageDTO::PrivateMessageDTO(std::string& dst, std::string& msg)
     : dst(dst), msg(msg) {}
 
 PrivateMessageDTO::~PrivateMessageDTO() {}

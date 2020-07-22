@@ -16,8 +16,6 @@ void GameRenderer::run() {
   try {
     // Cargamos todas las texturas del juego
     texture_manager.load_textures(renderer);
-    int frame_start;
-    int frame_time;
     // Para saber las dimensiones de la ventana de juego
     SDL_Rect window_size = {0, 0, screen_width, screen_height};
     // Leemos la primera instancia que nos manda el server
@@ -34,8 +32,8 @@ void GameRenderer::run() {
     std::string input_message;
 
     while (is_running) {
-      frame_start = SDL_GetTicks();
-
+      int frame_start = SDL_GetTicks();
+      int frame_time = 0;
       // Vemos si hay algun evento local
       local_event = events_queue.pop(index);
       if (local_event) {

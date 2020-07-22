@@ -17,16 +17,7 @@ CommandDTO* CommandsBlockingQueue::pop() {
   while (queue.empty()) {
     cv.wait(lock);
   }
-
-  if (!more_commands && queue.empty()) {
-    return new QuitCommandDTO();
-  }
   CommandDTO* last_element = queue.back();
   queue.pop_back();
   return last_element;
-}
-
-void CommandsBlockingQueue::no_more_commands() {
-  more_commands = false;
-  cv.notify_all();
 }
