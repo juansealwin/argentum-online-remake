@@ -66,11 +66,11 @@ Parte de la temática de este tipo de juegos, es que no hay un objetivo definido
 Al iniciar el cliente se nos cargará el lobby del juego. Dandonos a elegir la resolución con la que queremos jugar (por default se ejecutará en *800x600*) y un nombre de usuario (obligatorio) para persistir el usuario.
 Además del usuario  se encuentra un ingreso de contraseña que no es relevante su ingreso ya que aun no fue implementada la lógica del lado del server.
 
-![Primer Lobby](images/lobby.png)
+![Primer Lobby](client/assets/lobby.png)
 
 Luego de ingresar nuestro usuario y elegir una resolución el juego nos pedirá seleccionar una raza y una clase para nuestro personaje ofreciendonos además una descripción de ambos en la parte inferior. Además de raza y clase también podremos elegir el mapa en el cual empezar. Por default las opciones elegidas son: **Humano**, **Guerrero** y **Bosque desolado**. Se permité un solo personaje por usuario y, en caso de ya haber creado previamente un personaje con dicho nombre de usuario, al jugar continuaremos con el personaje previamente creado.
 
-![Segundo Lobby](images/lobby2.png)
+![Segundo Lobby](client/assets/lobby2.png)
 
 ### Juego
 
@@ -136,11 +136,11 @@ En esta sección se listaran los comandos admitidos en la barra de chat y cuando
 
 - **/tomar** : Para usar este comando hay que posicionarse sobre el item que se quiere recojer.
 
-### Teclado
+### Controles
 
 Además de los comandos del chat muchas acciones se pueden suplir por teclas del teclado
 
-![Teclado](images/teclado.png)
+![Imagen Teclado](images/teclado.png)
 
 1. **Flechas** : Sirven para mover y direccionar al jugador en la dirección deseada.
 
