@@ -5,7 +5,7 @@
 Remake del **Argentum Online**, el primer **MMORPG** argentino creado a finales de los 90' con Visual Basic. Este remake hecho con C++, intenta conservar tanto la vista área 2D y los gráficos del juego original para ser fiel a su estilo. 
 Desarrollado en 6 semanas por tres estudiantes de Facultad de Ingeniería de la Universidad de Buenos Aires, a modo de trabajo práctico final para la materia Taller de Programación (75.42).
 
-![Gif intro](client/assets/intro.gif)
+![Gif intro](images/intro2.gif)
 
 Documentación adicional:
 
@@ -55,29 +55,28 @@ Luego levantar el cliente en localhost con el puerto 8080
 
 ## Manual del juego
 
-###Objetivo
+### Objetivo
 
 El objetivo de este juego de rol es crearse un personaje de fantasia para interactuar en un mundo abierto con otros personajes y *monstruos*.
 Parte de la temática de este tipo de juegos, es que no hay un objetivo definido en concreto, sino   más bien diversas maneras de jugarlo.
 
-![GIF intro2](client/assets/intro2.gif)
 
-###Lobby
+### Lobby
 
 Al iniciar el cliente se nos cargará el lobby del juego. Dandonos a elegir la resolución con la que queremos jugar (por default se ejecutará en *800x600*) y un nombre de usuario (obligatorio) para persistir el usuario.
 Además del usuario  se encuentra un ingreso de contraseña que no es relevante su ingreso ya que aun no fue implementada la lógica del lado del server.
 
-![Primer Lobby](client/assets/lobby.png)
+![Primer Lobby](images/lobby.png)
 
 Luego de ingresar nuestro usuario y elegir una resolución el juego nos pedirá seleccionar una raza y una clase para nuestro personaje ofreciendonos además una descripción de ambos en la parte inferior. Además de raza y clase también podremos elegir el mapa en el cual empezar. Por default las opciones elegidas son: **Humano**, **Guerrero** y **Bosque desolado**. Se permité un solo personaje por usuario y, en caso de ya haber creado previamente un personaje con dicho nombre de usuario, al jugar continuaremos con el personaje previamente creado.
 
-![Segundo Lobby](client/assets/lobby2.png)
+![Segundo Lobby](images/lobby2.png)
 
 ### Juego
 
 #### Introducción a la UI
 
-![Intro UI](client/assets/intro_ui.png)
+![Intro UI](images/intro_ui.png)
 
 1. **Chat:** El chat de juego es usado para ingresar los comandos disponibles para interactuar con los NPC y también para enviar mensajes privados a otros jugadores.
 
@@ -104,15 +103,15 @@ En esta sección se listaran los comandos admitidos en la barra de chat y cuando
 
 - **/meditar** : Se puede usar en cualquier momento y su función es que el personaje empiece a recuperar maná rápidamente.
 
-![Gif meditar](client/assets/meditar.gif)
+![Gif meditar](images/meditar.gif)
 
 - **/revivir** : Cuando los puntos de vida del jugador llegan a cero entra en modo fantasma, para revivir el jugador deberá ingresar el comando y esperar unos segundos o bien, situarse al lado del sacerdote y revivir de inmediato al ingresar el comando.
 
-![Gif revivir](client/assets/revivir.gif)
+![Gif revivir](images/revivir.gif)
 
 - **/curar** : El mensaje deberá ser ingresado junto a un sacerdote y el jugador recuperará puntos de vida y puntos de maná.
 
-![Gif curar](client/assets/curar.gif)
+![Gif curar](images/curar.gif)
 
 
 - **/listar** : El mensaje deberá ser ingresado junto a un comerciante o un banquero y se mostrará el mercado disponible o los items guardados en el banco según sea la situación.
@@ -120,20 +119,20 @@ En esta sección se listaran los comandos admitidos en la barra de chat y cuando
 
 - **/depositar <objeto>** : Una vez se haya ingresado el comando **/listar** junto a un banquero, el deposito del banco se abrirá. Con el deposito abierto el jugador podrá depositar items en el banco con el comando o bien haciendo click en los items de su inventario para depositarlos.
 
-![Gif depositar](client/assets/listar_depositar.gif)
+![Gif depositar](images/listar_depositar.gif)
 
 - **/retirar <objeto>** : Al igual que **/depositar**, primero hay que usar **/listar** para abrir la bóveda del banco y luego con el comando se podrá retirar los items deseados. Para retirar items del banco también se puede hacer click en los items que se muestran en el banco.
 
 
 - **/vender <objeto>** : Para usar este comando primero hay que abrir el mercado usando el comando **/listar** junto a un comerciante. Una vez abierto el mercado se podrá vender objetos con el comando o bien haciendo click en el inventario sobre el item que se quiere vender.
 
-![Gif comprar y vender](client/assets/comprar_vender.gif)
+![Gif comprar y vender](images/comprar_vender.gif)
 
 - **/comprar <objeto>** : Al igual que antes primero se debe abrir el mercado. Una vez abierto, se podrá comprar objetos con el comando o bien haciendo click en el mercado sobre el item que se quiere comprar.
 
 - **/tirar** : Una vez seleccionado el item que se desea tirar (haciendo click sobre el y que tenga el recuadro amarillo de selección) usamos el comando para dejar el item en el suelo.
 
-![Gif tomar y tirar](client/assets/tomar_tirar.gif)
+![Gif tomar y tirar](images/tomar_tirar.gif)
 
 - **/tomar** : Para usar este comando hay que posicionarse sobre el item que se quiere recojer.
 
@@ -141,7 +140,7 @@ En esta sección se listaran los comandos admitidos en la barra de chat y cuando
 
 Además de los comandos del chat muchas acciones se pueden suplir por teclas del teclado
 
-![Teclado](client/assets/teclado.png)
+![Teclado](images/teclado.png)
 
 1. **Flechas** : Sirven para mover y direccionar al jugador en la dirección deseada.
 
