@@ -7,7 +7,13 @@ Desarrollado en 6 semanas por tres estudiantes de Facultad de Ingeniería de la 
 
 ![Gif intro](images/intro2.gif)
 
-Documentación adicional:
+## Documentación adicional:
+
+[Manual de usuario](https://github.com/rapariciof/tp_final_taller/blob/master/Documentation/Documentaci%C3%B3n%20de%20usuario.pdf)
+
+[Manual de proyecto](https://github.com/rapariciof/tp_final_taller/blob/master/Documentation/Documentaci%C3%B3n%20de%20proyecto.pdf)
+
+[Documentacion técnica](https://github.com/rapariciof/tp_final_taller/blob/master/Documentation/Documentaci%C3%B3n%20t%C3%A9cnica%20.pdf)
 
 ## Dependencias
 Dentro del instalador del juego estás dependencias serán provistas en caso de que el usuario lo desee.
@@ -40,7 +46,7 @@ Sistema Operativo: Ubuntu 18.04
   1. Desde una terminar situada en build ejecutar: 
 `cmake .. && make && make install` 
 
-  1. Una vez installados los archivos, desde una terminal situarse en `build/server` y para levantar el server ejecutamos:
+  1. Una vez instalados los archivos, desde una terminal situarse en `build/server` y para levantar el server ejecutamos:
 `./server <puerto> entities.json` 
 
   1. Una vez levantado el server, nos situaremos en `build/client` y para correr el juego ejecutaremos:
@@ -85,7 +91,7 @@ Luego de ingresar nuestro usuario y elegir una resolución el juego nos pedirá 
 
 1. **Información general:** En este recuadro podemos ver la información básica de nuestro usuario/personaje. De arriba hacia abajo: el nivel actual de nuestro personaje, su nombre y en que porcentaje del nivel se encuentra (cuando llega al 100% pasa al siguiente nivel).
 
-1. **Inventario:** En el inventario podemos visualizar nuestras pertenencias. Cuando un objeto tiene un **+** blanco encima significa que lo tenemos equipado.
+1. **Inventario:** En el inventario podemos visualizar nuestras pertenencias. Cuando un item tiene un **+** blanco encima significa que lo tenemos equipado.
 
 1. **Oro:** El oro disponible que tenemos, nos servirá a la hora de comerciar. Podemos llevar con nosotros más o menos oro dependiendo de nuestro nivel.
 
@@ -95,13 +101,13 @@ Luego de ingresar nuestro usuario y elegir una resolución el juego nos pedirá 
 
 1. **Maná:** Los puntos de maná actuales de nuestro personaje. Estos puntos sirven para poder usar los distintos hechizos mágicos.
 
-1. **Mercado/Banco:** En esta sección visualizaremos el mercado si estamos intentando *comprar/vender* con un comperciante o bien el banco si estamos tratando de *depositar/retirar* algun objeto con el banquero.
+1. **Mercado/Banco:** En esta sección visualizaremos el mercado si estamos intentando *comprar/vender* con un comerciante o bien el banco si estamos tratando de *depositar/retirar* algun objeto con el banquero.
 
 ### Comandos
 
-En esta sección se listaran los comandos admitidos en la barra de chat y cuando se pueden usar.
+En esta sección se listarán los comandos admitidos en la barra de chat y cuando se pueden usar.
 
-- **/meditar** : Se puede usar en cualquier momento y su función es que el personaje empiece a recuperar maná rápidamente.
+- **/meditar** : Se puede usar en cualquier momento que no se este en medio de un combate y su función es que el personaje empiece a recuperar maná rápidamente.
 
 ![Gif meditar](images/meditar.gif)
 
@@ -138,13 +144,13 @@ En esta sección se listaran los comandos admitidos en la barra de chat y cuando
 
 ### Controles
 
-Además de los comandos del chat muchas acciones se pueden suplir por teclas del teclado
+Además de los comandos del chat muchas acciones se pueden ejecutar con las teclas del teclado.
 
 ![Imagen Teclado](images/teclado.png)
 
 1. **Flechas** : Sirven para mover y direccionar al jugador en la dirección deseada.
 
-2. **Barra espaciadora** : Se usa para atacar con el arma equipada, en caso de no tener ningún arma se atacará con los puños. Paras atacar al objetivo se debe estar alineado con el, y estar al rango correcto para atinarle. 
+2. **Barra espaciadora** : Se usa para atacar con el arma equipada, en caso de no tener ningún arma se atacará con los puños. Para atacar al objetivo se debe estar alineado con el, y estar al rango correcto para atinarle. 
 
 3. **Teclas numericas** : Se utilizan para viajar entre los distintos mundos disponibles, actualmente hay 4.
 
@@ -157,7 +163,7 @@ Además de los comandos del chat muchas acciones se pueden suplir por teclas del
 7. **R** : Sirve para revivir. Si el personaje se encuentra junto con un sacerdote revive de
 inmediato. Sino debe esperar según cuan lejos se esté del sacerdote, o cambiar de mapa si no hay un sacerdote en el que se encuentra.
 
-8. **H** : Con esta tecla si estamos junto a un sacerdote podremos usar el comando **/curar** recuperando puntos de vida y maná.
+8. **H** : Con esta tecla, si estamos junto a un sacerdote, podremos curarnos recuperando puntos de vida y maná.
 
 9. **L**: Sube automáticamente de nivel.
 
