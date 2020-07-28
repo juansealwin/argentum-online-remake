@@ -45,4 +45,6 @@ client/client_autogen
 client/client
 server/server
 
+images/*
+
 server/status/*
